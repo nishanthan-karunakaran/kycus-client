@@ -1,0 +1,62 @@
+@import './_variables';
+
+// Font Size Utilities
+.font-sm {
+  font-size: $font-sm;
+}
+.font-md {
+  font-size: $font-md;
+}
+.font-lg {
+  font-size: $font-lg;
+}
+.font-xl {
+  font-size: $font-xl;
+}
+.font-xxl {
+  font-size: $font-xxl;
+}
+
+// Spacing Utilities
+.m-xs { margin: $spacing-xs; }
+.m-sm { margin: $spacing-sm; }
+.m-md { margin: $spacing-md; }
+.m-lg { margin: $spacing-lg; }
+.m-xl { margin: $spacing-xl; }
+
+.p-xs { padding: $spacing-xs; }
+.p-sm { padding: $spacing-sm; }
+.p-md { padding: $spacing-md; }
+.p-lg { padding: $spacing-lg; }
+.p-xl { padding: $spacing-xl; }
+
+// Text Colors
+.text-primary {
+  color: $primary;
+}
+.text-secondary {
+  color: $secondary;
+}
+.text-body {
+  color: $text-body;
+}
+.text-accent {
+  color: $text-accent;
+}
+.text-dark {
+  color: $text-dark;
+}
+.text-subtle {
+  color: $text-subtle;
+}
+
+// Background Colors
+.bg-primary {
+  background-color: $primary;
+}
+.bg-secondary {
+  background-color: $secondary;
+}
+.bg-failure {
+  background-color: $failure;
+}
