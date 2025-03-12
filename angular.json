@@ -17,7 +17,8 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "outputPath": "dist/kycus-ui",
+            "outputPath": "dist/kycus",
+            "baseHref": "/kycus/",
             "index": "src/index.html",
             "main": "src/main.ts",
             "polyfills": [
@@ -31,7 +32,7 @@
             ],
             "styles": [
               "src/styles.scss",
-              "node_modules/bootstrap/dist/css/bootstrap.scss"
+              "node_modules/bootstrap/dist/css/bootstrap.css"
             ],
             "scripts": []
           },
@@ -72,7 +73,10 @@
               "browserTarget": "kycus-ui:build:development"
             }
           },
-          "defaultConfiguration": "development"
+          "defaultConfiguration": "development",
+          "options": {
+            "port": 4000
+          }
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
