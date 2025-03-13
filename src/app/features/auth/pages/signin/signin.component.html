@@ -1,0 +1,49 @@
+<main class="flex justify-center items-center">
+  <section
+    class="card w-[400px] bg-white p-5 border rounded-xl flex flex-col justify-center items-center gap-4"
+  >
+    <img src="./assets/images/logo/ebitaus-kycus.webp" alt="" />
+
+    <h2 class="self-start">Sign In</h2>
+
+    <form
+      class="w-11/12 flex flex-col gap-4"
+      [formGroup]="loginForm"
+      (submit)="submitLoginForm()"
+    >
+      <fieldset>
+        <label for="email">Email</label>
+        <input
+          type="email"
+          id="email"
+          name="email"
+          placeholder="Enter your email"
+          formControlName="email"
+          autofocus
+        />
+        <p class="error-msg" *ngIf="getFormError('email')">
+          {{ getFormError("email") }}
+        </p>
+      </fieldset>
+
+      <fieldset>
+        <label for="otp">OTP</label>
+        <input
+          type="text"
+          id="otp"
+          name="otp"
+          placeholder="OTP"
+          formControlName="otp"
+          autocomplete="off"
+        />
+        <p class="error-msg" *ngIf="getFormError('otp')">
+          {{ getFormError("otp") }}
+        </p>
+      </fieldset>
+      <button type="submit">
+        {{ isLoading ? "Loading..." : "SEND OTP" }}
+      </button>
+    </form>
+    <p>Don't have an account? <a routerLink="/auth/signup">REGISTER</a></p>
+  </section>
+</main>

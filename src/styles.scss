@@ -1,12 +1,58 @@
-body {
-  background: linear-gradient(to right,
-                rgb(21, 58, 124) 15%,  /* 15% blue */
-                rgb(180, 124, 108) 90%) !important; /* 75% reddish */
-  height: 100vh;
-  margin: 0;
-}
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
+html,
+body {
+  @apply min-h-screen w-screen;
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+  scroll-behavior: smooth;
+  display: grid;
+  grid-template-rows: 1fr;
+}
+
+body {
+  background: linear-gradient(
+    to right,
+    rgb(21, 58, 124) 15%,
+    /* 15% blue */ rgb(180, 124, 108) 90%
+  ) !important; /* 75% reddish */
+}
+
+@layer base {
+  * {
+    @apply box-border;
+  }
+
+  main {
+    @apply w-full h-full;
+  }
+}
+
+@layer components {
+  h2 {
+    @apply capitalize text-xl text-primary font-bold;
+  }
+
+  fieldset {
+    @apply w-full flex flex-col gap-2;
+  }
+
+  a {
+    @apply text-primary cursor-pointer;
+  }
+
+  input {
+    @apply rounded-xl;
+  }
+
+  .error-msg {
+    @apply text-red-500 text-sm;
+  }
+
+  button {
+    @apply border-none p-2 bg-primary text-white rounded-md disabled:opacity-70 disabled:cursor-not-allowed;
+  }
+}
