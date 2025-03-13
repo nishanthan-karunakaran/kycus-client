@@ -1,3 +1,12 @@
+body {
+  background: linear-gradient(to right,
+                rgb(21, 58, 124) 15%,  /* 15% blue */
+                rgb(180, 124, 108) 90%) !important; /* 75% reddish */
+  height: 100vh;
+  margin: 0;
+}
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+

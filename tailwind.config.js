@@ -2,7 +2,6 @@
 export default {
   content: [
     "./src/**/*.{html,ts}",
-    "./node_modules/@spartan-ng/ui/dist/**/*.{js,mjs}"
   ],
   theme: {
     extend: {},
