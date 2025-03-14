@@ -1,16 +1,18 @@
 <main class="flex justify-center items-center">
   <section
-    class="card w-[400px] bg-white p-5 border rounded-xl flex flex-col justify-center items-center gap-4"
+    class="card w-[400px] bg-white p-5 border rounded-lg flex flex-col justify-center items-center gap-4"
   >
-    <img src="./assets/images/logo/ebitaus-kycus.webp" alt="" />
-
-    <h2 class="self-start">Sign In</h2>
+    <div class="w-1/2 max-w-40">
+      <img src="./assets/images/logo/kycus.webp" alt="" />
+    </div>
 
     <form
       class="w-11/12 flex flex-col gap-4"
       [formGroup]="loginForm"
       (submit)="submitLoginForm()"
     >
+      <h2 class="self-start">Sign In</h2>
+
       <fieldset>
         <label for="email">Email</label>
         <input
@@ -20,6 +22,7 @@
           placeholder="Enter your email"
           formControlName="email"
           autofocus
+          inputFormat="lowercase"
         />
         <p class="error-msg" *ngIf="getFormError('email')">
           {{ getFormError("email") }}

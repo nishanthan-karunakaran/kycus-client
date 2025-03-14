@@ -1,1 +1,116 @@
-<p>signup works!</p>
+<main class="flex justify-center items-center min-h-screen p-4">
+  <section
+    class="card w-[90%] h-auto max-h-[90vh] sm:w-11/12 md:w-[740px] bg-white p-6 pt-4 sm:pt-6 border rounded-lg flex flex-col justify-start items-center gap-4"
+  >
+    <div class="w-1/2 max-w-40 flex-shrink-0">
+      <img
+        src="./assets/images/logo/kycus.webp"
+        alt="Logo"
+        class="w-full object-contain"
+      />
+    </div>
+
+    <h2 class="self-start">Sign Up</h2>
+
+    <form
+      class="w-full p-2 grid auto-rows-min sm:grid-cols-2 sm:justify-between gap-4 flex-grow overflow-y-auto"
+      [formGroup]="signupForm"
+      (submit)="submitForm()"
+    >
+      <fieldset>
+        <label for="name">Name</label>
+        <input
+          type="text"
+          id="name"
+          name="name"
+          placeholder="Enter your name"
+          formControlName="name"
+          autofocus
+        />
+        <p class="error-msg" *ngIf="getFormError('name')">
+          {{ getFormError("name") }}
+        </p>
+      </fieldset>
+
+      <fieldset>
+        <label for="email">Official Mail-ID</label>
+        <input
+          type="email"
+          id="email"
+          name="email"
+          placeholder="Enter your E-Mail"
+          formControlName="email"
+          autocomplete="off"
+          inputFormat="lowercase"
+        />
+        <p class="error-msg" *ngIf="getFormError('email')">
+          {{ getFormError("email") }}
+        </p>
+      </fieldset>
+
+      <fieldset>
+        <label for="designation">Designation</label>
+        <input
+          type="text"
+          id="designation"
+          name="designation"
+          placeholder="Enter your designation"
+          formControlName="designation"
+          autofocus
+        />
+        <p class="error-msg" *ngIf="getFormError('designation')">
+          {{ getFormError("designation") }}
+        </p>
+      </fieldset>
+
+      <fieldset>
+        <label for="aadhaar">Aadhaar</label>
+        <input
+          type="number"
+          id="aadhaar"
+          name="aadhaar"
+          placeholder="Enter your aadhaar"
+          formControlName="aadhaar"
+          autocomplete="off"
+        />
+        <p class="error-msg" *ngIf="getFormError('aadhaar')">
+          {{ getFormError("aadhaar") }}
+        </p>
+      </fieldset>
+
+      <fieldset>
+        <label for="pan">Pan</label>
+        <input
+          type="text"
+          id="pan"
+          name="pan"
+          placeholder="Enter your pan"
+          formControlName="pan"
+          autofocus
+          inputFormat="uppercase"
+        />
+        <p class="error-msg" *ngIf="getFormError('pan')">
+          {{ getFormError("pan") }}
+        </p>
+      </fieldset>
+
+      <fieldset>
+        <label for="mobileNo">Mobile Number</label>
+        <input
+          type="number"
+          id="mobileNo"
+          name="mobileNo"
+          placeholder="Enter your mobile number"
+          formControlName="mobileNo"
+          autocomplete="off"
+        />
+        <p class="error-msg" *ngIf="getFormError('mobileNo')">
+          {{ getFormError("mobileNo") }}
+        </p>
+      </fieldset>
+
+      <button type="submit" class="sm:col-span-2 w-full">REGISTER</button>
+    </form>
+    <p>Already have an account? <a routerLink="/auth/signin">LOGIN</a></p>
+  </section>
+</main>

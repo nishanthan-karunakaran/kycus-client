@@ -1,0 +1,59 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  * {
+    @apply box-border;
+  }
+
+  main {
+    @apply w-full h-full;
+  }
+
+  [type="text"],
+  [type="email"],
+  [type="password"],
+  [type="number"],
+  [type="tel"],
+  [type="url"],
+  [type="search"],
+  textarea,
+  select {
+    @apply rounded-md;
+  }
+
+  [type="text"]:focus,
+  [type="email"]:focus,
+  [type="password"]:focus,
+  [type="number"]:focus,
+  [type="tel"]:focus,
+  [type="url"]:focus,
+  [type="search"]:focus,
+  textarea:focus,
+  select:focus {
+    @apply appearance-none border-none ring-2 outline-none ring-primary bg-white;
+  }
+}
+
+@layer components {
+  h2 {
+    @apply capitalize text-xl text-primary font-bold;
+  }
+
+  fieldset {
+    @apply w-full flex flex-col gap-2;
+  }
+
+  a {
+    @apply text-primary cursor-pointer;
+  }
+
+  .error-msg {
+    @apply text-red-500 text-sm;
+  }
+
+  button {
+    @apply border-none p-2 bg-primary text-white rounded-md focus:ring-primary disabled:opacity-70 disabled:cursor-not-allowed;
+  }
+}
