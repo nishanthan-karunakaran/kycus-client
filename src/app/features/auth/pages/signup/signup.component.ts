@@ -6,7 +6,7 @@ import { ValidatorsService } from 'src/app/core/services/validators.service';
 @Component({
   selector: 'app-signup',
   templateUrl: './signup.component.html',
-  styleUrls: ['./signup.component.scss']
+  styleUrls: ['./signup.component.scss'],
 })
 export class SignupComponent {
   isLoading = false;
@@ -18,20 +18,26 @@ export class SignupComponent {
     name: ['', [Validators.required]],
     email: ['', [Validators.required, this.validatorService.emailValidator()]],
     designation: ['', [Validators.required]],
-    aadhaar: ['', [Validators.required, this.validatorService.aadhaarValidator()]],
+    aadhaar: [
+      '',
+      [Validators.required, this.validatorService.aadhaarValidator()],
+    ],
     pan: ['', [Validators.required, this.validatorService.panValidator()]],
-    mobileNo: ['', [Validators.required, this.validatorService.mobileNumberValidator()]],
+    mobileNo: [
+      '',
+      [Validators.required, this.validatorService.mobileNumberValidator()],
+    ],
   });
 
   getRequiredMessage(field: string): string {
-    const capsErrorFields = ["aadhaar", "pan", "otp"];
+    const capsErrorFields = ['aadhaar', 'pan', 'otp'];
 
     if (capsErrorFields.includes(field)) {
-      return `${(field).toUpperCase()} is required`;
+      return `${field.toUpperCase()} is required`;
     }
 
-    if (field === "mobileNo") {
-      return "Mobile Number is required";
+    if (field === 'mobileNo') {
+      return 'Mobile Number is required';
     }
     return `${this.helperService.toTitleCase(field)} is required`;
   }
@@ -60,11 +66,9 @@ export class SignupComponent {
     }
   }
 
-
   submitForm() {
     this.submitted = true;
 
     // this.signupForm.get('mobileNo')?.setErrors({ 'validationError': 'Vanakkam' });
   }
-
 }

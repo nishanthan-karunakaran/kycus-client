@@ -1,4 +1,9 @@
 {
-  // For more information, visit: https://go.microsoft.com/fwlink/?linkid=827846
-  "recommendations": ["angular.ng-template"]
+  "recommendations": [
+    "esbenp.prettier-vscode", // Prettier (Formatting)
+    "bradlc.vscode-tailwindcss", // TailwindCSS IntelliSense
+    "dbaeumer.vscode-eslint", // ESLint (Fix errors)
+    "stylelint.vscode-stylelint", // StyleLint for SCSS
+    "angular.ng-template" // Angular Language Service
+  ]
 }

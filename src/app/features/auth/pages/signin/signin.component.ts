@@ -24,10 +24,11 @@ export class SigninComponent {
     if (!control) return null;
 
     if (control.hasError('required'))
-      return `${field !== 'otp'
-        ? this.helperService.toTitleCase(field)
-        : field.toUpperCase()
-        } is required`;
+      return `${
+        field !== 'otp'
+          ? this.helperService.toTitleCase(field)
+          : field.toUpperCase()
+      } is required`;
 
     if (control.hasError('email')) return 'Invalid email format';
 
@@ -38,7 +39,6 @@ export class SigninComponent {
 
     return null;
   }
-
 
   submitLoginForm() {
     this.submitted = true;
@@ -51,5 +51,4 @@ export class SigninComponent {
       this.isLoading = false;
     }, 3000);
   }
-
 }
