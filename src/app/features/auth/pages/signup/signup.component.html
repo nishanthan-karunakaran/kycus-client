@@ -1,6 +1,6 @@
-<main class="flex justify-center items-center">
+<main class="flex items-center justify-center">
   <section
-    class="card w-[90%] h-auto max-h-[90vh] sm:w-11/12 md:w-[740px] bg-white p-6 pt-4 sm:pt-6 border rounded-lg flex flex-col justify-start items-center gap-4"
+    class="card flex h-auto max-h-[90vh] w-[90%] flex-col items-center justify-start gap-4 rounded-lg border bg-white p-6 pt-4 sm:w-11/12 sm:pt-6 md:w-[740px]"
   >
     <div class="w-1/2 max-w-40 flex-shrink-0">
       <img
@@ -13,12 +13,12 @@
     <h2 class="self-start">Sign Up</h2>
 
     <form
-      class="w-full grid place-items-center gap-4"
+      class="grid w-full place-items-center gap-4"
       [formGroup]="signupForm"
       (submit)="submitForm()"
     >
       <div
-        class="w-full h-[50vh] sm:h-auto p-1 grid auto-rows-min sm:grid-cols-2 sm:justify-between gap-4 flex-grow overflow-y-auto no-scrollbar"
+        class="no-scrollbar grid h-[50vh] w-full flex-grow auto-rows-min gap-4 overflow-y-auto p-1 sm:h-auto sm:grid-cols-2 sm:justify-between"
       >
         <fieldset>
           <label for="name">Name</label>
@@ -113,7 +113,7 @@
         </fieldset>
       </div>
 
-      <button type="submit" class="w-full m-1">REGISTER</button>
+      <button type="submit" class="m-1 w-full">REGISTER</button>
     </form>
     <p>Already have an account? <a routerLink="/auth/signin">LOGIN</a></p>
   </section>

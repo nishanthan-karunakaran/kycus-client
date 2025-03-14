@@ -1,13 +1,11 @@
-<main class="flex justify-center items-center">
-  <section
-    class="card w-[90%] max-w-[400px] bg-white p-4 sm:p-5 border rounded-lg flex flex-col justify-center items-center gap-4"
-  >
+<main class="flex items-center justify-center">
+  <section class="card flex flex-col items-center justify-center gap-4">
     <div class="w-1/2 max-w-40">
       <img src="./assets/images/logo/kycus.webp" alt="" />
     </div>
 
     <form
-      class="w-11/12 flex flex-col gap-4"
+      class="flex w-11/12 flex-col gap-4"
       [formGroup]="loginForm"
       (submit)="submitLoginForm()"
     >
