@@ -20,11 +20,7 @@ export class SigninComponent implements OnInit {
   });
 
   ngOnInit(): void {
-    this.toast.showToast({
-      type: 'info',
-      message: 'Login to access your account',
-      description: 'Enter your email and OTP to login',
-    });
+    this.toast.success('Login to access your account');
   }
 
   getFormError(field: string): string | null {

@@ -24,7 +24,7 @@
   }
 
   button {
-    @apply min-w-20 rounded-md border-none bg-primary p-2 font-semibold text-white transition-all duration-200 ease-in-out focus:border-primary focus:ring-1 focus:ring-primary disabled:cursor-not-allowed disabled:opacity-70;
+    @apply rounded-md border-none bg-primary p-2 font-semibold text-white transition-all duration-200 ease-in-out focus:border-primary focus:ring-1 focus:ring-primary disabled:cursor-not-allowed disabled:opacity-70;
   }
 
   [type="text"],
@@ -68,11 +68,11 @@
   }
 
   .btn-outline-secondary {
-    @apply btn-outline border-secondary text-secondary bg-secondary/10 hover:bg-secondary/20 focus:ring-secondary focus:border-secondary;
+    @apply btn-outline border-secondary bg-secondary/10 text-secondary hover:bg-secondary/20 focus:border-secondary focus:ring-secondary;
   }
 
   .btn-outline-danger {
-    @apply btn-outline border-danger text-danger bg-danger/10 hover:bg-danger/20 focus:ring-danger focus:border-danger;
+    @apply btn-outline border-danger bg-danger/10 text-danger hover:bg-danger/20 focus:border-danger focus:ring-danger;
   }
 
   .error-msg {
@@ -112,11 +112,11 @@
   }
 
   .btn-outline-secondary.loading::before {
-    @apply border-secondary absolute h-5 w-5 animate-spin rounded-full border-[3px] border-t-transparent;
+    @apply absolute h-5 w-5 animate-spin rounded-full border-[3px] border-secondary border-t-transparent;
   }
 
   .btn-outline-danger.loading::before {
-    @apply border-danger absolute h-5 w-5 animate-spin rounded-full border-[3px] border-t-transparent;
+    @apply absolute h-5 w-5 animate-spin rounded-full border-[3px] border-danger border-t-transparent;
   }
 }
 

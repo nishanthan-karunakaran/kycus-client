@@ -1,47 +1,76 @@
 import {
   ApplicationRef,
   ComponentFactoryResolver,
+  ComponentRef,
   Injectable,
   Injector,
 } from '@angular/core';
 import { ToastComponent } from './toast.component';
 
 export interface Toast {
-  type: 'success' | 'info' | 'warning' | 'error';
+  type: 'success' | 'error' | 'warning' | 'info' | 'danger';
   message: string;
-  description?: string; // Optional field for additional information
+  options: ToastOptions;
+}
+
+export interface ToastOptions {
+  duration?: number;
+  dismissable?: boolean;
+  outlined?: boolean;
+  autoClose?: boolean;
 }
 
 @Injectable({
   providedIn: 'root',
 })
 export class ToastService {
+  private toastContainer?: ComponentRef<ToastComponent>;
+
   constructor(
     private injector: Injector,
     private appRef: ApplicationRef,
-    private cfr: ComponentFactoryResolver,
+    private resolver: ComponentFactoryResolver,
   ) {}
 
-  private toastContainer: HTMLElement | null = null;
-
-  showToast(toast: Toast) {
+  private ensureToastContainer() {
     if (!this.toastContainer) {
-      this.toastContainer = document.createElement('div');
-      document.body.appendChild(this.toastContainer);
+      const factory = this.resolver.resolveComponentFactory(ToastComponent);
+      this.toastContainer = factory.create(this.injector);
+      this.appRef.attachView(this.toastContainer.hostView);
+      document.body.appendChild(this.toastContainer.location.nativeElement);
     }
+  }
 
-    const factory = this.cfr.resolveComponentFactory(ToastComponent);
-    const componentRef = factory.create(this.injector);
+  show(
+    type: 'success' | 'error' | 'warning' | 'info' | 'danger',
+    message: string,
+    options: ToastOptions,
+  ) {
+    this.ensureToastContainer();
+    this.toastContainer?.instance.addToast({
+      type,
+      message,
+      options,
+    });
+  }
 
-    componentRef.instance.toast = toast;
+  success(message: string, options: ToastOptions = {}) {
+    this.show('success', message, options);
+  }
 
-    this.appRef.attachView(componentRef.hostView);
-    this.toastContainer?.appendChild(componentRef.location.nativeElement);
+  error(message: string, options: ToastOptions = {}) {
+    this.show('error', message, options);
+  }
 
-    // Remove toast after some time (e.g., 5 seconds)
-    setTimeout(() => {
-      this.appRef.detachView(componentRef.hostView);
-      componentRef.destroy();
-    }, 5000); // Adjust time as needed
+  warning(message: string, options: ToastOptions = {}) {
+    this.show('warning', message, options);
+  }
+
+  info(message: string, options: ToastOptions = {}) {
+    this.show('info', message, options);
+  }
+
+  danger(message: string, options: ToastOptions = {}) {
+    this.show('danger', message, options);
   }
 }

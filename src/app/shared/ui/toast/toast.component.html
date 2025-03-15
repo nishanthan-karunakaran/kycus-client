@@ -1,24 +1,29 @@
-<div *ngIf="toast" class="space-y-2 p-4">
+<div class="fixed right-5 top-5 z-50 max-w-xs space-y-2">
   <div
-    role="alert"
-    [ngClass]="toastClass"
-    class="flex transform items-center rounded-lg border-l-4 p-2 text-xs font-semibold transition duration-300 ease-in-out hover:scale-105"
+    *ngFor="let toast of toasts"
+    [ngClass]="toastClasses(toast)"
+    class="grid min-h-14 w-full grid-cols-[auto_1fr_auto] place-content-center gap-3 overflow-hidden rounded-lg p-4 text-white shadow-lg"
   >
-    <svg
-      stroke="currentColor"
-      viewBox="0 0 24 24"
-      fill="none"
-      class="mr-2 h-5 w-5 flex-shrink-0"
-      [ngClass]="iconClass"
-      xmlns="http://www.w3.org/2000/svg"
+    <lucide-icon
+      [name]="toastIcon(toast.type)"
+      size="20"
+      class="text-white"
+    ></lucide-icon>
+
+    <span class="whitespace-normal break-words" [ngClass]="textColor(toast)">
+      {{ toast.message }}
+    </span>
+
+    <button
+      *ngIf="toast.options.dismissable"
+      (click)="removeToast(toast)"
+      class="group appearance-none border-none bg-transparent p-0 outline-none focus:ring-0 active:ring-0"
     >
-      <path
-        d="M13 16h-1v-4h1m0-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-        stroke-width="2"
-        stroke-linejoin="round"
-        stroke-linecap="round"
-      ></path>
-    </svg>
-    <p>{{ toast.message }}</p>
+      <lucide-icon
+        name="x"
+        size="20"
+        class="text-white transition-transform duration-200 ease-in-out group-hover:scale-125"
+      ></lucide-icon>
+    </button>
   </div>
 </div>
