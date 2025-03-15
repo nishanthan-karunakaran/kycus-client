@@ -95,6 +95,29 @@
   .card-footer {
     @apply mt-4 border-t border-gray-200 pt-2 text-sm text-gray-500;
   }
+
+  /* Loader */
+  .loading {
+    @apply relative flex items-center justify-center text-transparent;
+  }
+
+  .loading::before {
+    content: "";
+    @apply absolute h-5 w-5 animate-spin rounded-full border-[3px] border-white border-t-transparent;
+  }
+
+  .btn-outline.loading::before,
+  .btn-outline-primary.loading::before {
+    @apply absolute h-5 w-5 animate-spin rounded-full border-[3px] border-primary border-t-transparent;
+  }
+
+  .btn-outline-secondary.loading::before {
+    @apply border-secondary absolute h-5 w-5 animate-spin rounded-full border-[3px] border-t-transparent;
+  }
+
+  .btn-outline-danger.loading::before {
+    @apply border-danger absolute h-5 w-5 animate-spin rounded-full border-[3px] border-t-transparent;
+  }
 }
 
 @layer utilities {

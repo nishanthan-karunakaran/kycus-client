@@ -43,8 +43,13 @@
           {{ getFormError("otp") }}
         </p>
       </fieldset>
-      <button type="submit" class="btn-outline">
-        {{ isLoading ? "Loading..." : "SEND OTP" }}
+      <button
+        type="submit"
+        class="btn-outline"
+        [ngClass]="{ loading: isLoading }"
+        [disabled]="isLoading"
+      >
+        SEND OTP
       </button>
     </form>
     <p>Don't have an account? <a routerLink="/auth/signup">REGISTER</a></p>
