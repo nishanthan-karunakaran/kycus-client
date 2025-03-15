@@ -34,25 +34,18 @@
   [type="tel"],
   [type="url"],
   [type="search"],
+  [type="checkbox"],
   textarea,
   select {
-    @apply rounded-md;
+    @apply rounded-md accent-primary focus:appearance-none focus:border-none focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary;
+  }
+
+  [type="checkbox"] {
+    @apply accent-primary focus:ring-2 focus:ring-primary;
   }
 
   select {
     @apply cursor-pointer;
-  }
-
-  [type="text"]:focus,
-  [type="email"]:focus,
-  [type="password"]:focus,
-  [type="number"]:focus,
-  [type="tel"]:focus,
-  [type="url"]:focus,
-  [type="search"]:focus,
-  textarea:focus,
-  select:focus {
-    @apply appearance-none border-none bg-white outline-none ring-2 ring-primary;
   }
 }
 
@@ -67,7 +60,7 @@
   }
 
   .btn-outline {
-    @apply focus:ring-secondary focus:border-secondary border-2 border-solid border-primary bg-primary/10 text-primary hover:bg-primary/20;
+    @apply border-2 border-solid border-primary bg-primary/10 text-primary hover:bg-primary/20 focus:border-primary focus:ring-primary;
   }
 
   .btn-outline-primary {
