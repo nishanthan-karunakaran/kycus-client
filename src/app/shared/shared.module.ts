@@ -11,11 +11,12 @@ import {
   X,
   XCircle,
 } from 'lucide-angular';
+import { ModalComponent } from 'src/app/shared/ui/modal/modal.component';
 import { ToastComponent } from 'src/app/shared/ui/toast/toast.component';
 import { InputFormatDirective } from '../core/directives/input-format.directive';
 
 @NgModule({
-  declarations: [ToastComponent],
+  declarations: [ToastComponent, ModalComponent],
   imports: [
     CommonModule,
     RouterModule,
@@ -38,6 +39,7 @@ import { InputFormatDirective } from '../core/directives/input-format.directive'
     ReactiveFormsModule,
     InputFormatDirective,
     ToastComponent,
+    ModalComponent,
     LucideAngularModule,
   ],
 })

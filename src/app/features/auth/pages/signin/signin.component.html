@@ -1,4 +1,4 @@
-<main class="flex items-center justify-center">
+<main class="flex flex-wrap items-center justify-center">
   <section
     class="card flex max-w-[400px] flex-col items-center justify-center gap-4"
   >
@@ -54,4 +54,394 @@
     </form>
     <p>Don't have an account? <a routerLink="/auth/signup">REGISTER</a></p>
   </section>
+  <section
+    class="card flex max-w-[400px] flex-col items-center justify-center gap-4"
+  >
+    <div class="w-1/2 max-w-40">
+      <img src="./assets/images/logo/kycus.webp" alt="" />
+    </div>
+
+    <form
+      class="flex w-11/12 flex-col gap-4"
+      [formGroup]="loginForm"
+      (submit)="submitLoginForm()"
+    >
+      <h2 class="self-start">Sign In</h2>
+
+      <fieldset>
+        <label for="email">Email</label>
+        <input
+          type="email"
+          id="email"
+          name="email"
+          placeholder="Enter your email"
+          formControlName="email"
+          autofocus
+          inputFormat="lowercase"
+        />
+        <p class="error-msg" *ngIf="getFormError('email')">
+          {{ getFormError("email") }}
+        </p>
+      </fieldset>
+
+      <fieldset>
+        <label for="otp">OTP</label>
+        <input
+          type="text"
+          id="otp"
+          name="otp"
+          placeholder="OTP"
+          formControlName="otp"
+          autocomplete="off"
+        />
+        <p class="error-msg" *ngIf="getFormError('otp')">
+          {{ getFormError("otp") }}
+        </p>
+      </fieldset>
+      <button
+        type="submit"
+        class="btn-outline"
+        [ngClass]="{ loading: isLoading }"
+        [disabled]="isLoading"
+      >
+        SEND OTP
+      </button>
+    </form>
+    <p>Don't have an account? <a routerLink="/auth/signup">REGISTER</a></p>
+  </section>
+  <section
+    class="card flex max-w-[400px] flex-col items-center justify-center gap-4"
+  >
+    <div class="w-1/2 max-w-40">
+      <img src="./assets/images/logo/kycus.webp" alt="" />
+    </div>
+
+    <form
+      class="flex w-11/12 flex-col gap-4"
+      [formGroup]="loginForm"
+      (submit)="submitLoginForm()"
+    >
+      <h2 class="self-start">Sign In</h2>
+
+      <fieldset>
+        <label for="email">Email</label>
+        <input
+          type="email"
+          id="email"
+          name="email"
+          placeholder="Enter your email"
+          formControlName="email"
+          autofocus
+          inputFormat="lowercase"
+        />
+        <p class="error-msg" *ngIf="getFormError('email')">
+          {{ getFormError("email") }}
+        </p>
+      </fieldset>
+
+      <fieldset>
+        <label for="otp">OTP</label>
+        <input
+          type="text"
+          id="otp"
+          name="otp"
+          placeholder="OTP"
+          formControlName="otp"
+          autocomplete="off"
+        />
+        <p class="error-msg" *ngIf="getFormError('otp')">
+          {{ getFormError("otp") }}
+        </p>
+      </fieldset>
+      <button
+        type="submit"
+        class="btn-outline"
+        [ngClass]="{ loading: isLoading }"
+        [disabled]="isLoading"
+      >
+        SEND OTP
+      </button>
+    </form>
+    <p>Don't have an account? <a routerLink="/auth/signup">REGISTER</a></p>
+  </section>
+  <section
+    class="card flex max-w-[400px] flex-col items-center justify-center gap-4"
+  >
+    <div class="w-1/2 max-w-40">
+      <img src="./assets/images/logo/kycus.webp" alt="" />
+    </div>
+
+    <form
+      class="flex w-11/12 flex-col gap-4"
+      [formGroup]="loginForm"
+      (submit)="submitLoginForm()"
+    >
+      <h2 class="self-start">Sign In</h2>
+
+      <fieldset>
+        <label for="email">Email</label>
+        <input
+          type="email"
+          id="email"
+          name="email"
+          placeholder="Enter your email"
+          formControlName="email"
+          autofocus
+          inputFormat="lowercase"
+        />
+        <p class="error-msg" *ngIf="getFormError('email')">
+          {{ getFormError("email") }}
+        </p>
+      </fieldset>
+
+      <fieldset>
+        <label for="otp">OTP</label>
+        <input
+          type="text"
+          id="otp"
+          name="otp"
+          placeholder="OTP"
+          formControlName="otp"
+          autocomplete="off"
+        />
+        <p class="error-msg" *ngIf="getFormError('otp')">
+          {{ getFormError("otp") }}
+        </p>
+      </fieldset>
+      <button
+        type="submit"
+        class="btn-outline"
+        [ngClass]="{ loading: isLoading }"
+        [disabled]="isLoading"
+      >
+        SEND OTP
+      </button>
+    </form>
+    <p>Don't have an account? <a routerLink="/auth/signup">REGISTER</a></p>
+  </section>
+  <section
+    class="card flex max-w-[400px] flex-col items-center justify-center gap-4"
+  >
+    <div class="w-1/2 max-w-40">
+      <img src="./assets/images/logo/kycus.webp" alt="" />
+    </div>
+
+    <form
+      class="flex w-11/12 flex-col gap-4"
+      [formGroup]="loginForm"
+      (submit)="submitLoginForm()"
+    >
+      <h2 class="self-start">Sign In</h2>
+
+      <fieldset>
+        <label for="email">Email</label>
+        <input
+          type="email"
+          id="email"
+          name="email"
+          placeholder="Enter your email"
+          formControlName="email"
+          autofocus
+          inputFormat="lowercase"
+        />
+        <p class="error-msg" *ngIf="getFormError('email')">
+          {{ getFormError("email") }}
+        </p>
+      </fieldset>
+
+      <fieldset>
+        <label for="otp">OTP</label>
+        <input
+          type="text"
+          id="otp"
+          name="otp"
+          placeholder="OTP"
+          formControlName="otp"
+          autocomplete="off"
+        />
+        <p class="error-msg" *ngIf="getFormError('otp')">
+          {{ getFormError("otp") }}
+        </p>
+      </fieldset>
+      <button
+        type="submit"
+        class="btn-outline"
+        [ngClass]="{ loading: isLoading }"
+        [disabled]="isLoading"
+      >
+        SEND OTP
+      </button>
+    </form>
+    <p>Don't have an account? <a routerLink="/auth/signup">REGISTER</a></p>
+  </section>
+  <section
+    class="card flex max-w-[400px] flex-col items-center justify-center gap-4"
+  >
+    <div class="w-1/2 max-w-40">
+      <img src="./assets/images/logo/kycus.webp" alt="" />
+    </div>
+
+    <form
+      class="flex w-11/12 flex-col gap-4"
+      [formGroup]="loginForm"
+      (submit)="submitLoginForm()"
+    >
+      <h2 class="self-start">Sign In</h2>
+
+      <fieldset>
+        <label for="email">Email</label>
+        <input
+          type="email"
+          id="email"
+          name="email"
+          placeholder="Enter your email"
+          formControlName="email"
+          autofocus
+          inputFormat="lowercase"
+        />
+        <p class="error-msg" *ngIf="getFormError('email')">
+          {{ getFormError("email") }}
+        </p>
+      </fieldset>
+
+      <fieldset>
+        <label for="otp">OTP</label>
+        <input
+          type="text"
+          id="otp"
+          name="otp"
+          placeholder="OTP"
+          formControlName="otp"
+          autocomplete="off"
+        />
+        <p class="error-msg" *ngIf="getFormError('otp')">
+          {{ getFormError("otp") }}
+        </p>
+      </fieldset>
+      <button
+        type="submit"
+        class="btn-outline"
+        [ngClass]="{ loading: isLoading }"
+        [disabled]="isLoading"
+      >
+        SEND OTP
+      </button>
+    </form>
+    <p>Don't have an account? <a routerLink="/auth/signup">REGISTER</a></p>
+  </section>
+  <section
+    class="card flex max-w-[400px] flex-col items-center justify-center gap-4"
+  >
+    <div class="w-1/2 max-w-40">
+      <img src="./assets/images/logo/kycus.webp" alt="" />
+    </div>
+
+    <form
+      class="flex w-11/12 flex-col gap-4"
+      [formGroup]="loginForm"
+      (submit)="submitLoginForm()"
+    >
+      <h2 class="self-start">Sign In</h2>
+
+      <fieldset>
+        <label for="email">Email</label>
+        <input
+          type="email"
+          id="email"
+          name="email"
+          placeholder="Enter your email"
+          formControlName="email"
+          autofocus
+          inputFormat="lowercase"
+        />
+        <p class="error-msg" *ngIf="getFormError('email')">
+          {{ getFormError("email") }}
+        </p>
+      </fieldset>
+
+      <fieldset>
+        <label for="otp">OTP</label>
+        <input
+          type="text"
+          id="otp"
+          name="otp"
+          placeholder="OTP"
+          formControlName="otp"
+          autocomplete="off"
+        />
+        <p class="error-msg" *ngIf="getFormError('otp')">
+          {{ getFormError("otp") }}
+        </p>
+      </fieldset>
+      <button
+        type="submit"
+        class="btn-outline"
+        [ngClass]="{ loading: isLoading }"
+        [disabled]="isLoading"
+      >
+        SEND OTP
+      </button>
+    </form>
+    <p>Don't have an account? <a routerLink="/auth/signup">REGISTER</a></p>
+  </section>
+
+  <app-modal
+    [isOpen]="isModalOpen"
+    [header]="'Modal Title'"
+    [showClose]="true"
+    [footer]="footerTemplate"
+    (close)="isModalOpen = false"
+  >
+    <div>
+      <ul class="flex list-disc flex-col gap-2">
+        <li>
+          Lorem ipsum dolor sit amet consectetur, adipisicing elit. Corrupti
+          nihil repellat aliquam reprehenderit unde consequatur. Fugiat
+          doloribus laboriosam delectus nulla? Voluptatem, molestiae nisi
+          aliquid obcaecati dolorum nostrum placeat maxime voluptas.
+        </li>
+        <li>
+          Lorem ipsum dolor sit amet consectetur, adipisicing elit. Corrupti
+          nihil repellat aliquam reprehenderit unde consequatur. Fugiat
+          doloribus laboriosam delectus nulla? Voluptatem, molestiae nisi
+          aliquid obcaecati dolorum nostrum placeat maxime voluptas.
+        </li>
+        <li>
+          Lorem ipsum dolor sit amet consectetur, adipisicing elit. Corrupti
+          nihil repellat aliquam reprehenderit unde consequatur. Fugiat
+          doloribus laboriosam delectus nulla? Voluptatem, molestiae nisi
+          aliquid obcaecati dolorum nostrum placeat maxime voluptas.
+        </li>
+        <li>
+          Lorem ipsum dolor sit amet consectetur, adipisicing elit. Corrupti
+          nihil repellat aliquam reprehenderit unde consequatur. Fugiat
+          doloribus laboriosam delectus nulla? Voluptatem, molestiae nisi
+          aliquid obcaecati dolorum nostrum placeat maxime voluptas.
+        </li>
+        <li>
+          Lorem ipsum dolor sit amet consectetur, adipisicing elit. Corrupti
+          nihil repellat aliquam reprehenderit unde consequatur. Fugiat
+          doloribus laboriosam delectus nulla? Voluptatem, molestiae nisi
+          aliquid obcaecati dolorum nostrum placeat maxime voluptas.
+        </li>
+        <li>
+          Lorem ipsum dolor sit amet consectetur, adipisicing elit. Corrupti
+          nihil repellat aliquam reprehenderit unde consequatur. Fugiat
+          doloribus laboriosam delectus nulla? Voluptatem, molestiae nisi
+          aliquid obcaecati dolorum nostrum placeat maxime voluptas.
+        </li>
+        <li>
+          Lorem ipsum dolor sit amet consectetur, adipisicing elit. Corrupti
+          nihil repellat aliquam reprehenderit unde consequatur. Fugiat
+          doloribus laboriosam delectus nulla? Voluptatem, molestiae nisi
+          aliquid obcaecati dolorum nostrum placeat maxime voluptas.
+        </li>
+      </ul>
+    </div>
+  </app-modal>
+
+  <ng-template #footerTemplate>
+    <button class="btn-outline" (click)="handleCancel()">Close</button>
+    <button (click)="handleConfirm()">Confirm</button>
+  </ng-template>
 </main>

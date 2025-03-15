@@ -24,7 +24,7 @@
   }
 
   button {
-    @apply rounded-md border-none bg-primary p-2 font-semibold text-white transition-all duration-200 ease-in-out focus:border-primary focus:ring-1 focus:ring-primary disabled:cursor-not-allowed disabled:opacity-70;
+    @apply rounded-md border-none bg-primary px-4 py-2 text-center font-semibold text-white transition-all duration-200 ease-in-out focus:border-primary focus:ring-1 focus:ring-primary disabled:cursor-not-allowed disabled:opacity-70;
   }
 
   [type="text"],
@@ -73,6 +73,10 @@
 
   .btn-outline-danger {
     @apply btn-outline border-danger bg-danger/10 text-danger hover:bg-danger/20 focus:border-danger focus:ring-danger;
+  }
+
+  .equal-btn {
+    @apply px-4 py-1;
   }
 
   .error-msg {

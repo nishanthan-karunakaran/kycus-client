@@ -14,13 +14,31 @@ export class SigninComponent implements OnInit {
   toast = inject(ToastService);
   submitted = false;
   isLoading = false;
+  isModalOpen = false;
   loginForm = this.fb.group({
     email: ['', [Validators.required, Validators.email]],
     otp: ['', [Validators.required, Validators.minLength(6)]],
   });
 
+  openModal() {
+    this.isModalOpen = true;
+  }
+
+  handleConfirm() {
+    console.log('Confirmed!');
+    this.isModalOpen = false;
+  }
+
+  handleCancel() {
+    console.log('Cancelled!');
+    this.isModalOpen = false;
+  }
+
   ngOnInit(): void {
     this.toast.success('Login to access your account');
+    setTimeout(() => {
+      this.openModal();
+    }, 0);
   }
 
   getFormError(field: string): string | null {
