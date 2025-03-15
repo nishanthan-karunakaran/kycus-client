@@ -39,6 +39,10 @@
     @apply rounded-md;
   }
 
+  select {
+    @apply cursor-pointer;
+  }
+
   [type="text"]:focus,
   [type="email"]:focus,
   [type="password"]:focus,
