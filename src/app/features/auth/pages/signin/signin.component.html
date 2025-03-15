@@ -385,7 +385,7 @@
     <p>Don't have an account? <a routerLink="/auth/signup">REGISTER</a></p>
   </section>
 
-  <app-modal
+  <ui-modal
     [isOpen]="isModalOpen"
     [header]="'Modal Title'"
     [showClose]="true"
@@ -438,7 +438,7 @@
         </li>
       </ul>
     </div>
-  </app-modal>
+  </ui-modal>
 
   <ng-template #footerTemplate>
     <button class="btn-outline" (click)="handleCancel()">Close</button>

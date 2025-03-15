@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { Toast } from 'src/app/shared/ui/toast/toast.service';
 
 @Component({
-  selector: 'app-toast',
+  selector: 'ui-toast',
   templateUrl: './toast.component.html',
   styleUrls: ['./toast.component.scss'],
 })
