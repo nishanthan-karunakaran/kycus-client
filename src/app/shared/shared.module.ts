@@ -1,24 +1,26 @@
-import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
+import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { RouterModule } from '@angular/router';
+import { ToastComponent } from 'src/app/shared/ui/toast/toast.component';
 import { InputFormatDirective } from '../core/directives/input-format.directive';
 
 @NgModule({
-  declarations: [],
+  declarations: [ToastComponent],
   imports: [
     CommonModule,
     RouterModule,
     FormsModule,
     ReactiveFormsModule,
-    InputFormatDirective
+    InputFormatDirective,
   ],
   exports: [
     CommonModule,
     RouterModule,
     FormsModule,
     ReactiveFormsModule,
-    InputFormatDirective
-  ]
+    InputFormatDirective,
+    ToastComponent,
+  ],
 })
-export class SharedModule { }
+export class SharedModule {}

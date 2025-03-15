@@ -1,21 +1,31 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { HelperService } from 'src/app/core/services/helpers.service';
+import { ToastService } from 'src/app/shared/ui/toast/toast.service';
 
 @Component({
   selector: 'app-signin',
   templateUrl: './signin.component.html',
   styleUrls: ['./signin.component.scss'],
 })
-export class SigninComponent {
+export class SigninComponent implements OnInit {
   fb = inject(FormBuilder);
   helperService = inject(HelperService);
+  toast = inject(ToastService);
   submitted = false;
   isLoading = false;
   loginForm = this.fb.group({
     email: ['', [Validators.required, Validators.email]],
     otp: ['', [Validators.required, Validators.minLength(6)]],
   });
+
+  ngOnInit(): void {
+    this.toast.showToast({
+      type: 'info',
+      message: 'Login to access your account',
+      description: 'Enter your email and OTP to login',
+    });
+  }
 
   getFormError(field: string): string | null {
     if (!this.submitted) return null;
