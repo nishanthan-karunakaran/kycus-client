@@ -1,5 +1,5 @@
-import { Component, inject } from '@angular/core';
-import { FormBuilder, Validators } from '@angular/forms';
+import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { HelperService } from 'src/app/core/services/helpers.service';
 import { ValidatorsService } from 'src/app/core/services/validators.service';
 
@@ -8,26 +8,36 @@ import { ValidatorsService } from 'src/app/core/services/validators.service';
   templateUrl: './signup.component.html',
   styleUrls: ['./signup.component.scss'],
 })
-export class SignupComponent {
+export class SignupComponent implements OnInit {
   isLoading = false;
-  submitted = false;
-  fb = inject(FormBuilder);
-  validatorService = inject(ValidatorsService);
-  helperService = inject(HelperService);
-  signupForm = this.fb.group({
-    name: ['', [Validators.required]],
-    email: ['', [Validators.required, this.validatorService.emailValidator()]],
-    designation: ['', [Validators.required]],
-    aadhaar: [
-      '',
-      [Validators.required, this.validatorService.aadhaarValidator()],
-    ],
-    pan: ['', [Validators.required, this.validatorService.panValidator()]],
-    mobileNo: [
-      '',
-      [Validators.required, this.validatorService.mobileNumberValidator()],
-    ],
-  });
+  isSubmitted = false;
+  signupForm!: FormGroup;
+
+  constructor(
+    private fb: FormBuilder,
+    private validatorService: ValidatorsService,
+    private helperService: HelperService,
+  ) {}
+
+  ngOnInit(): void {
+    this.signupForm = this.fb.group({
+      name: ['', [Validators.required]],
+      email: [
+        '',
+        [Validators.required, this.validatorService.emailValidator()],
+      ],
+      designation: ['', [Validators.required]],
+      aadhaar: [
+        '',
+        [Validators.required, this.validatorService.aadhaarValidator()],
+      ],
+      pan: ['', [Validators.required, this.validatorService.panValidator()]],
+      mobileNo: [
+        '',
+        [Validators.required, this.validatorService.mobileNumberValidator()],
+      ],
+    });
+  }
 
   getRequiredMessage(field: string): string {
     const capsErrorFields = ['aadhaar', 'pan', 'otp'];
@@ -43,7 +53,7 @@ export class SignupComponent {
   }
 
   getFormError(field: string): string | null {
-    if (!this.submitted) return null;
+    if (!this.isSubmitted) return null;
 
     const control = this.signupForm.get(field);
     if (!control) return null;
@@ -67,7 +77,7 @@ export class SignupComponent {
   }
 
   submitForm() {
-    this.submitted = true;
+    this.isSubmitted = true;
 
     // this.signupForm.get('mobileNo')?.setErrors({ 'validationError': 'Vanakkam' });
   }

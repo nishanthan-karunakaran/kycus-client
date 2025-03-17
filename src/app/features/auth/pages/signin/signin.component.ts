@@ -2,13 +2,12 @@ import {
   ChangeDetectorRef,
   Component,
   ElementRef,
-  inject,
   OnInit,
   Renderer2,
   signal,
   ViewChild,
 } from '@angular/core';
-import { FormBuilder, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { HelperService } from 'src/app/core/services/helpers.service';
 import { ValidatorsService } from 'src/app/core/services/validators.service';
 import { SigninState } from 'src/app/features/auth/auth.model';
@@ -20,26 +19,33 @@ import { ToastService } from 'src/app/shared/ui/toast/toast.service';
   styleUrls: ['./signin.component.scss'],
 })
 export class SigninComponent implements OnInit {
-  fb = inject(FormBuilder);
-  helperService = inject(HelperService);
-  validatorsService = inject(ValidatorsService);
-  toast = inject(ToastService);
-  renderer = inject(Renderer2);
-  cdr = inject(ChangeDetectorRef);
-
   isSubmitted = false;
   isLoading = false;
   loginState = signal<SigninState>({
     otpSent: false,
     otpVerified: false,
   });
-  loginForm = this.fb.group({
-    email: ['', [Validators.required, this.validatorsService.emailValidator()]],
-    otp: [''],
-  });
+  loginForm!: FormGroup;
   @ViewChild('otpInput') otpInput!: ElementRef<HTMLInputElement>;
 
-  ngOnInit(): void {}
+  constructor(
+    private fb: FormBuilder,
+    private helperService: HelperService,
+    private validatorsService: ValidatorsService,
+    private toast: ToastService,
+    private renderer: Renderer2,
+    private cdr: ChangeDetectorRef,
+  ) {}
+
+  ngOnInit(): void {
+    this.loginForm = this.fb.group({
+      email: [
+        '',
+        [Validators.required, this.validatorsService.emailValidator()],
+      ],
+      otp: [''],
+    });
+  }
 
   getFormError(field: string): string | null {
     const control = this.loginForm.get(field);
@@ -77,6 +83,8 @@ export class SigninComponent implements OnInit {
     this.loginState.mutate((state) => (state.otpSent = true));
 
     /* i call the service later */
+
+    this.toast.success('OTP sent successfully!');
 
     this.isSubmitted = false; // reset the form
     this.updateOTPValidators();
