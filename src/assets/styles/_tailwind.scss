@@ -7,16 +7,40 @@
     @apply box-border;
   }
 
+  body {
+    @apply text-sm;
+  }
+
   main {
     @apply h-full w-full;
   }
 
+  h1 {
+    @apply text-4xl font-bold;
+  }
+
   h2 {
-    @apply text-xl font-bold capitalize text-primary;
+    @apply text-3xl font-semibold;
+  }
+
+  h3 {
+    @apply text-2xl font-medium;
+  }
+
+  h4 {
+    @apply text-xl font-medium;
+  }
+
+  h5 {
+    @apply text-lg font-semibold;
+  }
+
+  h6 {
+    @apply text-base font-medium;
   }
 
   fieldset {
-    @apply flex w-full flex-col gap-2;
+    @apply flex w-full flex-col gap-2 border-none;
   }
 
   a {
@@ -46,6 +70,10 @@
 
   select {
     @apply cursor-pointer;
+  }
+
+  label {
+    @apply font-medium;
   }
 }
 
@@ -80,7 +108,11 @@
   }
 
   .error-msg {
-    @apply text-sm text-red-500;
+    @apply m-0 text-sm font-medium text-danger;
+  }
+
+  .error-input {
+    @apply border-2 border-solid border-danger;
   }
 
   /* Card Components */

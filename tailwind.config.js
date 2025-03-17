@@ -21,6 +21,10 @@ export default {
         danger: "#FF0000",
         dangerLight: "#FCA5A5",
       },
+      fontFamily: {
+        sans: ["Inter", "sans-serif"],
+        poppins: ["Poppins", "sans-serif"],
+      },
     },
   },
   plugins: [require("@tailwindcss/forms"), require("@tailwindcss/typography")],

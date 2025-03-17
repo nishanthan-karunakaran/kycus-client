@@ -10,7 +10,7 @@
       />
     </div>
 
-    <h2 class="self-start">Sign Up</h2>
+    <h4 class="self-start text-primary">Sign Up</h4>
 
     <form
       class="grid w-full place-items-center gap-4"
@@ -29,6 +29,7 @@
             placeholder="Enter your name"
             formControlName="name"
             autofocus
+            [ngClass]="{ 'error-input': getFormError('name') }"
           />
           <p class="error-msg" *ngIf="getFormError('name')">
             {{ getFormError("name") }}
@@ -45,6 +46,7 @@
             formControlName="email"
             autocomplete="off"
             inputFormat="lowercase"
+            [ngClass]="{ 'error-input': getFormError('email') }"
           />
           <p class="error-msg" *ngIf="getFormError('email')">
             {{ getFormError("email") }}
@@ -60,6 +62,7 @@
             placeholder="Enter your designation"
             formControlName="designation"
             autofocus
+            [ngClass]="{ 'error-input': getFormError('designation') }"
           />
           <p class="error-msg" *ngIf="getFormError('designation')">
             {{ getFormError("designation") }}
@@ -75,6 +78,7 @@
             placeholder="Enter your aadhaar"
             formControlName="aadhaar"
             autocomplete="off"
+            [ngClass]="{ 'error-input': getFormError('aadhaar') }"
           />
           <p class="error-msg" *ngIf="getFormError('aadhaar')">
             {{ getFormError("aadhaar") }}
@@ -91,6 +95,7 @@
             formControlName="pan"
             autofocus
             inputFormat="uppercase"
+            [ngClass]="{ 'error-input': getFormError('pan') }"
           />
           <p class="error-msg" *ngIf="getFormError('pan')">
             {{ getFormError("pan") }}
@@ -106,6 +111,7 @@
             placeholder="Enter your mobile number"
             formControlName="mobileNo"
             autocomplete="off"
+            [ngClass]="{ 'error-input': getFormError('mobileNo') }"
           />
           <p class="error-msg" *ngIf="getFormError('mobileNo')">
             {{ getFormError("mobileNo") }}
