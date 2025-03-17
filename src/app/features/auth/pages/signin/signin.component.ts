@@ -1,6 +1,16 @@
-import { Component, inject, OnInit } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  inject,
+  OnInit,
+  Renderer2,
+  signal,
+  ViewChild,
+} from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { HelperService } from 'src/app/core/services/helpers.service';
+import { ValidatorsService } from 'src/app/core/services/validators.service';
+import { SigninState } from 'src/app/features/auth/auth.model';
 import { ToastService } from 'src/app/shared/ui/toast/toast.service';
 
 @Component({
@@ -11,30 +21,33 @@ import { ToastService } from 'src/app/shared/ui/toast/toast.service';
 export class SigninComponent implements OnInit {
   fb = inject(FormBuilder);
   helperService = inject(HelperService);
+  validatorsService = inject(ValidatorsService);
   toast = inject(ToastService);
-  submitted = false;
-  isLoading = false;
-  loginForm = this.fb.group({
-    email: ['', [Validators.required, Validators.email]],
-    otp: ['', [Validators.required, Validators.minLength(6)]],
-  });
+  renderer = inject(Renderer2);
 
-  ngOnInit(): void {
-    this.toast.success('Login to access your account');
-  }
+  isSubmitted = false;
+  isLoading = false;
+  loginState = signal<SigninState>({
+    otpSent: false,
+    otpVerified: false,
+  });
+  loginForm = this.fb.group({
+    email: ['', [Validators.required, this.validatorsService.emailValidator()]],
+    otp: [''],
+  });
+  @ViewChild('otpInput') otpInput!: ElementRef<HTMLInputElement>;
+
+  ngOnInit(): void {}
 
   getFormError(field: string): string | null {
-    if (!this.submitted) return null;
-
     const control = this.loginForm.get(field);
-    if (!control) return null;
+    if (!control || (!this.isSubmitted && !control.touched)) return null;
 
-    if (control.hasError('required'))
-      return `${
-        field !== 'otp'
-          ? this.helperService.toTitleCase(field)
-          : field.toUpperCase()
-      } is required`;
+    if (control.hasError('required')) {
+      return field !== 'otp'
+        ? this.helperService.toTitleCase(field) + ' is required'
+        : field.toUpperCase() + ' is required';
+    }
 
     if (control.hasError('email')) return 'Invalid email format';
 
@@ -46,15 +59,37 @@ export class SigninComponent implements OnInit {
     return null;
   }
 
-  submitLoginForm() {
-    this.submitted = true;
-    console.log('login form values', this.loginForm.value);
+  sendOTP() {
+    this.loginState.mutate((state) => {
+      state.otpSent = true;
+    });
 
-    if (this.loginForm.invalid) return;
-
-    this.isLoading = true;
+    this.isSubmitted = false;
     setTimeout(() => {
-      this.isLoading = false;
-    }, 3000);
+      this.renderer.selectRootElement(this.otpInput.nativeElement).focus();
+    }, 0);
+    this.loginForm
+      .get('otp')
+      ?.setValidators([Validators.required, Validators.minLength(6)]);
+    this.loginForm.get('otp')?.updateValueAndValidity();
+  }
+
+  submitOTP() {}
+
+  submitLoginForm() {
+    this.isSubmitted = true;
+
+    if (this.loginForm.invalid) return; // Stop execution if form is invalid
+
+    if (this.loginState().otpSent) {
+      this.submitOTP();
+    } else {
+      this.sendOTP();
+    }
+
+    // this.isLoading = true;
+    // setTimeout(() => {
+    //   this.isLoading = false;
+    // }, 3000);
   }
 }

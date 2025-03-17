@@ -20,6 +20,7 @@
           id="email"
           name="email"
           placeholder="Enter your email"
+          [readOnly]="loginState().otpSent"
           formControlName="email"
           autofocus
           inputFormat="lowercase"
@@ -29,7 +30,7 @@
         </p>
       </fieldset>
 
-      <fieldset>
+      <fieldset *ngIf="loginState().otpSent">
         <label for="otp">OTP</label>
         <input
           type="text"
@@ -38,18 +39,19 @@
           placeholder="OTP"
           formControlName="otp"
           autocomplete="off"
+          #otpInput
         />
         <p class="error-msg" *ngIf="getFormError('otp')">
           {{ getFormError("otp") }}
         </p>
       </fieldset>
+
       <button
         type="submit"
-        class="btn-outline"
         [ngClass]="{ loading: isLoading }"
-        [disabled]="isLoading"
+        [disabled]="loginForm.invalid"
       >
-        SEND OTP
+        {{ loginState().otpSent ? "Submit OTP" : "Send OTP" }}
       </button>
     </form>
     <p>Don't have an account? <a routerLink="/auth/signup">REGISTER</a></p>
