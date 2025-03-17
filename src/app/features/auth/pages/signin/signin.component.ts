@@ -1,4 +1,5 @@
 import {
+  ChangeDetectorRef,
   Component,
   ElementRef,
   inject,
@@ -24,6 +25,7 @@ export class SigninComponent implements OnInit {
   validatorsService = inject(ValidatorsService);
   toast = inject(ToastService);
   renderer = inject(Renderer2);
+  cdr = inject(ChangeDetectorRef);
 
   isSubmitted = false;
   isLoading = false;
@@ -59,22 +61,31 @@ export class SigninComponent implements OnInit {
     return null;
   }
 
-  sendOTP() {
-    this.loginState.mutate((state) => {
-      state.otpSent = true;
-    });
-
-    this.isSubmitted = false;
-    setTimeout(() => {
-      this.renderer.selectRootElement(this.otpInput.nativeElement).focus();
-    }, 0);
+  private updateOTPValidators() {
     this.loginForm
       .get('otp')
       ?.setValidators([Validators.required, Validators.minLength(6)]);
     this.loginForm.get('otp')?.updateValueAndValidity();
   }
 
-  submitOTP() {}
+  private moveFocusToOTP() {
+    this.cdr.detectChanges();
+    this.renderer.selectRootElement(this.otpInput.nativeElement).focus();
+  }
+
+  sendOTP() {
+    this.loginState.mutate((state) => (state.otpSent = true));
+
+    /* i call the service later */
+
+    this.isSubmitted = false; // reset the form
+    this.updateOTPValidators();
+    this.moveFocusToOTP();
+  }
+
+  submitOTP() {
+    /* i call the service later */
+  }
 
   submitLoginForm() {
     this.isSubmitted = true;
@@ -86,10 +97,5 @@ export class SigninComponent implements OnInit {
     } else {
       this.sendOTP();
     }
-
-    // this.isLoading = true;
-    // setTimeout(() => {
-    //   this.isLoading = false;
-    // }, 3000);
   }
 }
