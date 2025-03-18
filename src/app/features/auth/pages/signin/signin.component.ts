@@ -73,10 +73,6 @@ export class SigninComponent implements OnInit {
     this.loginForm.get('otp')?.updateValueAndValidity();
   }
 
-  onOTPEntered(otp: string) {
-    this.loginForm.patchValue({ otp });
-  }
-
   sendOTP() {
     this.authService.signin({ email: this.loginForm.value.email }).subscribe({
       next: (result) => {
