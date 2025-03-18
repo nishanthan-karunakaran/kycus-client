@@ -12,11 +12,12 @@ import {
   XCircle,
 } from 'lucide-angular';
 import { ModalComponent } from 'src/app/shared/ui/modal/modal.component';
+import { OtpComponent } from 'src/app/shared/ui/otp/otp.component';
 import { ToastComponent } from 'src/app/shared/ui/toast/toast.component';
 import { InputFormatDirective } from '../core/directives/input-format.directive';
 
 @NgModule({
-  declarations: [ToastComponent, ModalComponent],
+  declarations: [ToastComponent, ModalComponent, OtpComponent],
   imports: [
     CommonModule,
     RouterModule,
@@ -38,9 +39,10 @@ import { InputFormatDirective } from '../core/directives/input-format.directive'
     FormsModule,
     ReactiveFormsModule,
     InputFormatDirective,
+    LucideAngularModule,
     ToastComponent,
     ModalComponent,
-    LucideAngularModule,
+    OtpComponent,
   ],
 })
 export class SharedModule {}

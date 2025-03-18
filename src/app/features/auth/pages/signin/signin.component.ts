@@ -82,6 +82,10 @@ export class SigninComponent implements OnInit {
     this.renderer.selectRootElement(this.otpInput.nativeElement).focus();
   }
 
+  onOTPEntered(otp: string) {
+    this.loginForm.patchValue({ otp });
+  }
+
   sendOTP() {
     // this.loginState.mutate((state) => (state.otpSent = true));
 
@@ -125,6 +129,8 @@ export class SigninComponent implements OnInit {
 
   submitLoginForm() {
     this.isSubmitted = true;
+
+    console.log(this.loginForm.value);
 
     if (this.loginForm.invalid) return; // Stop execution if form is invalid
 

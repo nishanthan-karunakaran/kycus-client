@@ -41,16 +41,23 @@
           formControlName="otp"
           autocomplete="off"
           #otpInput
+          [ngClass]="{ 'error-input': getFormError('otp') }"
         />
         <p class="error-msg" *ngIf="getFormError('otp')">
           {{ getFormError("otp") }}
         </p>
       </fieldset>
 
+      <ui-otp
+        label="OTP"
+        [errorMessage]="getFormError('otp')"
+        (otpEntered)="onOTPEntered($event)"
+      ></ui-otp>
+
       <button
         type="submit"
         [ngClass]="{ loading: isLoading }"
-        [disabled]="loginForm.invalid"
+        [disabled]="loginForm.invalid || isLoading"
       >
         {{ loginState().otpSent ? "Submit OTP" : "Send OTP" }}
       </button>
