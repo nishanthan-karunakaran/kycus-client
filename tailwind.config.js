@@ -20,6 +20,8 @@ export default {
         infoLight: "#BFDBFE",
         danger: "#FF0000",
         dangerLight: "#FCA5A5",
+        error: "#FF0000",
+        errorLight: "#FCA5A5",
       },
       fontFamily: {
         sans: ["Inter", "sans-serif"],

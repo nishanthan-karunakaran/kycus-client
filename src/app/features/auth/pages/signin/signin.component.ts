@@ -8,9 +8,11 @@ import {
   ViewChild,
 } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { ApiStatus } from 'src/app/core/constants/api.response';
 import { HelperService } from 'src/app/core/services/helpers.service';
 import { ValidatorsService } from 'src/app/core/services/validators.service';
 import { SigninState } from 'src/app/features/auth/auth.model';
+import { AuthService } from 'src/app/features/auth/auth.service';
 import { ToastService } from 'src/app/shared/ui/toast/toast.service';
 
 @Component({
@@ -32,6 +34,7 @@ export class SigninComponent implements OnInit {
     private fb: FormBuilder,
     private helperService: HelperService,
     private validatorsService: ValidatorsService,
+    private authService: AuthService,
     private toast: ToastService,
     private renderer: Renderer2,
     private cdr: ChangeDetectorRef,
@@ -80,15 +83,40 @@ export class SigninComponent implements OnInit {
   }
 
   sendOTP() {
-    this.loginState.mutate((state) => (state.otpSent = true));
+    // this.loginState.mutate((state) => (state.otpSent = true));
 
-    /* i call the service later */
+    this.authService.signin({ email: this.loginForm.value.email }).subscribe({
+      next: (result) => {
+        console.log('On Next =>', result);
 
-    this.toast.success('OTP sent successfully!');
+        const { loading, response } = result;
+        this.isLoading = loading;
 
-    this.isSubmitted = false; // reset the form
-    this.updateOTPValidators();
-    this.moveFocusToOTP();
+        if (!response) return;
+
+        const { status } = response;
+
+        if (status === ApiStatus.SUCCESS) {
+          this.loginState.mutate((state) => (state.otpSent = true));
+          this.toast.success('OTP sent successfully!');
+
+          this.isSubmitted = false;
+          this.updateOTPValidators();
+          this.moveFocusToOTP();
+        } else {
+          this.toast.error(response.message || 'Something went wrong!');
+        }
+      },
+      complete: () => {
+        console.log('Request completed');
+      },
+    });
+
+    // this.toast.success('OTP sent successfully!');
+
+    // this.isSubmitted = false; // reset the form
+    // this.updateOTPValidators();
+    // this.moveFocusToOTP();
   }
 
   submitOTP() {
