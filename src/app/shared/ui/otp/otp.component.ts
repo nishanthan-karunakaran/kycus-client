@@ -1,36 +1,51 @@
 import {
+  AfterViewInit,
   Component,
   ElementRef,
-  EventEmitter,
   Input,
   OnChanges,
   OnInit,
-  Output,
   QueryList,
   SimpleChanges,
   ViewChildren,
+  forwardRef,
 } from '@angular/core';
-import { FormArray, FormControl, FormGroup } from '@angular/forms';
+import {
+  FormArray,
+  FormControl,
+  FormGroup,
+  NG_VALUE_ACCESSOR,
+} from '@angular/forms';
 
 @Component({
   selector: 'ui-otp',
   templateUrl: './otp.component.html',
   styleUrls: ['./otp.component.scss'],
+  providers: [
+    {
+      provide: NG_VALUE_ACCESSOR,
+      useExisting: forwardRef(() => OtpComponent),
+      multi: true,
+    },
+  ],
 })
-export class OtpComponent implements OnInit, OnChanges {
+export class OtpComponent implements OnInit, OnChanges, AfterViewInit {
   @Input() length: number = 6;
   @Input() onlyNumeric: boolean = true;
   @Input() disabled: boolean = false;
+  @Input() autoFocus: boolean = false;
   @Input() required: boolean = false;
   @Input() label: string = '';
   @Input() errorMessage: string | null = '';
   @Input() defaultValue: string = '';
-  @Output() otpEntered = new EventEmitter<string>();
 
   @Input() inputProps: { [key: string]: any } = {};
 
   otpForm!: FormGroup;
   otpControls!: FormControl[]; // Store controls separately for easy access
+
+  private onChange: (value: string) => void = () => {};
+  private onTouched: () => void = () => {};
 
   get otpArray(): FormArray {
     return this.otpForm.get('otpValues') as FormArray;
@@ -41,13 +56,19 @@ export class OtpComponent implements OnInit, OnChanges {
   ngOnInit(): void {
     this.initializeForm();
     if (this.defaultValue) {
-      this.fillOtpInputs(this.defaultValue);
+      this.writeValue(this.defaultValue);
     }
   }
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['defaultValue'] && this.defaultValue) {
-      this.fillOtpInputs(this.defaultValue);
+      this.writeValue(this.defaultValue);
+    }
+  }
+
+  ngAfterViewInit(): void {
+    if (this.autoFocus && this.otpInputs) {
+      this.handleAutoFocus();
     }
   }
 
@@ -59,6 +80,12 @@ export class OtpComponent implements OnInit, OnChanges {
     this.otpForm = new FormGroup({
       otpValues: new FormArray(this.otpControls),
     });
+
+    // Automatically notify parent form if value changes
+    this.otpForm.valueChanges.subscribe((value) => {
+      const otpValue = value.otpValues.join(''); // Join the OTP values together
+      this.onChange(otpValue); // Notify parent form of changes
+    });
   }
 
   private fillOtpInputs(value: string): void {
@@ -67,7 +94,13 @@ export class OtpComponent implements OnInit, OnChanges {
         this.otpControls[index].setValue(char);
       }
     });
-    this.emitOtp();
+  }
+
+  private handleAutoFocus() {
+    const firstInput = this.otpInputs.toArray()[0];
+    if (firstInput) {
+      firstInput.nativeElement.focus();
+    }
   }
 
   onInputChange(index: number, event: any): void {
@@ -83,8 +116,6 @@ export class OtpComponent implements OnInit, OnChanges {
     if (index < this.length - 1 && value) {
       this.otpInputs.toArray()[index + 1].nativeElement.focus();
     }
-
-    this.emitOtp();
   }
 
   handleBackspace(index: number, event: KeyboardEvent): void {
@@ -95,7 +126,6 @@ export class OtpComponent implements OnInit, OnChanges {
         this.otpControls[index - 1].setValue('');
         this.otpInputs.toArray()[index - 1].nativeElement.focus();
       }
-      this.emitOtp();
       event.preventDefault();
     }
   }
@@ -112,12 +142,30 @@ export class OtpComponent implements OnInit, OnChanges {
         this.otpControls[i].setValue(char);
       }
     });
-
-    this.emitOtp();
   }
 
-  private emitOtp(): void {
-    const otpValue = this.otpControls.map((control) => control.value).join('');
-    this.otpEntered.emit(otpValue);
+  writeValue(value: string): void {
+    if (value) {
+      this.fillOtpInputs(value); // Update OTP fields from parent value
+    }
+  }
+
+  registerOnChange(fn: (value: string) => void): void {
+    this.onChange = fn;
+  }
+
+  registerOnTouched(fn: () => void): void {
+    this.onTouched = fn;
+  }
+
+  setDisabledState(isDisabled: boolean): void {
+    this.disabled = isDisabled;
+    this.otpControls.forEach((control) => {
+      if (isDisabled) {
+        control.disable();
+      } else {
+        control.enable();
+      }
+    });
   }
 }

@@ -31,27 +31,12 @@
         </p>
       </fieldset>
 
-      <fieldset *ngIf="loginState().otpSent">
-        <label for="otp">OTP</label>
-        <input
-          type="text"
-          id="otp"
-          name="otp"
-          placeholder="OTP"
-          formControlName="otp"
-          autocomplete="off"
-          #otpInput
-          [ngClass]="{ 'error-input': getFormError('otp') }"
-        />
-        <p class="error-msg" *ngIf="getFormError('otp')">
-          {{ getFormError("otp") }}
-        </p>
-      </fieldset>
-
       <ui-otp
+        *ngIf="loginState().otpSent"
         label="OTP"
+        formControlName="otp"
         [errorMessage]="getFormError('otp')"
-        (otpEntered)="onOTPEntered($event)"
+        [autoFocus]="loginState().otpSent"
       ></ui-otp>
 
       <button

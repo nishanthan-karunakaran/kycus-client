@@ -1,9 +1,7 @@
 import {
-  ChangeDetectorRef,
   Component,
   ElementRef,
   OnInit,
-  Renderer2,
   signal,
   ViewChild,
 } from '@angular/core';
@@ -36,8 +34,6 @@ export class SigninComponent implements OnInit {
     private validatorsService: ValidatorsService,
     private authService: AuthService,
     private toast: ToastService,
-    private renderer: Renderer2,
-    private cdr: ChangeDetectorRef,
   ) {}
 
   ngOnInit(): void {
@@ -77,18 +73,11 @@ export class SigninComponent implements OnInit {
     this.loginForm.get('otp')?.updateValueAndValidity();
   }
 
-  private moveFocusToOTP() {
-    this.cdr.detectChanges();
-    this.renderer.selectRootElement(this.otpInput.nativeElement).focus();
-  }
-
   onOTPEntered(otp: string) {
     this.loginForm.patchValue({ otp });
   }
 
   sendOTP() {
-    // this.loginState.mutate((state) => (state.otpSent = true));
-
     this.authService.signin({ email: this.loginForm.value.email }).subscribe({
       next: (result) => {
         console.log('On Next =>', result);
@@ -106,7 +95,6 @@ export class SigninComponent implements OnInit {
 
           this.isSubmitted = false;
           this.updateOTPValidators();
-          this.moveFocusToOTP();
         } else {
           this.toast.error(response.message || 'Something went wrong!');
         }
@@ -115,12 +103,6 @@ export class SigninComponent implements OnInit {
         console.log('Request completed');
       },
     });
-
-    // this.toast.success('OTP sent successfully!');
-
-    // this.isSubmitted = false; // reset the form
-    // this.updateOTPValidators();
-    // this.moveFocusToOTP();
   }
 
   submitOTP() {
