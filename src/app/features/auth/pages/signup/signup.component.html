@@ -54,6 +54,22 @@
         </fieldset>
 
         <fieldset>
+          <label for="companyName">Company Name</label>
+          <input
+            type="text"
+            id="companyName"
+            name="companyName"
+            placeholder="Enter your company name"
+            formControlName="companyName"
+            autofocus
+            [ngClass]="{ 'error-input': getFormError('companyName') }"
+          />
+          <p class="error-msg" *ngIf="getFormError('companyName')">
+            {{ getFormError("companyName") }}
+          </p>
+        </fieldset>
+
+        <fieldset>
           <label for="designation">Designation</label>
           <input
             type="text"
@@ -66,39 +82,6 @@
           />
           <p class="error-msg" *ngIf="getFormError('designation')">
             {{ getFormError("designation") }}
-          </p>
-        </fieldset>
-
-        <fieldset>
-          <label for="aadhaar">Aadhaar</label>
-          <input
-            type="number"
-            id="aadhaar"
-            name="aadhaar"
-            placeholder="Enter your aadhaar"
-            formControlName="aadhaar"
-            autocomplete="off"
-            [ngClass]="{ 'error-input': getFormError('aadhaar') }"
-          />
-          <p class="error-msg" *ngIf="getFormError('aadhaar')">
-            {{ getFormError("aadhaar") }}
-          </p>
-        </fieldset>
-
-        <fieldset>
-          <label for="pan">Pan</label>
-          <input
-            type="text"
-            id="pan"
-            name="pan"
-            placeholder="Enter your pan"
-            formControlName="pan"
-            autofocus
-            inputFormat="uppercase"
-            [ngClass]="{ 'error-input': getFormError('pan') }"
-          />
-          <p class="error-msg" *ngIf="getFormError('pan')">
-            {{ getFormError("pan") }}
           </p>
         </fieldset>
 

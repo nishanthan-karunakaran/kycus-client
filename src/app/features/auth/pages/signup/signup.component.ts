@@ -26,12 +26,8 @@ export class SignupComponent implements OnInit {
         '',
         [Validators.required, this.validatorService.emailValidator()],
       ],
+      companyName: ['', [Validators.required]],
       designation: ['', [Validators.required]],
-      aadhaar: [
-        '',
-        [Validators.required, this.validatorService.aadhaarValidator()],
-      ],
-      pan: ['', [Validators.required, this.validatorService.panValidator()]],
       mobileNo: [
         '',
         [Validators.required, this.validatorService.mobileNumberValidator()],
