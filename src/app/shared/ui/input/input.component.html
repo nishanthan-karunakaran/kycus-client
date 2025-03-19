@@ -6,15 +6,19 @@
     [id]="id"
     [name]="name"
     [placeholder]="placeholder"
-    [readOnly]="readOnly ? true : null"
-    [disabled]="disabled ? true : null"
-    [required]="required ? true : null"
     [ngClass]="{ 'error-input': errorMessage }"
     (input)="handleInput($event)"
+    [attr.disabled]="disabled ? true : null"
+    [attr.required]="required ? true : null"
+    [attr.readonly]="readonly ? true : null"
+    [attr.autofocus]="autofocus ? true : null"
+    [attr.maxlength]="maxlength !== undefined ? maxlength : null"
+    [attr.min]="min !== undefined ? min : null"
+    [attr.max]="max !== undefined ? max : null"
+    [attr.pattern]="pattern"
+    [attr.autocomplete]="autocomplete"
+    #inputElement
   />
-  <!-- [attr]="attrs" -->
-  <!-- [attr.autoFocus]="autoFocus ? true : null" -->
-  <!-- [attr]="additionalAttrs" -->
 
   <p class="error-msg" *ngIf="errorMessage">
     {{ errorMessage }}
