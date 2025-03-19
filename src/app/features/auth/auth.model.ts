@@ -1,4 +1,4 @@
-export interface SigninState {
+export interface AuthStep {
   otpSent: boolean;
   otpVerified: boolean;
 }

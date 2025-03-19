@@ -1,7 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, signal } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { HelperService } from 'src/app/core/services/helpers.service';
 import { ValidatorsService } from 'src/app/core/services/validators.service';
+import { AuthStep } from 'src/app/features/auth/auth.model';
+import { ToastService } from 'src/app/shared/ui/toast/toast.service';
 
 @Component({
   selector: 'app-signup',
@@ -12,11 +14,16 @@ export class SignupComponent implements OnInit {
   isLoading = false;
   isSubmitted = false;
   signupForm!: FormGroup;
+  signupState = signal<AuthStep>({
+    otpSent: false,
+    otpVerified: false,
+  });
 
   constructor(
     private fb: FormBuilder,
     private validatorService: ValidatorsService,
     private helperService: HelperService,
+    private toast: ToastService,
   ) {}
 
   ngOnInit(): void {
@@ -26,17 +33,38 @@ export class SignupComponent implements OnInit {
         '',
         [Validators.required, this.validatorService.emailValidator()],
       ],
-      companyName: ['', [Validators.required]],
-      designation: ['', [Validators.required]],
-      mobileNo: [
-        '',
-        [Validators.required, this.validatorService.mobileNumberValidator()],
-      ],
     });
   }
 
+  addOTPField() {
+    this.isSubmitted = false;
+    this.signupForm.addControl(
+      'otp',
+      this.fb.control('', [Validators.required, Validators.minLength(6)]),
+    );
+  }
+
+  addAllFields() {
+    this.isSubmitted = false;
+    this.signupForm.addControl(
+      'companyName',
+      this.fb.control('', Validators.required),
+    );
+    this.signupForm.addControl(
+      'designation',
+      this.fb.control('', Validators.required),
+    );
+    this.signupForm.addControl(
+      'mobileNo',
+      this.fb.control('', [
+        Validators.required,
+        this.validatorService.mobileNumberValidator(),
+      ]),
+    );
+  }
+
   getRequiredMessage(field: string): string {
-    const capsErrorFields = ['aadhaar', 'pan', 'otp'];
+    const capsErrorFields = ['aadhaar', 'pan', 'otp', 'companyName'];
 
     if (capsErrorFields.includes(field)) {
       return `${field.toUpperCase()} is required`;
@@ -72,8 +100,46 @@ export class SignupComponent implements OnInit {
     }
   }
 
+  handleLoading() {
+    this.isLoading = true;
+    setTimeout(() => {
+      this.isLoading = false;
+    }, 2000);
+  }
+
+  sendEmailOTP() {
+    this.signupState.mutate((state) => (state.otpSent = true));
+    this.addOTPField();
+    this.handleLoading();
+    this.toast.success('OTP sent successfully!');
+  }
+
+  verifyEmailOTP() {
+    this.signupState.mutate((state) => (state.otpVerified = true));
+    this.addAllFields();
+    this.handleLoading();
+    this.toast.success('Email verified successfully!');
+  }
+
+  signup() {
+    this.handleLoading();
+    this.toast.success('Account created successfully!');
+  }
+
   submitForm() {
     this.isSubmitted = true;
+
+    if (this.signupForm.invalid) return;
+
+    if (!this.signupState().otpSent) {
+      this.sendEmailOTP();
+    } else if (!this.signupState().otpVerified) {
+      this.verifyEmailOTP();
+    } else {
+      this.signup();
+    }
+
+    console.log(this.signupForm.value);
 
     // this.signupForm.get('mobileNo')?.setErrors({ 'validationError': 'Vanakkam' });
   }

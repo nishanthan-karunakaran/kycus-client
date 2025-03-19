@@ -17,92 +17,81 @@
       [formGroup]="signupForm"
       (submit)="submitForm()"
     >
+      <!-- class="no-scrollbar grid h-[50vh] w-full flex-grow auto-rows-min gap-4 overflow-y-auto p-1 sm:h-auto sm:grid-cols-2 sm:justify-between" -->
       <div
-        class="no-scrollbar grid h-[50vh] w-full flex-grow auto-rows-min gap-4 overflow-y-auto p-1 sm:h-auto sm:grid-cols-2 sm:justify-between"
+        class="no-scrollbar flex h-[50vh] w-full flex-grow flex-col gap-4 overflow-y-auto p-1 sm:h-auto"
       >
-        <fieldset>
-          <label for="name">Name</label>
-          <input
-            type="text"
-            id="name"
-            name="name"
-            placeholder="Enter your name"
-            formControlName="name"
-            autofocus
-            [ngClass]="{ 'error-input': getFormError('name') }"
-          />
-          <p class="error-msg" *ngIf="getFormError('name')">
-            {{ getFormError("name") }}
-          </p>
-        </fieldset>
+        <ui-input
+          label="Name"
+          id="name"
+          name="name"
+          placeholder="Enter your name"
+          formControlName="name"
+          autofocus
+          [errorMessage]="getFormError('name')"
+        />
 
-        <fieldset>
-          <label for="email">Official Mail-ID</label>
-          <input
-            type="email"
-            id="email"
-            name="email"
-            placeholder="Enter your E-Mail"
-            formControlName="email"
-            autocomplete="off"
-            inputFormat="lowercase"
-            [ngClass]="{ 'error-input': getFormError('email') }"
-          />
-          <p class="error-msg" *ngIf="getFormError('email')">
-            {{ getFormError("email") }}
-          </p>
-        </fieldset>
+        <ui-input
+          label="Official Mail-ID"
+          type="email"
+          id="email"
+          name="email"
+          formControlName="email"
+          placeholder="Enter your email"
+          [errorMessage]="getFormError('email')"
+        ></ui-input>
 
-        <fieldset>
-          <label for="companyName">Company Name</label>
-          <input
-            type="text"
+        <ng-container
+          *ngIf="signupState().otpSent && !signupState().otpVerified"
+        >
+          <ui-otp
+            label="OTP"
+            [errorMessage]="getFormError('otp')"
+            formControlName="otp"
+            [autoFocus]="signupState().otpSent"
+          />
+        </ng-container>
+
+        <ng-container
+          *ngIf="signupState().otpSent && signupState().otpVerified"
+        >
+          <ui-input
+            label="Company Name"
             id="companyName"
             name="companyName"
             placeholder="Enter your company name"
             formControlName="companyName"
-            autofocus
-            [ngClass]="{ 'error-input': getFormError('companyName') }"
+            [errorMessage]="getFormError('companyName')"
           />
-          <p class="error-msg" *ngIf="getFormError('companyName')">
-            {{ getFormError("companyName") }}
-          </p>
-        </fieldset>
 
-        <fieldset>
-          <label for="designation">Designation</label>
-          <input
-            type="text"
+          <ui-input
+            label="Designation"
             id="designation"
             name="designation"
             placeholder="Enter your designation"
             formControlName="designation"
-            autofocus
-            [ngClass]="{ 'error-input': getFormError('designation') }"
+            [errorMessage]="getFormError('designation')"
           />
-          <p class="error-msg" *ngIf="getFormError('designation')">
-            {{ getFormError("designation") }}
-          </p>
-        </fieldset>
 
-        <fieldset>
-          <label for="mobileNo">Mobile Number</label>
-          <input
-            type="number"
+          <ui-input
+            label="Mobile Number"
             id="mobileNo"
             name="mobileNo"
             placeholder="Enter your mobile number"
             formControlName="mobileNo"
-            autocomplete="off"
-            [ngClass]="{ 'error-input': getFormError('mobileNo') }"
+            [errorMessage]="getFormError('mobileNo')"
           />
-          <p class="error-msg" *ngIf="getFormError('mobileNo')">
-            {{ getFormError("mobileNo") }}
-          </p>
-        </fieldset>
+        </ng-container>
       </div>
 
-      <button type="submit" class="m-1 w-full">REGISTER</button>
+      <button
+        type="submit"
+        [ngClass]="{ loading: isLoading }"
+        [disabled]="signupForm.invalid || isLoading"
+        class="m-1 w-full"
+      >
+        REGISTER
+      </button>
     </form>
     <p>Already have an account? <a routerLink="/auth/signin">LOGIN</a></p>
   </section>

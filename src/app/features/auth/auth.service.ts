@@ -9,19 +9,25 @@ import { ApiService } from 'src/app/core/services/api.service';
 export class AuthService {
   constructor(private api: ApiService) {}
 
-  public getAuthToken(): string | null {
+  getAuthToken(): string | null {
     return localStorage.getItem('authToken');
   }
 
-  public setAuthToken(token: string): void {
+  setAuthToken(token: string): void {
     localStorage.setItem('authToken', token);
   }
 
-  public logout(): void {
+  logout(): void {
     localStorage.removeItem('authToken');
   }
 
-  public signin(data: any): ApiResult {
-    return this.api.post<ApiResponse<any>>(API_URL.AUTH.VALIDATE_EMAIL, data);
+  sendEmailOTP(data: { email: string }): ApiResult {
+    return this.api.post<ApiResponse<any>>(API_URL.AUTH.SEND_EMAIL_OTP, {
+      data,
+    });
+  }
+
+  signin(data: any): ApiResult {
+    return this.api.post<ApiResponse<any>>(API_URL.AUTH.SEND_EMAIL_OTP, data);
   }
 }

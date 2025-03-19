@@ -9,7 +9,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ApiStatus } from 'src/app/core/constants/api.response';
 import { HelperService } from 'src/app/core/services/helpers.service';
 import { ValidatorsService } from 'src/app/core/services/validators.service';
-import { SigninState } from 'src/app/features/auth/auth.model';
+import { AuthStep } from 'src/app/features/auth/auth.model';
 import { AuthService } from 'src/app/features/auth/auth.service';
 import { ToastService } from 'src/app/shared/ui/toast/toast.service';
 
@@ -21,7 +21,7 @@ import { ToastService } from 'src/app/shared/ui/toast/toast.service';
 export class SigninComponent implements OnInit {
   isSubmitted = false;
   isLoading = false;
-  loginState = signal<SigninState>({
+  loginState = signal<AuthStep>({
     otpSent: false,
     otpVerified: false,
   });
