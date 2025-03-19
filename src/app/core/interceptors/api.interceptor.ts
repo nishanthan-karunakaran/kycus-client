@@ -5,12 +5,15 @@ import {
   HttpRequest,
 } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 import { AuthService } from 'src/app/features/auth/auth.service';
 import { environment } from 'src/environments/enviroment';
 
 @Injectable()
 export class ApiInterceptor implements HttpInterceptor {
+  private cancelRequests$ = new Subject<string>(); // Subject to cancel specific requests
+
   constructor(private authService: AuthService) {}
 
   intercept(
@@ -19,14 +22,21 @@ export class ApiInterceptor implements HttpInterceptor {
   ): Observable<HttpEvent<any>> {
     const token = this.authService.getAuthToken();
     const apiBaseUrl = environment.apiBaseUrl;
+    const fullUrl = apiBaseUrl + req.url;
 
+    // Cancel previous requests with the same URL
+    this.cancelRequests$.next(fullUrl);
+
+    // Clone the request and attach headers
     const clonedRequest = req.clone({
-      url: apiBaseUrl + req.url,
+      url: fullUrl,
       setHeaders: {
         Authorization: token ? `Bearer ${token}` : '',
       },
     });
 
-    return next.handle(clonedRequest);
+    return next.handle(clonedRequest).pipe(
+      takeUntil(this.cancelRequests$.asObservable()), // Cancel on duplicate requests
+    );
   }
 }

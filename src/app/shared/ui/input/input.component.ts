@@ -45,13 +45,31 @@ export class InputComponent implements OnChanges, ControlValueAccessor {
   onTouched = () => {};
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes['autofocus']) {
-      this.focusInput();
+    for (const propName in changes) {
+      if (changes.hasOwnProperty(propName)) {
+        const change = changes[propName];
+        console.log(`Input property '${propName}' changed:`, change);
+
+        if (propName === 'autofocus' && change.currentValue) {
+          this.focusInput();
+        }
+
+        if (propName === 'disabled') {
+          this.setDisabledState(change.currentValue);
+        }
+      }
     }
   }
 
   focusInput(): void {
     setTimeout(() => this.inputRef?.nativeElement?.focus(), 0);
+  }
+
+  setDisabledState(isDisabled: boolean): void {
+    this.disabled = isDisabled;
+    if (this.inputRef) {
+      this.inputRef.nativeElement.disabled = isDisabled;
+    }
   }
 
   writeValue(value: string | number | boolean): void {

@@ -3,6 +3,8 @@ export const API_URL = {
     SEND_EMAIL_OTP: '/auth/kycus/sendEmailOtp',
     VALIDATE_EMAIL_OTP: '/auth/kycus/validateEmail',
     SIGNUP: '/auth/kycus/signup',
+    REQUEST_LOGIN_OTP: '/auth/kycus/requestLoginOtp',
+    LOGIN: '/auth/kycus/login',
   },
 };
 

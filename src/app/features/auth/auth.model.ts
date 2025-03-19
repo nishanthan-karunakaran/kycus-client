@@ -4,10 +4,23 @@ export interface AuthStep {
 }
 
 export interface Signin {
+  username: string;
+  otp: string;
+}
+
+export interface RequestLoginOtp {
+  username: string;
+}
+
+export interface ValidataEmailOTP {
   email: string;
   otp: string;
 }
 
-export interface SigninEmailValidation {
+export interface Signup {
+  namre: string;
   email: string;
+  companyName: string;
+  designation: string;
+  mobileNo: string;
 }

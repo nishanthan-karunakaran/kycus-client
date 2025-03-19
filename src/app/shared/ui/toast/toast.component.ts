@@ -13,7 +13,7 @@ export class ToastComponent {
     const newToast = {
       ...toast,
       options: {
-        duration: toast.options.duration ?? 3000,
+        duration: toast.options.duration ?? 2000,
         dismissable: toast.options.dismissable ?? true,
         outlined: toast.options.outlined ?? false,
         autoClose: toast.options.autoClose ?? true,

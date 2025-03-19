@@ -1,11 +1,13 @@
 import {
   Component,
   ElementRef,
+  OnDestroy,
   OnInit,
   signal,
   ViewChild,
 } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Subject, takeUntil } from 'rxjs';
 import { ApiStatus } from 'src/app/core/constants/api.response';
 import { HelperService } from 'src/app/core/services/helpers.service';
 import { ValidatorsService } from 'src/app/core/services/validators.service';
@@ -18,7 +20,8 @@ import { ToastService } from 'src/app/shared/ui/toast/toast.service';
   templateUrl: './signin.component.html',
   styleUrls: ['./signin.component.scss'],
 })
-export class SigninComponent implements OnInit {
+export class SigninComponent implements OnInit, OnDestroy {
+  private destroy$ = new Subject<void>();
   isSubmitted = false;
   isLoading = false;
   loginState = signal<AuthStep>({
@@ -73,11 +76,40 @@ export class SigninComponent implements OnInit {
     this.loginForm.get('otp')?.updateValueAndValidity();
   }
 
-  sendOTP() {
-    this.authService.signin({ email: this.loginForm.value.email }).subscribe({
-      next: (result) => {
-        console.log('On Next =>', result);
+  requestLoginOTP() {
+    this.authService
+      .requestLoginOTP({ username: this.loginForm.value.email })
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (result) => {
+          const { loading, response } = result;
+          this.isLoading = loading;
 
+          if (!response) return;
+
+          const { status } = response;
+
+          if (status === ApiStatus.SUCCESS) {
+            this.loginState.mutate((state) => (state.otpSent = true));
+            this.toast.success('OTP sent successfully!');
+
+            this.isSubmitted = false;
+            this.updateOTPValidators();
+          } else {
+            this.toast.error(response.message || 'Something went wrong!');
+          }
+        },
+      });
+  }
+
+  signin() {
+    const paylaod = {
+      username: this.loginForm.value.email,
+      otp: this.loginForm.value.otp,
+    };
+
+    this.authService.signin(paylaod).subscribe({
+      next: (result) => {
         const { loading, response } = result;
         this.isLoading = loading;
 
@@ -86,23 +118,12 @@ export class SigninComponent implements OnInit {
         const { status } = response;
 
         if (status === ApiStatus.SUCCESS) {
-          this.loginState.mutate((state) => (state.otpSent = true));
-          this.toast.success('OTP sent successfully!');
-
-          this.isSubmitted = false;
-          this.updateOTPValidators();
+          this.toast.success('Logged in successfully!');
         } else {
           this.toast.error(response.message || 'Something went wrong!');
         }
       },
-      complete: () => {
-        console.log('Request completed');
-      },
     });
-  }
-
-  submitOTP() {
-    /* i call the service later */
   }
 
   submitLoginForm() {
@@ -113,9 +134,14 @@ export class SigninComponent implements OnInit {
     if (this.loginForm.invalid) return; // Stop execution if form is invalid
 
     if (this.loginState().otpSent) {
-      this.submitOTP();
+      this.signin();
     } else {
-      this.sendOTP();
+      this.requestLoginOTP();
     }
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }

@@ -1,8 +1,10 @@
 import { Component, OnInit, signal } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { ApiStatus } from 'src/app/core/constants/api.response';
 import { HelperService } from 'src/app/core/services/helpers.service';
 import { ValidatorsService } from 'src/app/core/services/validators.service';
 import { AuthStep } from 'src/app/features/auth/auth.model';
+import { AuthService } from 'src/app/features/auth/auth.service';
 import { ToastService } from 'src/app/shared/ui/toast/toast.service';
 
 @Component({
@@ -24,6 +26,7 @@ export class SignupComponent implements OnInit {
     private validatorService: ValidatorsService,
     private helperService: HelperService,
     private toast: ToastService,
+    private authService: AuthService,
   ) {}
 
   ngOnInit(): void {
@@ -120,30 +123,72 @@ export class SignupComponent implements OnInit {
     return hasEmptyRequiredFields || isOtpInvalid;
   }
 
-  handleLoading() {
-    this.isLoading = true;
-    setTimeout(() => {
-      this.isLoading = false;
-    }, 2000);
-  }
-
   sendEmailOTP() {
-    this.signupState.mutate((state) => (state.otpSent = true));
-    this.addOTPField();
-    this.handleLoading();
-    this.toast.success('OTP sent successfully!');
+    this.authService
+      .sendEmailOTP({ email: this.signupForm.value.email })
+      .subscribe({
+        next: (result) => {
+          const { loading, response } = result;
+          this.isLoading = loading;
+
+          if (!response) return;
+
+          const { status } = response;
+
+          if (status === ApiStatus.SUCCESS) {
+            this.signupState.mutate((state) => (state.otpSent = true));
+            this.addOTPField();
+            this.toast.success('OTP sent successfully!');
+          } else {
+            this.toast.error(response.message || 'Something went wrong!');
+          }
+        },
+      });
   }
 
   verifyEmailOTP() {
-    this.signupState.mutate((state) => (state.otpVerified = true));
-    this.addAllFields();
-    this.handleLoading();
-    this.toast.success('Email verified successfully!');
+    const payload = {
+      email: this.signupForm.value.email,
+      otp: this.signupForm.value.otp,
+    };
+
+    this.authService.verifyEmailOTP(payload).subscribe({
+      next: (result) => {
+        const { loading, response } = result;
+        this.isLoading = loading;
+
+        if (!response) return;
+
+        const { status } = response;
+
+        if (status === ApiStatus.SUCCESS) {
+          this.signupState.mutate((state) => (state.otpVerified = true));
+          this.addAllFields();
+          this.toast.success('OTP verified successfully!');
+        } else {
+          this.toast.error(response.message || 'Something went wrong!');
+        }
+      },
+    });
   }
 
   signup() {
-    this.handleLoading();
-    this.toast.success('Account created successfully!');
+    this.authService.signup(this.signupForm.value).subscribe({
+      next: (result) => {
+        const { loading, response } = result;
+        this.isLoading = loading;
+
+        if (!response) return;
+
+        const { status } = response;
+
+        if (status === ApiStatus.SUCCESS) {
+          this.toast.success('Account created successfully!');
+        } else {
+          this.toast.error(response.message || 'Something went wrong!');
+        }
+      },
+    });
   }
 
   submitForm() {

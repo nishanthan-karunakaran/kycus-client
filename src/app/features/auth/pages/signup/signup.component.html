@@ -28,6 +28,8 @@
           placeholder="Enter your name"
           formControlName="name"
           [autofocus]="true"
+          [readonly]="signupState().otpSent"
+          [disabled]="signupState().otpSent"
           [errorMessage]="getFormError('name')"
         />
 
