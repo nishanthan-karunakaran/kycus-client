@@ -5,6 +5,7 @@ import { RouterModule } from '@angular/router';
 import {
   AlertOctagon,
   AlertTriangle,
+  Check,
   CheckCircle,
   Info,
   LucideAngularModule,
@@ -32,6 +33,7 @@ import { InputFormatDirective } from '../core/directives/input-format.directive'
       AlertTriangle,
       Info,
       AlertOctagon,
+      Check,
     }),
   ],
   exports: [

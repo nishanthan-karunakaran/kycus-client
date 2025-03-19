@@ -41,6 +41,7 @@
           formControlName="email"
           placeholder="Enter your email"
           [errorMessage]="getFormError('email')"
+          [icon]="signupState().otpVerified ? 'check' : null"
         ></ui-input>
 
         <ng-container
@@ -52,6 +53,11 @@
             formControlName="otp"
             [autofocus]="signupState().otpSent"
           />
+          <p>
+            Didn't receive the OTP?
+            <a (click)="sendEmailOTP(true)">Resend OTP</a>
+            <span *ngIf="resendOTPTimer > 0"> in {{ resendOTPTimer }}</span>
+          </p>
         </ng-container>
 
         <ng-container

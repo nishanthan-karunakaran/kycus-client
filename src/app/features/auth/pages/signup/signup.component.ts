@@ -1,5 +1,6 @@
-import { Component, OnInit, signal } from '@angular/core';
+import { Component, OnDestroy, OnInit, signal } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { interval, Subscription, takeWhile } from 'rxjs';
 import { ApiStatus } from 'src/app/core/constants/api.response';
 import { HelperService } from 'src/app/core/services/helpers.service';
 import { ValidatorsService } from 'src/app/core/services/validators.service';
@@ -12,7 +13,7 @@ import { ToastService } from 'src/app/shared/ui/toast/toast.service';
   templateUrl: './signup.component.html',
   styleUrls: ['./signup.component.scss'],
 })
-export class SignupComponent implements OnInit {
+export class SignupComponent implements OnInit, OnDestroy {
   isLoading = false;
   isSubmitted = false;
   signupForm!: FormGroup;
@@ -20,6 +21,9 @@ export class SignupComponent implements OnInit {
     otpSent: false,
     otpVerified: false,
   });
+  resendOTPTimer: number = 0;
+  private intervalSubscription: Subscription | null = null;
+  private readonly initialTime = 30;
 
   constructor(
     private fb: FormBuilder,
@@ -123,27 +127,49 @@ export class SignupComponent implements OnInit {
     return hasEmptyRequiredFields || isOtpInvalid;
   }
 
-  sendEmailOTP() {
-    this.authService
-      .sendEmailOTP({ email: this.signupForm.value.email })
-      .subscribe({
-        next: (result) => {
-          const { loading, response } = result;
-          this.isLoading = loading;
+  startResendTimer() {
+    this.resendOTPTimer = this.initialTime;
 
-          if (!response) return;
-
-          const { status } = response;
-
-          if (status === ApiStatus.SUCCESS) {
-            this.signupState.mutate((state) => (state.otpSent = true));
-            this.addOTPField();
-            this.toast.success('OTP sent successfully!');
-          } else {
-            this.toast.error(response.message || 'Something went wrong!');
-          }
-        },
+    this.intervalSubscription = interval(1000)
+      .pipe(takeWhile(() => this.resendOTPTimer > 0))
+      .subscribe(() => {
+        this.resendOTPTimer--;
       });
+  }
+
+  stopResendTimer() {
+    if (this.intervalSubscription) {
+      this.intervalSubscription.unsubscribe();
+    }
+    this.resendOTPTimer = 0;
+  }
+
+  sendEmailOTP(isResend = false) {
+    const canProceed = isResend ? this.resendOTPTimer <= 0 : true;
+
+    if (canProceed) {
+      this.authService
+        .sendEmailOTP({ email: this.signupForm.value.email })
+        .subscribe({
+          next: (result) => {
+            const { loading, response } = result;
+            this.isLoading = loading;
+
+            if (!response) return;
+
+            const { status } = response;
+
+            if (status === ApiStatus.SUCCESS) {
+              this.signupState.mutate((state) => (state.otpSent = true));
+              this.startResendTimer();
+              this.addOTPField();
+              this.toast.success('OTP sent successfully!');
+            } else {
+              this.toast.error(response.message || 'Something went wrong!');
+            }
+          },
+        });
+    }
   }
 
   verifyEmailOTP() {
@@ -165,6 +191,7 @@ export class SignupComponent implements OnInit {
           this.signupState.mutate((state) => (state.otpVerified = true));
           this.addAllFields();
           this.toast.success('OTP verified successfully!');
+          this.stopResendTimer();
         } else {
           this.toast.error(response.message || 'Something went wrong!');
         }
@@ -207,5 +234,11 @@ export class SignupComponent implements OnInit {
     console.log(this.signupForm.value);
 
     // this.signupForm.get('mobileNo')?.setErrors({ 'validationError': 'Vanakkam' });
+  }
+
+  ngOnDestroy() {
+    if (this.intervalSubscription) {
+      this.intervalSubscription.unsubscribe();
+    }
   }
 }

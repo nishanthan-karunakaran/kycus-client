@@ -1,26 +1,37 @@
 <fieldset>
-  <label *ngIf="label" [for]="id || name">{{ label }}</label>
+  <label *ngIf="label" [for]="id || name" class="block">{{ label }}</label>
 
-  <input
-    [type]="type"
-    [id]="id"
-    [name]="name"
-    [placeholder]="placeholder"
-    [ngClass]="{ 'error-input': errorMessage }"
-    (input)="handleInput($event)"
-    [attr.disabled]="disabled ? true : null"
-    [attr.required]="required ? true : null"
-    [attr.readonly]="readonly ? true : null"
-    [attr.autofocus]="autofocus ? true : null"
-    [attr.maxlength]="maxlength !== undefined ? maxlength : null"
-    [attr.min]="min !== undefined ? min : null"
-    [attr.max]="max !== undefined ? max : null"
-    [attr.pattern]="pattern"
-    [attr.autocomplete]="autocomplete"
-    #inputElement
-  />
+  <div class="relative">
+    <input
+      [type]="type"
+      [id]="id"
+      [name]="name"
+      [placeholder]="placeholder"
+      class="w-full pr-10"
+      [ngClass]="{ 'error-input': errorMessage }"
+      (input)="handleInput($event)"
+      [attr.disabled]="disabled ? true : null"
+      [attr.required]="required ? true : null"
+      [attr.readonly]="readonly ? true : null"
+      [attr.autofocus]="autofocus ? true : null"
+      [attr.maxlength]="maxlength !== undefined ? maxlength : null"
+      [attr.min]="min !== undefined ? min : null"
+      [attr.max]="max !== undefined ? max : null"
+      [attr.pattern]="pattern"
+      [attr.autocomplete]="autocomplete"
+      #inputElement
+    />
+    <lucide-icon
+      *ngIf="icon"
+      [name]="icon"
+      color="green"
+      size="24"
+      class="pointer-events-none absolute right-2 top-1/2 -translate-y-1/2 transform"
+      aria-hidden="true"
+    />
+  </div>
 
-  <p class="error-msg" *ngIf="errorMessage">
+  <p *ngIf="errorMessage" class="error-msg" aria-live="assertive">
     {{ errorMessage }}
   </p>
 </fieldset>

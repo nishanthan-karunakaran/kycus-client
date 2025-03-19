@@ -1,4 +1,5 @@
 import {
+  ChangeDetectorRef,
   Component,
   ElementRef,
   forwardRef,
@@ -37,6 +38,7 @@ export class InputComponent implements OnChanges, ControlValueAccessor {
   @Input() pattern?: string | null = null;
   @Input() autocomplete?: 'on' | 'off' | null = null;
   @Input() errorMessage: string | null = null;
+  @Input() icon: string | null = null;
 
   value: string | number | boolean = '';
   @ViewChild('inputElement') inputRef!: ElementRef<HTMLInputElement>;
@@ -44,21 +46,57 @@ export class InputComponent implements OnChanges, ControlValueAccessor {
   onChange = (value: any) => {};
   onTouched = () => {};
 
+  constructor(private cdr: ChangeDetectorRef) {}
+
   ngOnChanges(changes: SimpleChanges): void {
     for (const propName in changes) {
       if (changes.hasOwnProperty(propName)) {
         const change = changes[propName];
-        console.log(`Input property '${propName}' changed:`, change);
+        // console.log(`Input property '${propName}' changed:`, change);
 
+        // Handle autofocus and set focus if true
         if (propName === 'autofocus' && change.currentValue) {
           this.focusInput();
         }
 
+        // Handle disabled state dynamically
         if (propName === 'disabled') {
           this.setDisabledState(change.currentValue);
         }
+
+        // Handle readonly state dynamically
+        if (propName === 'readonly') {
+          this.setReadonlyState(change.currentValue);
+        }
+
+        // Update other properties if necessary
+        if (this.inputRef) {
+          if (propName === 'maxlength') {
+            this.inputRef.nativeElement.maxLength = this.maxlength || -1;
+          }
+
+          if (propName === 'min') {
+            this.inputRef.nativeElement.min = this.min ? String(this.min) : '';
+          }
+
+          if (propName === 'max') {
+            this.inputRef.nativeElement.max = this.max ? String(this.max) : '';
+          }
+
+          if (propName === 'pattern') {
+            this.inputRef.nativeElement.pattern = this.pattern || '';
+          }
+
+          if (propName === 'autocomplete') {
+            this.inputRef.nativeElement.autocomplete =
+              this.autocomplete || 'off';
+          }
+        }
       }
     }
+
+    // Trigger change detection to ensure input reflects changes immediately
+    this.cdr.detectChanges();
   }
 
   focusInput(): void {
@@ -69,6 +107,13 @@ export class InputComponent implements OnChanges, ControlValueAccessor {
     this.disabled = isDisabled;
     if (this.inputRef) {
       this.inputRef.nativeElement.disabled = isDisabled;
+    }
+  }
+
+  setReadonlyState(isReadonly: boolean): void {
+    this.readonly = isReadonly;
+    if (this.inputRef) {
+      this.inputRef.nativeElement.readOnly = isReadonly;
     }
   }
 
