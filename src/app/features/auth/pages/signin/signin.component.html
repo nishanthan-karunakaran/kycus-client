@@ -36,9 +36,9 @@
         id="email"
         name="email"
         placeholder="Enter your email"
-        [readOnly]="loginState().otpSent"
+        [readonly]="loginState().otpSent"
         formControlName="email"
-        autofocus
+        [autofocus]="true"
         inputFormat="lowercase"
         [errorMessage]="getFormError('email')"
       ></ui-input>
@@ -48,7 +48,7 @@
         label="OTP"
         formControlName="otp"
         [errorMessage]="getFormError('otp')"
-        [autoFocus]="loginState().otpSent"
+        [autofocus]="loginState().otpSent"
       ></ui-otp>
 
       <button

@@ -46,21 +46,21 @@ export class SignupComponent implements OnInit {
 
   addAllFields() {
     this.isSubmitted = false;
-    this.signupForm.addControl(
-      'companyName',
-      this.fb.control('', Validators.required),
-    );
-    this.signupForm.addControl(
-      'designation',
-      this.fb.control('', Validators.required),
-    );
-    this.signupForm.addControl(
-      'mobileNo',
-      this.fb.control('', [
-        Validators.required,
-        this.validatorService.mobileNumberValidator(),
-      ]),
-    );
+    const additionalFields = {
+      companyName: ['', Validators.required],
+      designation: ['', Validators.required],
+      mobileNo: [
+        '',
+        [Validators.required, this.validatorService.mobileNumberValidator()],
+      ],
+    };
+
+    Object.entries(additionalFields).forEach(([key, config]) => {
+      this.signupForm.addControl(
+        key,
+        this.fb.control(...(config as [any, any])),
+      );
+    });
   }
 
   getRequiredMessage(field: string): string {
@@ -98,6 +98,26 @@ export class SignupComponent implements OnInit {
       default:
         return null;
     }
+  }
+
+  isButtonDisabled(): boolean {
+    if (this.isLoading) return true; // btn to be disabled if loading
+
+    // Get all required fields
+    const requiredFields = Object.keys(this.signupForm.controls).filter((key) =>
+      this.signupForm.get(key)?.hasValidator(Validators.required),
+    );
+
+    // Check if any required field is empty
+    const hasEmptyRequiredFields = requiredFields.some(
+      (field) => !this.signupForm.get(field)?.value,
+    );
+
+    // Check OTP length if the field exists
+    const otpField = this.signupForm.get('otp');
+    const isOtpInvalid = otpField ? otpField.value?.length !== 6 : false;
+
+    return hasEmptyRequiredFields || isOtpInvalid;
   }
 
   handleLoading() {

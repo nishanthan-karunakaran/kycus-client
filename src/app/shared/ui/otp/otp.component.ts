@@ -33,7 +33,7 @@ export class OtpComponent implements OnInit, OnChanges, AfterViewInit {
   @Input() length: number = 6;
   @Input() onlyNumeric: boolean = true;
   @Input() disabled: boolean = false;
-  @Input() autoFocus: boolean = false;
+  @Input() autofocus: boolean = false;
   @Input() required: boolean = false;
   @Input() label: string = '';
   @Input() errorMessage: string | null = '';
@@ -67,7 +67,7 @@ export class OtpComponent implements OnInit, OnChanges, AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    if (this.autoFocus && this.otpInputs) {
+    if (this.autofocus && this.otpInputs) {
       this.handleAutoFocus();
     }
   }

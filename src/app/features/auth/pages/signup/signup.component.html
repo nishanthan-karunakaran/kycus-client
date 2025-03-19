@@ -27,7 +27,7 @@
           name="name"
           placeholder="Enter your name"
           formControlName="name"
-          autofocus
+          [autofocus]="true"
           [errorMessage]="getFormError('name')"
         />
 
@@ -48,7 +48,7 @@
             label="OTP"
             [errorMessage]="getFormError('otp')"
             formControlName="otp"
-            [autoFocus]="signupState().otpSent"
+            [autofocus]="signupState().otpSent"
           />
         </ng-container>
 
@@ -62,6 +62,7 @@
             placeholder="Enter your company name"
             formControlName="companyName"
             [errorMessage]="getFormError('companyName')"
+            [autofocus]="signupState().otpVerified"
           />
 
           <ui-input
@@ -87,7 +88,7 @@
       <button
         type="submit"
         [ngClass]="{ loading: isLoading }"
-        [disabled]="signupForm.invalid || isLoading"
+        [disabled]="isButtonDisabled()"
         class="m-1 w-full"
       >
         REGISTER
