@@ -11,13 +11,14 @@ import {
   X,
   XCircle,
 } from 'lucide-angular';
+import { InputComponent } from 'src/app/shared/ui/input/input.component';
 import { ModalComponent } from 'src/app/shared/ui/modal/modal.component';
 import { OtpComponent } from 'src/app/shared/ui/otp/otp.component';
 import { ToastComponent } from 'src/app/shared/ui/toast/toast.component';
 import { InputFormatDirective } from '../core/directives/input-format.directive';
 
 @NgModule({
-  declarations: [ToastComponent, ModalComponent, OtpComponent],
+  declarations: [ToastComponent, ModalComponent, OtpComponent, InputComponent],
   imports: [
     CommonModule,
     RouterModule,
@@ -43,6 +44,7 @@ import { InputFormatDirective } from '../core/directives/input-format.directive'
     ToastComponent,
     ModalComponent,
     OtpComponent,
+    InputComponent,
   ],
 })
 export class SharedModule {}

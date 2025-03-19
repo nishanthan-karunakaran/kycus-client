@@ -51,6 +51,10 @@
     @apply rounded-md border-none bg-primary px-4 py-2 text-center font-semibold text-white transition-all duration-200 ease-in-out focus:border-primary focus:ring-1 focus:ring-primary disabled:cursor-not-allowed disabled:opacity-70;
   }
 
+  ui-input {
+    all: unset !important;
+  }
+
   [type="text"],
   [type="email"],
   [type="password"],
@@ -67,6 +71,10 @@
   [type="checkbox"] {
     @apply accent-primary focus:ring-2 focus:ring-primary;
   }
+
+  // input:not(ui-input) {
+  //   @apply form-input; /* Ensures Tailwind styles apply only to real inputs */
+  // }
 
   select {
     @apply cursor-pointer;

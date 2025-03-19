@@ -1,0 +1,22 @@
+<fieldset>
+  <label *ngIf="label" [for]="id || name">{{ label }}</label>
+
+  <input
+    [type]="type"
+    [id]="id"
+    [name]="name"
+    [placeholder]="placeholder"
+    [readOnly]="readOnly ? true : null"
+    [disabled]="disabled ? true : null"
+    [required]="required ? true : null"
+    [ngClass]="{ 'error-input': errorMessage }"
+    (input)="handleInput($event)"
+  />
+  <!-- [attr]="attrs" -->
+  <!-- [attr.autoFocus]="autoFocus ? true : null" -->
+  <!-- [attr]="additionalAttrs" -->
+
+  <p class="error-msg" *ngIf="errorMessage">
+    {{ errorMessage }}
+  </p>
+</fieldset>
