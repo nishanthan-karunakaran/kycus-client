@@ -1,11 +1,15 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { DashboardComponent } from './pages/dashboard/dashboard.component';
+import { WalletComponent } from './pages/wallet/wallet.component';
 
 const routes: Routes = [
   {
     path: '',
-    component: DashboardComponent
+    component: WalletComponent
+  },
+  {
+    path: 'wallet',
+    component: WalletComponent
   }
 ];
 

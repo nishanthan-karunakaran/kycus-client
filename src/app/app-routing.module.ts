@@ -9,12 +9,13 @@ const routes: Routes = [
   },
   {
     path: '',
-    loadChildren: () => import('./features/dashboard/dashboard.module').then(m => m.DashboardModule),
+    loadChildren: () => import('./layouts/dashboard-layout/dashboard-layout.module')
+      .then(m => m.DashboardLayoutModule),
     canActivate: [AuthGuard]
   },
   {
     path: '**',
-    redirectTo: 'auth/signin'
+    redirectTo: 'auth'
   }
 ];
 
