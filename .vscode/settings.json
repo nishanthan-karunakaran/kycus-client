@@ -43,7 +43,7 @@
   "prettier.arrowParens": "always",
   "prettier.endOfLine": "lf",
   // "prettier.printWidth": 150,
-  "prettier.proseWrap": "always",
+  // "prettier.proseWrap": "always",
   "editor.trimAutoWhitespace": true,
   "files.insertFinalNewline": true,
   "files.trimTrailingWhitespace": true,

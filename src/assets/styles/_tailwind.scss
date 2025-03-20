@@ -72,10 +72,6 @@
     @apply accent-primary focus:ring-2 focus:ring-primary;
   }
 
-  // input:not(ui-input) {
-  //   @apply form-input; /* Ensures Tailwind styles apply only to real inputs */
-  // }
-
   select {
     @apply cursor-pointer;
   }
@@ -125,7 +121,7 @@
 
   /* Card Components */
   .card {
-    @apply flex h-auto w-[90%] max-w-[400px] flex-col gap-2 overflow-auto rounded-lg border border-gray-200 bg-white p-4 shadow-md sm:max-w-[600px];
+    @apply flex h-auto w-[90%] max-w-[400px] flex-col gap-2 overflow-auto rounded-lg border border-gray-200 bg-white p-4 shadow-lg sm:max-w-[600px];
   }
 
   .card-header {
