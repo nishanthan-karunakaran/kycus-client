@@ -36,7 +36,7 @@ export class InputComponent implements OnChanges, ControlValueAccessor {
   @Input() max?: number;
   @Input() min?: number;
   @Input() pattern?: string | null = null;
-  @Input() autocomplete?: 'on' | 'off' | null = null;
+  @Input() autocomplete?: 'on' | 'off' | null = 'on';
   @Input() errorMessage: string | null = null;
   @Input() icon: string | null = null;
 

@@ -7,6 +7,7 @@ import {
   ViewChild,
 } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 import { Subject, takeUntil } from 'rxjs';
 import { ApiStatus } from 'src/app/core/constants/api.response';
 import { HelperService } from 'src/app/core/services/helpers.service';
@@ -37,6 +38,7 @@ export class SigninComponent implements OnInit, OnDestroy {
     private validatorsService: ValidatorsService,
     private authService: AuthService,
     private toast: ToastService,
+    private router: Router,
   ) {}
 
   ngOnInit(): void {
@@ -115,9 +117,11 @@ export class SigninComponent implements OnInit, OnDestroy {
 
         if (!response) return;
 
-        const { status } = response;
+        const { status, data } = response;
 
         if (status === ApiStatus.SUCCESS) {
+          this.authService.setAccessTokens(data);
+          this.router.navigate(['/']);
           this.toast.success('Logged in successfully!');
         } else {
           this.toast.error(response.message || 'Something went wrong!');

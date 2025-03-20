@@ -3,6 +3,11 @@ export interface AuthStep {
   otpVerified: boolean;
 }
 
+export interface AccessTokens {
+  authToken: string | null,
+  refreshToken: string | null,
+}
+
 export interface Signin {
   username: string;
   otp: string;
