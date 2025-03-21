@@ -1,2 +1,11 @@
-<p>dashboard-layout works!</p>
-<router-outlet></router-outlet>
+<section class="flex h-screen flex-col overflow-hidden">
+  <dashboard-header />
+
+  <section class="flex flex-1">
+    <dashboard-sidebar class="h-full" />
+
+    <main class="flex-1 overflow-auto bg-white">
+      <router-outlet></router-outlet>
+    </main>
+  </section>
+</section>
