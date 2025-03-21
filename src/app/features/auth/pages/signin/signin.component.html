@@ -21,17 +21,25 @@
         [readonly]="loginState().otpSent"
         formControlName="email"
         [autofocus]="true"
-        inputFormat="lowercase"
+        [inputFormat]="inputFormat"
         [errorMessage]="getFormError('email')"
       ></ui-input>
 
-      <ui-otp
-        *ngIf="loginState().otpSent"
-        label="OTP"
-        formControlName="otp"
-        [errorMessage]="getFormError('otp')"
-        [autofocus]="loginState().otpSent"
-      ></ui-otp>
+      <ng-container *ngIf="loginState().otpSent">
+        <ui-otp
+          label="OTP"
+          formControlName="otp"
+          [errorMessage]="getFormError('otp')"
+          [autofocus]="loginState().otpSent"
+        />
+        <p class="text-nowrap">
+          Didn't receive the OTP?
+          <a (click)="requestLoginOTP(true)">Resend OTP</a>
+          <span *ngIf="resendOTPTimer > 0">
+            in {{ resendOTPTimer }} seconds</span
+          >
+        </p>
+      </ng-container>
 
       <button
         type="submit"

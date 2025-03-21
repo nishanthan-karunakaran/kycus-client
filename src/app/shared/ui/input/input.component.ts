@@ -9,6 +9,7 @@ import {
   ViewChild,
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { InputFormat } from 'src/app/core/directives/input-format.directive';
 
 @Component({
   selector: 'ui-input',
@@ -39,6 +40,7 @@ export class InputComponent implements OnChanges, ControlValueAccessor {
   @Input() autocomplete?: 'on' | 'off' | null = 'on';
   @Input() errorMessage: string | null = null;
   @Input() icon: string | null = null;
+  @Input() inputFormat: InputFormat = InputFormat.DEFAULT;
 
   value: string | number | boolean = '';
   @ViewChild('inputElement') inputRef!: ElementRef<HTMLInputElement>;
@@ -129,48 +131,52 @@ export class InputComponent implements OnChanges, ControlValueAccessor {
     this.onTouched = fn;
   }
 
-  handleInput(event: Event): void {
-    const target = event.target as HTMLInputElement;
+handleInput(event: Event): void {
+  const target = event.target as HTMLInputElement;
 
-    if (this.type === 'number') {
-      let cleanedValue = target.value.replace(/[^0-9.-]/g, ''); // Remove non-numeric characters
+  let inputValue = target.value;
 
-      if (cleanedValue !== '' && !isNaN(Number(cleanedValue))) {
-        let numericValue = Number(cleanedValue);
+  // Apply maxlength validation for all input types
+  if (this.maxlength !== undefined && inputValue.length > this.maxlength) {
+    inputValue = inputValue.slice(0, this.maxlength); // Trim input to maxlength
+    target.value = inputValue; // Update input field with trimmed value
+  }
 
-        // Ensure min/max constraints only if defined
-        if (this.min !== undefined && numericValue < this.min) {
-          numericValue = this.min;
-        }
-        if (this.max !== undefined && numericValue > this.max) {
-          numericValue = this.max;
-        }
+  if (this.type === 'number') {
+    // Remove non-numeric characters except for decimal and minus sign
+    let cleanedValue = inputValue.replace(/[^0-9.-]/g, '');
 
-        this.value = numericValue;
-        target.value = String(numericValue);
-      } else {
-        this.value = '';
-        target.value = '';
-      }
-    } else {
-      let inputValue = target.value;
-
-      if (this.maxlength !== undefined && inputValue.length > this.maxlength) {
-        inputValue = inputValue.slice(0, this.maxlength);
-      }
-
-      if (this.pattern) {
-        const regex = new RegExp(this.pattern);
-        if (!regex.test(inputValue)) {
-          inputValue = this.value as string; // Revert to last valid value
-        }
-      }
-
-      this.value = inputValue;
-      target.value = inputValue;
+    // Ensure only one decimal point is allowed
+    const decimalCount = (cleanedValue.match(/\./g) || []).length;
+    if (decimalCount > 1) {
+      cleanedValue = cleanedValue.slice(0, cleanedValue.lastIndexOf('.'));
     }
 
-    this.onChange(this.value);
-    this.onTouched();
+    if (cleanedValue !== '' && !isNaN(Number(cleanedValue))) {
+      let numericValue = Number(cleanedValue);
+
+      // Ensure min/max constraints are applied, if defined
+      if (this.min !== undefined && numericValue < this.min) {
+        numericValue = this.min;
+      }
+      if (this.max !== undefined && numericValue > this.max) {
+        numericValue = this.max;
+      }
+
+      this.value = numericValue;
+      target.value = String(numericValue); // Update input field with the valid numeric value
+    } else {
+      this.value = ''; // Reset value if invalid
+      target.value = ''; // Clear input if value is not valid
+    }
+  } else {
+    // For other types, just update the value based on input (text, etc.)
+    this.value = inputValue;
+    target.value = inputValue; // Update input field with value
   }
+
+  this.onChange(this.value); // Notify change
+  this.onTouched(); // Mark input as touched
+}
+
 }

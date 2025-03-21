@@ -8,8 +8,9 @@ import {
 } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { Subject, takeUntil } from 'rxjs';
+import { interval, Subject, Subscription, takeUntil, takeWhile } from 'rxjs';
 import { ApiStatus } from 'src/app/core/constants/api.response';
+import { InputFormat } from 'src/app/core/directives/input-format.directive';
 import { HelperService } from 'src/app/core/services/helpers.service';
 import { ValidatorsService } from 'src/app/core/services/validators.service';
 import { AuthStep } from 'src/app/features/auth/auth.model';
@@ -30,7 +31,11 @@ export class SigninComponent implements OnInit, OnDestroy {
     otpVerified: false,
   });
   loginForm!: FormGroup;
+  inputFormat: InputFormat = InputFormat.LOWERCASE;
   @ViewChild('otpInput') otpInput!: ElementRef<HTMLInputElement>;
+  resendOTPTimer: number = 0;
+  private intervalSubscription: Subscription | null = null;
+  private readonly initialTime = 30;
 
   constructor(
     private fb: FormBuilder,
@@ -78,30 +83,51 @@ export class SigninComponent implements OnInit, OnDestroy {
     this.loginForm.get('otp')?.updateValueAndValidity();
   }
 
-  requestLoginOTP() {
-    this.authService
-      .requestLoginOTP({ username: this.loginForm.value.email })
-      .pipe(takeUntil(this.destroy$))
-      .subscribe({
-        next: (result) => {
-          const { loading, response } = result;
-          this.isLoading = loading;
+  startResendTimer() {
+    this.resendOTPTimer = this.initialTime;
 
-          if (!response) return;
-
-          const { status } = response;
-
-          if (status === ApiStatus.SUCCESS) {
-            this.loginState.mutate((state) => (state.otpSent = true));
-            this.toast.success('OTP sent successfully!');
-
-            this.isSubmitted = false;
-            this.updateOTPValidators();
-          } else {
-            this.toast.error(response.message || 'Something went wrong!');
-          }
-        },
+    this.intervalSubscription = interval(1000)
+      .pipe(takeWhile(() => this.resendOTPTimer > 0))
+      .subscribe(() => {
+        this.resendOTPTimer--;
       });
+  }
+
+  stopResendTimer() {
+    if (this.intervalSubscription) {
+      this.intervalSubscription.unsubscribe();
+    }
+    this.resendOTPTimer = 0;
+  }
+
+  requestLoginOTP(isResend = false) {
+    const canProceed = isResend ? this.resendOTPTimer <= 0 : true;
+
+    if (canProceed) {
+      this.authService
+        .requestLoginOTP({ username: this.loginForm.value.email })
+        .pipe(takeUntil(this.destroy$))
+        .subscribe({
+          next: (result) => {
+            const { loading, response } = result;
+            this.isLoading = loading;
+
+            if (!response) return;
+
+            const { status } = response;
+
+            if (status === ApiStatus.SUCCESS) {
+              this.loginState.mutate((state) => (state.otpSent = true));
+              this.toast.success('OTP sent successfully!');
+              this.startResendTimer();
+              this.isSubmitted = false;
+              this.updateOTPValidators();
+            } else {
+              this.toast.error(response.message || 'Something went wrong!');
+            }
+          },
+        });
+    }
   }
 
   signin() {
@@ -120,6 +146,7 @@ export class SigninComponent implements OnInit, OnDestroy {
         const { status, data } = response;
 
         if (status === ApiStatus.SUCCESS) {
+          this.stopResendTimer();
           this.authService.setAccessTokens(data);
           this.router.navigate(['/']);
           this.toast.success('Logged in successfully!');

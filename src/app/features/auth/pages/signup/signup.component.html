@@ -42,6 +42,7 @@
           placeholder="Enter your email"
           [errorMessage]="getFormError('email')"
           [icon]="signupState().otpVerified ? 'check' : null"
+          [inputFormat]="inputFormat"
         ></ui-input>
 
         <ng-container
@@ -56,7 +57,9 @@
           <p>
             Didn't receive the OTP?
             <a (click)="sendEmailOTP(true)">Resend OTP</a>
-            <span *ngIf="resendOTPTimer > 0"> in {{ resendOTPTimer }}</span>
+            <span *ngIf="resendOTPTimer > 0">
+              in {{ resendOTPTimer }} seconds</span
+            >
           </p>
         </ng-container>
 
@@ -64,13 +67,22 @@
           *ngIf="signupState().otpSent && signupState().otpVerified"
         >
           <ui-input
+            label="CIN"
+            id="cin"
+            name="cin"
+            placeholder="Enter your company's CIN"
+            formControlName="cin"
+            [errorMessage]="getFormError('cin')"
+            [autofocus]="signupState().otpVerified"
+          />
+
+          <ui-input
             label="Company Name"
             id="companyName"
             name="companyName"
             placeholder="Enter your company name"
             formControlName="companyName"
             [errorMessage]="getFormError('companyName')"
-            [autofocus]="signupState().otpVerified"
           />
 
           <ui-input
@@ -84,11 +96,13 @@
 
           <ui-input
             label="Mobile Number"
-            id="mobileNo"
-            name="mobileNo"
+            id="mobileNumber"
+            name="mobileNumber"
+            type="number"
+            [maxlength]="10"
             placeholder="Enter your mobile number"
-            formControlName="mobileNo"
-            [errorMessage]="getFormError('mobileNo')"
+            formControlName="mobileNumber"
+            [errorMessage]="getFormError('mobileNumber')"
           />
         </ng-container>
       </div>

@@ -7,8 +7,11 @@
       [id]="id"
       [name]="name"
       [placeholder]="placeholder"
-      class="w-full pr-10"
-      [ngClass]="{ 'error-input': errorMessage }"
+      [ngClass]="{
+        'w-full': true,
+        'pr-10': icon !== null,
+        'error-input': errorMessage,
+      }"
       (input)="handleInput($event)"
       [attr.disabled]="disabled ? true : null"
       [attr.required]="required ? true : null"
@@ -19,6 +22,7 @@
       [attr.max]="max !== undefined ? max : null"
       [attr.pattern]="pattern"
       [attr.autocomplete]="autocomplete"
+      [inputFormat]="inputFormat"
       #inputElement
     />
     <lucide-icon

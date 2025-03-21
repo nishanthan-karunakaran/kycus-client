@@ -1,12 +1,20 @@
 import { Directive, ElementRef, HostListener, Input } from '@angular/core';
 import { NgControl } from '@angular/forms';
 
+export enum InputFormat {
+  UPPERCASE = 'uppercase',
+  LOWERCASE = 'lowercase',
+  CAPITALIZE = 'capitalize',
+  NUMBERS = 'numbers',
+  DEFAULT = '',
+}
+
 @Directive({
   selector: '[inputFormat]',
   standalone: true,
 })
 export class InputFormatDirective {
-  @Input('inputFormat') format: 'uppercase' | 'lowercase' | 'capitalize' | 'numbers' = 'lowercase';
+  @Input('inputFormat') format: InputFormat = InputFormat.DEFAULT;
 
   constructor(private el: ElementRef, private control: NgControl) {}
 
@@ -27,6 +35,8 @@ export class InputFormatDirective {
         break;
       case 'numbers':
         transformedValue = transformedValue.replace(/\D/g, ''); // Remove non-numeric characters
+        break;
+      default:
         break;
     }
 

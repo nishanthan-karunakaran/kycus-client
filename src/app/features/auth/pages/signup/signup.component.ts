@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { interval, Subscription, takeWhile } from 'rxjs';
 import { ApiStatus } from 'src/app/core/constants/api.response';
+import { InputFormat } from 'src/app/core/directives/input-format.directive';
 import { HelperService } from 'src/app/core/services/helpers.service';
 import { ValidatorsService } from 'src/app/core/services/validators.service';
 import { AuthStep } from 'src/app/features/auth/auth.model';
@@ -22,6 +23,7 @@ export class SignupComponent implements OnInit, OnDestroy {
     otpSent: false,
     otpVerified: false,
   });
+  inputFormat: InputFormat = InputFormat.LOWERCASE;
   resendOTPTimer: number = 0;
   private intervalSubscription: Subscription | null = null;
   private readonly initialTime = 30;
@@ -56,9 +58,10 @@ export class SignupComponent implements OnInit, OnDestroy {
   addAllFields() {
     this.isSubmitted = false;
     const additionalFields = {
+      cin: ['', Validators.required],
       companyName: ['', Validators.required],
       designation: ['', Validators.required],
-      mobileNo: [
+      mobileNumber: [
         '',
         [Validators.required, this.validatorService.mobileNumberValidator()],
       ],
@@ -79,7 +82,7 @@ export class SignupComponent implements OnInit, OnDestroy {
       return `${field.toUpperCase()} is required`;
     }
 
-    if (field === 'mobileNo') {
+    if (field === 'mobileNumber') {
       return 'Mobile Number is required';
     }
     return `${this.helperService.toTitleCase(field)} is required`;
@@ -202,7 +205,17 @@ export class SignupComponent implements OnInit, OnDestroy {
   }
 
   signup() {
-    this.authService.signup(this.signupForm.value).subscribe({
+    const payload = {
+    "email": this.signupForm.value.email,
+    "username": this.signupForm.value.name,
+    "isAgree":true,
+    "companyName": this.signupForm.value.companyName,
+    "designation": this.signupForm.value.designation,
+    "mobileNumber": this.signupForm.value.mobileNumber,
+    "cin":"12231788938141"
+    }
+
+    this.authService.signup(payload).subscribe({
       next: (result) => {
         const { loading, response } = result;
         this.isLoading = loading;
@@ -237,7 +250,7 @@ export class SignupComponent implements OnInit, OnDestroy {
 
     console.log(this.signupForm.value);
 
-    // this.signupForm.get('mobileNo')?.setErrors({ 'validationError': 'Vanakkam' });
+    // this.signupForm.get('mobileNumber')?.setErrors({ 'validationError': 'Vanakkam' });
   }
 
   ngOnDestroy() {

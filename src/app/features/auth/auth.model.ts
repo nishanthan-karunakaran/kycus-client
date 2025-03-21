@@ -23,9 +23,11 @@ export interface ValidataEmailOTP {
 }
 
 export interface Signup {
-  namre: string;
+  username: string;
   email: string;
+  cin: string;
   companyName: string;
   designation: string;
-  mobileNo: string;
+  mobileNumber: string;
+  isAgree: boolean
 }
