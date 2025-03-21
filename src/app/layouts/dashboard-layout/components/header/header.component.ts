@@ -18,7 +18,7 @@ export class HeaderComponent implements OnInit {
       color: 'white',
       size: '22'
     }
-  ]
+  ];
 
   constructor(private router: Router) { }
 

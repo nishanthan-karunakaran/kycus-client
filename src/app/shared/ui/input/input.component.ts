@@ -131,52 +131,52 @@ export class InputComponent implements OnChanges, ControlValueAccessor {
     this.onTouched = fn;
   }
 
-handleInput(event: Event): void {
-  const target = event.target as HTMLInputElement;
+  handleInput(event: Event): void {
+    const target = event.target as HTMLInputElement;
 
-  let inputValue = target.value;
+    let inputValue = target.value;
 
-  // Apply maxlength validation for all input types
-  if (this.maxlength !== undefined && inputValue.length > this.maxlength) {
-    inputValue = inputValue.slice(0, this.maxlength); // Trim input to maxlength
-    target.value = inputValue; // Update input field with trimmed value
-  }
+    // Apply maxlength validation for all input types
+    if (this.maxlength !== undefined && inputValue.length > this.maxlength) {
+      inputValue = inputValue.slice(0, this.maxlength); // Trim input to maxlength
+      target.value = inputValue; // Update input field with trimmed value
+    }
 
-  if (this.type === 'number') {
+    if (this.type === 'number') {
     // Remove non-numeric characters except for decimal and minus sign
-    let cleanedValue = inputValue.replace(/[^0-9.-]/g, '');
+      let cleanedValue = inputValue.replace(/[^0-9.-]/g, '');
 
-    // Ensure only one decimal point is allowed
-    const decimalCount = (cleanedValue.match(/\./g) || []).length;
-    if (decimalCount > 1) {
-      cleanedValue = cleanedValue.slice(0, cleanedValue.lastIndexOf('.'));
-    }
-
-    if (cleanedValue !== '' && !isNaN(Number(cleanedValue))) {
-      let numericValue = Number(cleanedValue);
-
-      // Ensure min/max constraints are applied, if defined
-      if (this.min !== undefined && numericValue < this.min) {
-        numericValue = this.min;
-      }
-      if (this.max !== undefined && numericValue > this.max) {
-        numericValue = this.max;
+      // Ensure only one decimal point is allowed
+      const decimalCount = (cleanedValue.match(/\./g) || []).length;
+      if (decimalCount > 1) {
+        cleanedValue = cleanedValue.slice(0, cleanedValue.lastIndexOf('.'));
       }
 
-      this.value = numericValue;
-      target.value = String(numericValue); // Update input field with the valid numeric value
+      if (cleanedValue !== '' && !isNaN(Number(cleanedValue))) {
+        let numericValue = Number(cleanedValue);
+
+        // Ensure min/max constraints are applied, if defined
+        if (this.min !== undefined && numericValue < this.min) {
+          numericValue = this.min;
+        }
+        if (this.max !== undefined && numericValue > this.max) {
+          numericValue = this.max;
+        }
+
+        this.value = numericValue;
+        target.value = String(numericValue); // Update input field with the valid numeric value
+      } else {
+        this.value = ''; // Reset value if invalid
+        target.value = ''; // Clear input if value is not valid
+      }
     } else {
-      this.value = ''; // Reset value if invalid
-      target.value = ''; // Clear input if value is not valid
-    }
-  } else {
     // For other types, just update the value based on input (text, etc.)
-    this.value = inputValue;
-    target.value = inputValue; // Update input field with value
-  }
+      this.value = inputValue;
+      target.value = inputValue; // Update input field with value
+    }
 
-  this.onChange(this.value); // Notify change
-  this.onTouched(); // Mark input as touched
-}
+    this.onChange(this.value); // Notify change
+    this.onTouched(); // Mark input as touched
+  }
 
 }

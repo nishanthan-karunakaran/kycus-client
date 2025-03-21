@@ -24,20 +24,20 @@ export class InputFormatDirective {
     let transformedValue = input.value;
 
     switch (this.format) {
-      case 'uppercase':
-        transformedValue = transformedValue.toUpperCase();
-        break;
-      case 'lowercase':
-        transformedValue = transformedValue.toLowerCase();
-        break;
-      case 'capitalize':
-        transformedValue = this.capitalizeWords(transformedValue);
-        break;
-      case 'numbers':
-        transformedValue = transformedValue.replace(/\D/g, ''); // Remove non-numeric characters
-        break;
-      default:
-        break;
+    case 'uppercase':
+      transformedValue = transformedValue.toUpperCase();
+      break;
+    case 'lowercase':
+      transformedValue = transformedValue.toLowerCase();
+      break;
+    case 'capitalize':
+      transformedValue = this.capitalizeWords(transformedValue);
+      break;
+    case 'numbers':
+      transformedValue = transformedValue.replace(/\D/g, ''); // Remove non-numeric characters
+      break;
+    default:
+      break;
     }
 
     // Update form control without triggering unnecessary change events

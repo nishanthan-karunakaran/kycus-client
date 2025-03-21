@@ -95,20 +95,20 @@ export class SignupComponent implements OnInit, OnDestroy {
     if (!control) return null;
 
     switch (true) {
-      case control.hasError('required'):
-        return this.getRequiredMessage(field);
+    case control.hasError('required'):
+      return this.getRequiredMessage(field);
 
-      case control.hasError('email'):
-        return 'Invalid email format';
+    case control.hasError('email'):
+      return 'Invalid email format';
 
-      case control.hasError('minlength'):
-        return `${this.helperService.toTitleCase(field)} must be at least ${control.errors?.['minlength']?.requiredLength} characters`;
+    case control.hasError('minlength'):
+      return `${this.helperService.toTitleCase(field)} must be at least ${control.errors?.['minlength']?.requiredLength} characters`;
 
-      case control.hasError('validationError'):
-        return control.errors?.['validationError'];
+    case control.hasError('validationError'):
+      return control.errors?.['validationError'];
 
-      default:
-        return null;
+    default:
+      return null;
     }
   }
 
@@ -206,14 +206,14 @@ export class SignupComponent implements OnInit, OnDestroy {
 
   signup() {
     const payload = {
-    "email": this.signupForm.value.email,
-    "username": this.signupForm.value.name,
-    "isAgree":true,
-    "companyName": this.signupForm.value.companyName,
-    "designation": this.signupForm.value.designation,
-    "mobileNumber": this.signupForm.value.mobileNumber,
-    "cin":"12231788938141"
-    }
+      'email': this.signupForm.value.email,
+      'username': this.signupForm.value.name,
+      'isAgree':true,
+      'companyName': this.signupForm.value.companyName,
+      'designation': this.signupForm.value.designation,
+      'mobileNumber': this.signupForm.value.mobileNumber,
+      'cin':'12231788938141'
+    };
 
     this.authService.signup(payload).subscribe({
       next: (result) => {
