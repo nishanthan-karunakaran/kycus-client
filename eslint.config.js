@@ -18,7 +18,6 @@ export default [
         sourceType: "module",
       },
       globals: {
-
         console: "readonly",
         document: "readonly",
         window: "readonly",
@@ -33,7 +32,7 @@ export default [
         clearInterval: "readonly",
         fetch: "readonly",
 
-
+        // Angular globals
         ng: "readonly",
         injector: "readonly",
         resolver: "readonly",
@@ -41,8 +40,27 @@ export default [
         zone: "readonly",
         bootstrapApplication: "readonly",
         isDevMode: "readonly",
+        ChangeDetectionStrategy: "readonly",
+        Injectable: "readonly",
+        Component: "readonly",
+        Directive: "readonly",
+        Input: "readonly",
+        Output: "readonly",
+        HostListener: "readonly",
+        HostBinding: "readonly",
+        NgModule: "readonly",
+        Pipe: "readonly",
+        ChangeDetectorRef: "readonly",
+        ViewChild: "readonly",
+        ViewChildren: "readonly",
+        ContentChild: "readonly",
+        ContentChildren: "readonly",
+        Renderer2: "readonly",
+        HttpClient: "readonly",
+        ActivatedRoute: "readonly",
+        Router: "readonly",
 
-
+        // Node.js and process-related globals
         require: "readonly",
         process: "readonly",
         global: "readonly",
