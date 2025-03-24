@@ -1,11 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 
 @Component({
-  selector: 'dashboard-sidebar',
+  selector: 'app-dashboard-sidebar',
   templateUrl: './sidebar.component.html',
   styleUrls: ['./sidebar.component.scss']
 })
-export class SidebarComponent implements OnInit {
+export class SidebarComponent {
   accessLinks = [
     {
       name: 'Entity',
@@ -26,8 +26,5 @@ export class SidebarComponent implements OnInit {
 
 
   constructor() { }
-
-  ngOnInit() {
-  }
 
 }

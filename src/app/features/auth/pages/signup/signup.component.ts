@@ -1,12 +1,12 @@
 import { Component, OnDestroy, OnInit, signal } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, ValidatorFn, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { interval, Subscription, takeWhile } from 'rxjs';
 import { ApiStatus } from 'src/app/core/constants/api.response';
 import { InputFormat } from 'src/app/core/directives/input-format.directive';
 import { HelperService } from 'src/app/core/services/helpers.service';
 import { ValidatorsService } from 'src/app/core/services/validators.service';
-import { AuthStep } from 'src/app/features/auth/auth.model';
+import { AccessTokens, AuthStep } from 'src/app/features/auth/auth.model';
 import { AuthService } from 'src/app/features/auth/auth.service';
 import { ToastService } from 'src/app/shared/ui/toast/toast.service';
 
@@ -24,7 +24,7 @@ export class SignupComponent implements OnInit, OnDestroy {
     otpVerified: false,
   });
   inputFormat: InputFormat = InputFormat.LOWERCASE;
-  resendOTPTimer: number = 0;
+  resendOTPTimer = 0;
   private intervalSubscription: Subscription | null = null;
   private readonly initialTime = 30;
 
@@ -55,26 +55,26 @@ export class SignupComponent implements OnInit, OnDestroy {
     );
   }
 
-  addAllFields() {
-    this.isSubmitted = false;
-    const additionalFields = {
-      cin: ['', Validators.required],
-      companyName: ['', Validators.required],
-      designation: ['', Validators.required],
-      mobileNumber: [
-        '',
-        [Validators.required, this.validatorService.mobileNumberValidator()],
-      ],
-    };
+  addAllFields(): void {
+  this.isSubmitted = false;
 
-    Object.entries(additionalFields).forEach(([key, config]) => {
-      this.signupForm.addControl(
-        key,
-        this.fb.control(...(config as [any, any])),
-      );
-    });
-  }
+  const additionalFields: Record<string, [string, ValidatorFn | ValidatorFn[]]> = {
+    cin: ['', Validators.required],
+    companyName: ['', Validators.required],
+    designation: ['', Validators.required],
+    mobileNumber: [
+      '',
+      [Validators.required, this.validatorService.mobileNumberValidator()],
+    ],
+  };
 
+  Object.entries(additionalFields).forEach(([key, config]: [string, [string, ValidatorFn | ValidatorFn[]]]) => {
+    this.signupForm.addControl(
+      key,
+      new FormControl(config[0], config[1])
+    );
+  });
+}
   getRequiredMessage(field: string): string {
     const capsErrorFields = ['aadhaar', 'pan', 'otp', 'companyName'];
 
@@ -225,7 +225,7 @@ export class SignupComponent implements OnInit, OnDestroy {
         const { status, data } = response;
 
         if (status === ApiStatus.SUCCESS) {
-          this.authService.setAccessTokens(data);
+          this.authService.setAccessTokens(data as AccessTokens);
           this.router.navigate(['/']);
           this.toast.success('Account created successfully!');
         } else {

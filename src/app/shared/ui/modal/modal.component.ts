@@ -15,12 +15,13 @@ import {
   styleUrls: ['./modal.component.scss'],
 })
 export class ModalComponent implements OnChanges {
-  @Input() isOpen: boolean = false;
+  @Input() isOpen = false;
   @Input() header?: string;
-  @Input() showClose: boolean = true;
-  @Input() footer?: TemplateRef<any>;
-  @Input() closeOnOutsideClick: boolean = true;
+  @Input() showClose = true;
+  @Input() footer?: TemplateRef<unknown>;
+  @Input() closeOnOutsideClick = true;
 
+  // eslint-disable-next-line @angular-eslint/no-output-native
   @Output() close = new EventEmitter<void>();
 
   constructor(private renderer: Renderer2) {}
@@ -31,7 +32,7 @@ export class ModalComponent implements OnChanges {
     this.close.emit();
   }
 
-  onOverlayClick(event: MouseEvent) {
+  onOverlayClick(event: Event) {
     if (this.closeOnOutsideClick && event.target === event.currentTarget) {
       this.closeModal();
     }

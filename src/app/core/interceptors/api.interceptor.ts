@@ -16,10 +16,10 @@ export class ApiInterceptor implements HttpInterceptor {
 
   constructor(private authService: AuthService) {}
 
-  intercept(
-    req: HttpRequest<any>,
+  intercept<T>(
+    req: HttpRequest<T>,
     next: HttpHandler,
-  ): Observable<HttpEvent<any>> {
+  ): Observable<HttpEvent<T>> {
     const token = this.authService.getAuthToken();
     const apiBaseUrl = environment.apiBaseUrl;
     const fullUrl = apiBaseUrl + req.url;

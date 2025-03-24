@@ -3,5 +3,7 @@
   "editor.codeActionsOnSave": {
     "source.fixAll.eslint": "always"
   },
-  "editor.formatOnSave": false // Prevent conflicts with Prettier
+  "editor.formatOnSave": false, // Prevent conflicts with Prettier
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.formatOnPaste": true,
 }

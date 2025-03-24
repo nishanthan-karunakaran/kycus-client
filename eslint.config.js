@@ -1,84 +1,27 @@
-import js from "@eslint/js";
-import tseslint from "@typescript-eslint/eslint-plugin";
-import tsparser from "@typescript-eslint/parser";
-import angular from "@angular-eslint/eslint-plugin";
-import angularTemplate from "@angular-eslint/eslint-plugin-template";
+// @ts-check
+const eslint = require("@eslint/js");
+const tseslint = require("typescript-eslint");
+const angular = require("angular-eslint");
 
-export default [
-  js.configs.recommended,
-  {
-    ignores: ["dist/**", "node_modules/**", "src/index.html"],
-  },
+module.exports = tseslint.config(
   {
     files: ["**/*.ts"],
-    languageOptions: {
-      parser: tsparser,
-      parserOptions: {
-        project: "./tsconfig.json",
-        sourceType: "module",
-      },
-      globals: {
-        console: "readonly",
-        document: "readonly",
-        window: "readonly",
-        localStorage: "readonly",
-        sessionStorage: "readonly",
-        navigator: "readonly",
-        location: "readonly",
-        history: "readonly",
-        setTimeout: "readonly",
-        clearTimeout: "readonly",
-        setInterval: "readonly",
-        clearInterval: "readonly",
-        fetch: "readonly",
-
-        // Angular globals
-        ng: "readonly",
-        injector: "readonly",
-        resolver: "readonly",
-        appRef: "readonly",
-        zone: "readonly",
-        bootstrapApplication: "readonly",
-        isDevMode: "readonly",
-        ChangeDetectionStrategy: "readonly",
-        Injectable: "readonly",
-        Component: "readonly",
-        Directive: "readonly",
-        Input: "readonly",
-        Output: "readonly",
-        HostListener: "readonly",
-        HostBinding: "readonly",
-        NgModule: "readonly",
-        Pipe: "readonly",
-        ChangeDetectorRef: "readonly",
-        ViewChild: "readonly",
-        ViewChildren: "readonly",
-        ContentChild: "readonly",
-        ContentChildren: "readonly",
-        Renderer2: "readonly",
-        HttpClient: "readonly",
-        ActivatedRoute: "readonly",
-        Router: "readonly",
-
-        // Node.js and process-related globals
-        require: "readonly",
-        process: "readonly",
-        global: "readonly",
-      },
-    },
-    plugins: {
-      "@typescript-eslint": tseslint,
-      "@angular-eslint": angular,
-    },
+    extends: [
+      eslint.configs.recommended,
+      ...tseslint.configs.recommended,
+      ...tseslint.configs.stylistic,
+      ...angular.configs.tsRecommended,
+    ],
+    processor: angular.processInlineTemplates,
     rules: {
-      "@angular-eslint/directive-selector": [
-        "error",
-        {
-          type: "attribute",
-          prefix: ["app", "ui"],
-          style: "camelCase",
-        },
-      ],
+      // "@angular-eslint/directive-selector": [
+      //   "error",
+      //   {
+      //     type: "attribute",
+      //     prefix: ["app", "ui"],
+      //     style: "camelCase",
+      //   },
+      // ],
       "@angular-eslint/component-selector": [
         "error",
         {
@@ -87,41 +30,16 @@ export default [
           style: "kebab-case",
         },
       ],
-      "@angular-eslint/no-empty-lifecycle-method": "error",
-      "@angular-eslint/no-output-on-prefix": "error",
-      "@angular-eslint/component-class-suffix": [
-        "error",
-        { suffixes: ["Component"] },
-      ],
-      "@typescript-eslint/no-explicit-any": "warn",
-      "@typescript-eslint/no-unused-vars": [
-        "error",
-        {
-          argsIgnorePattern: "^_",
-          varsIgnorePattern: "^(this\\.|_)",
-          caughtErrorsIgnorePattern: "^_",
-          destructuredArrayIgnorePattern: "^_",
-        },
-      ],
-      "@typescript-eslint/consistent-type-definitions": ["error", "interface"],
-      "no-console": ["warn", { allow: ["warn", "error"] }],
-      "no-debugger": "error",
-      "no-trailing-spaces": "error",
-      "eol-last": "error",
-      indent: ["error", 2],
-      quotes: ["error", "single"],
-      semi: ["error", "always"],
+      "@typescript-eslint/no-empty-function": "off",
+      // "@typescript-eslint/no-explicit-any": "off", // Allow 'any' type
     },
   },
   {
     files: ["**/*.html"],
-    plugins: { "@angular-eslint/template": angularTemplate },
-    rules: {
-      "@angular-eslint/template/no-negated-async": "error",
-      "@angular-eslint/template/cyclomatic-complexity": [
-        "warn",
-        { maxComplexity: 5 },
-      ],
-    },
+    extends: [
+      ...angular.configs.templateRecommended,
+      ...angular.configs.templateAccessibility,
+    ],
+    rules: {},
   },
-];
+);

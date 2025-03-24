@@ -5,6 +5,10 @@
       alt="Kycus Logo"
       (click)="navigateToHome()"
       class="cursor-pointer"
+      role="button"
+      tabindex="0"
+      (keydown.enter)="navigateToHome()"
+      (keydown.space)="navigateToHome()"
     />
   </div>
 
@@ -15,6 +19,8 @@
       role="button"
       tabindex="0"
       (click)="handleIconClick(icon.name)"
+      (keydown.enter)="handleIconClick(icon.name)"
+      (keydown.space)="handleIconClick(icon.name)"
     >
       <lucide-icon [name]="icon.name" [color]="icon.color" [size]="icon.size" />
     </div>

@@ -1,5 +1,10 @@
 <fieldset class="otp-container">
-  <label *ngIf="label" class="input-label" [attr.aria-label]="label">
+  <label
+    *ngIf="label"
+    class="input-label"
+    [attr.aria-label]="label"
+    [attr.for]="'otpInput' + 0"
+  >
     {{ label }}<span *ngIf="required" class="required-asterisk">*</span>
   </label>
 

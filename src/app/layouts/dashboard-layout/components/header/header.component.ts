@@ -1,13 +1,19 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 
+interface Icon {
+  name: string;
+  color: string;
+  size: string;
+}
+
 @Component({
-  selector: 'dashboard-header',
+  selector: 'app-dashboard-header',
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.scss']
 })
-export class HeaderComponent implements OnInit {
-  iconsArr= [
+export class HeaderComponent {
+  iconsArr: Icon[] = [
     {
       name: 'Bell',
       color: 'white',
@@ -22,10 +28,7 @@ export class HeaderComponent implements OnInit {
 
   constructor(private router: Router) { }
 
-  ngOnInit() {
-  }
-
-  trackIcon(index: number, item: any): string {
+  trackIcon(_: number, item: Icon): string {
     return item.name;
   }
 

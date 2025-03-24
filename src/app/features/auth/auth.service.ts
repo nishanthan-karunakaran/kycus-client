@@ -35,8 +35,8 @@ export class AuthService {
 
   setAccessTokens(data: AccessTokens): void {
     const { authToken, refreshToken } = data;
-    authToken && localStorage.setItem('authToken', authToken);
-    refreshToken && localStorage.setItem('refreshToken', refreshToken);
+    if (authToken) localStorage.setItem('authToken', authToken);
+    if (refreshToken) localStorage.setItem('refreshToken', refreshToken);
   }
 
   removeAccessTokens(): void {
@@ -49,25 +49,25 @@ export class AuthService {
   }
 
   sendEmailOTP(data: { email: string }): ApiResult {
-    return this.api.post<ApiResponse<any>>(API_URL.AUTH.SEND_EMAIL_OTP, data);
+    return this.api.post<ApiResponse<ApiResult>>(API_URL.AUTH.SEND_EMAIL_OTP, data);
   }
 
   verifyEmailOTP(data: ValidataEmailOTP): ApiResult {
-    return this.api.post<ApiResponse<any>>(
+    return this.api.post<ApiResponse<ApiResult>>(
       API_URL.AUTH.VALIDATE_EMAIL_OTP,
       data,
     );
   }
 
   signup(data: Signup): ApiResult {
-    return this.api.post<ApiResponse<any>>(API_URL.AUTH.SIGNUP, data);
+    return this.api.post<ApiResponse<ApiResult>>(API_URL.AUTH.SIGNUP, data);
   }
 
   requestLoginOTP(data: RequestLoginOtp): ApiResult {
-    return this.api.post<ApiResponse<any>>(API_URL.AUTH.REQUEST_LOGIN_OTP, data);
+    return this.api.post<ApiResponse<ApiResult>>(API_URL.AUTH.REQUEST_LOGIN_OTP, data);
   }
 
   signin(data: Signin): ApiResult {
-    return this.api.post<ApiResponse<any>>(API_URL.AUTH.LOGIN, data);
+    return this.api.post<ApiResponse<ApiResult>>(API_URL.AUTH.LOGIN, data);
   }
 }

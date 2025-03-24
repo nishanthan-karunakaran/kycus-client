@@ -13,7 +13,7 @@ import { ApiStatus } from 'src/app/core/constants/api.response';
 import { InputFormat } from 'src/app/core/directives/input-format.directive';
 import { HelperService } from 'src/app/core/services/helpers.service';
 import { ValidatorsService } from 'src/app/core/services/validators.service';
-import { AuthStep } from 'src/app/features/auth/auth.model';
+import { AccessTokens, AuthStep } from 'src/app/features/auth/auth.model';
 import { AuthService } from 'src/app/features/auth/auth.service';
 import { ToastService } from 'src/app/shared/ui/toast/toast.service';
 
@@ -33,7 +33,7 @@ export class SigninComponent implements OnInit, OnDestroy {
   loginForm!: FormGroup;
   inputFormat: InputFormat = InputFormat.LOWERCASE;
   @ViewChild('otpInput') otpInput!: ElementRef<HTMLInputElement>;
-  resendOTPTimer: number = 0;
+  resendOTPTimer = 0;
   private intervalSubscription: Subscription | null = null;
   private readonly initialTime = 30;
 
@@ -147,7 +147,7 @@ export class SigninComponent implements OnInit, OnDestroy {
 
         if (status === ApiStatus.SUCCESS) {
           this.stopResendTimer();
-          this.authService.setAccessTokens(data);
+          this.authService.setAccessTokens(data as AccessTokens);
           this.router.navigate(['/']);
           this.toast.success('Logged in successfully!');
         } else {

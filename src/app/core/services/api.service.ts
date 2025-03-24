@@ -4,6 +4,8 @@ import { BehaviorSubject, of } from 'rxjs';
 import { catchError, finalize, map, startWith } from 'rxjs/operators';
 import { ApiResponse, ApiResult } from 'src/app/core/constants/api.response';
 
+type BodyType = object | FormData;
+
 @Injectable({
   providedIn: 'root',
 })
@@ -16,7 +18,7 @@ export class ApiService {
   request<T>(
     method: 'GET' | 'POST' | 'PUT' | 'DELETE',
     url: string,
-    body?: any,
+    body?: BodyType,
     params?: HttpParams,
     headers?: HttpHeaders,
   ): ApiResult<T> {
@@ -48,11 +50,11 @@ export class ApiService {
     return this.request<T>('GET', url, undefined, params, headers);
   }
 
-  post<T>(url: string, body: any, headers?: HttpHeaders) {
+  post<T>(url: string, body: BodyType, headers?: HttpHeaders) {
     return this.request<T>('POST', url, body, undefined, headers);
   }
 
-  put<T>(url: string, body: any, headers?: HttpHeaders) {
+  put<T>(url: string, body: BodyType, headers?: HttpHeaders) {
     return this.request<T>('PUT', url, body, undefined, headers);
   }
 

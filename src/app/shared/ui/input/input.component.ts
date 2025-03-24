@@ -1,4 +1,5 @@
 import {
+  AfterViewInit,
   ChangeDetectorRef,
   Component,
   ElementRef,
@@ -23,16 +24,16 @@ import { InputFormat } from 'src/app/core/directives/input-format.directive';
     },
   ],
 })
-export class InputComponent implements OnChanges, ControlValueAccessor {
-  @Input() type: string = 'text';
-  @Input() id: string = '';
-  @Input() name: string = '';
-  @Input() label: string = '';
-  @Input() placeholder: string = '';
-  @Input() readonly: boolean = false;
-  @Input() disabled: boolean = false;
-  @Input() autofocus: boolean = false;
-  @Input() required: boolean = false;
+export class InputComponent implements OnChanges, AfterViewInit, ControlValueAccessor {
+  @Input() type = 'text';
+  @Input() id = '';
+  @Input() name = '';
+  @Input() label = '';
+  @Input() placeholder = '';
+  @Input() readonly = false;
+  @Input() disabled = false;
+  @Input() autofocus = false;
+  @Input() required = false;
   @Input() maxlength?: number;
   @Input() max?: number;
   @Input() min?: number;
@@ -45,14 +46,14 @@ export class InputComponent implements OnChanges, ControlValueAccessor {
   value: string | number | boolean = '';
   @ViewChild('inputElement') inputRef!: ElementRef<HTMLInputElement>;
 
-  onChange = (value: any) => {};
+  onChange: (value: string | number | null) => void = () => {};
   onTouched = () => {};
 
   constructor(private cdr: ChangeDetectorRef) {}
 
   ngOnChanges(changes: SimpleChanges): void {
     for (const propName in changes) {
-      if (changes.hasOwnProperty(propName)) {
+      if (Object.prototype.hasOwnProperty.call(changes, propName)) {
         const change = changes[propName];
         // console.log(`Input property '${propName}' changed:`, change);
 
@@ -101,6 +102,12 @@ export class InputComponent implements OnChanges, ControlValueAccessor {
     this.cdr.detectChanges();
   }
 
+    ngAfterViewInit(): void {
+    if (this.autofocus) {
+      setTimeout(() => this.inputRef?.nativeElement?.focus(), 0);
+    }
+  }
+
   focusInput(): void {
     setTimeout(() => this.inputRef?.nativeElement?.focus(), 0);
   }
@@ -123,13 +130,13 @@ export class InputComponent implements OnChanges, ControlValueAccessor {
     this.value = value;
   }
 
-  registerOnChange(fn: any): void {
-    this.onChange = fn;
-  }
+  registerOnChange(fn: (value: string | number | null) => void): void {
+  this.onChange = fn;
+}
 
-  registerOnTouched(fn: any): void {
-    this.onTouched = fn;
-  }
+  registerOnTouched(fn: (value: string | number | null) => void): void {
+  this.onChange = fn;
+}
 
   handleInput(event: Event): void {
     const target = event.target as HTMLInputElement;

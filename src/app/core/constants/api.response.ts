@@ -11,14 +11,14 @@ export interface FieldError {
   message: string;
 }
 
-export interface ApiResponse<T = any> {
+export interface ApiResponse<T = unknown> {
   status: ApiStatus;
   message?: string;
   data?: T | T[] | Record<string, T>;
-  errors?: any;
+  errors?: T | T[] | Record<string, T>;
 }
 
-export type ApiResult<T = any> = Observable<{
+export type ApiResult<T = unknown> = Observable<{
   loading: boolean;
   response: ApiResponse<T> | null;
 }>;

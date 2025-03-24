@@ -30,16 +30,16 @@ import {
   ],
 })
 export class OtpComponent implements OnInit, OnChanges, AfterViewInit {
-  @Input() length: number = 6;
-  @Input() onlyNumeric: boolean = true;
-  @Input() disabled: boolean = false;
-  @Input() autofocus: boolean = false;
-  @Input() required: boolean = false;
-  @Input() label: string = '';
+  @Input() length = 6;
+  @Input() onlyNumeric = true;
+  @Input() disabled = false;
+  @Input() autofocus = false;
+  @Input() required = false;
+  @Input() label = '';
   @Input() errorMessage: string | null = '';
-  @Input() defaultValue: string = '';
+  @Input() defaultValue = '';
 
-  @Input() inputProps: { [key: string]: any } = {};
+  @Input() inputProps: Record<string, string | boolean> = {};
 
   otpForm!: FormGroup;
   otpControls!: FormControl[]; // Store controls separately for easy access
@@ -103,8 +103,9 @@ export class OtpComponent implements OnInit, OnChanges, AfterViewInit {
     }
   }
 
-  onInputChange(index: number, event: any): void {
-    const value = event.target.value;
+  onInputChange(index: number, event: Event): void {
+    const input = event.target as HTMLInputElement;
+    const value = input.value;
 
     if (this.onlyNumeric && !/^\d$/.test(value)) {
       this.otpControls[index].setValue('');
