@@ -160,7 +160,7 @@ export class SigninComponent implements OnInit, OnDestroy {
   submitLoginForm() {
     this.isSubmitted = true;
 
-    console.log(this.loginForm.value);
+    // console.log(this.loginForm.value);
 
     if (this.loginForm.invalid) return; // Stop execution if form is invalid
 

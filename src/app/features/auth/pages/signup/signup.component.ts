@@ -105,7 +105,7 @@ export class SignupComponent implements OnInit, OnDestroy {
       return `${this.helperService.toTitleCase(field)} must be at least ${control.errors?.['minlength']?.requiredLength} characters`;
 
     case control.hasError('validationError'):
-      return control.errors?.['validationError'];
+      return control.errors?.['validationError'] as string;
 
     default:
       return null;
@@ -248,7 +248,7 @@ export class SignupComponent implements OnInit, OnDestroy {
       this.signup();
     }
 
-    console.log(this.signupForm.value);
+    // console.log(this.signupForm.value);
 
     // this.signupForm.get('mobileNumber')?.setErrors({ 'validationError': 'Vanakkam' });
   }

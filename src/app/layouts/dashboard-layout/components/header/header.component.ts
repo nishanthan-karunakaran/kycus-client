@@ -37,6 +37,6 @@ export class HeaderComponent {
   }
 
   handleIconClick(icon: string) {
-    console.log(icon);
+    // console.log(icon);
   }
 }

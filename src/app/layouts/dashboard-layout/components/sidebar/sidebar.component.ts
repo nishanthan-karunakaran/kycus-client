@@ -24,7 +24,4 @@ export class SidebarComponent {
     }
   ];
 
-
-  constructor() { }
-
 }
