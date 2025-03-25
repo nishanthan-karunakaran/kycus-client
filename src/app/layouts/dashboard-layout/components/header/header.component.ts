@@ -37,6 +37,7 @@ export class HeaderComponent {
   }
 
   handleIconClick(icon: string) {
-    // console.log(icon);
+    // eslint-disable-next-line no-console
+    console.log(icon);
   }
 }

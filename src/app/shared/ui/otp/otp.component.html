@@ -10,7 +10,7 @@
 
   <div class="flex w-full gap-2">
     <input
-      *ngFor="let control of otpControls; let i = index"
+      *ngFor="let control of otpControls; let i = index; trackBy: trackOTP"
       #otpInput
       type="text"
       [maxlength]="1"

@@ -1,12 +1,18 @@
 import { Component } from '@angular/core';
 
+interface Link {
+  name: string;
+  link: string;
+  icon: string;
+}
+
 @Component({
   selector: 'app-dashboard-sidebar',
   templateUrl: './sidebar.component.html',
   styleUrls: ['./sidebar.component.scss'],
 })
 export class SidebarComponent {
-  accessLinks = [
+  accessLinks: Link[] = [
     {
       name: 'Entity',
       link: '/entity',
@@ -23,4 +29,8 @@ export class SidebarComponent {
       icon: 'wallet',
     },
   ];
+
+  trackLink(_: number, item: Link): string {
+    return item.link;
+  }
 }

@@ -40,7 +40,7 @@ module.exports = tseslint.config(
       ],
       '@typescript-eslint/no-empty-function': 'off', // Function body should not be empty
       '@typescript-eslint/no-explicit-any': 'error',
-      '@typescript-eslint/no-unused-vars': ['error', { args: 'none' }],
+      '@typescript-eslint/no-unused-vars': 'error',
       '@typescript-eslint/no-unsafe-return': 'error',
       '@typescript-eslint/prefer-as-const': 'error',
       // '@typescript-eslint/no-magic-numbers': [
@@ -88,6 +88,14 @@ module.exports = tseslint.config(
       ...angular.configs.templateRecommended,
       ...angular.configs.templateAccessibility,
     ],
-    rules: {},
+    rules: {
+      '@angular-eslint/template/use-track-by-function': 'error',
+      '@angular-eslint/template/no-negated-async': 'error',
+      // '@angular-eslint/template/no-call-expression': 'error',
+      '@angular-eslint/template/cyclomatic-complexity': [
+        'error',
+        { maxComplexity: 5 },
+      ],
+    },
   },
 );

@@ -18,10 +18,12 @@ export class ToastComponent {
 
   addToast(toast: Toast) {
     const newToast = {
+      id: this.toasts.length + 1,
       ...toast,
       options: {
         duration: toast.options.duration ?? DEFAULT_TOAST_OPTIONS.duration,
-        dismissable: toast.options.dismissable ?? DEFAULT_TOAST_OPTIONS.dismissable,
+        dismissable:
+          toast.options.dismissable ?? DEFAULT_TOAST_OPTIONS.dismissable,
         outlined: toast.options.outlined ?? DEFAULT_TOAST_OPTIONS.outlined,
         autoClose: toast.options.autoClose ?? DEFAULT_TOAST_OPTIONS.autoClose,
       },
@@ -91,5 +93,11 @@ export class ToastComponent {
       danger: 'alert-octagon',
     };
     return icons[type] || 'bell';
+  }
+
+  trackToast(index: number, toast: Toast) {
+    // eslint-disable-next-line no-console
+    console.log(toast);
+    return toast.id;
   }
 }

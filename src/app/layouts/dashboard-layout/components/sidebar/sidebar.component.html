@@ -4,7 +4,7 @@
 >
   <nav role="navigation" class="mt-4 w-full">
     <ul class="w-full" role="list">
-      <li *ngFor="let link of accessLinks" role="listitem">
+      <li *ngFor="let link of accessLinks; trackBy: trackLink" role="listitem">
         <a
           class="flex w-full items-center gap-2 rounded-md p-4 text-white transition-all duration-200 hover:border-l-4 hover:border-gray-300 hover:bg-gray-700"
           [routerLink]="link.link"

@@ -8,6 +8,7 @@ import {
 import { ToastComponent } from './toast.component';
 
 export interface Toast {
+  id?: string | number;
   type: 'success' | 'error' | 'warning' | 'info' | 'danger';
   message: string;
   options: ToastOptions;

@@ -169,4 +169,8 @@ export class OtpComponent implements OnInit, OnChanges, AfterViewInit {
       }
     });
   }
+
+  trackOTP(index: number) {
+    return index;
+  }
 }
