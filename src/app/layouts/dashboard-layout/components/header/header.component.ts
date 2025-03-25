@@ -10,23 +10,23 @@ interface Icon {
 @Component({
   selector: 'app-dashboard-header',
   templateUrl: './header.component.html',
-  styleUrls: ['./header.component.scss']
+  styleUrls: ['./header.component.scss'],
 })
 export class HeaderComponent {
   iconsArr: Icon[] = [
     {
       name: 'Bell',
       color: 'white',
-      size: '20'
+      size: '20',
     },
     {
       name: 'UserRound',
       color: 'white',
-      size: '22'
-    }
+      size: '22',
+    },
   ];
 
-  constructor(private router: Router) { }
+  constructor(private router: Router) {}
 
   trackIcon(_: number, item: Icon): string {
     return item.name;

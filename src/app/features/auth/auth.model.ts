@@ -4,8 +4,8 @@ export interface AuthStep {
 }
 
 export interface AccessTokens {
-  authToken: string | null,
-  refreshToken: string | null,
+  authToken: string | null;
+  refreshToken: string | null;
 }
 
 export interface Signin {
@@ -29,5 +29,5 @@ export interface Signup {
   companyName: string;
   designation: string;
   mobileNumber: string;
-  isAgree: boolean
+  isAgree: boolean;
 }

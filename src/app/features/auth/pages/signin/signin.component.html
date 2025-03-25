@@ -53,7 +53,7 @@
         [ngClass]="{ loading: isLoading }"
         [disabled]="loginForm.invalid || isLoading"
       >
-        {{ loginState().otpSent ? "Submit OTP" : "Send OTP" }}
+        {{ loginState().otpSent ? 'Submit OTP' : 'Send OTP' }}
       </button>
     </form>
     <p>Don't have an account? <a routerLink="/auth/signup">REGISTER</a></p>

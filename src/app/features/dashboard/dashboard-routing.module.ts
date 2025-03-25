@@ -8,28 +8,28 @@ const routes: Routes = [
   {
     path: '',
     redirectTo: 'wallet',
-    pathMatch: 'full'
+    pathMatch: 'full',
   },
   {
     path: 'wallet',
-    component: WalletComponent
+    component: WalletComponent,
   },
   {
     path: 'entity',
-    component: EntityComponent
+    component: EntityComponent,
   },
   {
     path: 'consent',
-    component: ConsentComponent
+    component: ConsentComponent,
   },
   {
     path: '**',
-    redirectTo: 'wallet'
-  }
+    redirectTo: 'wallet',
+  },
 ];
 
 @NgModule({
   imports: [RouterModule.forChild(routes)],
-  exports: [RouterModule]
+  exports: [RouterModule],
 })
-export class DashboardRoutingModule { }
+export class DashboardRoutingModule {}

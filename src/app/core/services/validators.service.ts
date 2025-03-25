@@ -12,9 +12,9 @@ export class ValidatorsService {
       return valid
         ? null
         : {
-          email: true,
-          validationError: customMessage || 'Invalid email format',
-        };
+            email: true,
+            validationError: customMessage || 'Invalid email format',
+          };
     };
   }
 
@@ -35,9 +35,9 @@ export class ValidatorsService {
       return valid
         ? null
         : {
-          aadhaar: true,
-          validationError: customMessage || 'Invalid Aadhaar number',
-        };
+            aadhaar: true,
+            validationError: customMessage || 'Invalid Aadhaar number',
+          };
     };
   }
 
@@ -48,9 +48,9 @@ export class ValidatorsService {
       return valid
         ? null
         : {
-          mobileNumber: true,
-          validationError: customMessage || 'Invalid mobile number',
-        };
+            mobileNumber: true,
+            validationError: customMessage || 'Invalid mobile number',
+          };
     };
   }
 }

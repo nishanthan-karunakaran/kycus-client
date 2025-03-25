@@ -7,24 +7,24 @@ const routes: Routes = [
   {
     path: '',
     redirectTo: 'signin',
-    pathMatch: 'full'
+    pathMatch: 'full',
   },
   {
     path: 'signin',
-    component: SigninComponent
+    component: SigninComponent,
   },
   {
     path: 'signup',
-    component: SignupComponent
+    component: SignupComponent,
   },
   {
     path: '**',
-    redirectTo: 'signin'
-  }
+    redirectTo: 'signin',
+  },
 ];
 
 @NgModule({
   imports: [RouterModule.forChild(routes)],
-  exports: [RouterModule]
+  exports: [RouterModule],
 })
-export class AuthRoutingModule { }
+export class AuthRoutingModule {}

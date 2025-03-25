@@ -16,7 +16,10 @@ export enum InputFormat {
 export class InputFormatDirective {
   @Input('inputFormat') format: InputFormat = InputFormat.DEFAULT;
 
-  constructor(private el: ElementRef, private control: NgControl) {}
+  constructor(
+    private el: ElementRef,
+    private control: NgControl,
+  ) {}
 
   @HostListener('input', ['$event'])
   onInput(event: Event) {
@@ -24,20 +27,20 @@ export class InputFormatDirective {
     let transformedValue = input.value;
 
     switch (this.format) {
-    case 'uppercase':
-      transformedValue = transformedValue.toUpperCase();
-      break;
-    case 'lowercase':
-      transformedValue = transformedValue.toLowerCase();
-      break;
-    case 'capitalize':
-      transformedValue = this.capitalizeWords(transformedValue);
-      break;
-    case 'numbers':
-      transformedValue = transformedValue.replace(/\D/g, ''); // Remove non-numeric characters
-      break;
-    default:
-      break;
+      case 'uppercase':
+        transformedValue = transformedValue.toUpperCase();
+        break;
+      case 'lowercase':
+        transformedValue = transformedValue.toLowerCase();
+        break;
+      case 'capitalize':
+        transformedValue = this.capitalizeWords(transformedValue);
+        break;
+      case 'numbers':
+        transformedValue = transformedValue.replace(/\D/g, ''); // Remove non-numeric characters
+        break;
+      default:
+        break;
     }
 
     // Update form control without triggering unnecessary change events
@@ -45,6 +48,6 @@ export class InputFormatDirective {
   }
 
   private capitalizeWords(value: string): string {
-    return value.replace(/\b\w/g, char => char.toUpperCase());
+    return value.replace(/\b\w/g, (char) => char.toUpperCase());
   }
 }

@@ -1,5 +1,11 @@
 import { Component, OnDestroy, OnInit, signal } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, ValidatorFn, Validators } from '@angular/forms';
+import {
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  ValidatorFn,
+  Validators,
+} from '@angular/forms';
 import { Router } from '@angular/router';
 import { interval, Subscription, takeWhile } from 'rxjs';
 import { ApiStatus } from 'src/app/core/constants/api.response';
@@ -56,25 +62,27 @@ export class SignupComponent implements OnInit, OnDestroy {
   }
 
   addAllFields(): void {
-  this.isSubmitted = false;
+    this.isSubmitted = false;
 
-  const additionalFields: Record<string, [string, ValidatorFn | ValidatorFn[]]> = {
-    cin: ['', Validators.required],
-    companyName: ['', Validators.required],
-    designation: ['', Validators.required],
-    mobileNumber: [
-      '',
-      [Validators.required, this.validatorService.mobileNumberValidator()],
-    ],
-  };
+    const additionalFields: Record<
+      string,
+      [string, ValidatorFn | ValidatorFn[]]
+    > = {
+      cin: ['', Validators.required],
+      companyName: ['', Validators.required],
+      designation: ['', Validators.required],
+      mobileNumber: [
+        '',
+        [Validators.required, this.validatorService.mobileNumberValidator()],
+      ],
+    };
 
-  Object.entries(additionalFields).forEach(([key, config]: [string, [string, ValidatorFn | ValidatorFn[]]]) => {
-    this.signupForm.addControl(
-      key,
-      new FormControl(config[0], config[1])
+    Object.entries(additionalFields).forEach(
+      ([key, config]: [string, [string, ValidatorFn | ValidatorFn[]]]) => {
+        this.signupForm.addControl(key, new FormControl(config[0], config[1]));
+      },
     );
-  });
-}
+  }
   getRequiredMessage(field: string): string {
     const capsErrorFields = ['aadhaar', 'pan', 'otp', 'companyName'];
 
@@ -95,20 +103,20 @@ export class SignupComponent implements OnInit, OnDestroy {
     if (!control) return null;
 
     switch (true) {
-    case control.hasError('required'):
-      return this.getRequiredMessage(field);
+      case control.hasError('required'):
+        return this.getRequiredMessage(field);
 
-    case control.hasError('email'):
-      return 'Invalid email format';
+      case control.hasError('email'):
+        return 'Invalid email format';
 
-    case control.hasError('minlength'):
-      return `${this.helperService.toTitleCase(field)} must be at least ${control.errors?.['minlength']?.requiredLength} characters`;
+      case control.hasError('minlength'):
+        return `${this.helperService.toTitleCase(field)} must be at least ${control.errors?.['minlength']?.requiredLength} characters`;
 
-    case control.hasError('validationError'):
-      return control.errors?.['validationError'] as string;
+      case control.hasError('validationError'):
+        return control.errors?.['validationError'] as string;
 
-    default:
-      return null;
+      default:
+        return null;
     }
   }
 
@@ -206,13 +214,13 @@ export class SignupComponent implements OnInit, OnDestroy {
 
   signup() {
     const payload = {
-      'email': this.signupForm.value.email,
-      'username': this.signupForm.value.name,
-      'isAgree':true,
-      'companyName': this.signupForm.value.companyName,
-      'designation': this.signupForm.value.designation,
-      'mobileNumber': this.signupForm.value.mobileNumber,
-      'cin':'12231788938141'
+      email: this.signupForm.value.email,
+      username: this.signupForm.value.name,
+      isAgree: true,
+      companyName: this.signupForm.value.companyName,
+      designation: this.signupForm.value.designation,
+      mobileNumber: this.signupForm.value.mobileNumber,
+      cin: '12231788938141',
     };
 
     this.authService.signup(payload).subscribe({

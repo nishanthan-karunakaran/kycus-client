@@ -2,15 +2,15 @@
   *ngIf="isOpen"
   class="modal-overlay fixed inset-0 z-50 flex items-center justify-center"
 >
-<div
-  class="absolute inset-0 bg-black bg-opacity-40 backdrop-blur-sm transition-opacity"
-  (click)="onOverlayClick($event)"
-  (keydown.enter)="onOverlayClick($event)"
-  (keydown.space)="onOverlayClick($event)"
-  tabindex="0"
-  role="button"
-  aria-label="Close overlay"
-></div>
+  <div
+    class="absolute inset-0 bg-black bg-opacity-40 backdrop-blur-sm transition-opacity"
+    (click)="onOverlayClick($event)"
+    (keydown.enter)="onOverlayClick($event)"
+    (keydown.space)="onOverlayClick($event)"
+    tabindex="0"
+    role="button"
+    aria-label="Close overlay"
+  ></div>
 
   <div
     class="modal-container animate-fade-in relative w-full max-w-lg scale-95 transform rounded-xl bg-white shadow-lg transition-transform"

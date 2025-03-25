@@ -24,7 +24,9 @@ import { InputFormat } from 'src/app/core/directives/input-format.directive';
     },
   ],
 })
-export class InputComponent implements OnChanges, AfterViewInit, ControlValueAccessor {
+export class InputComponent
+  implements OnChanges, AfterViewInit, ControlValueAccessor
+{
   @Input() type = 'text';
   @Input() id = '';
   @Input() name = '';
@@ -102,7 +104,7 @@ export class InputComponent implements OnChanges, AfterViewInit, ControlValueAcc
     this.cdr.detectChanges();
   }
 
-    ngAfterViewInit(): void {
+  ngAfterViewInit(): void {
     if (this.autofocus) {
       setTimeout(() => this.inputRef?.nativeElement?.focus(), 0);
     }
@@ -131,12 +133,12 @@ export class InputComponent implements OnChanges, AfterViewInit, ControlValueAcc
   }
 
   registerOnChange(fn: (value: string | number | null) => void): void {
-  this.onChange = fn;
-}
+    this.onChange = fn;
+  }
 
   registerOnTouched(fn: (value: string | number | null) => void): void {
-  this.onChange = fn;
-}
+    this.onChange = fn;
+  }
 
   handleInput(event: Event): void {
     const target = event.target as HTMLInputElement;
@@ -150,7 +152,7 @@ export class InputComponent implements OnChanges, AfterViewInit, ControlValueAcc
     }
 
     if (this.type === 'number') {
-    // Remove non-numeric characters except for decimal and minus sign
+      // Remove non-numeric characters except for decimal and minus sign
       let cleanedValue = inputValue.replace(/[^0-9.-]/g, '');
 
       // Ensure only one decimal point is allowed
@@ -177,7 +179,7 @@ export class InputComponent implements OnChanges, AfterViewInit, ControlValueAcc
         target.value = ''; // Clear input if value is not valid
       }
     } else {
-    // For other types, just update the value based on input (text, etc.)
+      // For other types, just update the value based on input (text, etc.)
       this.value = inputValue;
       target.value = inputValue; // Update input field with value
     }
@@ -185,5 +187,4 @@ export class InputComponent implements OnChanges, AfterViewInit, ControlValueAcc
     this.onChange(this.value); // Notify change
     this.onTouched(); // Mark input as touched
   }
-
 }

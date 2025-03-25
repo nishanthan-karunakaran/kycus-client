@@ -1,6 +1,13 @@
 import { Component } from '@angular/core';
 import { Toast } from 'src/app/shared/ui/toast/toast.service';
 
+export const DEFAULT_TOAST_OPTIONS = {
+  duration: 2000,
+  dismissable: true,
+  outlined: false,
+  autoClose: true,
+} as const;
+
 @Component({
   selector: 'ui-toast',
   templateUrl: './toast.component.html',
@@ -13,10 +20,10 @@ export class ToastComponent {
     const newToast = {
       ...toast,
       options: {
-        duration: toast.options.duration ?? 2000,
-        dismissable: toast.options.dismissable ?? true,
-        outlined: toast.options.outlined ?? false,
-        autoClose: toast.options.autoClose ?? true,
+        duration: toast.options.duration ?? DEFAULT_TOAST_OPTIONS.duration,
+        dismissable: toast.options.dismissable ?? DEFAULT_TOAST_OPTIONS.dismissable,
+        outlined: toast.options.outlined ?? DEFAULT_TOAST_OPTIONS.outlined,
+        autoClose: toast.options.autoClose ?? DEFAULT_TOAST_OPTIONS.autoClose,
       },
     };
 

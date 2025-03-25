@@ -6,10 +6,7 @@ import { SidebarComponent } from './components/sidebar/sidebar.component';
 import { HeaderComponent } from './components/header/header.component';
 
 @NgModule({
-  imports: [
-    SharedModule,
-    DashboardLayoutRoutingModule
-  ],
-  declarations: [DashboardLayoutComponent, SidebarComponent, HeaderComponent]
+  imports: [SharedModule, DashboardLayoutRoutingModule],
+  declarations: [DashboardLayoutComponent, SidebarComponent, HeaderComponent],
 })
-export class DashboardLayoutModule { }
+export class DashboardLayoutModule {}

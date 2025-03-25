@@ -1,11 +1,11 @@
 // @ts-check
-const eslint = require("@eslint/js");
-const tseslint = require("typescript-eslint");
-const angular = require("angular-eslint");
+const eslint = require('@eslint/js');
+const tseslint = require('typescript-eslint');
+const angular = require('angular-eslint');
 
 module.exports = tseslint.config(
   {
-    files: ["**/*.ts"],
+    files: ['**/*.ts'],
     extends: [
       eslint.configs.recommended,
       ...tseslint.configs.recommended,
@@ -14,7 +14,7 @@ module.exports = tseslint.config(
       {
         languageOptions: {
           parserOptions: {
-            project: "./tsconfig.json",
+            project: './tsconfig.json',
             tsconfigRootDir: __dirname,
           },
         },
@@ -30,48 +30,60 @@ module.exports = tseslint.config(
       //     style: "camelCase",
       //   },
       // ],
-      "@angular-eslint/component-selector": [
-        "error",
+      '@angular-eslint/component-selector': [
+        'error',
         {
-          type: "element",
-          prefix: ["app", "ui"],
-          style: "kebab-case",
+          type: 'element',
+          prefix: ['app', 'ui'],
+          style: 'kebab-case',
         },
       ],
-      "@typescript-eslint/no-empty-function": "off", // Function body should not be empty
-      "@typescript-eslint/no-explicit-any": "error",
-      "@typescript-eslint/no-unused-vars": ["error", { args: "none" }],
-      "@typescript-eslint/no-unsafe-return": "error",
-      "@typescript-eslint/prefer-as-const": "error",
-      // "@typescript-eslint/no-magic-numbers": [
-      //   "error",
+      '@typescript-eslint/no-empty-function': 'off', // Function body should not be empty
+      '@typescript-eslint/no-explicit-any': 'error',
+      '@typescript-eslint/no-unused-vars': ['error', { args: 'none' }],
+      '@typescript-eslint/no-unsafe-return': 'error',
+      '@typescript-eslint/prefer-as-const': 'error',
+      // '@typescript-eslint/no-magic-numbers': [
+      //   'error',
       //   {
+      //     ignore: [-1, 0, 1],
       //     ignoreArrayIndexes: true,
       //   },
       // ],
-      "@typescript-eslint/array-type": [
-        "error",
+      '@typescript-eslint/array-type': [
+        'error',
         {
-          default: "array-simple",
+          default: 'array-simple',
         },
       ],
-      "no-restricted-imports": [
-        "error",
+      'no-restricted-imports': [
+        'error',
         {
-          patterns: ["../*"],
+          patterns: ['../*'],
         },
       ],
-      "@typescript-eslint/no-useless-constructor": "error",
-      "no-extra-boolean-cast": "error",
-      eqeqeq: "error",
-      "no-console": "error",
-      "no-debugger": "error", // Disallows debugger
-      // "no-undef": "error", // Ensures no variables are used without being defined
-      "no-duplicate-imports": "error",
+      '@typescript-eslint/no-useless-constructor': 'error',
+      'no-extra-boolean-cast': 'error',
+      eqeqeq: 'error',
+      'no-console': 'error',
+      'no-debugger': 'error', // Disallows debugger
+      // 'no-undef': 'error', // Ensures no variables are used without being defined
+      'no-duplicate-imports': 'error',
+      'max-len': [
+        'warn',
+        {
+          code: 120,
+          ignoreUrls: true,
+          ignoreStrings: true,
+          ignoreTemplateLiterals: true,
+          ignoreComments: true,
+          ignoreRegExpLiterals: true,
+        },
+      ],
     },
   },
   {
-    files: ["**/*.html"],
+    files: ['**/*.html'],
     extends: [
       ...angular.configs.templateRecommended,
       ...angular.configs.templateAccessibility,

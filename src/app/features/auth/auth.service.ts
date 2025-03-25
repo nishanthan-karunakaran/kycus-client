@@ -2,7 +2,11 @@ import { Injectable } from '@angular/core';
 import { ApiResponse, ApiResult } from 'src/app/core/constants/api.response';
 import { API_URL } from 'src/app/core/constants/apiurls';
 import { ApiService } from 'src/app/core/services/api.service';
-import { AccessTokens, Signup, ValidataEmailOTP } from 'src/app/features/auth/auth.model';
+import {
+  AccessTokens,
+  Signup,
+  ValidataEmailOTP,
+} from 'src/app/features/auth/auth.model';
 import { RequestLoginOtp, Signin } from './auth.model';
 
 @Injectable({
@@ -49,7 +53,10 @@ export class AuthService {
   }
 
   sendEmailOTP(data: { email: string }): ApiResult {
-    return this.api.post<ApiResponse<ApiResult>>(API_URL.AUTH.SEND_EMAIL_OTP, data);
+    return this.api.post<ApiResponse<ApiResult>>(
+      API_URL.AUTH.SEND_EMAIL_OTP,
+      data,
+    );
   }
 
   verifyEmailOTP(data: ValidataEmailOTP): ApiResult {
@@ -64,7 +71,10 @@ export class AuthService {
   }
 
   requestLoginOTP(data: RequestLoginOtp): ApiResult {
-    return this.api.post<ApiResponse<ApiResult>>(API_URL.AUTH.REQUEST_LOGIN_OTP, data);
+    return this.api.post<ApiResponse<ApiResult>>(
+      API_URL.AUTH.REQUEST_LOGIN_OTP,
+      data,
+    );
   }
 
   signin(data: Signin): ApiResult {
