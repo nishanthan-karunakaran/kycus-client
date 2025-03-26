@@ -11,6 +11,7 @@ import {
   FileText,
   Info,
   Landmark,
+  LaptopMinimalCheck,
   LucideAngularModule,
   User,
   UserRound,
@@ -46,6 +47,7 @@ import { InputFormatDirective } from 'src/app/core/directives/input-format.direc
       Landmark,
       Wallet,
       FileText,
+      LaptopMinimalCheck,
     }),
   ],
   exports: [

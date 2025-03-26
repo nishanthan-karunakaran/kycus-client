@@ -29,6 +29,11 @@ export class SidebarComponent {
       link: '/wallet',
       icon: 'wallet',
     },
+    {
+      name: 'Re-KYC',
+      link: '/reKYC',
+      icon: 'laptop-minimal-check',
+    },
   ];
 
   constructor(private router: Router) {}

@@ -34,6 +34,13 @@ const routes: Routes = [
           ),
       },
       {
+        path: 'reKYC',
+        loadChildren: () =>
+          import('../../features/rekyc/rekyc.module').then(
+            (m) => m.RekycModule,
+          ),
+      },
+      {
         path: '**',
         redirectTo: 'wallet',
       },
