@@ -1,19 +1,23 @@
 <aside
   class="sidebar-bg flex h-full w-52 flex-col items-center"
-  aria-label="Sidebar Navigation"
+  role="complementary"
 >
-  <nav role="navigation" class="mt-4 w-full">
+  <nav role="navigation" aria-labelledby="sidebar-nav" class="mt-4 w-full">
+    <h2 id="sidebar-nav" class="sr-only">Sidebar Navigation</h2>
     <ul class="w-full" role="list">
       <li *ngFor="let link of accessLinks; trackBy: trackLink" role="listitem">
         <a
-          class="flex w-full items-center gap-2 rounded-md p-4 text-white transition-all duration-200 hover:border-l-4 hover:border-gray-300 hover:bg-gray-700"
+          class="accessLink"
           [routerLink]="link.link"
           routerLinkActive="border-l-4 border-white font-semibold bg-gray-800 text-gray-100"
-          tabindex="0"
+          role="link"
+          (keydown.enter)="handleAccessLink(link.link)"
+          (keydown.space)="handleAccessLink(link.link)"
         >
           <lucide-icon
             [name]="link.icon"
             class="h-5 w-5 text-white"
+            aria-hidden="true"
           ></lucide-icon>
           {{ link.name }}
         </a>

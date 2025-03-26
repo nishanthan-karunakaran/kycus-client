@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { Router } from '@angular/router';
 
 interface Link {
   name: string;
@@ -29,6 +30,12 @@ export class SidebarComponent {
       icon: 'wallet',
     },
   ];
+
+  constructor(private router: Router) {}
+
+  handleAccessLink(link: string) {
+    this.router.navigate([link]);
+  }
 
   trackLink(_: number, item: Link): string {
     return item.link;
