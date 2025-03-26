@@ -1,0 +1,19 @@
+<div
+  *ngIf="isOpen"
+  class="fixed inset-0 z-10 bg-gray-600 bg-opacity-50"
+  (click)="close()"
+  (keydown.enter)="close()"
+  (keydown.space)="close()"
+  tabindex="0"
+></div>
+
+<div
+  *ngIf="isOpen"
+  class="fixed right-0 top-0 z-20 h-full w-80 transform bg-white shadow-lg transition-transform duration-300 ease-in-out"
+  [ngClass]="{ 'translate-x-full': !isOpen }"
+>
+  <button (click)="close()" class="absolute right-4 top-4 text-xl">×</button>
+  <div class="p-4">
+    <ng-content></ng-content>
+  </div>
+</div>

@@ -28,6 +28,7 @@ import { OtpComponent } from 'src/app/shared/ui/otp/otp.component';
 import { ToastComponent } from 'src/app/shared/ui/toast/toast.component';
 import { InputFormatDirective } from 'src/app/core/directives/input-format.directive';
 import { TableComponent } from './ui/table/table.component';
+import { SheetComponent } from './ui/sheet/sheet.component';
 
 @NgModule({
   declarations: [
@@ -36,6 +37,7 @@ import { TableComponent } from './ui/table/table.component';
     OtpComponent,
     InputComponent,
     TableComponent,
+    SheetComponent,
   ],
   imports: [
     CommonModule,
@@ -75,6 +77,7 @@ import { TableComponent } from './ui/table/table.component';
     OtpComponent,
     InputComponent,
     TableComponent,
+    SheetComponent,
   ],
 })
 export class SharedModule {}
