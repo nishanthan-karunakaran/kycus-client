@@ -5,6 +5,9 @@ import { RouterModule } from '@angular/router';
 import {
   AlertOctagon,
   AlertTriangle,
+  ArrowDown,
+  ArrowUp,
+  ArrowUpDown,
   Bell,
   Check,
   CheckCircle,
@@ -24,9 +27,16 @@ import { ModalComponent } from 'src/app/shared/ui/modal/modal.component';
 import { OtpComponent } from 'src/app/shared/ui/otp/otp.component';
 import { ToastComponent } from 'src/app/shared/ui/toast/toast.component';
 import { InputFormatDirective } from 'src/app/core/directives/input-format.directive';
+import { TableComponent } from './ui/table/table.component';
 
 @NgModule({
-  declarations: [ToastComponent, ModalComponent, OtpComponent, InputComponent],
+  declarations: [
+    ToastComponent,
+    ModalComponent,
+    OtpComponent,
+    InputComponent,
+    TableComponent,
+  ],
   imports: [
     CommonModule,
     RouterModule,
@@ -48,6 +58,9 @@ import { InputFormatDirective } from 'src/app/core/directives/input-format.direc
       Wallet,
       FileText,
       LaptopMinimalCheck,
+      ArrowUp,
+      ArrowDown,
+      ArrowUpDown,
     }),
   ],
   exports: [
@@ -61,6 +74,7 @@ import { InputFormatDirective } from 'src/app/core/directives/input-format.direc
     ModalComponent,
     OtpComponent,
     InputComponent,
+    TableComponent,
   ],
 })
 export class SharedModule {}

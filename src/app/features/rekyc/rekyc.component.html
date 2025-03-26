@@ -1,3 +1,7 @@
-<p>
-  rekyc works!
-</p>
+<ui-table
+  [data]="user"
+  [sortable]="['age', 'name']"
+  [columns]="columns"
+  [emitActiveRow]="true"
+  (activeRow)="onRowSelected($event)"
+></ui-table>
