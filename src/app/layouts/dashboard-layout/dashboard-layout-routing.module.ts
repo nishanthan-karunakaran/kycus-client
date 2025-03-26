@@ -9,10 +9,33 @@ const routes: Routes = [
     children: [
       {
         path: '',
+        redirectTo: 'wallet',
+        pathMatch: 'full',
+      },
+      {
+        path: 'wallet',
         loadChildren: () =>
-          import('../../features/dashboard/dashboard.module').then(
-            (m) => m.DashboardModule,
+          import('../../features/wallet/wallet.module').then(
+            (m) => m.WalletModule,
           ),
+      },
+      {
+        path: 'entity',
+        loadChildren: () =>
+          import('../../features/entity/entity.module').then(
+            (m) => m.EntityModule,
+          ),
+      },
+      {
+        path: 'consent',
+        loadChildren: () =>
+          import('../../features/consent/consent.module').then(
+            (m) => m.ConsentModule,
+          ),
+      },
+      {
+        path: '**',
+        redirectTo: 'wallet',
       },
     ],
   },
