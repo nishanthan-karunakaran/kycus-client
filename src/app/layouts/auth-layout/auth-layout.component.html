@@ -1,1 +1,7 @@
-<p>auth-layout works!</p>
+<section class="flex h-screen w-screen overflow-hidden">
+  <app-auth-sidebar class="h-full w-1/5" />
+
+  <main class="flex-1 overflow-auto bg-white">
+    <router-outlet></router-outlet>
+  </main>
+</section>
