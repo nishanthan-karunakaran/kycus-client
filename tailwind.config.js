@@ -16,7 +16,7 @@ export default {
         textSubtle: '#7B8798',
         failure: '#E74C3C',
         failureLight: '#FAD4D0',
-        success: '#15803D',
+        success: '#219B17',
         successLight: '#90EE90',
         warning: '#D97706',
         warningLight: '#FDE68A',

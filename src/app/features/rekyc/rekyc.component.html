@@ -1,7 +1,66 @@
-<ui-table
-  [data]="user"
-  [sortable]="['age', 'name']"
-  [columns]="columns"
-  [emitActiveRow]="true"
-  (activeRow)="onRowSelected($event)"
-></ui-table>
+<section class="flex flex-col gap-4">
+  <div class="flex justify-between">
+    <ui-input
+      type="search"
+      placeholder="Search Company"
+      class="w-36"
+      (valueChange)="onSearchInputChange($event)"
+      aria-label="Search for a company"
+    ></ui-input>
+
+    <div class="flex items-center gap-2">
+      <button class="btn-outline flex items-center gap-2">
+        <lucide-icon name="sliders-horizontal" size="14" />
+        Filter
+      </button>
+      <button>Upload</button>
+    </div>
+  </div>
+
+  <table aria-labelledby="user-table">
+    <thead>
+      <tr>
+        <th scope="col" class="w-[25%]">Company</th>
+        <th scope="col" class="w-[25%]">Requested On</th>
+        <th scope="col" class="w-[20%]">Status</th>
+        <th scope="col" class="w-[30%]">Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      <ng-container *ngFor="let item of users; trackBy: trackRow">
+        <tr>
+          <td>{{ item.company }}</td>
+          <td>{{ item.requestedOn }}</td>
+          <td
+            [ngClass]="
+              item.status.toLowerCase() === 'completed'
+                ? 'text-success'
+                : 'text-secondary'
+            "
+          >
+            {{ item.status }}
+          </td>
+          <td class="flex items-center gap-2">
+            <button
+              class="btn-outline flex items-center gap-2 px-2 py-1 text-xs"
+            >
+              <span>Send Reminder</span>
+              <lucide-icon
+                name="bell-ring"
+                color="#01327E"
+                size="14"
+                aria-hidden="true"
+              />
+            </button>
+            <button class="btn-outline p-1.5 text-xs">
+              <lucide-icon name="download" size="14" aria-hidden="true" />
+            </button>
+            <button class="btn-outline p-1.5 text-xs">
+              <lucide-icon name="eye" size="14" aria-hidden="true" />
+            </button>
+          </td>
+        </tr>
+      </ng-container>
+    </tbody>
+  </table>
+</section>

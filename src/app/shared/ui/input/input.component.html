@@ -12,6 +12,8 @@
         'pr-10': icon !== null,
         'error-input': errorMessage,
       }"
+      [class]="class"
+      [(ngModel)]="value"
       (input)="handleInput($event)"
       [attr.disabled]="disabled ? true : null"
       [attr.required]="required ? true : null"

@@ -1,11 +1,4 @@
-import {
-  Component,
-  DoCheck,
-  EventEmitter,
-  Input,
-  OnInit,
-  Output,
-} from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 
 interface Column {
   key: string;
@@ -21,14 +14,12 @@ type DataRow = Record<string, string | number | boolean>;
   templateUrl: './table.component.html',
   styleUrls: ['./table.component.scss'],
 })
-export class TableComponent<T extends DataRow> implements OnInit, DoCheck {
+export class TableComponent<T extends DataRow> implements OnInit {
   @Input() data: T[] = [];
   @Input() columns: Column[] = [];
   @Input() sortable: boolean | string[] = true;
   @Input() emitActiveRow = false;
   @Output() activeRow = new EventEmitter<T>();
-
-  render = 0;
 
   sortedData: T[] = [];
   sortKey: string | null = null;
@@ -45,12 +36,6 @@ export class TableComponent<T extends DataRow> implements OnInit, DoCheck {
     this.columns.forEach((column) => {
       this.columnSortState[column.key] = 'none';
     });
-  }
-
-  ngDoCheck(): void {
-    this.render++;
-    // eslint-disable-next-line no-console
-    console.log('render table => ', this.render);
   }
 
   sort(key: string) {

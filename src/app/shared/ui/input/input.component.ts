@@ -3,9 +3,11 @@ import {
   ChangeDetectorRef,
   Component,
   ElementRef,
+  EventEmitter,
   forwardRef,
   Input,
   OnChanges,
+  Output,
   SimpleChanges,
   ViewChild,
 } from '@angular/core';
@@ -44,6 +46,8 @@ export class InputComponent
   @Input() errorMessage: string | null = null;
   @Input() icon: string | null = null;
   @Input() inputFormat: InputFormat = InputFormat.DEFAULT;
+  @Input() class = '';
+  @Output() valueChange = new EventEmitter<string | number | boolean>();
 
   value: string | number | boolean = '';
   @ViewChild('inputElement') inputRef!: ElementRef<HTMLInputElement>;
@@ -184,7 +188,8 @@ export class InputComponent
       target.value = inputValue; // Update input field with value
     }
 
-    this.onChange(this.value); // Notify change
-    this.onTouched(); // Mark input as touched
+    this.onChange(this.value);
+    this.onTouched();
+    this.valueChange.emit(this.value);
   }
 }
