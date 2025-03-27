@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, DoCheck, OnInit } from '@angular/core';
 import { HelperService } from 'src/app/core/services/helpers.service';
 
 interface User {
@@ -13,7 +13,7 @@ interface User {
   templateUrl: './rekyc.component.html',
   styleUrls: ['./rekyc.component.scss'],
 })
-export class RekycComponent implements OnInit {
+export class RekycComponent implements OnInit, DoCheck {
   users: User[] = [
     {
       id: 1,
@@ -39,12 +39,24 @@ export class RekycComponent implements OnInit {
 
   constructor(private helperService: HelperService) {}
 
+  ngDoCheck(): void {
+    // eslint-disable-next-line no-console
+    console.log('rendeing');
+  }
+
   ngOnInit(): void {
     if (this.users.length > 0) {
       this.columns = Object.keys(this.users[0]).map((key) =>
         this.helperService.toTitleCase(key, 'camelCase'),
       );
     }
+  }
+
+  get filteredUsers(): User[] {
+    const query = this.searchInput as string;
+    return this.users.filter((user) =>
+      user.company.toLowerCase().includes(query),
+    );
   }
 
   onSearchInputChange(event: string | number | boolean): void {
@@ -54,14 +66,6 @@ export class RekycComponent implements OnInit {
   onRowSelected(row: User) {
     // eslint-disable-next-line no-console
     console.log('Selected Row:', row);
-  }
-
-  objectEntries(obj: User) {
-    return Object.entries(obj);
-  }
-
-  objectKeys(obj: User) {
-    return Object.keys(obj);
   }
 
   trackByKey(_: number, key: string): string {
