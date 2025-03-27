@@ -1,11 +1,18 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import {
+  Component,
+  Input,
+  Output,
+  EventEmitter,
+  ChangeDetectionStrategy,
+  OnChanges,
+} from '@angular/core';
 
 @Component({
   selector: 'ui-button',
   template: `
     <button
       class="flex items-center justify-center gap-2"
-      [ngClass]="class"
+      [ngClass]="btnClass"
       [attr.tabindex]="tabindex"
       [attr.aria-label]="ariaLabel"
       [attr.aria-disabled]="disabled"
@@ -15,27 +22,20 @@ import { Component, Input, Output, EventEmitter } from '@angular/core';
       [type]="type"
       (click)="btnClick.emit($event)"
     >
-      <lucide-icon
-        *ngIf="icon && iconPos === 'left'"
-        [name]="icon"
-        [size]="iconSize"
-        aria-hidden="true"
-      ></lucide-icon>
       <span *ngIf="label">{{ label }}</span>
       <lucide-icon
-        *ngIf="icon && iconPos === 'right'"
         [name]="icon"
         [size]="iconSize"
         aria-hidden="true"
       ></lucide-icon>
     </button>
   `,
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ButtonComponent {
+export class ButtonComponent implements OnChanges {
   @Input() label!: string;
   @Input() icon?: string;
   @Input() iconSize = 20;
-  @Input() iconColor = '';
   @Input() iconPos: 'left' | 'right' = 'left';
   @Input() class = '';
   @Input() tabindex = 0;
@@ -46,4 +46,13 @@ export class ButtonComponent {
   @Input() ariaPressed?: boolean;
 
   @Output() btnClick = new EventEmitter<Event>();
+
+  btnClass = {};
+
+  ngOnChanges() {
+    this.btnClass = {
+      'flex-row-reverse': this.iconPos === 'left',
+      [this.class]: !!this.class,
+    };
+  }
 }
