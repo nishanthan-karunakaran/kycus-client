@@ -19,6 +19,7 @@ import {
   Landmark,
   LaptopMinimalCheck,
   LucideAngularModule,
+  Search,
   SlidersHorizontal,
   Upload,
   User,
@@ -75,6 +76,7 @@ import { ButtonComponent } from './ui/button/button.component';
       Download,
       BellRing,
       Upload,
+      Search,
     }),
   ],
   exports: [
