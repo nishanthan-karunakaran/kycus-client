@@ -9,11 +9,13 @@
     ></ui-input>
 
     <div class="flex items-center gap-2">
-      <button class="btn-outline flex items-center gap-2">
-        <lucide-icon name="sliders-horizontal" size="14" />
-        Filter
-      </button>
-      <button>Upload</button>
+      <ui-button
+        label="Filter"
+        icon="sliders-horizontal"
+        [iconSize]="16"
+        class="btn-outline"
+      />
+      <ui-button label="Upload" icon="upload" [iconSize]="16" />
     </div>
   </div>
 
@@ -44,21 +46,24 @@
           {{ item.status }}
         </td>
         <td class="flex items-center gap-2">
-          <button class="btn-outline flex items-center gap-2 px-2 py-1 text-xs">
-            <span>Send Reminder</span>
-            <lucide-icon
-              name="bell-ring"
-              color="#01327E"
-              size="14"
-              aria-hidden="true"
-            />
-          </button>
-          <button class="btn-outline p-1.5 text-xs">
-            <lucide-icon name="download" size="14" aria-hidden="true" />
-          </button>
-          <button class="btn-outline p-1.5 text-xs">
-            <lucide-icon name="eye" size="14" aria-hidden="true" />
-          </button>
+          <ui-button
+            class="btn-outline px-2 py-1 text-xs"
+            label="Send Reminder"
+            icon="bell-ring"
+            iconColor="#01327E"
+            [iconSize]="14"
+            iconPos="right"
+          />
+          <ui-button
+            class="btn-outline p-1.5 text-xs"
+            icon="download"
+            [iconSize]="14"
+          />
+          <ui-button
+            class="btn-outline p-1.5 text-xs"
+            icon="eye"
+            [iconSize]="14"
+          />
         </td>
       </tr>
     </tbody>

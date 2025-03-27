@@ -20,6 +20,7 @@ import {
   LaptopMinimalCheck,
   LucideAngularModule,
   SlidersHorizontal,
+  Upload,
   User,
   UserRound,
   Wallet,
@@ -33,6 +34,7 @@ import { ToastComponent } from 'src/app/shared/ui/toast/toast.component';
 import { InputFormatDirective } from 'src/app/core/directives/input-format.directive';
 import { TableComponent } from './ui/table/table.component';
 import { SheetComponent } from './ui/sheet/sheet.component';
+import { ButtonComponent } from './ui/button/button.component';
 
 @NgModule({
   declarations: [
@@ -42,6 +44,7 @@ import { SheetComponent } from './ui/sheet/sheet.component';
     InputComponent,
     TableComponent,
     SheetComponent,
+    ButtonComponent,
   ],
   imports: [
     CommonModule,
@@ -71,6 +74,7 @@ import { SheetComponent } from './ui/sheet/sheet.component';
       Eye,
       Download,
       BellRing,
+      Upload,
     }),
   ],
   exports: [
@@ -86,6 +90,7 @@ import { SheetComponent } from './ui/sheet/sheet.component';
     InputComponent,
     TableComponent,
     SheetComponent,
+    ButtonComponent,
   ],
 })
 export class SharedModule {}
