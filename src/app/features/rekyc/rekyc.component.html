@@ -1,4 +1,4 @@
-<section class="flex flex-col gap-4">
+<section class="flex h-full flex-col gap-4">
   <div class="flex justify-between">
     <ui-input
       type="search"
@@ -22,52 +22,54 @@
     </div>
   </div>
 
-  <table aria-labelledby="user-table">
-    <thead>
-      <tr>
-        <th scope="col" class="w-[25%]">Company</th>
-        <th scope="col" class="w-[25%]">Requested On</th>
-        <th scope="col" class="w-[20%]">Status</th>
-        <th scope="col" class="w-[30%]">Action</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngIf="filteredUsers.length === 0">
-        <td colspan="4" class="text-center">No data found</td>
-      </tr>
+  <div class="flex-1 overflow-y-auto">
+    <table aria-labelledby="user-table" class="min-w-full">
+      <thead class="sticky top-0">
+        <tr>
+          <th scope="col" class="w-[25%]">Company</th>
+          <th scope="col" class="w-[25%]">Requested On</th>
+          <th scope="col" class="w-[20%]">Status</th>
+          <th scope="col" class="w-[30%]">Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngIf="filteredUsers.length === 0">
+          <td colspan="4" class="text-center">No data found</td>
+        </tr>
 
-      <tr *ngFor="let item of filteredUsers; trackBy: trackRow">
-        <td>{{ item.company }}</td>
-        <td>{{ item.requestedOn }}</td>
-        <td
-          [ngClass]="
-            item.status.toLowerCase() === 'completed'
-              ? 'text-success'
-              : 'text-secondary'
-          "
-        >
-          {{ item.status }}
-        </td>
-        <td class="flex items-center gap-2">
-          <ui-button
-            class="btn-outline px-2 py-1 text-xs font-semibold"
-            label="Send Reminder"
-            icon="bell-ring"
-            [iconSize]="14"
-            iconPos="right"
-          />
-          <ui-button
-            class="btn-outline p-1.5 text-xs"
-            icon="download"
-            [iconSize]="14"
-          />
-          <ui-button
-            class="btn-outline p-1.5 text-xs"
-            icon="eye"
-            [iconSize]="14"
-          />
-        </td>
-      </tr>
-    </tbody>
-  </table>
+        <tr *ngFor="let item of filteredUsers; trackBy: trackRow">
+          <td>{{ item.company }}</td>
+          <td>{{ item.requestedOn }}</td>
+          <td
+            [ngClass]="
+              item.status.toLowerCase() === 'completed'
+                ? 'text-success'
+                : 'text-secondary'
+            "
+          >
+            {{ item.status }}
+          </td>
+          <td class="flex items-center gap-2">
+            <ui-button
+              class="btn-outline px-2 py-1 text-xs font-semibold"
+              label="Send Reminder"
+              icon="bell-ring"
+              [iconSize]="14"
+              iconPos="right"
+            />
+            <ui-button
+              class="btn-outline p-1.5 text-xs"
+              icon="download"
+              [iconSize]="14"
+            />
+            <ui-button
+              class="btn-outline p-1.5 text-xs"
+              icon="eye"
+              [iconSize]="14"
+            />
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 </section>
