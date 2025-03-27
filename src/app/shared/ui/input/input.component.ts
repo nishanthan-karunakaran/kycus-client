@@ -47,7 +47,7 @@ export class InputComponent
   @Input() icon: string | null = null;
   @Input() iconSize = 20;
   @Input() iconColor = '';
-  @Input() iconPos: 'left' | 'right' = 'left';
+  @Input() iconPos: 'start' | 'end' = 'start';
   @Input() inputFormat: InputFormat = InputFormat.DEFAULT;
   @Input() class = '';
   @Output() valueChange = new EventEmitter<string | number | boolean>();
@@ -64,7 +64,6 @@ export class InputComponent
     for (const propName in changes) {
       if (Object.prototype.hasOwnProperty.call(changes, propName)) {
         const change = changes[propName];
-        // console.log(`Input property '${propName}' changed:`, change);
 
         // Handle autofocus and set focus if true
         if (propName === 'autofocus' && change.currentValue) {

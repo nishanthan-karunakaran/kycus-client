@@ -9,7 +9,8 @@
       [placeholder]="placeholder"
       [ngClass]="{
         'w-full': true,
-        'pr-10': icon !== null,
+        'pr-9': icon !== null && iconPos === 'end',
+        'pl-9': icon !== null && iconPos === 'start',
         'error-input': errorMessage,
       }"
       [class]="class"
@@ -30,7 +31,12 @@
       *ngIf="icon"
       [name]="icon"
       [size]="iconSize"
-      class="pointer-events-none absolute right-2 top-1/2 -translate-y-1/2 transform"
+      [color]="iconColor"
+      class="pointer-events-none absolute top-1/2 -translate-y-1/2 transform"
+      [ngClass]="{
+        'left-3': iconPos === 'start',
+        'right-7': iconPos === 'end',
+      }"
       aria-hidden="true"
     />
   </div>
