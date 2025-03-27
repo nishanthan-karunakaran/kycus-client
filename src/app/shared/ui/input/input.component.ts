@@ -45,6 +45,9 @@ export class InputComponent
   @Input() autocomplete?: 'on' | 'off' | null = 'on';
   @Input() errorMessage: string | null = null;
   @Input() icon: string | null = null;
+  @Input() iconSize = 20;
+  @Input() iconColor = '';
+  @Input() iconPos: 'left' | 'right' = 'left';
   @Input() inputFormat: InputFormat = InputFormat.DEFAULT;
   @Input() class = '';
   @Output() valueChange = new EventEmitter<string | number | boolean>();
