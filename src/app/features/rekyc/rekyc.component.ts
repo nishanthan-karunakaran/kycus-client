@@ -127,6 +127,15 @@ export class RekycComponent implements OnInit, DoCheck {
   columns: string[] = [];
   searchInput: string | number | boolean = '';
   activePage = 1;
+  isModalOpen = false;
+
+  closeModal() {
+    this.isModalOpen = false;
+  }
+
+  openModal() {
+    this.isModalOpen = true;
+  }
 
   private readonly ROWS_PER_PAGE = 10;
 

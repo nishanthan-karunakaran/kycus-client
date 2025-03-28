@@ -20,7 +20,7 @@ import {
       [attr.aria-pressed]="ariaPressed"
       [disabled]="disabled"
       [type]="type"
-      (click)="btnClick.emit($event)"
+      (click)="onClick($event)"
     >
       <span *ngIf="label">{{ label }}</span>
       <lucide-icon
@@ -57,5 +57,11 @@ export class ButtonComponent implements OnChanges {
       [this.class]: !!this.class,
       ...this.ngClass,
     };
+  }
+
+  onClick(event: Event) {
+    if (!this.disabled) {
+      this.btnClick.emit(event);
+    }
   }
 }

@@ -16,7 +16,7 @@
   }
 
   a {
-    @apply no-underline;
+    @apply cursor-pointer text-secondary underline;
   }
 
   h1 {
@@ -49,6 +49,10 @@
 
   a {
     @apply cursor-pointer font-semibold text-primary;
+  }
+
+  hr {
+    @apply h-[1px] w-full border-0 bg-gray-300;
   }
 
   button {
@@ -122,7 +126,11 @@
   }
 
   .btn-outline {
-    @apply border-[1px] border-solid border-gray-300 bg-white font-normal text-primary;
+    @apply border-2 border-solid border-primary bg-transparent text-primary hover:bg-primary/10 focus:ring-0;
+  }
+
+  .btn-outline-compact {
+    @apply border-[1px] border-solid border-gray-300 bg-white px-2 py-1 text-xs font-normal text-primary;
   }
 
   .btn-outline-primary {

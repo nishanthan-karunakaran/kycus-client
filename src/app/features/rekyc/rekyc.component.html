@@ -18,7 +18,12 @@
         [iconSize]="14"
         class="btn-outline"
       />
-      <ui-button label="Upload" icon="upload" [iconSize]="14" />
+      <ui-button
+        label="Upload"
+        icon="upload"
+        [iconSize]="14"
+        (btnClick)="openModal()"
+      />
     </div>
   </div>
 
@@ -51,19 +56,19 @@
           </td>
           <td class="flex items-center gap-2">
             <ui-button
-              class="btn-outline px-2 py-1 text-xs font-semibold"
+              class="btn-outline-compact font-semibold"
               label="Send Reminder"
               icon="bell-ring"
               [iconSize]="14"
               iconPos="right"
             />
             <ui-button
-              class="btn-outline p-1.5 text-xs"
+              class="btn-outline-compact p-1.5"
               icon="download"
               [iconSize]="14"
             />
             <ui-button
-              class="btn-outline p-1.5 text-xs"
+              class="btn-outline-compact p-1.5"
               icon="eye"
               [iconSize]="14"
             />
@@ -80,3 +85,38 @@
     (activeChange)="setActivePage($event)"
   />
 </section>
+
+<ui-modal
+  [isOpen]="isModalOpen"
+  header="Bulk Upload"
+  [showClose]="true"
+  (close)="closeModal()"
+>
+  <div
+    class="flex items-center justify-center border-2 border-dashed border-primary p-6"
+  >
+    <div class="flex w-2/3 flex-col items-center gap-4 text-primary">
+      <div class="flex flex-col items-center gap-2">
+        <div class="w-14">
+          <img src="./assets/images/icons/upload-file.svg" alt="Upload File" />
+        </div>
+        <p>Drag & Drop</p>
+      </div>
+
+      <div class="flex w-full items-center gap-2">
+        <hr />
+        <span>or</span>
+        <hr />
+      </div>
+
+      <ui-button label="Browse files" class="btn-outline" />
+
+      <p class="text-pretty text-center">
+        Supports only <strong>EXCEL format</strong> <br />Should be same as
+        Given format <br />Max File Size <strong>20mb</strong>
+      </p>
+
+      <a class="text-secondary">Download Sample</a>
+    </div>
+  </div>
+</ui-modal>

@@ -10,12 +10,13 @@ import {
 } from '@angular/core';
 
 @Component({
-  selector: 'app-modal',
+  selector: 'ui-modal',
   templateUrl: './modal.component.html',
   styleUrls: ['./modal.component.scss'],
 })
 export class ModalComponent implements OnChanges {
   @Input() isOpen = false;
+  @Input() class = '';
   @Input() header?: string;
   @Input() showClose = true;
   @Input() footer?: TemplateRef<unknown>;

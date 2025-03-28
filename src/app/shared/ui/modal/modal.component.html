@@ -14,14 +14,15 @@
 
   <div
     class="modal-container animate-fade-in relative w-full max-w-lg scale-95 transform rounded-xl bg-white shadow-lg transition-transform"
+    [ngClass]="class"
   >
     <div
       *ngIf="header || showClose"
       class="flex items-center justify-between border-b p-4"
     >
-      <h3 *ngIf="header" class="text-lg font-semibold text-gray-900">
+      <h5 *ngIf="header" class="font-semibold text-primary">
         {{ header }}
-      </h3>
+      </h5>
       <button
         *ngIf="showClose"
         (click)="closeModal()"
