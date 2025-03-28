@@ -4,16 +4,24 @@ import { ToastService } from 'src/app/shared/ui/toast/toast.service';
 @Component({
   selector: 'app-filemodal',
   templateUrl: './filemodal.component.html',
+  styleUrls: ['./filemodal.component.scss'],
 })
 export class FilemodalComponent {
   @Input() isModalOpen = false;
   @Output() closeModal = new EventEmitter<boolean>();
 
   file: File | null = null;
+  isOpenFilePreview = false;
+  isDataFetching = false;
 
   constructor(private toastService: ToastService) {}
 
   handleModal() {
+    this.closeModal.emit(false);
+  }
+
+  handlePreviewModal() {
+    this.isOpenFilePreview = false;
     this.closeModal.emit(false);
   }
 
@@ -32,6 +40,11 @@ export class FilemodalComponent {
 
         // eslint-disable-next-line no-console
         console.log(this.file);
+        this.isOpenFilePreview = true;
+        this.isDataFetching = true;
+        setTimeout(() => {
+          this.isDataFetching = false;
+        }, 3000);
       } else {
         this.toastService.error('Please select a valid Excel file.');
       }

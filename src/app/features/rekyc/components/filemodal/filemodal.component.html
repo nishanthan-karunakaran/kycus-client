@@ -1,5 +1,5 @@
 <ui-modal
-  [isOpen]="isModalOpen"
+  [isOpen]="isModalOpen && !isOpenFilePreview"
   header="Bulk Upload"
   [showClose]="true"
   (close)="handleModal()"
@@ -43,5 +43,23 @@
 
       <a class="text-secondary">Download Sample</a>
     </div>
+  </div>
+</ui-modal>
+
+<ui-modal
+  [isOpen]="isOpenFilePreview"
+  header="Bulk Upload"
+  [showClose]="true"
+  (close)="handlePreviewModal()"
+>
+  <div class="flex flex-col items-center justify-center">
+    <ng-container *ngIf="isDataFetching">
+      <div class="relative h-1 w-20 overflow-hidden rounded-lg bg-gray-300">
+        <div
+          class="animate-moving-line h-full w-2/5 rounded-lg bg-primary"
+        ></div>
+      </div>
+      <p class="mt-2">Fetching Data...</p>
+    </ng-container>
   </div>
 </ui-modal>
