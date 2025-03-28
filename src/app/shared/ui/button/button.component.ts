@@ -24,6 +24,7 @@ import {
     >
       <span *ngIf="label">{{ label }}</span>
       <lucide-icon
+        *ngIf="icon"
         [name]="icon"
         [size]="iconSize"
         aria-hidden="true"
@@ -33,11 +34,12 @@ import {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ButtonComponent implements OnChanges {
-  @Input() label!: string;
+  @Input() label!: string | number | boolean;
   @Input() icon?: string;
   @Input() iconSize = 20;
   @Input() iconPos: 'left' | 'right' = 'left';
   @Input() class = '';
+  @Input() ngClass = {};
   @Input() tabindex = 0;
   @Input() disabled = false;
   @Input() type: 'button' | 'submit' | 'reset' = 'button';
@@ -53,6 +55,7 @@ export class ButtonComponent implements OnChanges {
     this.btnClass = {
       'flex-row-reverse': this.iconPos === 'left',
       [this.class]: !!this.class,
+      ...this.ngClass,
     };
   }
 }

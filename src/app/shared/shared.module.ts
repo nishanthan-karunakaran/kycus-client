@@ -6,6 +6,8 @@ import {
   AlertOctagon,
   AlertTriangle,
   ArrowDown,
+  ArrowLeft,
+  ArrowRight,
   ArrowUp,
   ArrowUpDown,
   Bell,
@@ -36,6 +38,7 @@ import { InputFormatDirective } from 'src/app/core/directives/input-format.direc
 import { TableComponent } from './ui/table/table.component';
 import { SheetComponent } from './ui/sheet/sheet.component';
 import { ButtonComponent } from './ui/button/button.component';
+import { PaginationComponent } from './ui/pagination/pagination.component';
 
 @NgModule({
   declarations: [
@@ -46,6 +49,7 @@ import { ButtonComponent } from './ui/button/button.component';
     TableComponent,
     SheetComponent,
     ButtonComponent,
+    PaginationComponent,
   ],
   imports: [
     CommonModule,
@@ -77,6 +81,8 @@ import { ButtonComponent } from './ui/button/button.component';
       BellRing,
       Upload,
       Search,
+      ArrowLeft,
+      ArrowRight,
     }),
   ],
   exports: [
@@ -93,6 +99,7 @@ import { ButtonComponent } from './ui/button/button.component';
     TableComponent,
     SheetComponent,
     ButtonComponent,
+    PaginationComponent,
   ],
 })
 export class SharedModule {}

@@ -33,9 +33,102 @@ export class RekycComponent implements OnInit, DoCheck {
       requestedOn: '03-01-2025, 11:40',
       status: 'In Progress',
     },
+    {
+      id: 1,
+      company: 'Ebitaus',
+      requestedOn: '01-01-2025, 11:00',
+      status: 'Completed',
+    },
+    {
+      id: 2,
+      company: 'Tata Motors',
+      requestedOn: '02-01-2025, 11:30',
+      status: 'In Progress',
+    },
+    {
+      id: 3,
+      company: 'Arun Excello',
+      requestedOn: '03-01-2025, 11:40',
+      status: 'In Progress',
+    },
+    {
+      id: 1,
+      company: 'Ebitaus',
+      requestedOn: '01-01-2025, 11:00',
+      status: 'Completed',
+    },
+    {
+      id: 2,
+      company: 'Tata Motors',
+      requestedOn: '02-01-2025, 11:30',
+      status: 'In Progress',
+    },
+    {
+      id: 3,
+      company: 'Arun Excello',
+      requestedOn: '03-01-2025, 11:40',
+      status: 'In Progress',
+    },
+    {
+      id: 1,
+      company: 'Ebitaus',
+      requestedOn: '01-01-2025, 11:00',
+      status: 'Completed',
+    },
+    {
+      id: 2,
+      company: 'Tata Motors',
+      requestedOn: '02-01-2025, 11:30',
+      status: 'In Progress',
+    },
+    {
+      id: 3,
+      company: 'Arun Excello',
+      requestedOn: '03-01-2025, 11:40',
+      status: 'In Progress',
+    },
+    {
+      id: 1,
+      company: 'Ebitaus',
+      requestedOn: '01-01-2025, 11:00',
+      status: 'Completed',
+    },
+    {
+      id: 2,
+      company: 'Tata Motors',
+      requestedOn: '02-01-2025, 11:30',
+      status: 'In Progress',
+    },
+    {
+      id: 3,
+      company: 'Arun Excello',
+      requestedOn: '03-01-2025, 11:40',
+      status: 'In Progress',
+    },
+    {
+      id: 1,
+      company: 'Ebitaus',
+      requestedOn: '01-01-2025, 11:00',
+      status: 'Completed',
+    },
+    {
+      id: 2,
+      company: 'Tata Motors',
+      requestedOn: '02-01-2025, 11:30',
+      status: 'In Progress',
+    },
+    {
+      id: 3,
+      company: 'Arun Excello',
+      requestedOn: '03-01-2025, 11:40',
+      status: 'In Progress',
+    },
   ];
   columns: string[] = [];
   searchInput: string | number | boolean = '';
+  activePage = 1;
+
+  private readonly ROWS_PER_PAGE = 10;
 
   constructor(private helperService: HelperService) {}
 
@@ -54,13 +147,20 @@ export class RekycComponent implements OnInit, DoCheck {
 
   get filteredUsers(): User[] {
     const query = this.searchInput as string;
-    return this.users.filter((user) =>
-      user.company.toLowerCase().includes(query),
-    );
+    return this.users
+      .slice(
+        this.activePage * this.ROWS_PER_PAGE - this.ROWS_PER_PAGE,
+        this.activePage * this.ROWS_PER_PAGE,
+      )
+      .filter((user) => user.company.toLowerCase().includes(query));
   }
 
   onSearchInputChange(event: string | number | boolean): void {
     this.searchInput = event;
+  }
+
+  setActivePage(page: number): void {
+    this.activePage = page;
   }
 
   onRowSelected(row: User) {

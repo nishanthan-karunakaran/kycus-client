@@ -22,8 +22,8 @@
     </div>
   </div>
 
-  <div class="flex-1 overflow-y-auto">
-    <table aria-labelledby="user-table" class="min-w-full">
+  <div class="flex-1 overflow-y-auto px-0.5">
+    <table aria-labelledby="user-table">
       <thead class="sticky top-0">
         <tr>
           <th scope="col" class="w-[25%]">Company</th>
@@ -37,7 +37,7 @@
           <td colspan="4" class="text-center">No data found</td>
         </tr>
 
-        <tr *ngFor="let item of filteredUsers; trackBy: trackRow">
+        <tr *ngFor="let item of filteredUsers; trackBy: trackRow" tabindex="0">
           <td>{{ item.company }}</td>
           <td>{{ item.requestedOn }}</td>
           <td
@@ -72,4 +72,11 @@
       </tbody>
     </table>
   </div>
+
+  <ui-pagination
+    [active]="1"
+    [totalItems]="users.length"
+    class="self-center"
+    (activeChange)="setActivePage($event)"
+  />
 </section>
