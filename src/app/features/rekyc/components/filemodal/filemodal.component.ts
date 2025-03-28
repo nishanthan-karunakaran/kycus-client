@@ -1,6 +1,13 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { ToastService } from 'src/app/shared/ui/toast/toast.service';
 
+interface ParsedData {
+  id: number;
+  company: string;
+  requestedOn: string;
+  status: string;
+}
+
 @Component({
   selector: 'app-filemodal',
   templateUrl: './filemodal.component.html',
@@ -13,6 +20,116 @@ export class FilemodalComponent {
   file: File | null = null;
   isOpenFilePreview = false;
   isDataFetching = false;
+  parsedData: ParsedData[] = [
+    {
+      id: 1,
+      company: 'Ebitaus',
+      requestedOn: '01-01-2025, 11:00',
+      status: 'Completed',
+    },
+    {
+      id: 2,
+      company: 'Tata Motors',
+      requestedOn: '02-01-2025, 11:30',
+      status: 'In Progress',
+    },
+    {
+      id: 3,
+      company: 'Arun Excello',
+      requestedOn: '03-01-2025, 11:40',
+      status: 'In Progress',
+    },
+    {
+      id: 1,
+      company: 'Ebitaus',
+      requestedOn: '01-01-2025, 11:00',
+      status: 'Completed',
+    },
+    {
+      id: 2,
+      company: 'Tata Motors',
+      requestedOn: '02-01-2025, 11:30',
+      status: 'In Progress',
+    },
+    {
+      id: 3,
+      company: 'Arun Excello',
+      requestedOn: '03-01-2025, 11:40',
+      status: 'In Progress',
+    },
+    {
+      id: 1,
+      company: 'Ebitaus',
+      requestedOn: '01-01-2025, 11:00',
+      status: 'Completed',
+    },
+    {
+      id: 2,
+      company: 'Tata Motors',
+      requestedOn: '02-01-2025, 11:30',
+      status: 'In Progress',
+    },
+    {
+      id: 3,
+      company: 'Arun Excello',
+      requestedOn: '03-01-2025, 11:40',
+      status: 'In Progress',
+    },
+    {
+      id: 1,
+      company: 'Ebitaus',
+      requestedOn: '01-01-2025, 11:00',
+      status: 'Completed',
+    },
+    {
+      id: 2,
+      company: 'Tata Motors',
+      requestedOn: '02-01-2025, 11:30',
+      status: 'In Progress',
+    },
+    {
+      id: 3,
+      company: 'Arun Excello',
+      requestedOn: '03-01-2025, 11:40',
+      status: 'In Progress',
+    },
+    {
+      id: 1,
+      company: 'Ebitaus',
+      requestedOn: '01-01-2025, 11:00',
+      status: 'Completed',
+    },
+    {
+      id: 2,
+      company: 'Tata Motors',
+      requestedOn: '02-01-2025, 11:30',
+      status: 'In Progress',
+    },
+    {
+      id: 3,
+      company: 'Arun Excello',
+      requestedOn: '03-01-2025, 11:40',
+      status: 'In Progress',
+    },
+    {
+      id: 1,
+      company: 'Ebitaus',
+      requestedOn: '01-01-2025, 11:00',
+      status: 'Completed',
+    },
+    {
+      id: 2,
+      company: 'Tata Motors',
+      requestedOn: '02-01-2025, 11:30',
+      status: 'In Progress',
+    },
+    {
+      id: 3,
+      company: 'Arun Excello',
+      requestedOn: '03-01-2025, 11:40',
+      status: 'In Progress',
+    },
+  ];
 
   constructor(private toastService: ToastService) {}
 
@@ -58,5 +175,9 @@ export class FilemodalComponent {
     } else {
       this.toastService.error('Please select a valid Excel file.');
     }
+  }
+
+  trackRow(_: number, parsedData: ParsedData): number {
+    return parsedData.id;
   }
 }
