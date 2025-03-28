@@ -129,14 +129,6 @@ export class RekycComponent implements OnInit, DoCheck {
   activePage = 1;
   isModalOpen = false;
 
-  closeModal() {
-    this.isModalOpen = false;
-  }
-
-  openModal() {
-    this.isModalOpen = true;
-  }
-
   private readonly ROWS_PER_PAGE = 10;
 
   constructor(private helperService: HelperService) {}
@@ -152,6 +144,10 @@ export class RekycComponent implements OnInit, DoCheck {
         this.helperService.toTitleCase(key, 'camelCase'),
       );
     }
+  }
+
+  handleModal() {
+    this.isModalOpen = !this.isModalOpen;
   }
 
   get filteredUsers(): User[] {

@@ -22,7 +22,7 @@
         label="Upload"
         icon="upload"
         [iconSize]="14"
-        (btnClick)="openModal()"
+        (btnClick)="handleModal()"
       />
     </div>
   </div>
@@ -86,37 +86,4 @@
   />
 </section>
 
-<ui-modal
-  [isOpen]="isModalOpen"
-  header="Bulk Upload"
-  [showClose]="true"
-  (close)="closeModal()"
->
-  <div
-    class="flex items-center justify-center border-2 border-dashed border-primary p-6"
-  >
-    <div class="flex w-2/3 flex-col items-center gap-4 text-primary">
-      <div class="flex flex-col items-center gap-2">
-        <div class="w-14">
-          <img src="./assets/images/icons/upload-file.svg" alt="Upload File" />
-        </div>
-        <p>Drag & Drop</p>
-      </div>
-
-      <div class="flex w-full items-center gap-2">
-        <hr />
-        <span>or</span>
-        <hr />
-      </div>
-
-      <ui-button label="Browse files" class="btn-outline" />
-
-      <p class="text-pretty text-center">
-        Supports only <strong>EXCEL format</strong> <br />Should be same as
-        Given format <br />Max File Size <strong>20mb</strong>
-      </p>
-
-      <a class="text-secondary">Download Sample</a>
-    </div>
-  </div>
-</ui-modal>
+<app-filemodal [isModalOpen]="isModalOpen" (closeModal)="handleModal()" />
