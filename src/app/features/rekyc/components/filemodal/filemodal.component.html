@@ -21,7 +21,14 @@
         <hr />
       </div>
 
-      <input #file id="file" type="file" class="hidden" />
+      <input
+        #file
+        id="file"
+        type="file"
+        class="hidden"
+        accept=".xlsx"
+        (change)="handleFile($event)"
+      />
 
       <ui-button
         label="Browse files"
@@ -31,7 +38,7 @@
 
       <p class="text-pretty text-center">
         Supports only <strong>EXCEL format</strong> <br />Should be same as
-        Given format <br />Max File Size <strong>20mb</strong>
+        Given format <br />Max File Size <strong>20MB</strong>
       </p>
 
       <a class="text-secondary">Download Sample</a>
