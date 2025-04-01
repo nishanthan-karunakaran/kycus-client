@@ -128,6 +128,7 @@ export class RekycComponent implements OnInit, DoCheck {
   searchInput: string | number | boolean = '';
   activePage = 1;
   isModalOpen = false;
+  selectedReKycEntity: User | null = null;
 
   private readonly ROWS_PER_PAGE = 10;
 
@@ -148,6 +149,10 @@ export class RekycComponent implements OnInit, DoCheck {
 
   handleModal() {
     this.isModalOpen = !this.isModalOpen;
+  }
+
+  handleReKycSheet(data: User | null = null) {
+    this.selectedReKycEntity = data;
   }
 
   get filteredUsers(): User[] {

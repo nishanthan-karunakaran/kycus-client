@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 
 @Component({
   selector: 'app-sheet',
@@ -7,9 +7,11 @@ import { Component, Input } from '@angular/core';
 })
 export class SheetComponent {
   @Input() isOpen = false;
-  @Input() position: 'left' | 'right' = 'right'; // Position of the sheet
+  @Input() position: 'left' | 'right' = 'right';
+  @Output() closeSheet = new EventEmitter<void>();
 
   close() {
-    this.isOpen = false; // Close the sheet when triggered
+    this.isOpen = false;
+    this.closeSheet.emit();
   }
 }

@@ -56,13 +56,15 @@
             {{ item.status }}
           </td>
           <td class="flex items-center gap-2">
-            <ui-button
-              class="btn-outline-compact font-semibold"
-              label="Send Reminder"
-              icon="bell-ring"
-              [iconSize]="14"
-              iconPos="right"
-            />
+            <ng-container *ngIf="item.status.toLowerCase() === 'completed'">
+              <ui-button
+                class="btn-outline-compact font-semibold"
+                label="Send Reminder"
+                icon="bell-ring"
+                [iconSize]="14"
+                iconPos="right"
+              />
+            </ng-container>
             <ui-button
               class="btn-outline-compact p-1.5"
               icon="download"
@@ -72,6 +74,7 @@
               class="btn-outline-compact p-1.5"
               icon="eye"
               [iconSize]="14"
+              (btnClick)="handleReKycSheet(item)"
             />
           </td>
         </tr>
@@ -88,3 +91,13 @@
 </section>
 
 <app-filemodal [isModalOpen]="isModalOpen" (closeModal)="handleModal()" />
+
+<app-sheet
+  [isOpen]="selectedReKycEntity !== null"
+  (closeSheet)="handleReKycSheet()"
+  class="w-[700px] bg-red-500"
+>
+  <div>
+    {{ selectedReKycEntity | json }}
+  </div>
+</app-sheet>

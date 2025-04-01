@@ -9,11 +9,22 @@
 
 <div
   *ngIf="isOpen"
-  class="fixed right-0 top-0 z-20 h-full w-80 transform bg-white shadow-lg transition-transform duration-300 ease-in-out"
+  class="fixed right-0 top-0 z-20 h-full min-w-80 max-w-3xl transform bg-white shadow-lg transition-transform duration-300 ease-in-out"
   [ngClass]="{ 'translate-x-full': !isOpen }"
 >
-  <button (click)="close()" class="absolute right-4 top-4 text-xl">×</button>
-  <div class="p-4">
+  <button
+    (click)="close()"
+    class="group absolute right-2 top-2 appearance-none border-none bg-transparent p-0 outline-none focus:ring-0 active:ring-0"
+    tabindex="0"
+  >
+    <lucide-icon
+      name="x"
+      size="20"
+      class="text-gray-900 transition-transform duration-200 ease-in-out group-hover:scale-125"
+    ></lucide-icon>
+  </button>
+
+  <div class="p-6">
     <ng-content></ng-content>
   </div>
 </div>
