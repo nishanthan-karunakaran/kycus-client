@@ -1,9 +1,11 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { HelperService } from 'src/app/core/services/helpers.service';
+import { RekycService } from 'src/app/features/rekyc/rekyc.service';
 import { ToastService } from 'src/app/shared/ui/toast/toast.service';
 
 interface ParsedData {
   id: number;
-  company: string;
+  companyName: string;
   requestedOn: string;
   status: string;
 }
@@ -20,121 +22,16 @@ export class FilemodalComponent {
   file: File | null = null;
   isOpenFilePreview = false;
   isDataFetching = false;
-  parsedData: ParsedData[] = [
-    {
-      id: 1,
-      company: 'Ebitaus',
-      requestedOn: '01-01-2025, 11:00',
-      status: 'Completed',
-    },
-    {
-      id: 2,
-      company: 'Tata Motors',
-      requestedOn: '02-01-2025, 11:30',
-      status: 'In Progress',
-    },
-    {
-      id: 3,
-      company: 'Arun Excello',
-      requestedOn: '03-01-2025, 11:40',
-      status: 'In Progress',
-    },
-    {
-      id: 1,
-      company: 'Ebitaus',
-      requestedOn: '01-01-2025, 11:00',
-      status: 'Completed',
-    },
-    {
-      id: 2,
-      company: 'Tata Motors',
-      requestedOn: '02-01-2025, 11:30',
-      status: 'In Progress',
-    },
-    {
-      id: 3,
-      company: 'Arun Excello',
-      requestedOn: '03-01-2025, 11:40',
-      status: 'In Progress',
-    },
-    {
-      id: 1,
-      company: 'Ebitaus',
-      requestedOn: '01-01-2025, 11:00',
-      status: 'Completed',
-    },
-    {
-      id: 2,
-      company: 'Tata Motors',
-      requestedOn: '02-01-2025, 11:30',
-      status: 'In Progress',
-    },
-    {
-      id: 3,
-      company: 'Arun Excello',
-      requestedOn: '03-01-2025, 11:40',
-      status: 'In Progress',
-    },
-    {
-      id: 1,
-      company: 'Ebitaus',
-      requestedOn: '01-01-2025, 11:00',
-      status: 'Completed',
-    },
-    {
-      id: 2,
-      company: 'Tata Motors',
-      requestedOn: '02-01-2025, 11:30',
-      status: 'In Progress',
-    },
-    {
-      id: 3,
-      company: 'Arun Excello',
-      requestedOn: '03-01-2025, 11:40',
-      status: 'In Progress',
-    },
-    {
-      id: 1,
-      company: 'Ebitaus',
-      requestedOn: '01-01-2025, 11:00',
-      status: 'Completed',
-    },
-    {
-      id: 2,
-      company: 'Tata Motors',
-      requestedOn: '02-01-2025, 11:30',
-      status: 'In Progress',
-    },
-    {
-      id: 3,
-      company: 'Arun Excello',
-      requestedOn: '03-01-2025, 11:40',
-      status: 'In Progress',
-    },
-    {
-      id: 1,
-      company: 'Ebitaus',
-      requestedOn: '01-01-2025, 11:00',
-      status: 'Completed',
-    },
-    {
-      id: 2,
-      company: 'Tata Motors',
-      requestedOn: '02-01-2025, 11:30',
-      status: 'In Progress',
-    },
-    {
-      id: 3,
-      company: 'Arun Excello',
-      requestedOn: '03-01-2025, 11:40',
-      status: 'In Progress',
-    },
-  ];
+  parsedData: ParsedData[] = [];
   activePage = 1;
 
   private readonly ROWS_PER_PAGE = 10;
 
-  constructor(private toastService: ToastService) {}
+  constructor(
+    private toastService: ToastService,
+    private rekycService: RekycService,
+    private helperService: HelperService,
+  ) {}
 
   handleModal() {
     this.closeModal.emit(false);
@@ -158,26 +55,53 @@ export class FilemodalComponent {
           return;
         }
 
-        // eslint-disable-next-line no-console
-        console.log(this.file);
         this.isOpenFilePreview = true;
-        this.isDataFetching = true;
-        setTimeout(() => {
-          this.isDataFetching = false;
-        }, 3000);
+        this.fileUpload();
       } else {
         this.toastService.error('Please select a valid Excel file.');
       }
-      // const reader = new FileReader();
-      // reader.onload = () => {
-      //   const fileContents = reader.result as string;
-      //   // eslint-disable-next-line no-console
-      //   console.log(fileContents);
-      // };
-      // reader.readAsText(this.file);
     } else {
       this.toastService.error('Please select a valid Excel file.');
     }
+  }
+
+  fileUpload() {
+    const formData = new FormData();
+    formData.append('file', this.file as Blob);
+    formData.append('mode', 'preview');
+    this.rekycService.uploadExcel(formData).subscribe({
+      next: (result) => {
+        const { loading, response } = result;
+        this.isDataFetching = loading;
+
+        if (!response) return;
+
+        // const { status } = response;
+
+        // if (status === ApiStatus.SUCCESS) {
+        const { data } = response;
+        this.parsedData = [];
+
+        (data as ParsedData[]).forEach((item) => {
+          const formattedItem: Record<string, string | number | boolean> = {};
+
+          Object.entries(item).forEach(([key, value]) => {
+            const camelCaseKey = this.helperService.toCamelCase(key);
+            formattedItem[camelCaseKey] = value;
+          });
+
+          formattedItem['id'] = this.parsedData.length + 1;
+          formattedItem['status'] = 'In Progress';
+          formattedItem['requestedOn'] = new Date().toLocaleDateString();
+          this.parsedData.push(formattedItem as unknown as ParsedData);
+        });
+
+        // eslint-disable-next-line no-console
+        console.log('parsedData', this.parsedData);
+
+        // }
+      },
+    });
   }
 
   get filteredData(): ParsedData[] {

@@ -6,8 +6,7 @@ export const API_URL = {
     REQUEST_LOGIN_OTP: '/auth/kycus/requestLoginOtp',
     LOGIN: '/auth/kycus/login',
   },
+  KYC: {
+    UPLOAD: '/kyc/rekyc/upload',
+  },
 };
-
-// http://localhost:8001/auth/kycus/validateEmail
-
-// http://localhost:8001/auth/kycus/signup
