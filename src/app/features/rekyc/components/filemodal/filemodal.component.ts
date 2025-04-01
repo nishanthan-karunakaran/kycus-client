@@ -24,6 +24,7 @@ export class FilemodalComponent {
   isDataFetching = false;
   parsedData: ParsedData[] = [];
   activePage = 1;
+  isDragging = false;
 
   private readonly ROWS_PER_PAGE = 10;
 
@@ -42,8 +43,12 @@ export class FilemodalComponent {
     this.closeModal.emit(false);
   }
 
-  handleFile(event: Event) {
-    this.file = (event.target as HTMLInputElement)?.files?.[0] ?? null;
+  handleFile(event: Event | DragEvent) {
+    if (event instanceof Event && (event.target as HTMLInputElement)?.files) {
+      this.file = (event.target as HTMLInputElement).files?.[0] ?? null;
+    } else if (event instanceof DragEvent && event.dataTransfer) {
+      this.file = event.dataTransfer.files?.[0] ?? null;
+    }
 
     if (this.file) {
       if (
@@ -63,6 +68,21 @@ export class FilemodalComponent {
     } else {
       this.toastService.error('Please select a valid Excel file.');
     }
+  }
+
+  onDragOver(event: DragEvent) {
+    event.preventDefault();
+    this.isDragging = true;
+  }
+
+  onDrop(event: DragEvent) {
+    event.preventDefault();
+    this.isDragging = false;
+    this.handleFile(event);
+  }
+
+  onDragLeave() {
+    this.isDragging = false;
   }
 
   fileUpload() {

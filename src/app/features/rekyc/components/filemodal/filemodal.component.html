@@ -6,7 +6,11 @@
   (close)="handleModal()"
 >
   <div
-    class="flex items-center justify-center border-2 border-dashed border-primary p-6"
+    class="flex items-center justify-center rounded-xl border-2 border-dashed border-primary p-6"
+    (dragover)="onDragOver($event)"
+    (drop)="onDrop($event)"
+    (dragleave)="onDragLeave()"
+    [ngClass]="{ 'bg-primary/10': isDragging }"
   >
     <div class="flex w-2/3 flex-col items-center gap-4 text-primary">
       <div class="flex flex-col items-center gap-2">
