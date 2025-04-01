@@ -125,6 +125,10 @@
     @apply bg-danger hover:bg-danger/90;
   }
 
+  .btn-nostyle {
+    @apply bg-transparent font-normal text-black focus:ring-0;
+  }
+
   .btn-outline {
     @apply border-2 border-solid border-primary bg-transparent text-primary hover:bg-primary/10 focus:ring-0;
   }

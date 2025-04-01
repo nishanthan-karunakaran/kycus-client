@@ -17,6 +17,7 @@ import {
 export class ModalComponent implements OnChanges {
   @Input() isOpen = false;
   @Input() class = '';
+  @Input() contentClass = '';
   @Input() header?: string;
   @Input() showClose = true;
   @Input() footer?: TemplateRef<unknown>;

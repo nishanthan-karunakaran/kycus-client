@@ -13,7 +13,7 @@
   ></div>
 
   <div
-    class="modal-container animate-fade-in relative w-full max-w-lg scale-95 transform rounded-xl bg-white shadow-lg transition-transform"
+    class="modal-container animate-fade-in relative w-full max-w-4xl scale-95 transform rounded-xl bg-white shadow-lg transition-transform"
     [ngClass]="class"
   >
     <div
@@ -37,11 +37,14 @@
       </button>
     </div>
 
-    <div class="max-h-[70vh] overflow-auto px-10 py-6">
+    <div class="max-h-[70vh] overflow-auto px-10 py-6" [ngClass]="contentClass">
       <ng-content></ng-content>
     </div>
 
-    <div *ngIf="footer" class="flex justify-end gap-3 border-t p-4">
+    <div
+      *ngIf="footer"
+      class="flex w-full items-center justify-between border-t p-4"
+    >
       <ng-container *ngTemplateOutlet="footer"></ng-container>
     </div>
   </div>

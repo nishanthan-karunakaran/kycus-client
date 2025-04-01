@@ -2,6 +2,7 @@
   [isOpen]="isModalOpen && !isOpenFilePreview"
   header="Bulk Upload"
   [showClose]="true"
+  [class]="'max-w-lg'"
   (close)="handleModal()"
 >
   <div
@@ -49,11 +50,14 @@
 <ui-modal
   [isOpen]="isOpenFilePreview"
   header="Bulk Upload"
+  [footer]="footer"
   [showClose]="true"
+  [contentClass]="'p-0'"
   (close)="handlePreviewModal()"
-  class="max-w-3xl"
 >
-  <div class="flex min-h-[50vh] w-full flex-col items-center justify-center">
+  <div
+    class="flex min-h-[50vh] w-full flex-col items-center justify-center gap-3"
+  >
     <ng-container *ngIf="isDataFetching">
       <div class="relative h-1 w-20 overflow-hidden rounded-lg bg-gray-300">
         <div
@@ -75,7 +79,10 @@
             </tr>
           </thead>
           <tbody>
-            <tr *ngFor="let item of parsedData; trackBy: trackRow" tabindex="0">
+            <tr
+              *ngFor="let item of filteredData; trackBy: trackRow"
+              tabindex="0"
+            >
               <td>{{ item.company }}</td>
               <td>{{ item.requestedOn }}</td>
               <td
@@ -110,6 +117,27 @@
           </tbody>
         </table>
       </div>
+
+      <ui-pagination
+        [active]="1"
+        [totalItems]="parsedData.length"
+        class="self-center"
+        (activeChange)="setActivePage($event)"
+      />
     </ng-container>
   </div>
+
+  <ng-template #footer>
+    <div class="flex w-full items-center justify-between">
+      <p class="font-semibold text-primary">
+        Please check all the details are right and submit
+      </p>
+
+      <div class="flex items-center gap-4">
+        <ui-button class="btn-nostyle" label="Cancel" />
+
+        <ui-button label="Submit" />
+      </div>
+    </div>
+  </ng-template>
 </ui-modal>

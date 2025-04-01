@@ -130,6 +130,9 @@ export class FilemodalComponent {
       status: 'In Progress',
     },
   ];
+  activePage = 1;
+
+  private readonly ROWS_PER_PAGE = 10;
 
   constructor(private toastService: ToastService) {}
 
@@ -175,6 +178,17 @@ export class FilemodalComponent {
     } else {
       this.toastService.error('Please select a valid Excel file.');
     }
+  }
+
+  get filteredData(): ParsedData[] {
+    return this.parsedData.slice(
+      this.activePage * this.ROWS_PER_PAGE - this.ROWS_PER_PAGE,
+      this.activePage * this.ROWS_PER_PAGE,
+    );
+  }
+
+  setActivePage(page: number): void {
+    this.activePage = page;
   }
 
   trackRow(_: number, parsedData: ParsedData): number {
