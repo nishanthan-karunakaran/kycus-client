@@ -39,6 +39,7 @@ import { TableComponent } from './ui/table/table.component';
 import { SheetComponent } from './ui/sheet/sheet.component';
 import { ButtonComponent } from './ui/button/button.component';
 import { PaginationComponent } from './ui/pagination/pagination.component';
+import { InputDebounceComponent } from './ui/input-debounce/input-debounce.component';
 
 @NgModule({
   declarations: [
@@ -46,6 +47,7 @@ import { PaginationComponent } from './ui/pagination/pagination.component';
     ModalComponent,
     OtpComponent,
     InputComponent,
+    InputDebounceComponent,
     TableComponent,
     SheetComponent,
     ButtonComponent,
@@ -96,6 +98,7 @@ import { PaginationComponent } from './ui/pagination/pagination.component';
     ModalComponent,
     OtpComponent,
     InputComponent,
+    InputDebounceComponent,
     TableComponent,
     SheetComponent,
     ButtonComponent,

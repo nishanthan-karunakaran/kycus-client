@@ -59,7 +59,8 @@
     @apply rounded-md border-none bg-primary px-4 py-1.5 text-center font-semibold text-white transition-all duration-200 ease-in-out focus:ring-2 focus:ring-primary disabled:cursor-not-allowed disabled:opacity-70;
   }
 
-  ui-input {
+  ui-input,
+  ui-input-debounce {
     all: unset !important;
   }
 

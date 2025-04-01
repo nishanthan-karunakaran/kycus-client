@@ -1,6 +1,6 @@
 <section class="flex h-full flex-col gap-4">
   <div class="flex justify-between">
-    <ui-input
+    <ui-input-debounce
       type="search"
       placeholder="Search Company"
       class="w-36"
@@ -9,7 +9,8 @@
       icon="search"
       iconColor="grey"
       [iconSize]="18"
-    ></ui-input>
+      [debounceTime]="2000"
+    ></ui-input-debounce>
 
     <div class="flex items-center gap-2">
       <ui-button
