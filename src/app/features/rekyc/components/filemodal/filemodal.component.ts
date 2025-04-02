@@ -2,6 +2,7 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { ApiStatus } from 'src/app/core/constants/api.response';
 import {
   RekycData,
+  SubmitReKycExcel,
   UploadReKycExcel,
 } from 'src/app/features/rekyc/rekyc.model';
 import { RekycService } from 'src/app/features/rekyc/rekyc.service';
@@ -19,6 +20,7 @@ export class FilemodalComponent {
   file: File | null = null;
   isOpenFilePreview = false;
   isDataFetching = false;
+  isDataSubmitting = false;
   rekycData: RekycData[] = [];
   activePage = 1;
   isDragging = false;
@@ -103,6 +105,33 @@ export class FilemodalComponent {
           }
         },
       });
+  }
+
+  submitReKycExcel() {
+    const payload: SubmitReKycExcel = {
+      mode: 'submit',
+      uploadedBy: 'admin@hdfc.com',
+      bankName: 'HDFC Bank',
+      data: this.rekycData,
+    };
+
+    this.rekycService.submitExcel(payload).subscribe({
+      next: (result) => {
+        const { loading, response } = result;
+        this.isDataSubmitting = loading;
+
+        if (!response) return;
+
+        const { status } = response;
+
+        if (status === ApiStatus.SUCCESS) {
+          this.toastService.success('Data submitted successfully');
+          this.handlePreviewModal();
+        } else {
+          this.toastService.error('Failed to submit the data');
+        }
+      },
+    });
   }
 
   get filteredData(): RekycData[] {

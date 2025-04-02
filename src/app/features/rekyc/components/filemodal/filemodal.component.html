@@ -132,7 +132,11 @@
           (btnClick)="handlePreviewModal()"
         />
 
-        <ui-button label="Submit" />
+        <ui-button
+          [loading]="isDataSubmitting"
+          label="Submit"
+          (btnClick)="submitReKycExcel()"
+        />
       </div>
     </div>
   </ng-template>
