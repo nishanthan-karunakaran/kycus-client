@@ -1,6 +1,6 @@
 <div
   *ngIf="isOpen"
-  class="fixed inset-0 z-10 bg-gray-600 bg-opacity-50"
+  class="fixed inset-0 z-10 bg-gray-600 bg-opacity-50 transition-opacity duration-300 ease-in-out"
   (click)="close()"
   (keydown.enter)="close()"
   (keydown.space)="close()"
@@ -8,11 +8,17 @@
 ></div>
 
 <div
-  *ngIf="isOpen"
-  class="fixed right-0 top-0 z-20 h-full min-w-80 max-w-3xl transform bg-white shadow-lg transition-transform duration-300 ease-in-out"
-  [ngClass]="{ 'translate-x-full': !isOpen }"
+  class="fixed top-0 z-20 h-full min-w-80 max-w-3xl transform bg-white shadow-lg transition-transform duration-500 ease-out"
+  [ngClass]="[
+    position === 'right'
+      ? 'right-0 translate-x-full'
+      : 'left-0 -translate-x-full',
+    isOpen ? 'translate-x-0' : '',
+    class,
+  ]"
 >
   <button
+    *ngIf="showClose"
     (click)="close()"
     class="group absolute right-2 top-2 appearance-none border-none bg-transparent p-0 outline-none focus:ring-0 active:ring-0"
     tabindex="0"

@@ -7,6 +7,8 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 })
 export class SheetComponent {
   @Input() isOpen = false;
+  @Input() showClose = false;
+  @Input() class = '';
   @Input() position: 'left' | 'right' = 'right';
   @Output() closeSheet = new EventEmitter<void>();
 
