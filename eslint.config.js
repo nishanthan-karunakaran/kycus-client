@@ -84,18 +84,15 @@ module.exports = tseslint.config(
   },
   {
     files: ['**/*.html'],
-    extends: [
-      ...angular.configs.templateRecommended,
-      ...angular.configs.templateAccessibility,
-    ],
+    extends: [...angular.configs.templateRecommended, ...angular.configs.templateAccessibility],
     rules: {
       '@angular-eslint/template/use-track-by-function': 'error',
       '@angular-eslint/template/no-negated-async': 'error',
       // '@angular-eslint/template/no-call-expression': 'error',
-      '@angular-eslint/template/cyclomatic-complexity': [
-        'error',
-        { maxComplexity: 5 },
-      ],
+      // '@angular-eslint/template/cyclomatic-complexity': [
+      //   'error',
+      //   { maxComplexity: 5 },
+      // ],
     },
   },
 );

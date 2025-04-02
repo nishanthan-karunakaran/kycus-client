@@ -7,5 +7,6 @@
   "arrowParens": "always",
   "quoteProps": "as-needed",
   "endOfLine": "lf",
-  "bracketSpacing": true
+  "bracketSpacing": true,
+  "printWidth": 120
 }
