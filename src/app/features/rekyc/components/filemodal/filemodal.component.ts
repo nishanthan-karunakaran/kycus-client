@@ -22,6 +22,7 @@ export class FilemodalComponent {
   isDataFetching = false;
   isDataSubmitting = false;
   rekycData: RekycData[] = [];
+  duplicateRekycData: RekycData[] = [];
   activePage = 1;
   isDragging = false;
 
@@ -98,8 +99,16 @@ export class FilemodalComponent {
 
           if (status === ApiStatus.SUCCESS) {
             const { data } = response;
-            const { uniqueRows } = data as { uniqueRows: RekycData[] };
+            const { uniqueRows, duplicateRows } = data as {
+              uniqueRows: RekycData[];
+              duplicateRows: RekycData[];
+            };
             this.rekycData = uniqueRows as RekycData[];
+            this.duplicateRekycData = duplicateRows as RekycData[];
+
+            if (duplicateRows.length > 0) {
+              this.toastService.warning('Duplicate data found');
+            }
           } else {
             this.toastService.error('Failed to parse the data');
           }
@@ -135,7 +144,10 @@ export class FilemodalComponent {
   }
 
   get filteredData(): RekycData[] {
-    return this.rekycData;
+    return [
+      ...this.rekycData.map((e) => ({ ...e, isDuplicate: false })),
+      ...this.duplicateRekycData.map((e) => ({ ...e, isDuplicate: true })),
+    ];
   }
 
   setActivePage(page: number): void {

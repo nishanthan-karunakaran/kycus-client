@@ -11,6 +11,7 @@ export interface RekycData {
   cinNumber: string;
   panNumber: string;
   ausDetails: Aus[];
+  isDuplicate: boolean; // for ui only
 }
 
 export interface UploadReKycExcel {

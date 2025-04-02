@@ -96,6 +96,10 @@
             <tr
               *ngFor="let item of filteredData; trackBy: trackRow"
               tabindex="0"
+              [ngClass]="{
+                'bg-secondary': item.isDuplicate,
+                'hover:bg-secondary': item.isDuplicate,
+              }"
             >
               <td>{{ item.companyName || '-' }}</td>
               <td>{{ item.custId || '-' }}</td>
