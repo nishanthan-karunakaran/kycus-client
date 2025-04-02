@@ -42,6 +42,7 @@ export class ButtonComponent implements OnChanges {
   @Input() ngClass = {};
   @Input() tabindex = 0;
   @Input() disabled = false;
+  @Input() loading = false;
   @Input() type: 'button' | 'submit' | 'reset' = 'button';
   @Input() ariaLabel?: string;
   @Input() role = 'button';
@@ -54,6 +55,7 @@ export class ButtonComponent implements OnChanges {
   ngOnChanges() {
     this.btnClass = {
       'flex-row-reverse': this.iconPos === 'left',
+      loading: this.loading,
       [this.class]: !!this.class,
       ...this.ngClass,
     };
