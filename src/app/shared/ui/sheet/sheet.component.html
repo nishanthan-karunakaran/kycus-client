@@ -8,15 +8,16 @@
 ></div>
 
 <div
-  class="fixed top-0 z-20 h-full min-w-80 max-w-3xl transform bg-white shadow-lg transition-transform duration-500 ease-out"
+  class="fixed top-0 z-20 h-full min-w-80 max-w-3xl transform bg-white shadow-lg transition-transform duration-300 ease-linear"
   [ngClass]="[
     position === 'right'
       ? 'right-0 translate-x-full'
       : 'left-0 -translate-x-full',
-    isOpen ? 'translate-x-0' : '',
+    isOpen ? 'translate-x-0' : 'translate-x-full',
     class,
   ]"
 >
+  <!-- [ngClass]="{ 'translate-x-0': isOpen, 'translate-x-full': !isOpen }" -->
   <button
     *ngIf="showClose"
     (click)="close()"
