@@ -1,10 +1,6 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { ApiStatus } from 'src/app/core/constants/api.response';
-import {
-  RekycData,
-  SubmitReKycExcel,
-  UploadReKycExcel,
-} from 'src/app/features/rekyc/rekyc.model';
+import { RekycData, SubmitReKycExcel, UploadReKycExcel } from 'src/app/features/rekyc/rekyc.model';
 import { RekycService } from 'src/app/features/rekyc/rekyc.service';
 import { ToastService } from 'src/app/shared/ui/toast/toast.service';
 
@@ -48,16 +44,12 @@ export class FilemodalComponent {
     }
 
     if (this.file) {
-      if (
-        this.file.type ===
-        'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
-      ) {
+      if (this.file.type === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet') {
         if (this.file.size >= 20 * 1024 * 1024) {
           this.toastService.error('File size must be less than 20MB');
           return;
         }
 
-        this.isOpenFilePreview = true;
         this.fileUpload();
       } else {
         this.toastService.error('Please select a valid Excel file.');
@@ -86,34 +78,36 @@ export class FilemodalComponent {
     const formData = new FormData();
     formData.append('file', this.file as Blob);
     formData.append('mode', 'preview');
-    this.rekycService
-      .uploadExcel(formData as unknown as UploadReKycExcel)
-      .subscribe({
-        next: (result) => {
-          const { loading, response } = result;
-          this.isDataFetching = loading;
 
-          if (!response) return;
+    this.isOpenFilePreview = true;
 
-          const { status } = response;
+    this.rekycService.uploadExcel(formData as unknown as UploadReKycExcel).subscribe({
+      next: (result) => {
+        const { loading, response } = result;
+        this.isDataFetching = loading;
 
-          if (status === ApiStatus.SUCCESS) {
-            const { data } = response;
-            const { uniqueRows, duplicateRows } = data as {
-              uniqueRows: RekycData[];
-              duplicateRows: RekycData[];
-            };
-            this.rekycData = uniqueRows as RekycData[];
-            this.duplicateRekycData = duplicateRows as RekycData[];
+        if (!response) return;
 
-            if (duplicateRows.length > 0) {
-              this.toastService.warning('Duplicate data found');
-            }
-          } else {
-            this.toastService.error('Failed to parse the data');
+        const { status } = response;
+
+        if (status === ApiStatus.SUCCESS) {
+          const { data } = response;
+          const { uniqueRows, duplicateRows } = data as {
+            uniqueRows: RekycData[];
+            duplicateRows: RekycData[];
+          };
+          this.rekycData = uniqueRows as RekycData[];
+          this.duplicateRekycData = duplicateRows as RekycData[];
+
+          if (duplicateRows.length > 0) {
+            this.toastService.warning('Duplicate data found');
           }
-        },
-      });
+        } else {
+          this.handlePreviewModal();
+          this.toastService.error('Failed to parse the data');
+        }
+      },
+    });
   }
 
   submitReKycExcel() {
