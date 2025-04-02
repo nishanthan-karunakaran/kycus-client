@@ -95,9 +95,9 @@
 <app-sheet
   [isOpen]="selectedReKycEntity !== null"
   (closeSheet)="handleReKycSheet()"
-  class="w-[700px] bg-red-500"
+  class="w-1/3"
 >
-  <div>
-    {{ selectedReKycEntity | json }}
-  </div>
+  <header>
+    <h3>{{ selectedReKycEntity?.company }}</h3>
+  </header>
 </app-sheet>

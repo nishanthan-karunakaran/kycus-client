@@ -152,7 +152,12 @@ export class RekycComponent implements OnInit, DoCheck {
   }
 
   handleReKycSheet(data: User | null = null) {
-    this.selectedReKycEntity = data;
+    setTimeout(
+      () => {
+        this.selectedReKycEntity = data;
+      },
+      data === null ? 1000 : 0,
+    );
   }
 
   get filteredUsers(): User[] {
