@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { API_URL } from 'src/app/core/constants/apiurls';
 import { ApiService } from 'src/app/core/services/api.service';
+import { SubmitReKycExcel, UploadReKycExcel } from './rekyc.model';
 
 @Injectable({
   providedIn: 'root',
@@ -8,7 +9,11 @@ import { ApiService } from 'src/app/core/services/api.service';
 export class RekycService {
   constructor(private api: ApiService) {}
 
-  uploadExcel(data: FormData) {
+  uploadExcel(data: UploadReKycExcel) {
+    return this.api.post(API_URL.KYC.UPLOAD, data);
+  }
+
+  submitExcel(data: SubmitReKycExcel) {
     return this.api.post(API_URL.KYC.UPLOAD, data);
   }
 }

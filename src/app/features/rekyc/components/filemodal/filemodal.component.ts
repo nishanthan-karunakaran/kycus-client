@@ -1,14 +1,11 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { HelperService } from 'src/app/core/services/helpers.service';
+import { ApiStatus } from 'src/app/core/constants/api.response';
+import {
+  RekycData,
+  UploadReKycExcel,
+} from 'src/app/features/rekyc/rekyc.model';
 import { RekycService } from 'src/app/features/rekyc/rekyc.service';
 import { ToastService } from 'src/app/shared/ui/toast/toast.service';
-
-interface ParsedData {
-  id: number;
-  companyName: string;
-  requestedOn: string;
-  status: string;
-}
 
 @Component({
   selector: 'app-filemodal',
@@ -22,16 +19,13 @@ export class FilemodalComponent {
   file: File | null = null;
   isOpenFilePreview = false;
   isDataFetching = false;
-  parsedData: ParsedData[] = [];
+  rekycData: RekycData[] = [];
   activePage = 1;
   isDragging = false;
-
-  private readonly ROWS_PER_PAGE = 10;
 
   constructor(
     private toastService: ToastService,
     private rekycService: RekycService,
-    private helperService: HelperService,
   ) {}
 
   handleModal() {
@@ -89,53 +83,41 @@ export class FilemodalComponent {
     const formData = new FormData();
     formData.append('file', this.file as Blob);
     formData.append('mode', 'preview');
-    this.rekycService.uploadExcel(formData).subscribe({
-      next: (result) => {
-        const { loading, response } = result;
-        this.isDataFetching = loading;
+    this.rekycService
+      .uploadExcel(formData as unknown as UploadReKycExcel)
+      .subscribe({
+        next: (result) => {
+          const { loading, response } = result;
+          this.isDataFetching = loading;
 
-        if (!response) return;
+          if (!response) return;
 
-        // const { status } = response;
+          const { status } = response;
 
-        // if (status === ApiStatus.SUCCESS) {
-        const { data } = response;
-        this.parsedData = [];
-
-        (data as ParsedData[]).forEach((item) => {
-          const formattedItem: Record<string, string | number | boolean> = {};
-
-          Object.entries(item).forEach(([key, value]) => {
-            const camelCaseKey = this.helperService.toCamelCase(key);
-            formattedItem[camelCaseKey] = value;
-          });
-
-          formattedItem['id'] = this.parsedData.length + 1;
-          formattedItem['status'] = 'In Progress';
-          formattedItem['requestedOn'] = new Date().toLocaleDateString();
-          this.parsedData.push(formattedItem as unknown as ParsedData);
-        });
-
-        // eslint-disable-next-line no-console
-        console.log('parsedData', this.parsedData);
-
-        // }
-      },
-    });
+          if (status === ApiStatus.SUCCESS) {
+            const { data } = response;
+            const { uniqueRows } = data as { uniqueRows: RekycData[] };
+            this.rekycData = uniqueRows as RekycData[];
+          } else {
+            this.toastService.error('Failed to parse the data');
+          }
+        },
+      });
   }
 
-  get filteredData(): ParsedData[] {
-    return this.parsedData.slice(
-      this.activePage * this.ROWS_PER_PAGE - this.ROWS_PER_PAGE,
-      this.activePage * this.ROWS_PER_PAGE,
-    );
+  get filteredData(): RekycData[] {
+    return this.rekycData;
   }
 
   setActivePage(page: number): void {
     this.activePage = page;
   }
 
-  trackRow(_: number, parsedData: ParsedData): number {
-    return parsedData.id;
+  trackRow(_: number, rekycDataRekycData: RekycData): number {
+    return rekycDataRekycData.id;
+  }
+
+  trackAus(index: number): number {
+    return index;
   }
 }

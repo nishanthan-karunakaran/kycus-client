@@ -71,15 +71,25 @@
       <p class="mt-2 text-primary">Fetching Data...</p>
     </ng-container>
 
-    <ng-container *ngIf="!isDataFetching && parsedData">
+    <ng-container *ngIf="!isDataFetching && rekycData">
       <div class="w-full flex-1 overflow-y-auto px-0.5">
-        <table aria-labelledby="user-table">
+        <table aria-labelledby="user-table" class="w-full table-auto">
           <thead class="sticky top-0">
             <tr>
-              <th scope="col" class="w-[25%]">Company</th>
-              <th scope="col" class="w-[25%]">Requested On</th>
-              <th scope="col" class="w-[20%]">Status</th>
-              <th scope="col" class="w-[30%]">Action</th>
+              <th scope="col">Company Name</th>
+              <th scope="col">Customer ID</th>
+              <th scope="col">CIN</th>
+              <th scope="col">PAN</th>
+              <th
+                *ngFor="
+                  let aus of rekycData[0]?.ausDetails;
+                  let i = index;
+                  trackBy: trackAus
+                "
+                scope="col"
+              >
+                AUS {{ i + 1 }}
+              </th>
             </tr>
           </thead>
           <tbody>
@@ -87,35 +97,13 @@
               *ngFor="let item of filteredData; trackBy: trackRow"
               tabindex="0"
             >
-              <td>{{ item.companyName }}</td>
-              <td>{{ item.requestedOn }}</td>
-              <td
-                [ngClass]="
-                  item.status.toLowerCase() === 'completed'
-                    ? 'text-success'
-                    : 'text-secondary'
-                "
-              >
-                {{ item.status }}
-              </td>
-              <td class="flex items-center gap-2">
-                <ui-button
-                  class="btn-outline-compact font-semibold"
-                  label="Send Reminder"
-                  icon="bell-ring"
-                  [iconSize]="14"
-                  iconPos="right"
-                />
-                <ui-button
-                  class="btn-outline-compact p-1.5"
-                  icon="download"
-                  [iconSize]="14"
-                />
-                <ui-button
-                  class="btn-outline-compact p-1.5"
-                  icon="eye"
-                  [iconSize]="14"
-                />
+              <td>{{ item.companyName ? item.companyName : '-' }}</td>
+              <td>{{ item.custId ? item.custId : '-' }}</td>
+              <td>{{ item.cinNumber ? item.cinNumber : '-' }}</td>
+              <td>{{ item.panNumber ? item.panNumber : '-' }}</td>
+              <td *ngFor="let aus of item.ausDetails; trackBy: trackAus">
+                <p>{{ aus?.name }}</p>
+                <span class="text-textBody">{{ aus?.email }}</span>
               </td>
             </tr>
           </tbody>
@@ -124,7 +112,7 @@
 
       <ui-pagination
         [active]="1"
-        [totalItems]="parsedData.length"
+        [totalItems]="rekycData.length"
         class="self-center"
         (activeChange)="setActivePage($event)"
       />
@@ -138,7 +126,11 @@
       </p>
 
       <div class="flex items-center gap-4">
-        <ui-button class="btn-nostyle" label="Cancel" />
+        <ui-button
+          class="btn-nostyle"
+          label="Cancel"
+          (btnClick)="handlePreviewModal()"
+        />
 
         <ui-button label="Submit" />
       </div>
