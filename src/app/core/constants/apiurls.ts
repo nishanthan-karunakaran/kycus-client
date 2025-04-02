@@ -6,7 +6,8 @@ export const API_URL = {
     REQUEST_LOGIN_OTP: '/auth/kycus/requestLoginOtp',
     LOGIN: '/auth/kycus/login',
   },
-  KYC: {
-    UPLOAD: '/kyc/rekyc/upload',
+  REKYC: {
+    UPLOAD_EXCEL: '/kycus/rekyc/upload',
+    SUBMIT_EXCEL: '/kycus/rekyc/upload',
   },
 };

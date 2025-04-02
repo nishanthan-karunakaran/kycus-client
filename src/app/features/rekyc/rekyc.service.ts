@@ -10,10 +10,10 @@ export class RekycService {
   constructor(private api: ApiService) {}
 
   uploadExcel(data: UploadReKycExcel) {
-    return this.api.post(API_URL.KYC.UPLOAD, data);
+    return this.api.post(API_URL.REKYC.UPLOAD_EXCEL, data);
   }
 
   submitExcel(data: SubmitReKycExcel) {
-    return this.api.post(API_URL.KYC.UPLOAD, data);
+    return this.api.post(API_URL.REKYC.SUBMIT_EXCEL, data);
   }
 }

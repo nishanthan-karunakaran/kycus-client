@@ -1,5 +1,4 @@
-import { Component, DoCheck, OnInit } from '@angular/core';
-import { HelperService } from 'src/app/core/services/helpers.service';
+import { Component, DoCheck } from '@angular/core';
 
 interface User {
   id: number;
@@ -13,7 +12,7 @@ interface User {
   templateUrl: './rekyc.component.html',
   styleUrls: ['./rekyc.component.scss'],
 })
-export class RekycComponent implements OnInit, DoCheck {
+export class RekycComponent implements DoCheck {
   users: User[] = [
     {
       id: 1,
@@ -124,7 +123,6 @@ export class RekycComponent implements OnInit, DoCheck {
       status: 'In Progress',
     },
   ];
-  columns: string[] = [];
   searchInput: string | number | boolean = '';
   activePage = 1;
   isModalOpen = false;
@@ -132,19 +130,9 @@ export class RekycComponent implements OnInit, DoCheck {
 
   private readonly ROWS_PER_PAGE = 10;
 
-  constructor(private helperService: HelperService) {}
-
   ngDoCheck(): void {
     // eslint-disable-next-line no-console
     console.log('rendeing');
-  }
-
-  ngOnInit(): void {
-    if (this.users.length > 0) {
-      this.columns = Object.keys(this.users[0]).map((key) =>
-        this.helperService.toTitleCase(key, 'camelCase'),
-      );
-    }
   }
 
   handleModal() {
@@ -162,12 +150,10 @@ export class RekycComponent implements OnInit, DoCheck {
 
   get filteredUsers(): User[] {
     const query = this.searchInput as string;
-    return this.users
-      .slice(
-        this.activePage * this.ROWS_PER_PAGE - this.ROWS_PER_PAGE,
-        this.activePage * this.ROWS_PER_PAGE,
-      )
-      .filter((user) => user.company.toLowerCase().includes(query));
+    const start = this.activePage * this.ROWS_PER_PAGE - this.ROWS_PER_PAGE;
+    const end = this.activePage * this.ROWS_PER_PAGE;
+
+    return this.users.slice(start, end).filter((user) => user.company.toLowerCase().includes(query));
   }
 
   onSearchInputChange(event: string | number | boolean): void {
