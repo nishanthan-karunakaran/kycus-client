@@ -97,10 +97,10 @@
               *ngFor="let item of filteredData; trackBy: trackRow"
               tabindex="0"
             >
-              <td>{{ item.companyName ? item.companyName : '-' }}</td>
-              <td>{{ item.custId ? item.custId : '-' }}</td>
-              <td>{{ item.cinNumber ? item.cinNumber : '-' }}</td>
-              <td>{{ item.panNumber ? item.panNumber : '-' }}</td>
+              <td>{{ item.companyName || '-' }}</td>
+              <td>{{ item.custId || '-' }}</td>
+              <td>{{ item.cinNumber || '-' }}</td>
+              <td>{{ item.panNumber || '-' }}</td>
               <td *ngFor="let aus of item.ausDetails; trackBy: trackAus">
                 <p>{{ aus?.name }}</p>
                 <span class="text-textBody">{{ aus?.email }}</span>
