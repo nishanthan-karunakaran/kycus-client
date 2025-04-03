@@ -1,36 +1,27 @@
-import {
-  Component,
-  EventEmitter,
-  Input,
-  OnChanges,
-  Output,
-  Renderer2,
-  SimpleChanges,
-  TemplateRef,
-} from '@angular/core';
+import { Component, Input, ElementRef, AfterContentInit, Output, EventEmitter } from '@angular/core';
 
 @Component({
   selector: 'ui-modal',
   templateUrl: './modal.component.html',
   styleUrls: ['./modal.component.scss'],
 })
-export class ModalComponent implements OnChanges {
+export class ModalComponent implements AfterContentInit {
   @Input() isOpen = false;
   @Input() class = '';
-  @Input() contentClass = '';
-  @Input() header?: string;
   @Input() showClose = true;
-  @Input() footer?: TemplateRef<unknown>;
   @Input() closeOnOutsideClick = true;
 
   // eslint-disable-next-line @angular-eslint/no-output-native
   @Output() close = new EventEmitter<void>();
 
-  constructor(private renderer: Renderer2) {}
+  hasHeader = false;
+  hasFooter = false;
+  hasContent = false;
+
+  constructor(private el: ElementRef) {}
 
   closeModal() {
     this.isOpen = false;
-    this.enablePageInteraction();
     this.close.emit();
   }
 
@@ -40,21 +31,9 @@ export class ModalComponent implements OnChanges {
     }
   }
 
-  disablePageInteraction() {
-    this.renderer.addClass(document.body, 'modal-open');
-  }
-
-  enablePageInteraction() {
-    this.renderer.removeClass(document.body, 'modal-open');
-  }
-
-  ngOnChanges(changes: SimpleChanges) {
-    if (changes['isOpen']) {
-      if (this.isOpen) {
-        this.disablePageInteraction();
-      } else {
-        this.enablePageInteraction();
-      }
-    }
+  ngAfterContentInit() {
+    this.hasHeader = !!this.el.nativeElement.querySelector('[modalHeader]');
+    this.hasFooter = !!this.el.nativeElement.querySelector('[modalFooter]');
+    this.hasContent = !!this.el.nativeElement.querySelector('[modalContent]');
   }
 }
