@@ -36,22 +36,9 @@ export class ToastComponent {
     }
   }
 
-  // removeToast(toast: Toast) {
-  //   const toastElement = document.getElementById(`toast-${toast.id}`);
-
-  //   if (toastElement) {
-  //     toastElement.classList.remove('animate-toast-in');
-  //     toastElement.classList.add('animate-toast-out');
-
-  //     setTimeout(() => {
-  //       this.toasts = this.toasts.filter((t) => t !== toast);
-  //     }, 300); // remove the toast after the animation has completed
-  //   }
-  // }
-
   removeToast(toast: Toast) {
     const index = this.toasts.findIndex((t) => t.id === toast.id);
-    if (index === -1) return; // Avoid errors if toast not found
+    if (index === -1) return; // if toast not found
 
     // Update animation class first
     this.toasts[index].animationClass = 'animate-toast-out';
