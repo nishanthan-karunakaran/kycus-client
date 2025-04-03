@@ -144,7 +144,7 @@ export class RekycComponent implements DoCheck {
       () => {
         this.selectedReKycEntity = data;
       },
-      data === null ? 1000 : 0,
+      data === null ? 300 : 0,
     );
   }
 
