@@ -4,22 +4,20 @@ import { RouterModule, Routes } from '@angular/router';
 const routes: Routes = [
   {
     path: 'auth',
-    loadChildren: () =>
-      import('./features/auth/auth.module').then((m) => m.AuthModule),
+    loadChildren: () => import('./features/auth/auth.module').then((m) => m.AuthModule),
   },
   {
     path: 'v2/auth',
-    loadChildren: () =>
-      import('./layouts/auth-layout/auth-layout.module').then(
-        (m) => m.AuthLayoutModule,
-      ),
+    loadChildren: () => import('./layouts/auth-layout/auth-layout.module').then((m) => m.AuthLayoutModule),
+  },
+  {
+    path: 'application',
+    loadChildren: () => import('./features/application/application.module').then((m) => m.ApplicationModule),
   },
   {
     path: '',
     loadChildren: () =>
-      import('./layouts/dashboard-layout/dashboard-layout.module').then(
-        (m) => m.DashboardLayoutModule,
-      ),
+      import('./layouts/dashboard-layout/dashboard-layout.module').then((m) => m.DashboardLayoutModule),
     // canActivate: [AuthGuard],
   },
   {
