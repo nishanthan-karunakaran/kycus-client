@@ -20,54 +20,71 @@ export class ToastComponent {
     const newToast = {
       id: this.toasts.length + 1,
       ...toast,
+      animationClass: 'animate-toast-in',
       options: {
         duration: toast.options.duration ?? DEFAULT_TOAST_OPTIONS.duration,
-        dismissable:
-          toast.options.dismissable ?? DEFAULT_TOAST_OPTIONS.dismissable,
+        dismissable: toast.options.dismissable ?? DEFAULT_TOAST_OPTIONS.dismissable,
         outlined: toast.options.outlined ?? DEFAULT_TOAST_OPTIONS.outlined,
         autoClose: toast.options.autoClose ?? DEFAULT_TOAST_OPTIONS.autoClose,
       },
     };
 
-    this.toasts.unshift(newToast); // add new toast to the top
+    this.toasts = [newToast, ...this.toasts]; // add new toast to the top
 
     if (newToast.options.autoClose) {
       setTimeout(() => this.removeToast(newToast), newToast.options.duration);
     }
   }
 
+  // removeToast(toast: Toast) {
+  //   const toastElement = document.getElementById(`toast-${toast.id}`);
+
+  //   if (toastElement) {
+  //     toastElement.classList.remove('animate-toast-in');
+  //     toastElement.classList.add('animate-toast-out');
+
+  //     setTimeout(() => {
+  //       this.toasts = this.toasts.filter((t) => t !== toast);
+  //     }, 300); // remove the toast after the animation has completed
+  //   }
+  // }
+
   removeToast(toast: Toast) {
-    this.toasts = this.toasts.filter((t) => t !== toast);
+    const index = this.toasts.findIndex((t) => t.id === toast.id);
+    if (index === -1) return; // Avoid errors if toast not found
+
+    // Update animation class first
+    this.toasts[index].animationClass = 'animate-toast-out';
+
+    // Wait for animation to complete before removing from array
+    setTimeout(() => {
+      this.toasts = this.toasts.filter((t) => t.id !== toast.id);
+    }, 300); // Match animation duration
   }
 
   toastClasses(toast: Toast) {
     return {
       // Normal filled background styles with white text
-      'bg-success text-white':
-        toast.type === 'success' && !toast.options.outlined,
+      'bg-success text-white': toast.type === 'success' && !toast.options.outlined,
       'bg-error text-white': toast.type === 'error' && !toast.options.outlined,
-      'bg-warning text-white':
-        toast.type === 'warning' && !toast.options.outlined,
+      'bg-warning text-white': toast.type === 'warning' && !toast.options.outlined,
       'bg-info text-white': toast.type === 'info' && !toast.options.outlined,
-      'bg-danger text-white':
-        toast.type === 'danger' && !toast.options.outlined,
+      'bg-danger text-white': toast.type === 'danger' && !toast.options.outlined,
 
       // Outlined styles with dark text
-      'border border-success bg-successLight text-success':
-        toast.type === 'success' && toast.options.outlined,
-      'border border-error bg-failureLight text-failure':
-        toast.type === 'error' && toast.options.outlined,
-      'border border-warning bg-warningLight text-warning':
-        toast.type === 'warning' && toast.options.outlined,
-      'border border-info bg-infoLight text-info':
-        toast.type === 'info' && toast.options.outlined,
-      'border border-danger bg-dangerLight text-danger':
-        toast.type === 'danger' && toast.options.outlined,
+      'border border-success bg-successLight text-success': toast.type === 'success' && toast.options.outlined,
+      'border border-error bg-failureLight text-failure': toast.type === 'error' && toast.options.outlined,
+      'border border-warning bg-warningLight text-warning': toast.type === 'warning' && toast.options.outlined,
+      'border border-info bg-infoLight text-info': toast.type === 'info' && toast.options.outlined,
+      'border border-danger bg-dangerLight text-danger': toast.type === 'danger' && toast.options.outlined,
 
       'rounded-lg shadow-lg px-4 py-2': true,
       'grid grid-cols-[auto_1fr_auto] items-center gap-4': true,
+
+      ...(toast.animationClass ? { [toast.animationClass]: true } : {}),
     };
   }
+
   textColor(toast: Toast) {
     if (toast.options.outlined) {
       return (
@@ -95,9 +112,7 @@ export class ToastComponent {
     return icons[type] || 'bell';
   }
 
-  trackToast(index: number, toast: Toast) {
-    // eslint-disable-next-line no-console
-    console.log(toast);
+  trackToast(_: number, toast: Toast) {
     return toast.id;
   }
 }

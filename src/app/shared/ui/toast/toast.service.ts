@@ -1,17 +1,14 @@
-import {
-  ApplicationRef,
-  ComponentFactoryResolver,
-  ComponentRef,
-  Injectable,
-  Injector,
-} from '@angular/core';
+import { ApplicationRef, ComponentFactoryResolver, ComponentRef, Injectable, Injector } from '@angular/core';
 import { ToastComponent } from './toast.component';
+
+export type ToastType = 'success' | 'error' | 'warning' | 'info' | 'danger';
 
 export interface Toast {
   id?: string | number;
-  type: 'success' | 'error' | 'warning' | 'info' | 'danger';
+  type: ToastType;
   message: string;
   options: ToastOptions;
+  animationClass?: string;
 }
 
 export interface ToastOptions {
@@ -42,11 +39,7 @@ export class ToastService {
     }
   }
 
-  show(
-    type: 'success' | 'error' | 'warning' | 'info' | 'danger',
-    message: string,
-    options: ToastOptions,
-  ) {
+  show(type: ToastType, message: string, options: ToastOptions) {
     this.ensureToastContainer();
     this.toastContainer?.instance.addToast({
       type,
