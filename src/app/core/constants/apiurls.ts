@@ -10,4 +10,12 @@ export const API_URL = {
     UPLOAD_EXCEL: '/kycus/rekyc/upload',
     SUBMIT_EXCEL: '/kycus/rekyc/upload',
   },
+  APPLICATION: {
+    REKYC: {
+      AUTH: {
+        REQUEST_OTP: '/kycus/rekyc/auth/request-otp',
+        VERIFY_OTP: '/kycus/rekyc/auth/verify-otp',
+      },
+    },
+  },
 };
