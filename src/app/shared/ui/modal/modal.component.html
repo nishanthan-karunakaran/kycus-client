@@ -1,6 +1,6 @@
 <div *ngIf="isOpen" class="modal-overlay fixed inset-0 z-50 flex items-center justify-center">
   <div
-    class="absolute inset-0 bg-black bg-opacity-40 backdrop-blur-sm transition-opacity"
+    class="absolute inset-0 cursor-default bg-black bg-opacity-40 backdrop-blur-sm transition-opacity"
     (click)="onOverlayClick($event)"
     (keydown.enter)="onOverlayClick($event)"
     (keydown.space)="onOverlayClick($event)"
@@ -14,7 +14,7 @@
     [ngClass]="class"
   >
     <div *ngIf="showClose || hasHeader" class="flex w-full items-center border-b p-4">
-      <div class="flex-grow truncate">
+      <div class="flex-grow select-none truncate">
         <ng-content select="[modalHeader]"></ng-content>
       </div>
 
@@ -32,7 +32,7 @@
       </button>
     </div>
 
-    <div class="max-h-[70vh] overflow-auto px-10 py-6">
+    <div class="max-h-[70vh] overflow-auto px-10 py-6" [ngClass]="contentClass">
       <ng-content select="[modalContent]"></ng-content>
     </div>
 
