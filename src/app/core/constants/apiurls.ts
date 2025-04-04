@@ -16,6 +16,7 @@ export const API_URL = {
         REQUEST_OTP: '/kycus/rekyc/auth/request-otp',
         VERIFY_OTP: '/kycus/rekyc/auth/verify-otp',
       },
+      APPLICATIONS: '/kycus/rekyc/applications',
     },
   },
 };

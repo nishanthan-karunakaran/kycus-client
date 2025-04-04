@@ -1,6 +1,8 @@
 import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
+import { EffectsModule } from '@ngrx/effects';
+import { StoreModule } from '@ngrx/store';
 import {
   AlertOctagon,
   AlertTriangle,
@@ -30,6 +32,8 @@ import { SharedModule } from './shared/shared.module';
       AlertOctagon,
     }),
     SharedModule,
+    StoreModule.forRoot({}, {}),
+    EffectsModule.forRoot([]),
   ],
   providers: [
     {

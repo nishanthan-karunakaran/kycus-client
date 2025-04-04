@@ -14,6 +14,22 @@ export interface RekycData {
   isDuplicate: boolean; // for ui only
 }
 
+export interface ReKycApplication {
+  _id: string;
+  id: string;
+  bankName: string;
+  entityName: string;
+  cin: string;
+  reason: string;
+  entityType: string;
+  entityUrlToken: string;
+  entityUrl: string;
+  authorizedSignatoriesDetails: Aus[];
+  status: string;
+  requestedOn: string;
+  uploadedBy: string;
+}
+
 export interface UploadReKycExcel {
   file: Blob;
   mode: 'preview';
@@ -24,4 +40,18 @@ export interface SubmitReKycExcel {
   uploadedBy: string;
   bankName: string;
   data: RekycData[];
+}
+
+export interface GetReKycApplicationsParams {
+  page?: number;
+  limit?: number;
+  search?: string;
+  status?: string;
+}
+
+export interface GetReKycApplicationsResponse {
+  results: ReKycApplication[];
+  total: number;
+  currentPage: number;
+  totalPages: number;
 }

@@ -22,27 +22,25 @@ export class ApiService {
     params?: HttpParams,
     headers?: HttpHeaders,
   ): ApiResult<T> {
-    return this.http
-      .request<ApiResponse<T>>(method, url, { body, params, headers })
-      .pipe(
-        map((response: ApiResponse<T>) => ({
+    return this.http.request<ApiResponse<T>>(method, url, { body, params, headers }).pipe(
+      map((response: ApiResponse<T>) => ({
+        loading: false,
+        response, // Pass the actual API response
+      })),
+      startWith({ loading: true, response: null }),
+      catchError((error) =>
+        of({
           loading: false,
-          response, // Pass the actual API response
-        })),
-        startWith({ loading: true, response: null }),
-        catchError((error) =>
-          of({
-            loading: false,
-            response: error?.error ?? {
-              status: 'error',
-              message: error.message || 'An unexpected error occurred',
-              data: null,
-              errors: null,
-            },
-          }),
-        ),
-        finalize(() => this.globalLoadingSubject.next(false)),
-      );
+          response: error?.error ?? {
+            status: 'error',
+            message: error.message || 'An unexpected error occurred',
+            data: null,
+            errors: null,
+          },
+        }),
+      ),
+      finalize(() => this.globalLoadingSubject.next(false)),
+    );
   }
 
   // Shorthand methods

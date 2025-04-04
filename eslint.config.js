@@ -59,7 +59,7 @@ module.exports = tseslint.config(
       'no-restricted-imports': [
         'error',
         {
-          patterns: ['../*'],
+          patterns: ['../../*'],
         },
       ],
       '@typescript-eslint/no-useless-constructor': 'error',
