@@ -70,9 +70,9 @@ module.exports = tseslint.config(
       // 'no-undef': 'error', // Ensures no variables are used without being defined
       'no-duplicate-imports': 'error',
       'max-len': [
-        'warn',
+        'error',
         {
-          code: 120,
+          code: 100,
           ignoreUrls: true,
           ignoreStrings: true,
           ignoreTemplateLiterals: true,
@@ -93,6 +93,13 @@ module.exports = tseslint.config(
       //   'error',
       //   { maxComplexity: 5 },
       // ],
+      '@angular-eslint/template/element-newline': [
+        'error',
+        {
+          multiline: 3, // Moves to a new line if >3 attributes
+          minAttributes: 3, // Enforces line breaks if >= 3 attributes
+        },
+      ],
     },
   },
 );

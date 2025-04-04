@@ -8,5 +8,24 @@
   "quoteProps": "as-needed",
   "endOfLine": "lf",
   "bracketSpacing": true,
-  "printWidth": 120
+  "printWidth": 100,
+  "htmlWhitespaceSensitivity": "ignore",
+  "proseWrap": "preserve",
+  "embeddedLanguageFormatting": "auto",
+  "useTabs": false,
+  "overrides": [
+    {
+      "files": "*.html",
+      "options": {
+        "printWidth": 80,
+        "wrapAttributes": "force-aligned"
+      }
+    },
+    {
+      "files": ["*.ts", "*.js", "*.json"],
+      "options": {
+        "printWidth": 100
+      }
+    }
+  ]
 }
