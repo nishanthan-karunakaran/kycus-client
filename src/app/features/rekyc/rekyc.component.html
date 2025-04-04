@@ -39,11 +39,14 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngIf="filteredUsers.length === 0">
+        <tr *ngIf="filteredApplications.length === 0">
           <td colspan="4" class="text-center">No data found</td>
         </tr>
 
-        <tr *ngFor="let item of filteredUsers; trackBy: trackRow" tabindex="0">
+        <tr
+          *ngFor="let item of filteredApplications; trackBy: trackRow"
+          tabindex="0"
+        >
           <td>{{ item.company }}</td>
           <td>{{ item.requestedOn }}</td>
           <td
@@ -84,7 +87,7 @@
 
   <ui-pagination
     [active]="1"
-    [totalItems]="users.length"
+    [totalItems]="applications.length"
     class="self-center"
     (activeChange)="setActivePage($event)"
   />

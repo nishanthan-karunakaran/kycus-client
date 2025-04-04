@@ -1,6 +1,6 @@
 import { Component, DoCheck } from '@angular/core';
 
-interface User {
+interface Application {
   id: number;
   company: string;
   requestedOn: string;
@@ -13,7 +13,7 @@ interface User {
   styleUrls: ['./rekyc.component.scss'],
 })
 export class RekycComponent implements DoCheck {
-  users: User[] = [
+  applications: Application[] = [
     {
       id: 1,
       company: 'Ebitaus',
@@ -126,7 +126,7 @@ export class RekycComponent implements DoCheck {
   searchInput: string | number | boolean = '';
   activePage = 1;
   isModalOpen = false;
-  selectedReKycEntity: User | null = null;
+  selectedReKycEntity: Application | null = null;
 
   private readonly ROWS_PER_PAGE = 10;
 
@@ -139,7 +139,7 @@ export class RekycComponent implements DoCheck {
     this.isModalOpen = !this.isModalOpen;
   }
 
-  handleReKycSheet(data: User | null = null) {
+  handleReKycSheet(data: Application | null = null) {
     setTimeout(
       () => {
         this.selectedReKycEntity = data;
@@ -148,12 +148,14 @@ export class RekycComponent implements DoCheck {
     );
   }
 
-  get filteredUsers(): User[] {
+  get filteredApplications(): Application[] {
     const query = this.searchInput as string;
     const start = this.activePage * this.ROWS_PER_PAGE - this.ROWS_PER_PAGE;
     const end = this.activePage * this.ROWS_PER_PAGE;
 
-    return this.users.slice(start, end).filter((user) => user.company.toLowerCase().includes(query));
+    return this.applications
+      .slice(start, end)
+      .filter((application) => application.company.toLowerCase().includes(query));
   }
 
   onSearchInputChange(event: string | number | boolean): void {
@@ -164,7 +166,7 @@ export class RekycComponent implements DoCheck {
     this.activePage = page;
   }
 
-  onRowSelected(row: User) {
+  onRowSelected(row: Application) {
     // eslint-disable-next-line no-console
     console.log('Selected Row:', row);
   }
@@ -173,7 +175,7 @@ export class RekycComponent implements DoCheck {
     return key;
   }
 
-  trackRow(_: number, user: User): number {
-    return user.id;
+  trackRow(_: number, application: Application): number {
+    return application.id;
   }
 }
