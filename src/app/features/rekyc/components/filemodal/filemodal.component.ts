@@ -1,4 +1,12 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import {
+  Component,
+  computed,
+  EventEmitter,
+  Input,
+  Output,
+  signal,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { ApiStatus } from 'src/app/core/constants/api.response';
 import { RekycData, SubmitReKycExcel, UploadReKycExcel } from 'src/app/features/rekyc/rekyc.model';
 import { RekycService } from 'src/app/features/rekyc/rekyc.service';
@@ -8,19 +16,20 @@ import { ToastService } from 'src/app/shared/ui/toast/toast.service';
   selector: 'app-filemodal',
   templateUrl: './filemodal.component.html',
   styleUrls: ['./filemodal.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FilemodalComponent {
   @Input() isModalOpen = false;
   @Output() closeModal = new EventEmitter<boolean>();
 
   file: File | null = null;
-  isOpenFilePreview = false;
-  isDataFetching = false;
-  isDataSubmitting = false;
-  rekycData: RekycData[] = [];
+  isOpenFilePreview = signal(false);
+  isDataFetching = signal(false);
+  isDataSubmitting = signal(false);
+  rekycData = signal<RekycData[]>([]);
   duplicateRekycData: RekycData[] = [];
-  activePage = 1;
-  isDragging = false;
+  activePage = signal(1);
+  isDragging = signal(false);
 
   constructor(
     private toastService: ToastService,
@@ -32,7 +41,7 @@ export class FilemodalComponent {
   }
 
   handlePreviewModal() {
-    this.isOpenFilePreview = false;
+    this.isOpenFilePreview.set(false);
     this.closeModal.emit(false);
   }
 
@@ -61,17 +70,17 @@ export class FilemodalComponent {
 
   onDragOver(event: DragEvent) {
     event.preventDefault();
-    this.isDragging = true;
+    this.isDragging.set(true);
   }
 
   onDrop(event: DragEvent) {
     event.preventDefault();
-    this.isDragging = false;
+    this.isDragging.set(false);
     this.handleFile(event);
   }
 
   onDragLeave() {
-    this.isDragging = false;
+    this.isDragging.set(false);
   }
 
   fileUpload() {
@@ -79,12 +88,12 @@ export class FilemodalComponent {
     formData.append('file', this.file as Blob);
     formData.append('mode', 'preview');
 
-    this.isOpenFilePreview = true;
+    this.isOpenFilePreview.set(true);
 
     this.rekycService.uploadExcel(formData as unknown as UploadReKycExcel).subscribe({
       next: (result) => {
         const { loading, response } = result;
-        this.isDataFetching = loading;
+        this.isDataFetching.set(loading);
 
         if (!response) return;
 
@@ -96,7 +105,7 @@ export class FilemodalComponent {
             uniqueRows: RekycData[];
             duplicateRows: RekycData[];
           };
-          this.rekycData = uniqueRows as RekycData[];
+          this.rekycData.set(uniqueRows);
           this.duplicateRekycData = duplicateRows as RekycData[];
 
           if (duplicateRows.length > 0) {
@@ -115,13 +124,13 @@ export class FilemodalComponent {
       mode: 'submit',
       uploadedBy: 'admin@hdfc.com',
       bankName: 'HDFC Bank',
-      data: this.rekycData,
+      data: this.rekycData(),
     };
 
     this.rekycService.submitExcel(payload).subscribe({
       next: (result) => {
         const { loading, response } = result;
-        this.isDataSubmitting = loading;
+        this.isDataSubmitting.set(loading);
 
         if (!response) return;
 
@@ -137,15 +146,15 @@ export class FilemodalComponent {
     });
   }
 
-  get filteredData(): RekycData[] {
+  filteredData = computed(() => {
     return [
-      ...this.rekycData.map((e) => ({ ...e, isDuplicate: false })),
+      ...this.rekycData().map((e) => ({ ...e, isDuplicate: false })),
       ...this.duplicateRekycData.map((e) => ({ ...e, isDuplicate: true })),
     ];
-  }
+  });
 
   setActivePage(page: number): void {
-    this.activePage = page;
+    this.activePage.set(page);
   }
 
   trackRow(_: number, rekycDataRekycData: RekycData): number {
