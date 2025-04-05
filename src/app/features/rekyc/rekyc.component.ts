@@ -24,7 +24,7 @@ import { rekycSelectors } from './store/rekyc.selectors';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class RekycComponent implements DoCheck, OnInit {
-  searchInput: string | number | boolean = '';
+  searchInput = '';
   activePage = 1;
   isModalOpen = false;
   selectedReKycEntity: ReKycApplication | null = null;
@@ -59,15 +59,10 @@ export class RekycComponent implements DoCheck, OnInit {
   }
 
   handleReKycSheet(data: ReKycApplication | null = null) {
-    setTimeout(
-      () => {
-        this.selectedReKycEntity = data;
-      },
-      data === null ? 300 : 0,
-    );
+    this.selectedReKycEntity = data;
   }
 
-  onSearchInputChange(event: string | number | boolean): void {
+  onSearchInputChange(event: string): void {
     this.searchInput = event;
   }
 
@@ -80,17 +75,17 @@ export class RekycComponent implements DoCheck, OnInit {
   }
 
   trackRow(_: number, rekycAppReKycApplication: ReKycApplication): string {
-    return rekycAppReKycApplication.id;
+    return rekycAppReKycApplication._id;
   }
 
   get filteredReKycApplications(): ReKycApplication[] {
-    const query = this.searchInput as string;
+    const query = this.searchInput.toLowerCase();
     const start = this.activePage * this.ROWS_PER_PAGE - this.ROWS_PER_PAGE;
     const end = this.activePage * this.ROWS_PER_PAGE;
 
     return this.reKycApplications
       .slice(start, end)
-      .filter((rekycApplication) => rekycApplication.entityName.toLowerCase().includes(query));
+      .filter((rekycApplication) => rekycApplication.entityName?.toLowerCase().includes(query));
   }
 
   getReKycApplications() {

@@ -20,7 +20,7 @@ import { InputFormat } from 'src/app/core/directives/input-format.directive';
     ></ui-input>
   `,
 })
-export class InputDebounceComponent {
+export class InputDebounceComponent<T extends string | number | boolean> {
   @Input() type = 'text';
   @Input() id = '';
   @Input() name = '';
@@ -44,17 +44,17 @@ export class InputDebounceComponent {
   @Input() class = '';
   @Input() debounceTime = 300;
 
-  @Output() valueChange = new EventEmitter<string | number | boolean>();
+  @Output() valueChange = new EventEmitter<T>();
 
-  private inputSubject = new Subject<string | number | boolean>();
+  private inputSubject = new Subject<T>();
 
   constructor() {
     this.inputSubject
       .pipe(debounceTime(this.debounceTime), distinctUntilChanged())
-      .subscribe((value) => this.valueChange.emit(value));
+      .subscribe((value) => this.valueChange.emit(value as T));
   }
 
   onInputChange(value: string | number | boolean) {
-    this.inputSubject.next(value);
+    this.inputSubject.next(value as T);
   }
 }
