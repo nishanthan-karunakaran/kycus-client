@@ -1,4 +1,5 @@
-import { EntityState, createEntityAdapter } from '@ngrx/entity';
+import { EntityState } from '@ngrx/entity';
+import { createMongoEntityAdapter } from 'src/app/core/utils/ngrx.utils';
 import { ReKycApplication } from 'src/app/features/rekyc/rekyc.model';
 
 interface PaginationInfo {
@@ -11,7 +12,7 @@ export interface ReKycState extends EntityState<ReKycApplication> {
   paginationInfo: PaginationInfo;
 }
 
-export const rekycAdapter = createEntityAdapter<ReKycApplication>();
+export const rekycAdapter = createMongoEntityAdapter<ReKycApplication>();
 
 export const initialReKycState: ReKycState = rekycAdapter.getInitialState({
   reKycApplications: [],
