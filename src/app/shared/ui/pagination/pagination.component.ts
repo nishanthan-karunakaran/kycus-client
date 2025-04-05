@@ -14,13 +14,6 @@ export class PaginationComponent {
   private startPage = 1;
 
   get totalPages(): number {
-    // eslint-disable-next-line no-console
-    console.log(
-      'split on pagi',
-      this.totalItems,
-      this.split,
-      Math.ceil(this.totalItems / this.split),
-    );
     return Math.ceil(this.totalItems / this.split);
   }
 
