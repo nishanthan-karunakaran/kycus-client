@@ -14,6 +14,14 @@ export interface RekycData {
   isDuplicate: boolean; // for ui only
 }
 
+export enum ReKycStatus {
+  IN_PROGRESS = 'in-progress',
+  SUBMITTED = 'submitted',
+  PENDING = 'pending',
+  EXPIRED = 'expired',
+  COMPLETED = 'completed',
+}
+
 export interface ReKycApplication {
   _id: string;
   id: string;
@@ -25,7 +33,7 @@ export interface ReKycApplication {
   entityUrlToken: string;
   entityUrl: string;
   authorizedSignatoriesDetails: Aus[];
-  status: string;
+  status: ReKycStatus;
   requestedOn: string;
   uploadedBy: string;
 }

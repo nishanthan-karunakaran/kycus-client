@@ -49,14 +49,8 @@
         >
           <td>{{ item.entityName }}</td>
           <td>{{ item.requestedOn }}</td>
-          <td
-            [ngClass]="
-              item.status.toLowerCase() === 'completed'
-                ? 'text-success'
-                : 'text-secondary'
-            "
-          >
-            {{ item.status }}
+          <td [ngClass]="item.status | rekycStatusClass">
+            {{ item.status | rekycStatusLabel }}
           </td>
           <td class="flex items-center gap-2">
             <ng-container *ngIf="item.status.toLowerCase() === 'completed'">
@@ -87,7 +81,7 @@
 
   <ui-pagination
     [active]="1"
-    [totalItems]="reKycApplications.length"
+    [totalItems]="filteredReKycApplications.length"
     class="self-center"
     (activeChange)="setActivePage($event)"
   />
