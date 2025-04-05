@@ -22,19 +22,11 @@ module.exports = tseslint.config(
     ],
     processor: angular.processInlineTemplates,
     rules: {
-      // "@angular-eslint/directive-selector": [
-      //   "error",
-      //   {
-      //     type: "attribute",
-      //     prefix: ["app", "ui"],
-      //     style: "camelCase",
-      //   },
-      // ],
       '@angular-eslint/component-selector': [
         'error',
         {
           type: 'element',
-          prefix: ['app', 'ui'],
+          prefix: ['app', 'ui', 'rekyc'],
           style: 'kebab-case',
         },
       ],
@@ -43,13 +35,6 @@ module.exports = tseslint.config(
       '@typescript-eslint/no-unused-vars': 'error',
       '@typescript-eslint/no-unsafe-return': 'error',
       '@typescript-eslint/prefer-as-const': 'error',
-      // '@typescript-eslint/no-magic-numbers': [
-      //   'error',
-      //   {
-      //     ignore: [-1, 0, 1],
-      //     ignoreArrayIndexes: true,
-      //   },
-      // ],
       '@typescript-eslint/array-type': [
         'error',
         {
@@ -67,7 +52,6 @@ module.exports = tseslint.config(
       eqeqeq: 'error',
       'no-console': 'error',
       'no-debugger': 'error', // Disallows debugger
-      // 'no-undef': 'error', // Ensures no variables are used without being defined
       'no-duplicate-imports': 'error',
       'max-len': [
         'error',

@@ -1,10 +1,4 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  EventEmitter,
-  Input,
-  Output,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
 
 @Component({
   selector: 'ui-pagination',
@@ -20,6 +14,13 @@ export class PaginationComponent {
   private startPage = 1;
 
   get totalPages(): number {
+    // eslint-disable-next-line no-console
+    console.log(
+      'split on pagi',
+      this.totalItems,
+      this.split,
+      Math.ceil(this.totalItems / this.split),
+    );
     return Math.ceil(this.totalItems / this.split);
   }
 
@@ -55,10 +56,7 @@ export class PaginationComponent {
 
   private updateStartPage() {
     // Move forward when reaching the last page in the current range
-    if (
-      this.active === this.startPage + 3 &&
-      this.active + 1 <= this.totalPages
-    ) {
+    if (this.active === this.startPage + 3 && this.active + 1 <= this.totalPages) {
       this.startPage += 3;
     }
     // Move backward when reaching the first page in the current range
