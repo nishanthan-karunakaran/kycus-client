@@ -1,11 +1,15 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { RekycFormComponent } from './pages/rekyc-form/rekyc-form.component';
 
 const routes: Routes = [
   {
     path: 'rekyc',
-    component: RekycFormComponent,
+    loadChildren: () =>
+      import('@features/forms/rekyc-form/rekyc-form.module').then((m) => m.RekycFormModule),
+  },
+  {
+    path: '**',
+    redirectTo: 'rekyc',
   },
 ];
 

@@ -1,3 +1,4 @@
+import { updateReKycApplications } from 'src/app/features/rekyc/store/rekyc.actions';
 import {
   Component,
   computed,
@@ -7,8 +8,14 @@ import {
   signal,
   ChangeDetectionStrategy,
 } from '@angular/core';
+import { Store } from '@ngrx/store';
 import { ApiStatus } from 'src/app/core/constants/api.response';
-import { RekycData, SubmitReKycExcel, UploadReKycExcel } from 'src/app/features/rekyc/rekyc.model';
+import {
+  RekycData,
+  SubmitReKycApplicationResponse,
+  SubmitReKycExcel,
+  UploadReKycExcel,
+} from 'src/app/features/rekyc/rekyc.model';
 import { RekycService } from 'src/app/features/rekyc/rekyc.service';
 import { ToastService } from 'src/app/shared/ui/toast/toast.service';
 
@@ -34,6 +41,7 @@ export class FilemodalComponent {
   constructor(
     private toastService: ToastService,
     private rekycService: RekycService,
+    private store: Store,
   ) {}
 
   handleModal() {
@@ -134,9 +142,11 @@ export class FilemodalComponent {
 
         if (!response) return;
 
-        const { status } = response;
+        const { status, data } = response;
 
         if (status === ApiStatus.SUCCESS) {
+          const { data: results } = data as SubmitReKycApplicationResponse;
+          this.store.dispatch(updateReKycApplications({ applications: results }));
           this.toastService.success('Data submitted successfully');
           this.handlePreviewModal();
         } else {

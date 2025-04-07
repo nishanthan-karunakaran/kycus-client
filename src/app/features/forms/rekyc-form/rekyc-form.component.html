@@ -1,0 +1,51 @@
+<section class="flex h-screen w-screen flex-col overflow-hidden">
+  <rekyc-form-header class="w-full" />
+  <main
+    class="flex flex-1 items-center justify-center overflow-auto bg-gray-100"
+  >
+    <div class="h-[90%] w-[60%] rounded-md bg-white shadow-md">
+      <div
+        class="flex items-center justify-between bg-secondary bg-opacity-10 p-10"
+      >
+        <ng-container
+          *ngFor="let item of formList; let i = index; trackBy: trackStep"
+        >
+          <div
+            class="flex cursor-pointer items-center gap-1 text-gray-500"
+            [ngClass]="{
+              'text-success': item.isCompleted,
+              'text-secondary':
+                currentForm() === item.step && !item.isCompleted,
+              disabled: !item.canShow,
+            }"
+            (click)="setCurrentForm(item)"
+          >
+            <span
+              class="flex size-5 items-center justify-center rounded-full text-white"
+              [ngClass]="{
+                'bg-success': item.isCompleted,
+                'bg-secondary':
+                  currentForm() === item.step && !item.isCompleted,
+                'bg-gray-500': currentForm() !== item.step && !item.isCompleted,
+              }"
+            >
+              {{ i + 1 }}
+            </span>
+            <span>{{ item.label }}</span>
+          </div>
+
+          <!-- line between steps -->
+          <div
+            *ngIf="i < formList.length - 1"
+            class="mx-2 h-[1.5px] w-14"
+            [ngClass]="{
+              'bg-success': item.isCompleted,
+              'bg-secondary': currentForm() === item.step && !item.isCompleted,
+              'bg-gray-300': currentForm() !== item.step && !item.isCompleted,
+            }"
+          ></div>
+        </ng-container>
+      </div>
+    </div>
+  </main>
+</section>

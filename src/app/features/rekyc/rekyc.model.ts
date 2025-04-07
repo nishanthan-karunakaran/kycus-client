@@ -63,3 +63,8 @@ export interface GetReKycApplicationsResponse {
   currentPage: number;
   totalPages: number;
 }
+
+export interface SubmitReKycApplicationResponse {
+  count: number;
+  data: ReKycApplication[];
+}
