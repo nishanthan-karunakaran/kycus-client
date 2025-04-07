@@ -6,8 +6,8 @@
     "paths": {
       "@assets/*": ["src/app/assets/*"],
       "@features/*": ["src/app/features/*"],
-      "@src/*": ["*"],
-      "@core": ["src/app/core/*"]
+      "@core/*": ["src/app/core/*"],
+      "@src/*": ["src/*"]
     },
     "forceConsistentCasingInFileNames": true,
     "strict": true,
