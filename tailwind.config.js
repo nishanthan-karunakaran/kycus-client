@@ -8,7 +8,7 @@ export default {
     extend: {
       colors: {
         primary: '#01327E',
-        secondary: '#CE8769',
+        secondary: '#FF8754',
         grayBg: '#F9FAFB',
         textBody: '#454F5E',
         textAccent: '#AEBDD2',
@@ -26,6 +26,7 @@ export default {
         dangerLight: '#FCA5A5',
         error: '#FF0000',
         errorLight: '#FCA5A5',
+        secondaryBlue: '#4076C9',
       },
       fontFamily: {
         sans: ['Inter', 'sans-serif'],

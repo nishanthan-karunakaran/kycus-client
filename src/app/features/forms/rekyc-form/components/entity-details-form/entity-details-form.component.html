@@ -1,0 +1,180 @@
+<div class="flex flex-col gap-4">
+  <div class="flex items-center justify-between">
+    <div>
+      <div class="flex items-center gap-2">
+        <img src="./assets/svgs/thunder.svg" alt="" />
+        <p class="font-medium text-secondary">Autofill form</p>
+      </div>
+      <p class="text-xs font-medium text-gray-500">
+        Please upload the required entity documents and proofs.
+      </p>
+    </div>
+
+    <div>
+      <p class="font-medium text-secondary">Supports JPG, PNG, PDF</p>
+      <p class="text-end text-xs text-gray-500">
+        Max file size
+        <strong>2 mb</strong>
+      </p>
+    </div>
+  </div>
+
+  <form [formGroup]="form" (ngSubmit)="submit()" class="flex flex-col gap-4">
+    <div class="grid w-full grid-cols-1 gap-4 md:grid-cols-2">
+      <ui-rekycform-uploadwrapper>
+        <p>Company's PAN</p>
+        <ui-upload-button
+          (btnClick)="panInput.click()"
+          *ngIf="!form.get('pan.file.link')?.value"
+        >
+          <input type="file" (change)="onFileChange($event, 'pan')" />
+        </ui-upload-button>
+
+        <input
+          type="file"
+          hidden
+          #panInput
+          (change)="onFileChange($event, 'pan')"
+        />
+        <ui-filename
+          *ngIf="form.get('pan.file.link')?.value"
+          [fileName]="form.get('pan.file.link')?.value"
+        />
+      </ui-rekycform-uploadwrapper>
+
+      <ui-rekycform-uploadwrapper>
+        <p>Company's GSTIN</p>
+        <ui-upload-button
+          (btnClick)="gstinInput.click()"
+          *ngIf="!form.get('gstin.file.link')?.value"
+        >
+          <input type="file" (change)="onFileChange($event, 'gstin')" />
+        </ui-upload-button>
+
+        <input
+          type="file"
+          hidden
+          #gstinInput
+          (change)="onFileChange($event, 'gstin')"
+        />
+
+        <ui-filename
+          *ngIf="form.get('gstin.file.name')?.value"
+          [fileName]="form.get('gstin.file.name')?.value"
+        />
+      </ui-rekycform-uploadwrapper>
+
+      <ui-rekycform-uploadwrapper>
+        <p>Select Proof of Address</p>
+
+        <select name="entityAddressProof" id="entityAddressProof">
+          <option
+            *ngFor="let option of entityAddressProofList"
+            [value]="option.value"
+          >
+            {{ option.label }}
+          </option>
+        </select>
+
+        <ui-upload-button
+          (btnClick)="addressProofInput.click()"
+          *ngIf="!form.get('addressProof.file.link')?.value"
+        >
+          <input type="file" (change)="onFileChange($event, 'addressProof')" />
+        </ui-upload-button>
+
+        <input
+          type="file"
+          hidden
+          #addressProofInput
+          (change)="onFileChange($event, 'addressProof')"
+        />
+
+        <ui-filename
+          *ngIf="form.get('addressProof.file.name')?.value"
+          [fileName]="form.get('addressProof.file.name')?.value"
+        />
+      </ui-rekycform-uploadwrapper>
+    </div>
+
+    <div>
+      <p class="text-base font-semibold">Entity Proof</p>
+      <span class="text-gray-500">All documents are mandatory</span>
+    </div>
+
+    <div class="grid w-full grid-cols-1 gap-4 md:grid-cols-2">
+      <ui-rekycform-uploadwrapper>
+        <p>COI (Certificate of Incoporation)</p>
+        <ui-upload-button
+          (btnClick)="cinInput.click()"
+          *ngIf="!form.get('cin.file.link')?.value"
+        >
+          <input type="file" (change)="onFileChange($event, 'cin')" />
+        </ui-upload-button>
+
+        <input
+          type="file"
+          hidden
+          #cinInput
+          (change)="onFileChange($event, 'cin')"
+        />
+
+        <ui-filename
+          *ngIf="form.get('cin.file.name')?.value"
+          [fileName]="form.get('cin.file.name')?.value"
+        />
+      </ui-rekycform-uploadwrapper>
+
+      <ui-rekycform-uploadwrapper>
+        <p>MOA (Memorandum of Association)</p>
+        <ui-upload-button
+          (btnClick)="moaInput.click()"
+          *ngIf="!form.get('moa.file.link')?.value"
+        >
+          <input type="file" (change)="onFileChange($event, 'moa')" />
+        </ui-upload-button>
+
+        <input
+          type="file"
+          hidden
+          #moaInput
+          (change)="onFileChange($event, 'moa')"
+        />
+
+        <ui-filename
+          *ngIf="form.get('moa.file.name')?.value"
+          [fileName]="form.get('moa.file.name')?.value"
+        />
+      </ui-rekycform-uploadwrapper>
+
+      <ui-rekycform-uploadwrapper>
+        <p>AOA (Articles of Association)</p>
+        <ui-upload-button
+          (btnClick)="aoaInput.click()"
+          *ngIf="!form.get('aoa.file.link')?.value"
+        >
+          <input type="file" (change)="onFileChange($event, 'aoa')" />
+        </ui-upload-button>
+
+        <input
+          type="file"
+          hidden
+          #aoaInput
+          (change)="onFileChange($event, 'aoa')"
+        />
+
+        <ui-filename
+          *ngIf="form.get('aoa.file.name')?.value"
+          [fileName]="form.get('aoa.file.name')?.value"
+        />
+      </ui-rekycform-uploadwrapper>
+    </div>
+
+    <div
+      class="flex items-center justify-end gap-2 border-t border-gray-300 py-4"
+    >
+      <ui-button label="Save Draft" class="btn-outline" />
+      <ui-button label="Submit" [disabled]="form.invalid" class="py-[7px]" />
+    </div>
+  </form>
+</div>

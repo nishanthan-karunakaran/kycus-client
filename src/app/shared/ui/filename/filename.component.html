@@ -1,0 +1,15 @@
+<div
+  class="flex w-max items-center justify-between gap-2 bg-primary bg-opacity-10 p-2 text-primary"
+>
+  <div class="flex items-center gap-2 border-r" (click)="openFileInNewTab()">
+    <lucide-icon name="file-minus" size="20" />
+    <p
+      class="max-w-[14ch] overflow-hidden truncate"
+      [attr.title]="fileName"
+      [ngClass]="{ underline: fileLink, 'cursor-pointer': fileLink }"
+    >
+      {{ fileName }}
+    </p>
+  </div>
+  <lucide-icon name="x" size="20" />
+</div>

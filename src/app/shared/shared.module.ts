@@ -14,8 +14,10 @@ import {
   BellRing,
   Check,
   CheckCircle,
+  CloudUpload,
   Download,
   Eye,
+  FileMinus,
   FileText,
   Info,
   Landmark,
@@ -40,6 +42,8 @@ import { SheetComponent } from './ui/sheet/sheet.component';
 import { ButtonComponent } from './ui/button/button.component';
 import { PaginationComponent } from './ui/pagination/pagination.component';
 import { InputDebounceComponent } from './ui/input-debounce/input-debounce.component';
+import { UploadButtonComponent } from './ui/upload-button/upload-button.component';
+import { FilenameComponent } from './ui/filename/filename.component';
 
 @NgModule({
   declarations: [
@@ -52,6 +56,8 @@ import { InputDebounceComponent } from './ui/input-debounce/input-debounce.compo
     SheetComponent,
     ButtonComponent,
     PaginationComponent,
+    UploadButtonComponent,
+    FilenameComponent,
   ],
   imports: [
     CommonModule,
@@ -85,6 +91,8 @@ import { InputDebounceComponent } from './ui/input-debounce/input-debounce.compo
       Search,
       ArrowLeft,
       ArrowRight,
+      CloudUpload,
+      FileMinus,
     }),
   ],
   exports: [
@@ -103,6 +111,8 @@ import { InputDebounceComponent } from './ui/input-debounce/input-debounce.compo
     SheetComponent,
     ButtonComponent,
     PaginationComponent,
+    UploadButtonComponent,
+    FilenameComponent,
   ],
 })
 export class SharedModule {}

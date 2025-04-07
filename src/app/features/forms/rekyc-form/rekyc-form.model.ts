@@ -12,3 +12,8 @@ export interface FormPage {
   isCompleted: boolean;
   canShow: boolean;
 }
+
+export interface UploadFileProof {
+  file: Blob;
+  type: string;
+}

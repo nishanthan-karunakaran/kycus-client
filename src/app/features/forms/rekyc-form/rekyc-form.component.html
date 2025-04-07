@@ -1,11 +1,12 @@
 <section class="flex h-screen w-screen flex-col overflow-hidden">
   <rekyc-form-header class="w-full" />
-  <main
-    class="flex flex-1 items-center justify-center overflow-auto bg-gray-100"
-  >
-    <div class="h-[90%] w-[60%] rounded-md bg-white shadow-md">
+
+  <main class="flex flex-1 items-center justify-center bg-gray-100">
+    <div
+      class="flex h-[90%] max-h-[90vh] w-[60%] flex-col overflow-hidden rounded-md bg-white shadow-md"
+    >
       <div
-        class="flex items-center justify-between bg-secondary bg-opacity-10 p-10"
+        class="flex flex-shrink-0 items-center justify-between bg-secondary bg-opacity-10 p-10"
       >
         <ng-container
           *ngFor="let item of formList; let i = index; trackBy: trackStep"
@@ -34,7 +35,6 @@
             <span>{{ item.label }}</span>
           </div>
 
-          <!-- line between steps -->
           <div
             *ngIf="i < formList.length - 1"
             class="mx-2 h-[1.5px] w-14"
@@ -47,24 +47,32 @@
         </ng-container>
       </div>
 
-      <div class="mx-auto flex w-[90%] flex-col gap-2">
-        <div class="flex items-center justify-between py-4">
-          <div class="flex flex-col items-start gap-1 text-primary">
-            <h6>RE KYC - NON INDIVIDUAL</h6>
-            <img
-              src="./assets/images/logo/hdfc.webp"
-              alt="HDFC"
-              class="w-32 object-contain"
-            />
-          </div>
+      <div class="flex-1 overflow-auto px-10 py-4">
+        <div class="mb-4 w-full">
+          <div class="flex items-center justify-between">
+            <div class="flex flex-col items-start gap-1 text-primary">
+              <h6>RE KYC - NON INDIVIDUAL</h6>
+              <img
+                src="./assets/images/logo/hdfc.webp"
+                alt="HDFC"
+                class="w-32 object-contain"
+              />
+            </div>
 
-          <div class="flex flex-col gap-1 text-primary">
-            <h6>TATA Consumer Products</h6>
-            <span class="text-end">Private Limited</span>
+            <div class="flex flex-col gap-1 text-primary">
+              <h6>TATA Consumer Products</h6>
+              <span class="text-end">Private Limited</span>
+            </div>
           </div>
+          <hr class="mt-4" />
         </div>
 
-        <hr />
+        <ng-container [ngSwitch]="currentForm()">
+          <rekyc-entity-details-form
+            *ngSwitchCase="FormStep.ENTITY_DETAILS"
+            class="w-full"
+          />
+        </ng-container>
       </div>
     </div>
   </main>
