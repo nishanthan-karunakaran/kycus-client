@@ -23,8 +23,10 @@ import {
   Landmark,
   LaptopMinimalCheck,
   LucideAngularModule,
+  Plus,
   Search,
   SlidersHorizontal,
+  Trash2,
   Upload,
   User,
   UserRound,
@@ -32,19 +34,19 @@ import {
   X,
   XCircle,
 } from 'lucide-angular';
+import { InputFormatDirective } from 'src/app/core/directives/input-format.directive';
 import { InputComponent } from 'src/app/shared/ui/input/input.component';
 import { ModalComponent } from 'src/app/shared/ui/modal/modal.component';
 import { OtpComponent } from 'src/app/shared/ui/otp/otp.component';
 import { ToastComponent } from 'src/app/shared/ui/toast/toast.component';
-import { InputFormatDirective } from 'src/app/core/directives/input-format.directive';
-import { TableComponent } from './ui/table/table.component';
-import { SheetComponent } from './ui/sheet/sheet.component';
 import { ButtonComponent } from './ui/button/button.component';
-import { PaginationComponent } from './ui/pagination/pagination.component';
-import { InputDebounceComponent } from './ui/input-debounce/input-debounce.component';
-import { UploadButtonComponent } from './ui/upload-button/upload-button.component';
 import { FilenameComponent } from './ui/filename/filename.component';
+import { InputDebounceComponent } from './ui/input-debounce/input-debounce.component';
+import { PaginationComponent } from './ui/pagination/pagination.component';
 import { SelectComponent } from './ui/select/select.component';
+import { SheetComponent } from './ui/sheet/sheet.component';
+import { TableComponent } from './ui/table/table.component';
+import { UploadButtonComponent } from './ui/upload-button/upload-button.component';
 
 @NgModule({
   declarations: [
@@ -95,6 +97,8 @@ import { SelectComponent } from './ui/select/select.component';
       ArrowRight,
       CloudUpload,
       FileMinus,
+      Trash2,
+      Plus,
     }),
   ],
   exports: [

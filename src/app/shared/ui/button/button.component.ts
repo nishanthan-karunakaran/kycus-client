@@ -23,12 +23,7 @@ import {
       (click)="onClick($event)"
     >
       <span *ngIf="label">{{ label }}</span>
-      <lucide-icon
-        *ngIf="icon"
-        [name]="icon"
-        [size]="iconSize"
-        aria-hidden="true"
-      ></lucide-icon>
+      <lucide-icon *ngIf="icon" [name]="icon" [size]="iconSize" aria-hidden="true"></lucide-icon>
     </button>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,

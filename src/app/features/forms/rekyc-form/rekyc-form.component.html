@@ -73,7 +73,7 @@
             class="w-full"
             (formNavigation)="onFormNavigation($event)"
           />
-          <p *ngSwitchCase="FormStep.DECLARATION">Declaration</p>
+          <rekyc-declaration-form *ngSwitchCase="FormStep.DECLARATION" />
           <p *ngSwitchCase="FormStep.PERSONAL_DETAILS">Personal Details</p>
           <p *ngSwitchCase="FormStep.KYC_FORM">KYC Form</p>
           <p *ngSwitchCase="FormStep.E_SIGN">E-Sign</p>

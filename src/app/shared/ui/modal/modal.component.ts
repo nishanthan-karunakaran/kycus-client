@@ -75,6 +75,8 @@ export class ModalComponent implements AfterContentInit, OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges) {
+    // eslint-disable-next-line no-console
+    console.log('ngonchange', changes['isOpen']?.currentValue, changes['isOpen']?.previousValue);
     if (changes['isOpen']?.currentValue !== changes['isOpen']?.previousValue) {
       if (this.isOpen) {
         this.lockBackground();

@@ -1,0 +1,84 @@
+<div class="flex flex-col gap-4">
+  <p class="font-medium text-gray-500">Add min 2 Beneficiary owner details</p>
+
+  <form [formGroup]="form">
+    <ng-container formArrayName="boDetails">
+      <div
+        *ngFor="let group of boDetails.controls; let i = index"
+        [formGroupName]="i"
+        class="mt-8 flex w-full flex-col gap-2 border-b pb-4"
+      >
+        <h6 class="mb-2 text-primary">Beneficiary Owner {{ i + 1 }}</h6>
+
+        <ui-input
+          type="text"
+          label="Name of the Beneficiary Owner"
+          formControlName="name"
+          class="w-[350px]"
+          (valueChange)="updateBoDetail(i, 'name', $event)"
+        />
+
+        <div class="flex w-[60%] flex-col gap-2">
+          <p>Current Address</p>
+
+          <ui-input
+            type="text"
+            label="Address Line"
+            formControlName="addressLine"
+            (valueChange)="updateBoDetail(i, 'addressLine', $event)"
+          />
+
+          <div class="flex w-full gap-2">
+            <div class="flex flex-1 flex-col gap-2">
+              <ui-input
+                type="text"
+                label="City"
+                formControlName="city"
+                (valueChange)="updateBoDetail(i, 'city', $event)"
+              />
+              <ui-input
+                type="text"
+                label="State"
+                formControlName="state"
+                (valueChange)="updateBoDetail(i, 'state', $event)"
+              />
+            </div>
+
+            <div class="flex flex-1 flex-col gap-2">
+              <ui-input
+                type="text"
+                label="Country"
+                formControlName="country"
+                (valueChange)="updateBoDetail(i, 'country', $event)"
+              />
+              <ui-input
+                type="number"
+                label="Pin Code"
+                formControlName="pincode"
+                (valueChange)="updateBoDetail(i, 'pincode', $event)"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <p>{{ form.invalid }}</p>
+    </ng-container>
+  </form>
+
+  <div
+    class="flex items-center justify-end gap-2 border-t border-gray-300 py-4"
+  >
+    <ui-button
+      label="Save Draft"
+      class="btn-outline"
+      (btnClick)="submit('save')"
+    />
+    <ui-button
+      type="submit"
+      label="I Declare"
+      class="py-[7px]"
+      (btnClick)="submit('submit')"
+    />
+  </div>
+</div>

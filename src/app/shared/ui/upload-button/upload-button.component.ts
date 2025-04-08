@@ -9,13 +9,14 @@ import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from 
       (click)="fileInput.click()"
     >
       <lucide-icon name="cloud-upload" color="#4076C9" size="16" />
-      <span class="text-secondaryBlue">Upload</span>
+      <span class="text-secondaryBlue">{{ label }}</span>
     </button>
     <input #fileInput type="file" hidden (change)="handleChange($event)" [accept]="accept" />
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class UploadButtonComponent {
+  @Input() label = 'Upload';
   @Input() accept = '.xlsx';
   @Output() selectedFile = new EventEmitter<File>();
 

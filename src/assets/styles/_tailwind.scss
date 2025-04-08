@@ -121,6 +121,10 @@
     @apply bg-secondary hover:bg-secondary/90;
   }
 
+  .btn-secondary-light {
+    @apply bg-secondary bg-opacity-10;
+  }
+
   .btn-danger {
     @apply bg-danger hover:bg-danger/90;
   }
