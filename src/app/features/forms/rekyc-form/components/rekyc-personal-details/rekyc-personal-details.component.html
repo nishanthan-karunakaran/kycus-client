@@ -1,0 +1,149 @@
+<div class="flex flex-col gap-4">
+  <div class="flex items-center justify-between">
+    <div>
+      <div class="flex items-center gap-2">
+        <img src="./assets/svgs/thunder.svg" alt="" />
+        <p class="font-medium text-secondary">Autofill form</p>
+      </div>
+      <p class="text-xs font-medium text-gray-500">
+        Please upload the required entity documents and proofs.
+      </p>
+    </div>
+
+    <div>
+      <p class="font-medium text-secondary">Supports JPG, PNG, PDF</p>
+      <p class="text-end text-xs text-gray-500">
+        Max file size
+        <strong>2 mb</strong>
+      </p>
+    </div>
+  </div>
+
+  <form
+    [formGroup]="form"
+    (ngSubmit)="submit('submit')"
+    class="flex flex-col gap-4"
+  >
+    <div class="grid w-full grid-cols-1 gap-4 md:grid-cols-2">
+      <ui-rekycform-uploadwrapper>
+        <p>
+          Select Proof of Identity
+          <span
+            *ngIf="form.get('proofOfIdentity.isRequired')?.value"
+            class="text-red-500"
+          >
+            *
+          </span>
+        </p>
+        <ui-select
+          [options]="proofOfIdentityList"
+          (valueChange)="onAddressProofChange($event)"
+          placeholder="Choose Proof of Address"
+          [defaultValue]="'water_bill'"
+        ></ui-select>
+
+        <ui-upload-button
+          accept=".pdf, .xlsx"
+          *ngIf="!form.get('proofOfIdentity.file.link')?.value"
+          (selectedFile)="onFileSelection('proofOfIdentity', $event)"
+        />
+
+        <ui-filename
+          *ngIf="form.get('proofOfIdentity.file.name')?.value"
+          [fileName]="form.get('proofOfIdentity.file.name')?.value"
+        />
+      </ui-rekycform-uploadwrapper>
+
+      <ui-rekycform-uploadwrapper>
+        <p>
+          Select Proof of Address
+          <span
+            *ngIf="form.get('proofOfAddress.isRequired')?.value"
+            class="text-red-500"
+          >
+            *
+          </span>
+        </p>
+        <ui-select
+          [options]="proofOfIdentityList"
+          (valueChange)="onAddressProofChange($event)"
+          placeholder="Choose Proof of Address"
+          [defaultValue]="'water_bill'"
+        ></ui-select>
+
+        <ui-upload-button
+          accept=".pdf, .xlsx"
+          *ngIf="!form.get('proofOfAddress.file.link')?.value"
+          (selectedFile)="onFileSelection('proofOfAddress', $event)"
+        />
+
+        <ui-filename
+          *ngIf="form.get('proofOfAddress.file.name')?.value"
+          [fileName]="form.get('proofOfAddress.file.name')?.value"
+        />
+      </ui-rekycform-uploadwrapper>
+
+      <ui-rekycform-uploadwrapper>
+        <p>
+          Upload Photograph
+          <span
+            *ngIf="form.get('photograph.isRequired')?.value"
+            class="text-red-500"
+          >
+            *
+          </span>
+        </p>
+
+        <ui-upload-button
+          accept=".jpg, .png"
+          *ngIf="!form.get('photograph.file.link')?.value"
+          (selectedFile)="onFileSelection('photograph', $event)"
+        />
+
+        <ui-filename
+          *ngIf="form.get('photograph.file.name')?.value"
+          [fileName]="form.get('photograph.file.name')?.value"
+        />
+      </ui-rekycform-uploadwrapper>
+
+      <ui-rekycform-uploadwrapper>
+        <p>
+          Upload Specimen Signature
+          <span
+            *ngIf="form.get('signature.isRequired')?.value"
+            class="text-red-500"
+          >
+            *
+          </span>
+        </p>
+
+        <ui-upload-button
+          accept=".jpg, .png"
+          *ngIf="!form.get('signature.file.link')?.value"
+          (selectedFile)="onFileSelection('signature', $event)"
+        />
+
+        <ui-filename
+          *ngIf="form.get('signature.file.name')?.value"
+          [fileName]="form.get('signature.file.name')?.value"
+        />
+      </ui-rekycform-uploadwrapper>
+    </div>
+
+    <div
+      class="flex items-center justify-end gap-2 border-t border-gray-300 py-4"
+    >
+      <ui-button
+        label="Save Draft"
+        class="btn-outline"
+        (btnClick)="submit('save')"
+      />
+      <ui-button
+        type="submit"
+        label="Submit"
+        [disabled]="!isFormValid"
+        class="py-[7px]"
+      />
+    </div>
+  </form>
+</div>
