@@ -19,43 +19,45 @@
     </div>
   </div>
 
-  <form [formGroup]="form" (ngSubmit)="submit()" class="flex flex-col gap-4">
+  <form
+    [formGroup]="form"
+    (ngSubmit)="submit('submit')"
+    class="flex flex-col gap-4"
+  >
     <div class="grid w-full grid-cols-1 gap-4 md:grid-cols-2">
       <ui-rekycform-uploadwrapper>
-        <p>Company's PAN</p>
+        <p>
+          Company's PAN
+          <span *ngIf="form.get('pan.isRequired')?.value" class="text-red-500">
+            *
+          </span>
+        </p>
         <ui-upload-button
-          (btnClick)="panInput.click()"
+          accept=".pdf, .xlsx"
           *ngIf="!form.get('pan.file.link')?.value"
-        >
-          <input type="file" (change)="onFileChange($event, 'pan')" />
-        </ui-upload-button>
-
-        <input
-          type="file"
-          hidden
-          #panInput
-          (change)="onFileChange($event, 'pan')"
+          (selectedFile)="onFileSelection('pan', $event)"
         />
         <ui-filename
           *ngIf="form.get('pan.file.link')?.value"
-          [fileName]="form.get('pan.file.link')?.value"
+          [fileName]="form.get('pan.file.name')?.value"
         />
       </ui-rekycform-uploadwrapper>
 
       <ui-rekycform-uploadwrapper>
-        <p>Company's GSTIN</p>
-        <ui-upload-button
-          (btnClick)="gstinInput.click()"
-          *ngIf="!form.get('gstin.file.link')?.value"
-        >
-          <input type="file" (change)="onFileChange($event, 'gstin')" />
-        </ui-upload-button>
+        <p>
+          Company's GSTIN
+          <span
+            *ngIf="form.get('gstin.isRequired')?.value"
+            class="text-red-500"
+          >
+            *
+          </span>
+        </p>
 
-        <input
-          type="file"
-          hidden
-          #gstinInput
-          (change)="onFileChange($event, 'gstin')"
+        <ui-upload-button
+          accept=".pdf, .xlsx"
+          *ngIf="!form.get('gstin.file.link')?.value"
+          (selectedFile)="onFileSelection('gstin', $event)"
         />
 
         <ui-filename
@@ -65,29 +67,45 @@
       </ui-rekycform-uploadwrapper>
 
       <ui-rekycform-uploadwrapper>
-        <p>Select Proof of Address</p>
+        <p>
+          Select Proof of Address
+          <span
+            *ngIf="form.get('addressProof.isRequired')?.value"
+            class="text-red-500"
+          >
+            *
+          </span>
+        </p>
 
-        <select name="entityAddressProof" id="entityAddressProof">
+        <!-- <select
+          name="entityAddressProof"
+          id="entityAddressProof"
+          formControlName="addressProof.file.selectedDoc"
+        >
           <option
             *ngFor="let option of entityAddressProofList"
             [value]="option.value"
           >
             {{ option.label }}
           </option>
-        </select>
+        </select> -->
+
+        <!-- <div formGroupName="addressProof">
+          <div formGroupName="file"> -->
+        <ui-select
+          [options]="entityAddressProofList"
+          (valueChange)="onAddressProofChange($event)"
+          placeholder="Choose Proof of Address"
+          [defaultValue]="'water_bill'"
+        ></ui-select>
+
+        <!-- </div>
+        </div> -->
 
         <ui-upload-button
-          (btnClick)="addressProofInput.click()"
+          accept=".pdf, .xlsx"
           *ngIf="!form.get('addressProof.file.link')?.value"
-        >
-          <input type="file" (change)="onFileChange($event, 'addressProof')" />
-        </ui-upload-button>
-
-        <input
-          type="file"
-          hidden
-          #addressProofInput
-          (change)="onFileChange($event, 'addressProof')"
+          (selectedFile)="onFileSelection('addressProof', $event)"
         />
 
         <ui-filename
@@ -104,41 +122,37 @@
 
     <div class="grid w-full grid-cols-1 gap-4 md:grid-cols-2">
       <ui-rekycform-uploadwrapper>
-        <p>COI (Certificate of Incoporation)</p>
-        <ui-upload-button
-          (btnClick)="cinInput.click()"
-          *ngIf="!form.get('cin.file.link')?.value"
-        >
-          <input type="file" (change)="onFileChange($event, 'cin')" />
-        </ui-upload-button>
+        <p>
+          COI (Certificate of Incoporation)
+          <span *ngIf="form.get('coi.isRequired')?.value" class="text-red-500">
+            *
+          </span>
+        </p>
 
-        <input
-          type="file"
-          hidden
-          #cinInput
-          (change)="onFileChange($event, 'cin')"
+        <ui-upload-button
+          accept=".pdf, .xlsx"
+          *ngIf="!form.get('coi.file.link')?.value"
+          (selectedFile)="onFileSelection('coi', $event)"
         />
 
         <ui-filename
-          *ngIf="form.get('cin.file.name')?.value"
-          [fileName]="form.get('cin.file.name')?.value"
+          *ngIf="form.get('coi.file.name')?.value"
+          [fileName]="form.get('coi.file.name')?.value"
         />
       </ui-rekycform-uploadwrapper>
 
       <ui-rekycform-uploadwrapper>
-        <p>MOA (Memorandum of Association)</p>
-        <ui-upload-button
-          (btnClick)="moaInput.click()"
-          *ngIf="!form.get('moa.file.link')?.value"
-        >
-          <input type="file" (change)="onFileChange($event, 'moa')" />
-        </ui-upload-button>
+        <p>
+          MOA (Memorandum of Association)
+          <span *ngIf="form.get('moa.isRequired')?.value" class="text-red-500">
+            *
+          </span>
+        </p>
 
-        <input
-          type="file"
-          hidden
-          #moaInput
-          (change)="onFileChange($event, 'moa')"
+        <ui-upload-button
+          accept=".pdf, .xlsx"
+          *ngIf="!form.get('moa.file.link')?.value"
+          (selectedFile)="onFileSelection('moa', $event)"
         />
 
         <ui-filename
@@ -148,19 +162,17 @@
       </ui-rekycform-uploadwrapper>
 
       <ui-rekycform-uploadwrapper>
-        <p>AOA (Articles of Association)</p>
-        <ui-upload-button
-          (btnClick)="aoaInput.click()"
-          *ngIf="!form.get('aoa.file.link')?.value"
-        >
-          <input type="file" (change)="onFileChange($event, 'aoa')" />
-        </ui-upload-button>
+        <p>
+          AOA (Articles of Association)
+          <span *ngIf="form.get('aoa.isRequired')?.value" class="text-red-500">
+            *
+          </span>
+        </p>
 
-        <input
-          type="file"
-          hidden
-          #aoaInput
-          (change)="onFileChange($event, 'aoa')"
+        <ui-upload-button
+          accept=".pdf, .xlsx"
+          *ngIf="!form.get('aoa.file.link')?.value"
+          (selectedFile)="onFileSelection('aoa', $event)"
         />
 
         <ui-filename
@@ -173,8 +185,17 @@
     <div
       class="flex items-center justify-end gap-2 border-t border-gray-300 py-4"
     >
-      <ui-button label="Save Draft" class="btn-outline" />
-      <ui-button label="Submit" [disabled]="form.invalid" class="py-[7px]" />
+      <ui-button
+        label="Save Draft"
+        class="btn-outline"
+        (btnClick)="submit('save')"
+      />
+      <ui-button
+        type="submit"
+        label="Submit"
+        [disabled]="!isFormValid"
+        class="py-[7px]"
+      />
     </div>
   </form>
 </div>

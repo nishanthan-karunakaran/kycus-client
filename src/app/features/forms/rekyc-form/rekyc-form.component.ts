@@ -22,19 +22,41 @@ export class RekycFormComponent implements DoCheck {
     { label: 'E-Sign', step: FormStep.E_SIGN, isCompleted: false, canShow: true },
   ];
   readonly FormStep = FormStep;
+  accessibleSteps = [
+    FormStep.ENTITY_DETAILS,
+    FormStep.DECLARATION,
+    FormStep.PERSONAL_DETAILS,
+    FormStep.KYC_FORM,
+    FormStep.E_SIGN,
+  ];
 
   ngDoCheck(): void {
     // eslint-disable-next-line no-console
     console.log('rekyc global form rendeing');
   }
 
-  trackStep(_index: number, step: FormPage): string {
+  trackStep(_index: number, step: FormPage) {
     return step.step;
   }
 
   setCurrentForm(item: FormPage) {
     if (item.canShow) {
       this.currentForm.set(item.step);
+    }
+  }
+
+  onFormNavigation(direction: string) {
+    const current = this.currentForm();
+    const currentIndex = this.accessibleSteps.indexOf(current);
+
+    if (currentIndex === -1) return;
+
+    if (direction === 'next' && currentIndex < this.accessibleSteps.length - 1) {
+      this.currentForm.set(this.accessibleSteps[currentIndex + 1]);
+    }
+
+    if (direction === 'prev' && currentIndex > 0) {
+      this.currentForm.set(this.accessibleSteps[currentIndex - 1]);
     }
   }
 }

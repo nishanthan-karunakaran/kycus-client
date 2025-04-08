@@ -44,6 +44,7 @@ import { PaginationComponent } from './ui/pagination/pagination.component';
 import { InputDebounceComponent } from './ui/input-debounce/input-debounce.component';
 import { UploadButtonComponent } from './ui/upload-button/upload-button.component';
 import { FilenameComponent } from './ui/filename/filename.component';
+import { SelectComponent } from './ui/select/select.component';
 
 @NgModule({
   declarations: [
@@ -58,6 +59,7 @@ import { FilenameComponent } from './ui/filename/filename.component';
     PaginationComponent,
     UploadButtonComponent,
     FilenameComponent,
+    SelectComponent,
   ],
   imports: [
     CommonModule,
@@ -113,6 +115,7 @@ import { FilenameComponent } from './ui/filename/filename.component';
     PaginationComponent,
     UploadButtonComponent,
     FilenameComponent,
+    SelectComponent,
   ],
 })
 export class SharedModule {}
