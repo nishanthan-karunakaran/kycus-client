@@ -14,7 +14,7 @@
           type="text"
           label="Name of the Beneficiary Owner"
           formControlName="name"
-          class="w-[350px]"
+          class="max-w-sm"
           (valueChange)="updateBoDetail(i, 'name', $event)"
         />
 
@@ -61,8 +61,6 @@
           </div>
         </div>
       </div>
-
-      <p>{{ form.invalid }}</p>
     </ng-container>
   </form>
 

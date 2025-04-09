@@ -167,10 +167,10 @@ export class RekycPersonalDetailsComponent implements OnInit {
     return this.form.get(`${doc}.file.${control}`);
   }
 
-  onAddressProofChange(value: string) {
+  onProofDocChange(doc: string, value: string) {
     // eslint-disable-next-line no-console
     console.log('addressProof', value);
-    this.form.get('addressProof.file.selectedDoc')?.setValue(value);
+    this.form.get(`${doc}.file.selectedDoc`)?.setValue(value);
   }
 
   onFileSelection(controlName: string, file: File): void {

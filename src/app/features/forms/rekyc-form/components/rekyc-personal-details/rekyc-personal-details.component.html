@@ -37,8 +37,8 @@
         </p>
         <ui-select
           [options]="proofOfIdentityList"
-          (valueChange)="onAddressProofChange($event)"
-          placeholder="Choose Proof of Address"
+          (valueChange)="onProofDocChange('proofOfIdentity', $event)"
+          placeholder="Choose Proof of Identity"
           [defaultValue]="'water_bill'"
         ></ui-select>
 
@@ -65,8 +65,8 @@
           </span>
         </p>
         <ui-select
-          [options]="proofOfIdentityList"
-          (valueChange)="onAddressProofChange($event)"
+          [options]="proofOfAddressList"
+          (valueChange)="onProofDocChange('proofOfAddress', $event)"
           placeholder="Choose Proof of Address"
           [defaultValue]="'water_bill'"
         ></ui-select>
