@@ -20,6 +20,9 @@
               disabled: !item.canShow,
             }"
             (click)="setCurrentForm(item)"
+            (keydown.enter)="setCurrentForm(item)"
+            (keydown.space)="setCurrentForm(item)"
+            tabindex="0"
           >
             <span
               class="flex size-5 items-center justify-center rounded-full text-white"

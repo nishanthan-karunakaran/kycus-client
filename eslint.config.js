@@ -77,13 +77,6 @@ module.exports = tseslint.config(
       //   'error',
       //   { maxComplexity: 5 },
       // ],
-      '@angular-eslint/template/element-newline': [
-        'error',
-        {
-          multiline: 3, // Moves to a new line if >3 attributes
-          minAttributes: 3, // Enforces line breaks if >= 3 attributes
-        },
-      ],
     },
   },
 );

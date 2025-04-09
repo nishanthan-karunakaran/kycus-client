@@ -8,9 +8,9 @@ import {
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
-export interface SelectOption {
+export interface SelectOption<T = unknown> {
   label: string;
-  value: any;
+  value: T;
 }
 
 @Component({
@@ -22,8 +22,7 @@ export interface SelectOption {
       [disabled]="disabled"
       [value]="selectedValue"
     >
-      <!-- Loop through options array -->
-      <option *ngFor="let option of options" [value]="option.value">
+      <option *ngFor="let option of options; trackBy: trackOption" [value]="option.value">
         {{ option.label }}
       </option>
     </select>
@@ -37,54 +36,51 @@ export interface SelectOption {
     },
   ],
 })
-export class SelectComponent implements ControlValueAccessor, OnInit {
-  @Input() options: SelectOption[] = [];
-  @Input() placeholder: string = '';
+export class SelectComponent<T = unknown> implements ControlValueAccessor, OnInit {
+  @Input() options: Array<SelectOption<T>> = [];
+  @Input() placeholder = '';
   @Input() disabled = false;
-  @Input() defaultValue: any = null;
+  @Input() defaultValue: T | null = null;
 
-  @Output() valueChange = new EventEmitter<any>();
+  @Output() valueChange = new EventEmitter<T>();
 
-  selectedValue: any = null;
+  selectedValue: T | null = null;
 
-  private onChange: any = () => {};
-  private onTouched: any = () => {};
+  private onChange: (value: T | null) => void = () => {};
+  private onTouched: () => void = () => {};
 
   ngOnInit(): void {
-    // If a placeholder is provided, prepend it to the options list
     if (this.placeholder) {
-      this.options = [
-        { label: this.placeholder, value: null }, // Placeholder option
-        ...this.options, // Rest of the options
-      ];
+      this.options = [{ label: this.placeholder, value: null as unknown as T }, ...this.options];
     }
 
-    // Set the default value if provided
     if (this.defaultValue !== null) {
       this.selectedValue = this.defaultValue;
       this.writeValue(this.defaultValue);
     }
   }
 
-  // Handle value change from <select>
   onSelectChange(event: Event): void {
-    const value = (event.target as HTMLSelectElement).value;
+    const value = (event.target as HTMLSelectElement).value as unknown as T;
     this.selectedValue = value;
     this.onChange(value);
-    this.onTouched(); // Notify that the control was touched
+    this.onTouched();
     this.valueChange.emit(value);
   }
 
-  // ControlValueAccessor Methods
-  writeValue(value: any): void {
+  writeValue(value: T | null): void {
     this.selectedValue = value;
   }
 
-  registerOnChange(fn: any): void {
-    this.onChange = fn; // Called when the value changes in the form control
+  registerOnChange(fn: (value: T | null) => void): void {
+    this.onChange = fn;
   }
 
-  registerOnTouched(fn: any): void {
-    this.onTouched = fn; // Called when the element is touched in the form control
+  registerOnTouched(fn: () => void): void {
+    this.onTouched = fn;
+  }
+
+  trackOption(_index: number, option: SelectOption) {
+    return option.value;
   }
 }

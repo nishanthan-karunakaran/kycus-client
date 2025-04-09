@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 
@@ -30,12 +29,15 @@ export class RekycBoFormComponent implements OnInit {
     this.addBoDetail();
   }
 
+  trackBO(index: number) {
+    return index;
+  }
+
   get boDetails(): FormArray {
     return this.form.get('boDetails') as FormArray;
   }
 
   get isFormValid(): boolean {
-    console.log(this.form.controls);
     return this.boDetails.controls.every((group) => group.valid);
   }
 
@@ -68,9 +70,8 @@ export class RekycBoFormComponent implements OnInit {
   }
 
   submit(action: 'save' | 'submit') {
-    console.log('Action:', action);
-    console.log('Form Value:', this.form.value);
-
+    // eslint-disable-next-line no-console
+    console.log(action, this.form.value);
     if (this.form.invalid) {
       this.form.markAllAsTouched();
       return;

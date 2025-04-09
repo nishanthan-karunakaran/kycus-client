@@ -1,6 +1,17 @@
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 
 type Screens = 'directors' | 'bo';
+
+interface ScreenHeader {
+  label: string;
+  value: string;
+}
+
+interface Director {
+  name: string;
+  din: string;
+}
+
 @Component({
   selector: 'rekyc-declaration-form',
   templateUrl: './rekyc-declaration-form.component.html',
@@ -8,7 +19,7 @@ type Screens = 'directors' | 'bo';
 })
 export class RekycDeclarationFormComponent {
   currentScreen = signal<Screens>('bo');
-  screenHeaders = [
+  screenHeaders: ScreenHeader[] = [
     {
       label: 'Directors',
       value: 'directors',
@@ -18,7 +29,7 @@ export class RekycDeclarationFormComponent {
       value: 'bo',
     },
   ];
-  directorsList = [
+  directorsList: Director[] = [
     {
       name: 'Abishek Yadav',
       din: '43928237',
@@ -40,6 +51,14 @@ export class RekycDeclarationFormComponent {
   isForm32ModalOpen = signal(false);
   selectedDirDin: string | null = null;
   addBtnClicked = false;
+
+  trackScreenHeader(_index: number, screen: ScreenHeader) {
+    return screen.value;
+  }
+
+  trackDir(_index: number, dir: Director) {
+    return dir.din;
+  }
 
   get actionBtnLabel() {
     if (this.currentScreen() === 'directors') {
