@@ -32,7 +32,11 @@
     "@tailwindcss/typography": "^0.5.16",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
+    "html2canvas": "^1.4.1",
+    "html2pdf.js": "^0.10.3",
+    "jspdf": "^3.0.1",
     "lucide-angular": "^0.482.0",
+    "ng2-pdf-viewer": "^10.4.0",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.13.0"

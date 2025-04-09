@@ -27,6 +27,8 @@ export default {
         error: '#FF0000',
         errorLight: '#FCA5A5',
         secondaryBlue: '#4076C9',
+        formTextPrimary: '#4B4B4D',
+        formTextSecondary: '#262900',
       },
       fontFamily: {
         sans: ['Inter', 'sans-serif'],

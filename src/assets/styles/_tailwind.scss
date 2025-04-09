@@ -204,6 +204,14 @@
   .btn-outline-danger.loading::before {
     @apply absolute h-5 w-5 animate-spin rounded-full border-[3px] border-danger border-t-transparent;
   }
+
+  .flex-center {
+    @apply flex items-center justify-center;
+  }
+
+  .flex-col-center {
+    @apply flex flex-col items-center justify-center;
+  }
 }
 
 @layer utilities {

@@ -1,0 +1,450 @@
+<div #pdfContent style="display: none" id="formContent">
+  <div class="pdf-page font-sans">
+    <!-- <rekyc-header-section /> -->
+    <section
+      id="form-header"
+      class="flex h-[100px] items-center justify-between border-b-2 border-gray-500"
+    >
+      <div>
+        <img src="./assets/images/logo/hdfc.webp" alt="HDFC" />
+      </div>
+
+      <div class="text-center">
+        <h6 class="text-formTextPrimary font-sans font-semibold">
+          CUSTOMER UPDATION FORM
+        </h6>
+        <h6 class="text-formTextPrimary font-sans font-semibold">
+          FOR RE KYC-NON-INDIVIDUALS
+        </h6>
+        <p class="text-formTextSecondary">
+          &#123;All fields with * are mandatory&#125;
+        </p>
+      </div>
+
+      <div class="h-[70px] w-[150px] border">
+        <div class="flex-center size-full">Bar Code</div>
+      </div>
+    </section>
+
+    <!-- Entity Basic Information -->
+    <section
+      id="entity-basic-information"
+      class="form-section text-xs font-semibold"
+    >
+      <div class="form-row">
+        <div class="form-container">
+          <label for="entityCustId" class="text-formTextPrimary">
+            CUSTOMER
+            <br />
+            <span class="text-nowrap">ID OF ENTITY</span>
+          </label>
+          <input type="text" id="entityCustId" />
+        </div>
+        <div class="form-container">
+          <label for="date" class="text-formTextPrimary">Date</label>
+          <input type="text" />
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-container">
+          <label for="propKartaCustId" class="text-formTextPrimary">
+            <span class="text-nowrap">CUSTOMER ID OF</span>
+            <br />
+            <span class="text-nowrap">Properitor/ Karta</span>
+          </label>
+          <input type="text" id="propKartaCustId" />
+        </div>
+        <div class="form-container">
+          <label for="propKartaCustId" class="text-formTextPrimary">
+            <span class="text-nowrap">CUSTOMER ID OF</span>
+            <br />
+            <span class="text-nowrap">Properitor/ Karta</span>
+          </label>
+          <input type="text" id="propKartaCustId" />
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-container">
+          <label for="propKartaCustName" class="text-formTextPrimary">
+            <span class="text-nowrap">CUSTOMER NAME</span>
+            <br />
+            <span class="text-nowrap">Prefix (Mr./miss/mrs.)</span>
+          </label>
+          <input type="text" id="propKartaCustName" />
+        </div>
+        <div class="form-container">
+          <label for="propKartaName" class="text-formTextPrimary">
+            <span class="text-nowrap">Name OF</span>
+            <br />
+            <span class="text-nowrap">Properitor/ Karta</span>
+          </label>
+          <input type="text" id="propKartaName" />
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-container">
+          <label for="entityName" class="text-nowrap">NAME OF ENTITY</label>
+          <input type="text" id="entityName" />
+        </div>
+        <div class="form-container" class="text-nowrap">
+          <label for="entityName">PAN OF ENTITY</label>
+          <input type="text" id="entityPAN" />
+        </div>
+      </div>
+    </section>
+
+    <!-- Entity Mailing Address 1 -->
+    <section id="entity-mailing-address" class="form-section">
+      <p class="text-black">*MAILING ADDRESS & CONTACT</p>
+
+      <div class="form-row">
+        <div class="flex items-center gap-2">
+          <input
+            type="checkbox"
+            name="noChangeInEmailAddress"
+            id="noChangeInEmailAddress"
+          />
+          <div class="text-secondary">
+            <p class="text-nowrap">There is no changes in our mail address.</p>
+            <p class="text-nowrap">(Note: Address proof to be provided)</p>
+          </div>
+        </div>
+        <div class="flex items-center gap-2">
+          <input
+            type="checkbox"
+            name="noChangeInEmailAddress"
+            id="noChangeInEmailAddress"
+          />
+          <div class="text-secondary">
+            <p class="text-nowrap">
+              I/Wish to change my/our mailing address/contact details as below.
+            </p>
+            <p class="text-nowrap">
+              (Note: Address proof to be provided for address change)
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <label for="shopBidg" class="text-formTextPrimary w-[20%] text-nowrap">
+          *Shop no / Bidg name
+        </label>
+        <input type="text" id="shopBidg" />
+      </div>
+
+      <div class="form-row">
+        <label for="roadName" class="text-formTextPrimary w-[20%] text-nowrap">
+          *Road Name
+        </label>
+        <input type="text" id="roadName" />
+      </div>
+
+      <div class="form-row">
+        <label for="landmark" class="text-formTextPrimary w-[20%]">
+          *Landmark
+        </label>
+        <input type="text" id="landmark" />
+      </div>
+
+      <div class="form-row">
+        <div class="flex w-full items-end">
+          <label for="city" class="text-formTextPrimary w-[30%]">*City</label>
+          <input type="text" id="city" />
+        </div>
+        <div class="flex items-end">
+          <label ffor="pincode" class="text-formTextPrimary">*Pincode</label>
+          <input type="text" id="pincode" />
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="flex w-full items-end">
+          <label for="state" class="text-formTextPrimary w-[30%]">*State</label>
+          <input type="text" id="state" />
+        </div>
+        <div class="flex items-end">
+          <label for="country" class="text-formTextPrimary">*Country</label>
+          <input type="text" id="country" />
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="flex w-full items-end">
+          <label for="telOff" class="text-formTextPrimary w-[42%] text-nowrap">
+            *Tel (Off)
+          </label>
+          <input type="text" id="telOff" />
+        </div>
+        <div class="flex items-end">
+          <label for="extNo" class="text-formTextPrimary text-nowrap">
+            *Extension No
+          </label>
+          <input type="text" id="extNo" />
+        </div>
+        <div class="flex items-end">
+          <label for="faxNo" class="text-formTextPrimary text-nowrap">
+            *Fax No
+          </label>
+          <input type="text" id="faxNo" />
+        </div>
+      </div>
+
+      <div class="form-row">
+        <label for="telR" class="text-formTextPrimary w-[20%] text-nowrap">
+          *Tel (R)
+        </label>
+        <input type="text" id="telR" />
+      </div>
+      <div class="form-row">
+        <label for="mobNo" class="text-formTextPrimary w-[20%] text-nowrap">
+          *Mobile No
+        </label>
+        <input type="text" id="mobNo" />
+      </div>
+      <div class="form-row">
+        <label for="emailID" class="text-formTextPrimary w-[20%] text-nowrap">
+          *E-Mail ID
+        </label>
+        <input type="text" id emailID />
+      </div>
+    </section>
+
+    <!-- Entity Mailing Address 2 -->
+    <section id="entity-mailing-address" class="form-section">
+      <div class="form-row justify-between">
+        <p class="text-black">*MAILING ADDRESS & CONTACT</p>
+        <div class="flex items-center gap-2">
+          <input
+            type="checkbox"
+            name="noChangeInEmailAddress"
+            id="noChangeInEmailAddress"
+          />
+          <div class="text-secondary">
+            <p class="text-nowrap">
+              Please tick in case of registered address is same as mailing
+              address
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <label for="shopBidg" class="text-formTextPrimary w-[20%] text-nowrap">
+          *Shop no / Bidg name
+        </label>
+        <input type="text" id="shopBidg" />
+      </div>
+
+      <div class="form-row">
+        <label for="roadName" class="text-formTextPrimary w-[20%] text-nowrap">
+          *Road Name
+        </label>
+        <input type="text" id="roadName" />
+      </div>
+
+      <div class="form-row">
+        <label for="landmark" class="text-formTextPrimary w-[20%]">
+          *Landmark
+        </label>
+        <input type="text" id="landmark" />
+      </div>
+
+      <div class="form-row">
+        <div class="flex w-full items-end">
+          <label for="city" class="text-formTextPrimary w-[30%]">*City</label>
+          <input type="text" id="city" />
+        </div>
+        <div class="flex items-end">
+          <label ffor="pincode" class="text-formTextPrimary">*Pincode</label>
+          <input type="text" id="pincode" />
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="flex w-full items-end">
+          <label for="state" class="text-formTextPrimary w-[30%]">*State</label>
+          <input type="text" id="state" />
+        </div>
+        <div class="flex items-end">
+          <label for="country" class="text-formTextPrimary">*Country</label>
+          <input type="text" id="country" />
+        </div>
+      </div>
+
+      <div class="form-row">
+        <label for="emailID" class="text-formTextPrimary text-nowrap">
+          *Registered Address Type
+        </label>
+        <div class="flex items-center gap-4">
+          <div class="flex items-center gap-2">
+            <input type="checkbox" name="owned" id="owned" />
+            <div class="text-secondary">
+              <p class="text-nowrap">Owned</p>
+            </div>
+          </div>
+
+          <div class="flex items-center gap-2">
+            <input type="checkbox" name="rentedLeased" id="rentedLeased" />
+            <div class="text-secondary">
+              <p class="text-nowrap">Rented / Leased</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Type of Entity -->
+    <section id="entity-type" class="form-section">
+      <p class="text-black">
+        *Business details (please tick on the appropriate sub category against
+        the type of entity)
+      </p>
+      <p class="text-black">Type of Entity :-</p>
+
+      <div class="mt-2 flex flex-wrap items-center gap-2">
+        <div class="flex items-center gap-2">
+          <input type="checkbox" name="proprietorship" id="proprietorship" />
+          <div class="text-secondary">
+            <p class="text-nowrap">Proprietorship</p>
+          </div>
+        </div>
+
+        <div class="flex items-center gap-2">
+          <input type="checkbox" name="partnership" id="partnership" />
+          <div class="text-secondary">
+            <p class="text-nowrap">Partnership</p>
+          </div>
+        </div>
+
+        <div class="flex items-center gap-2">
+          <input
+            type="checkbox"
+            name="limitedLiabilityPartnership"
+            id="limitedLiabilityPartnership"
+          />
+          <div class="text-secondary">
+            <p class="text-nowrap">Limited Liability Partnership</p>
+          </div>
+        </div>
+
+        <div class="flex items-center gap-2">
+          <input
+            type="checkbox"
+            name="publicPrivateOnePersonCompany"
+            id="publicPrivateOnePersonCompany"
+          />
+          <div class="text-secondary">
+            <p class="text-nowrap">Public / Private / One Person Company</p>
+          </div>
+        </div>
+
+        <div class="flex items-center gap-2">
+          <input type="checkbox" name="huf" id="huf" />
+          <div class="text-secondary">
+            <p class="text-nowrap">HUF</p>
+          </div>
+        </div>
+
+        <div class="flex items-center gap-2">
+          <input type="checkbox" name="government" id="government" />
+          <div class="text-secondary">
+            <p class="text-nowrap">Government</p>
+          </div>
+        </div>
+
+        <div class="flex items-center gap-2">
+          <input type="checkbox" name="bank" id="bank" />
+          <div class="text-secondary">
+            <p class="text-nowrap">Bank</p>
+          </div>
+        </div>
+
+        <div class="flex items-center gap-2">
+          <input type="checkbox" name="socities" id="socities" />
+          <div class="text-secondary">
+            <p class="text-nowrap">Socities</p>
+          </div>
+        </div>
+
+        <div class="flex items-center gap-2">
+          <input type="checkbox" name="insurance" id="insurance" />
+          <div class="text-secondary">
+            <p class="text-nowrap">Insurance</p>
+          </div>
+        </div>
+
+        <div class="flex items-center gap-2">
+          <input type="checkbox" name="selfHelpedGroup" id="selfHelpedGroup" />
+          <div class="text-secondary">
+            <p class="text-nowrap">Self Helped Group</p>
+          </div>
+        </div>
+
+        <div class="flex items-center gap-2">
+          <input type="checkbox" name="foreignBodies" id="foreignBodies" />
+          <div class="text-secondary">
+            <p class="text-nowrap">Foreign Bodies</p>
+          </div>
+        </div>
+
+        <div class="flex items-center gap-2">
+          <input type="checkbox" name="clubs" id="clubs" />
+          <div class="text-secondary">
+            <p class="text-nowrap">Clubs</p>
+          </div>
+        </div>
+
+        <div class="flex items-center gap-2">
+          <input type="checkbox" name="nonGovOrg" id="nonGovOrg" />
+          <div class="text-secondary">
+            <p class="text-nowrap">Non-Government Organization</p>
+          </div>
+        </div>
+
+        <div class="flex items-center gap-2">
+          <input type="checkbox" name="mutualFund" id="mutualFund" />
+          <div class="text-secondary">
+            <p class="text-nowrap">Mutual Fund</p>
+          </div>
+        </div>
+
+        <div class="flex items-center gap-2">
+          <input type="checkbox" name="association" id="association" />
+          <div class="text-secondary">
+            <p class="text-nowrap">Association</p>
+          </div>
+        </div>
+
+        <div class="flex items-center gap-2">
+          <input type="checkbox" name="trust" id="trust" />
+          <div class="text-secondary">
+            <p class="text-nowrap">Trust</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <div class="pdf-page">
+    <rekyc-entity-details-form></rekyc-entity-details-form>
+  </div>
+
+  <div class="pdf-page">
+    <rekyc-entity-details-form></rekyc-entity-details-form>
+  </div>
+
+  <div class="pdf-page">
+    <rekyc-entity-details-form></rekyc-entity-details-form>
+  </div>
+</div>
+
+<iframe
+  #pdfViewer
+  width="100%"
+  height="1000px"
+  style="border: 1px solid #ccc"
+></iframe>

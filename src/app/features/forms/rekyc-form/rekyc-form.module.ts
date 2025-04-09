@@ -8,6 +8,8 @@ import { RekycFormUploadWrapperComponent } from './components/rekyc-form-uploadW
 import { RekycDeclarationFormComponent } from './components/rekyc-declaration-form/rekyc-declaration-form.component';
 import { RekycBoFormComponent } from './components/rekyc-declaration-form/components/rekyc-bo-form/rekyc-bo-form.component';
 import { RekycPersonalDetailsComponent } from './components/rekyc-personal-details/rekyc-personal-details.component';
+import { RekycKycFormComponent } from './components/rekyc-kyc-form/rekyc-kyc-form.component';
+import { RekycHeaderSectionComponent } from './components/rekyc-kyc-form/components/rekyc-header-section/rekyc-header-section.component';
 
 @NgModule({
   imports: [SharedModule, RekycFormRoutingModule],
@@ -19,6 +21,8 @@ import { RekycPersonalDetailsComponent } from './components/rekyc-personal-detai
     RekycBoFormComponent,
     RekycFormUploadWrapperComponent,
     RekycPersonalDetailsComponent,
+    RekycKycFormComponent,
+    RekycHeaderSectionComponent,
   ],
 })
 export class RekycFormModule {}

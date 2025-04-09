@@ -78,7 +78,9 @@
             *ngSwitchCase="FormStep.PERSONAL_DETAILS"
             (formNavigation)="onFormNavigation($event)"
           />
-          <p *ngSwitchCase="FormStep.KYC_FORM">KYC Form</p>
+          <rekyc-kyc-form *ngSwitchCase="FormStep.KYC_FORM">
+            KYC Form
+          </rekyc-kyc-form>
           <p *ngSwitchCase="FormStep.E_SIGN">E-Sign</p>
         </ng-container>
       </div>
