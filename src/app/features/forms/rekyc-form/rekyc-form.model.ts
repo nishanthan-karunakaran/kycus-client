@@ -42,6 +42,7 @@ export interface FormPage {
 
 export interface UploadFileProof {
   file: Blob;
-  type: string;
-  entityId: string;
+  docType: string;
+  entityId?: string;
+  ausId?: string;
 }

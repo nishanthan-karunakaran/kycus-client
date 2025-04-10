@@ -35,17 +35,22 @@
             *
           </span>
         </p>
+
+        <p>{{ form.value.proofOfIdentity.file.selectedType }}</p>
+
         <ui-select
           [options]="proofOfIdentityList"
           (valueChange)="onProofDocChange('proofOfIdentity', $event)"
           placeholder="Choose Proof of Identity"
-          [defaultValue]="'water_bill'"
+          [defaultValue]="form.value.proofOfIdentity.file.selectedType"
         ></ui-select>
 
         <ui-upload-button
           accept=".pdf, .xlsx"
           *ngIf="!form.get('proofOfIdentity.file.link')?.value"
           (selectedFile)="onFileSelection('proofOfIdentity', $event)"
+          [disabled]="form.value.proofOfIdentity.file.selectedType === ''"
+          [loading]="form.value.proofOfIdentity.file.isLoading"
         />
 
         <ui-filename
@@ -75,6 +80,8 @@
           accept=".pdf, .xlsx"
           *ngIf="!form.get('proofOfAddress.file.link')?.value"
           (selectedFile)="onFileSelection('proofOfAddress', $event)"
+          [disabled]="form.value.proofOfAddress.file.selectedType === ''"
+          [loading]="form.value.proofOfAddress.file.isLoading"
         />
 
         <ui-filename
@@ -98,6 +105,8 @@
           accept=".jpg, .png"
           *ngIf="!form.get('photograph.file.link')?.value"
           (selectedFile)="onFileSelection('photograph', $event)"
+          [disabled]="form.value.photograph.file.selectedType === ''"
+          [loading]="form.value.photograph.file.isLoading"
         />
 
         <ui-filename
@@ -121,6 +130,8 @@
           accept=".jpg, .png"
           *ngIf="!form.get('signature.file.link')?.value"
           (selectedFile)="onFileSelection('signature', $event)"
+          [disabled]="form.value.signature.file.selectedType === ''"
+          [loading]="form.value.signature.file.isLoading"
         />
 
         <ui-filename

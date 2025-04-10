@@ -23,6 +23,9 @@ export const API_URL = {
       DECLARATION_FORM: {
         DIRECTORS: '/kycus/rekyc/declaration/directors',
       },
+      PERSONAL_FORM: {
+        PERSONAL_DOCS_UPLOAD: '/kycus/rekyc/peronalDocs/uploads',
+      },
     },
   },
 };

@@ -1,7 +1,10 @@
-import { EntityDetailsFormService } from '../entity-details-form/entity-details-form.service';
 import { ChangeDetectionStrategy, Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import { ApiStatus } from '@core/constants/api.response';
+import { HelperService } from '@core/services/helpers.service';
 import { ToastService } from '@src/app/shared/ui/toast/toast.service';
+import { UploadFileProof } from '@features/forms/rekyc-form/rekyc-form.model';
+import { RekycPersonalFormService } from './rekyc-personal.service';
 
 interface Doc {
   label: string;
@@ -103,7 +106,8 @@ export class RekycPersonalDetailsComponent implements OnInit {
 
   constructor(
     private fb: FormBuilder,
-    private entityDetailsFormService: EntityDetailsFormService,
+    private personalFormService: RekycPersonalFormService,
+    private helperService: HelperService,
     private toast: ToastService,
   ) {}
   ngOnInit(): void {
@@ -116,6 +120,8 @@ export class RekycPersonalDetailsComponent implements OnInit {
         file: this.fb.group({
           name: [''],
           link: [''],
+          selectedType: 'driving_license',
+          isLoading: false,
         }),
         isRequired: this.fb.control(true),
       });
@@ -125,7 +131,7 @@ export class RekycPersonalDetailsComponent implements OnInit {
       file: this.fb.group({
         name: [''],
         link: [''],
-        selectedDoc: 'water_bill',
+        selectedType: '',
       }),
       isRequired: this.fb.control(true),
     });
@@ -134,7 +140,7 @@ export class RekycPersonalDetailsComponent implements OnInit {
       file: this.fb.group({
         name: [''],
         link: [''],
-        selectedDoc: 'water_bill',
+        selectedType: '',
       }),
       isRequired: this.fb.control(true),
     });
@@ -151,9 +157,9 @@ export class RekycPersonalDetailsComponent implements OnInit {
   }
 
   getSelectedAddressProof() {
-    const selectedDoc = this.form.get('addressProof.file.selectedDoc')?.value;
+    const selectedType = this.form.get('addressProof.file.selectedType')?.value;
     // eslint-disable-next-line no-console
-    console.log('selectedDoc', selectedDoc);
+    console.log('selectedType', selectedType);
   }
 
   get isFormValid(): boolean {
@@ -168,9 +174,7 @@ export class RekycPersonalDetailsComponent implements OnInit {
   }
 
   onProofDocChange(doc: string, value: string) {
-    // eslint-disable-next-line no-console
-    console.log('addressProof', value);
-    this.form.get(`${doc}.file.selectedDoc`)?.setValue(value);
+    this.form.get(`${doc}.file.selectedType`)?.setValue(value);
   }
 
   onFileSelection(controlName: string, file: File): void {
@@ -183,7 +187,9 @@ export class RekycPersonalDetailsComponent implements OnInit {
     if (!file || !type) return;
 
     const formData = new FormData();
-    formData.append('type', type);
+    formData.append('docType', type);
+    formData.append('entityId', 'ebitaus-CUS1234567-09042025');
+    formData.append('ausId', 'ebitaus-CUS1234567-09042025-AUS3');
     formData.append('file', file);
 
     const fileGroup = this.form.get(`${type}.file`) as FormGroup;
@@ -198,11 +204,25 @@ export class RekycPersonalDetailsComponent implements OnInit {
       link: file,
     });
 
-    // eslint-disable-next-line no-console
-    console.log(`[${type}] Uploaded File Details:`, this.form.get(type)?.value);
+    this.personalFormService.uploadProofDocument(formData as unknown as UploadFileProof).subscribe({
+      next: (result) => {
+        const { loading, response } = result;
+        fileGroup.get('isLoading')?.setValue(loading);
 
-    // Call your upload service (if needed)
-    // this.entityDetailsFormService.uploadFileProof(formData).subscribe();
+        if (!response) return;
+
+        const { status } = response;
+
+        const fileType =
+          type !== 'addressProof' ? type.toUpperCase() : this.helperService.toTitleCase(type);
+
+        if (status === ApiStatus.SUCCESS) {
+          this.toast.success(`${fileType} uploaded successfully`);
+        } else {
+          this.toast.error(`Invalid document for ${fileType}`);
+        }
+      },
+    });
   }
 
   submit(action: 'submit' | 'save' = 'submit'): void {

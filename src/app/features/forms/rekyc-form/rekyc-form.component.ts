@@ -9,7 +9,7 @@ import { ActivatedRoute } from '@angular/router';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class RekycFormComponent implements OnInit, DoCheck {
-  currentForm = signal<FormStep>(FormStep.DECLARATION);
+  currentForm = signal<FormStep>(FormStep.PERSONAL_DETAILS);
   formList: FormPage[] = [
     { label: 'Entity Details', step: FormStep.ENTITY_DETAILS, isCompleted: false, canShow: true },
     { label: 'Declaration', step: FormStep.DECLARATION, isCompleted: false, canShow: true },

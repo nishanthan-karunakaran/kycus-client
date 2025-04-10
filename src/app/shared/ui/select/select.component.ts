@@ -20,9 +20,12 @@ export interface SelectOption<T = unknown> {
       class="w-full rounded border bg-white p-2"
       (change)="onSelectChange($event)"
       [disabled]="disabled"
-      [value]="selectedValue"
     >
-      <option *ngFor="let option of options; trackBy: trackOption" [value]="option.value">
+      <option
+        *ngFor="let option of options; trackBy: trackOption"
+        [value]="option.value"
+        [selected]="isSelected(option.value)"
+      >
         {{ option.label }}
       </option>
     </select>
@@ -39,6 +42,7 @@ export interface SelectOption<T = unknown> {
 export class SelectComponent<T = unknown> implements ControlValueAccessor, OnInit {
   @Input() options: Array<SelectOption<T>> = [];
   @Input() placeholder = '';
+  @Input() optional = false;
   @Input() disabled = false;
   @Input() defaultValue: T | null = null;
 
@@ -50,7 +54,7 @@ export class SelectComponent<T = unknown> implements ControlValueAccessor, OnIni
   private onTouched: () => void = () => {};
 
   ngOnInit(): void {
-    if (this.placeholder) {
+    if (this.placeholder && this.optional) {
       this.options = [{ label: this.placeholder, value: null as unknown as T }, ...this.options];
     }
 
@@ -58,6 +62,10 @@ export class SelectComponent<T = unknown> implements ControlValueAccessor, OnIni
       this.selectedValue = this.defaultValue;
       this.writeValue(this.defaultValue);
     }
+  }
+
+  isSelected(value: T): boolean {
+    return value === this.selectedValue;
   }
 
   onSelectChange(event: Event): void {
