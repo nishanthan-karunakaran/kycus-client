@@ -15,10 +15,6 @@
     @apply h-full w-full;
   }
 
-  a {
-    @apply cursor-pointer text-secondary underline;
-  }
-
   h1 {
     @apply text-4xl font-bold;
   }
@@ -48,7 +44,7 @@
   }
 
   a {
-    @apply cursor-pointer font-semibold text-primary;
+    @apply cursor-pointer font-semibold text-secondary underline;
   }
 
   hr {

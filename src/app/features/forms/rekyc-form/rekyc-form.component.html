@@ -1,5 +1,16 @@
-<section class="flex h-screen w-screen flex-col overflow-hidden">
-  <rekyc-form-header class="w-full" />
+<ng-container *ngIf="!isAuthenticated">
+  <rekyc-email-validation
+    class="h-full w-full flex-1"
+    [token]="applicationToken"
+    (emailVerified)="onEmailVerified($event)"
+  />
+</ng-container>
+
+<section
+  *ngIf="isAuthenticated"
+  class="flex h-screen w-screen flex-col overflow-hidden"
+>
+  <rekyc-form-header class="w-full" [ausInfo]="ausInfo" />
 
   <main class="flex flex-1 items-center justify-center bg-gray-100">
     <div

@@ -1,5 +1,6 @@
-import { ChangeDetectionStrategy, Component, DoCheck, signal } from '@angular/core';
-import { FormPage, FormStep } from './rekyc-form.model';
+import { ChangeDetectionStrategy, Component, DoCheck, OnInit, signal } from '@angular/core';
+import { AusInfo, FormPage, FormStep } from './rekyc-form.model';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-rekyc-form',
@@ -7,8 +8,8 @@ import { FormPage, FormStep } from './rekyc-form.model';
   styleUrls: ['./rekyc-form.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class RekycFormComponent implements DoCheck {
-  currentForm = signal<FormStep>(FormStep.KYC_FORM);
+export class RekycFormComponent implements OnInit, DoCheck {
+  currentForm = signal<FormStep>(FormStep.ENTITY_DETAILS);
   formList: FormPage[] = [
     { label: 'Entity Details', step: FormStep.ENTITY_DETAILS, isCompleted: false, canShow: true },
     { label: 'Declaration', step: FormStep.DECLARATION, isCompleted: false, canShow: true },
@@ -29,6 +30,15 @@ export class RekycFormComponent implements DoCheck {
     FormStep.KYC_FORM,
     FormStep.E_SIGN,
   ];
+  isAuthenticated = false;
+  applicationToken: string | null = null;
+  ausInfo: AusInfo | null = null;
+
+  constructor(private activatedRouter: ActivatedRoute) {}
+
+  ngOnInit(): void {
+    this.applicationToken = this.activatedRouter.snapshot.queryParamMap.get('token');
+  }
 
   ngDoCheck(): void {
     // eslint-disable-next-line no-console
@@ -37,6 +47,11 @@ export class RekycFormComponent implements DoCheck {
 
   trackStep(_index: number, step: FormPage) {
     return step.step;
+  }
+
+  onEmailVerified(event: AusInfo) {
+    this.ausInfo = event;
+    this.isAuthenticated = true;
   }
 
   setCurrentForm(item: FormPage) {

@@ -5,7 +5,8 @@
     [attr.aria-label]="label"
     [attr.for]="'otpInput' + 0"
   >
-    {{ label }}<span *ngIf="required" class="required-asterisk">*</span>
+    {{ label }}
+    <span *ngIf="required" class="required-asterisk">*</span>
   </label>
 
   <div class="flex w-full gap-2">
@@ -15,7 +16,7 @@
       type="text"
       [maxlength]="1"
       [disabled]="disabled"
-      class="w-10 text-center"
+      class="size-10 text-center"
       [ngClass]="{ 'error-input': errorMessage }"
       [formControl]="control"
       (input)="onInputChange(i, $event)"

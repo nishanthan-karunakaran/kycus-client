@@ -10,12 +10,14 @@ import { RekycBoFormComponent } from './components/rekyc-declaration-form/compon
 import { RekycPersonalDetailsComponent } from './components/rekyc-personal-details/rekyc-personal-details.component';
 import { RekycKycFormComponent } from './components/rekyc-kyc-form/rekyc-kyc-form.component';
 import { RekycHeaderSectionComponent } from './components/rekyc-kyc-form/components/rekyc-header-section/rekyc-header-section.component';
+import { RekycEmailValidationComponent } from './components/email-validation/email-validation.component';
 
 @NgModule({
   imports: [SharedModule, RekycFormRoutingModule],
   declarations: [
     RekycFormComponent,
     RekycFormHeaderComponent,
+    RekycEmailValidationComponent,
     RekycEntityDetailsFormComponent,
     RekycDeclarationFormComponent,
     RekycBoFormComponent,

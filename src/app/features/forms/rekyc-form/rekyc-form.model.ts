@@ -14,6 +14,25 @@ export enum FormStep {
 //   E_SIGN = 'eSign',
 // }
 
+export interface VerifyOtpResponse {
+  ausId: string;
+  ausName: string;
+  ausType: 'aus' | 'others';
+  filledBy: string | null;
+}
+
+export interface EntityInfo {
+  entityId: string;
+  entityName: string;
+  filledBy: string | null;
+}
+
+export interface AusInfo {
+  ausId: string;
+  ausName: string;
+  ausType: 'aus' | 'others';
+}
+
 export interface FormPage {
   label: string;
   step: FormStep;
