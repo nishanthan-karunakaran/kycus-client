@@ -15,7 +15,7 @@ interface ScreenHeader {
 })
 export class RekycDeclarationFormComponent {
   @Input() ausInfo: AusInfo | null = null;
-  currentScreen = signal<Screens>('directors');
+  currentScreen = signal<Screens>('bo');
   screenHeaders: ScreenHeader[] = [
     {
       label: 'Directors',

@@ -46,3 +46,17 @@ export interface UploadFileProof {
   entityId?: string;
   ausId?: string;
 }
+
+export interface BoDetail {
+  name: string;
+  addressLine: string;
+  city: string;
+  state: string;
+  country: string;
+  pincode: string;
+}
+
+export interface SaveBODetails {
+  ausId: string;
+  boList: BoDetail[];
+}

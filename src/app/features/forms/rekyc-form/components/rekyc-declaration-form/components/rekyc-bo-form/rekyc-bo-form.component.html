@@ -1,4 +1,4 @@
-<div class="flex flex-col gap-4">
+<div class="flex flex-col">
   <p class="font-medium text-gray-500">Add min 2 Beneficiary owner details</p>
 
   <form [formGroup]="form">
@@ -10,7 +10,7 @@
           trackBy: trackBO
         "
         [formGroupName]="i"
-        class="mt-8 flex w-full flex-col gap-2 border-b pb-4"
+        class="mt-4 flex w-full flex-col gap-2 border-b pb-4"
       >
         <h6 class="mb-2 text-primary">Beneficiary Owner {{ i + 1 }}</h6>
 
@@ -58,6 +58,7 @@
               <ui-input
                 type="number"
                 label="Pin Code"
+                [maxlength]="6"
                 formControlName="pincode"
                 (valueChange)="updateBoDetail(i, 'pincode', $event)"
               />
@@ -80,6 +81,8 @@
       type="submit"
       label="I Declare"
       class="py-[7px]"
+      [disabled]="!isFormValid"
+      [loading]="isLoading()"
       (btnClick)="submit('submit')"
     />
   </div>

@@ -5,8 +5,13 @@ import {
   Input,
   OnInit,
   Output,
+  signal,
 } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { RekycBoService } from './rekyc-bo.service';
+import { BoDetail, SaveBODetails } from '@features/forms/rekyc-form/rekyc-form.model';
+import { ToastService } from '@src/app/shared/ui/toast/toast.service';
+import { ApiStatus } from '@core/constants/api.response';
 
 @Component({
   selector: 'rekyc-bo-form',
@@ -28,8 +33,13 @@ export class RekycBoFormComponent implements OnInit {
   form = this.fb.group({
     boDetails: this.fb.array([]),
   });
+  isLoading = signal(false);
 
-  constructor(private fb: FormBuilder) {}
+  constructor(
+    private fb: FormBuilder,
+    private boService: RekycBoService,
+    private toast: ToastService,
+  ) {}
 
   ngOnInit() {
     // Add two initial BO entries
@@ -46,17 +56,20 @@ export class RekycBoFormComponent implements OnInit {
   }
 
   get isFormValid(): boolean {
-    return this.boDetails.controls.every((group) => group.valid);
+    const formArray = this.form.get('boDetails') as FormArray;
+    return (
+      formArray && formArray.length > 0 && formArray.controls.every((control) => control.valid)
+    );
   }
 
   createBoDetail(): FormGroup {
     return this.fb.group({
-      name: ['', Validators.required],
-      addressLine: ['', Validators.required],
-      city: ['', Validators.required],
-      state: ['', Validators.required],
-      country: ['', Validators.required],
-      pincode: ['', [Validators.required, Validators.pattern(/^\d{6}$/)]],
+      name: ['q', Validators.required],
+      addressLine: ['q', Validators.required],
+      city: ['q', Validators.required],
+      state: ['q', Validators.required],
+      country: ['q', Validators.required],
+      pincode: ['1', [Validators.required, Validators.pattern(/^\d{6}$/)]],
     });
   }
 
@@ -79,11 +92,31 @@ export class RekycBoFormComponent implements OnInit {
   }
 
   submit(action: 'save' | 'submit') {
-    // eslint-disable-next-line no-console
-    console.log(action, this.form.value);
-    if (this.form.invalid) {
-      this.form.markAllAsTouched();
-      return;
+    if (!this.isFormValid) return;
+
+    if (action === 'submit') {
+      const boList = this.form.value.boDetails as BoDetail[];
+
+      const payload: SaveBODetails = {
+        ausId: 'ebitaus-CUS1234567-09042025-AUS3',
+        boList,
+      };
+      this.boService.saveBODetails(payload).subscribe({
+        next: (result) => {
+          const { loading, response } = result;
+          this.isLoading.set(loading);
+
+          if (!response) return;
+
+          const { status } = response;
+
+          if (status === ApiStatus.SUCCESS) {
+            this.toast.success('Beneficairy Owners details saved successfully!');
+          } else {
+            this.toast.error(response.message || 'Something went wrong!');
+          }
+        },
+      });
     }
   }
 }

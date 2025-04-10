@@ -22,6 +22,7 @@ export const API_URL = {
       },
       DECLARATION_FORM: {
         DIRECTORS: '/kycus/rekyc/declaration/directors',
+        BO: '/kycus/rekyc/declaration/beneficiaryOwner',
       },
       PERSONAL_FORM: {
         PERSONAL_DOCS_UPLOAD: '/kycus/rekyc/peronalDocs/uploads',
