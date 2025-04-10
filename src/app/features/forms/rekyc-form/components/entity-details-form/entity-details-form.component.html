@@ -40,6 +40,7 @@
         <ui-filename
           *ngIf="form.get('pan.file.link')?.value"
           [fileName]="form.get('pan.file.name')?.value"
+          (removeFile)="removeFile('pan')"
         />
       </ui-rekycform-uploadwrapper>
 
@@ -63,6 +64,7 @@
         <ui-filename
           *ngIf="form.get('gstin.file.name')?.value"
           [fileName]="form.get('gstin.file.name')?.value"
+          (removeFile)="removeFile('gstin')"
         />
       </ui-rekycform-uploadwrapper>
 
@@ -77,21 +79,6 @@
           </span>
         </p>
 
-        <!-- <select
-          name="entityAddressProof"
-          id="entityAddressProof"
-          formControlName="addressProof.file.selectedDoc"
-        >
-          <option
-            *ngFor="let option of entityAddressProofList"
-            [value]="option.value"
-          >
-            {{ option.label }}
-          </option>
-        </select> -->
-
-        <!-- <div formGroupName="addressProof">
-          <div formGroupName="file"> -->
         <ui-select
           [options]="entityAddressProofList"
           (valueChange)="onAddressProofChange($event)"
@@ -99,18 +86,18 @@
           [defaultValue]="'water_bill'"
         ></ui-select>
 
-        <!-- </div>
-        </div> -->
-
         <ui-upload-button
+          *ngIf="!form.get('addressProof.file.name')?.value"
           accept=".pdf, .xlsx"
-          *ngIf="!form.get('addressProof.file.link')?.value"
+          [disabled]="form.value.addressProof.file.selectedType === ''"
+          [loading]="form.value.addressProof.file.isLoading"
           (selectedFile)="onFileSelection('addressProof', $event)"
         />
 
         <ui-filename
           *ngIf="form.get('addressProof.file.name')?.value"
           [fileName]="form.get('addressProof.file.name')?.value"
+          (removeFile)="removeFile('addressProof')"
         />
       </ui-rekycform-uploadwrapper>
     </div>
@@ -138,6 +125,7 @@
         <ui-filename
           *ngIf="form.get('coi.file.name')?.value"
           [fileName]="form.get('coi.file.name')?.value"
+          (removeFile)="removeFile('coi')"
         />
       </ui-rekycform-uploadwrapper>
 
@@ -158,6 +146,7 @@
         <ui-filename
           *ngIf="form.get('moa.file.name')?.value"
           [fileName]="form.get('moa.file.name')?.value"
+          (removeFile)="removeFile('moa')"
         />
       </ui-rekycform-uploadwrapper>
 
@@ -178,6 +167,7 @@
         <ui-filename
           *ngIf="form.get('aoa.file.name')?.value"
           [fileName]="form.get('aoa.file.name')?.value"
+          (removeFile)="removeFile('aoa')"
         />
       </ui-rekycform-uploadwrapper>
     </div>

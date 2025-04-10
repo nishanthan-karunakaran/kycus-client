@@ -1,3 +1,4 @@
+import { HelperService } from 'src/app/core/services/helpers.service';
 import { EntityDetailsFormService } from './entity-details-form.service';
 import {
   ChangeDetectionStrategy,
@@ -9,6 +10,8 @@ import {
 } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { ToastService } from '@src/app/shared/ui/toast/toast.service';
+import { UploadFileProof } from '@features/forms/rekyc-form/rekyc-form.model';
+import { ApiStatus } from '@core/constants/api.response';
 
 interface Doc {
   label: string;
@@ -76,6 +79,7 @@ export class RekycEntityDetailsFormComponent implements OnInit, DoCheck {
   constructor(
     private fb: FormBuilder,
     private entityDetailsFormService: EntityDetailsFormService,
+    private helperService: HelperService,
     private toast: ToastService,
   ) {}
   ngOnInit(): void {
@@ -88,8 +92,9 @@ export class RekycEntityDetailsFormComponent implements OnInit, DoCheck {
         file: this.fb.group({
           name: [''],
           link: [''],
+          isLoading: false,
         }),
-        isRequired: this.fb.control(true),
+        isRequired: this.fb.control(key !== 'gstin'),
       });
     });
 
@@ -97,7 +102,8 @@ export class RekycEntityDetailsFormComponent implements OnInit, DoCheck {
       file: this.fb.group({
         name: [''],
         link: [''],
-        selectedDoc: 'water_bill',
+        selectedType: '',
+        isLoading: false,
       }),
       isRequired: this.fb.control(true),
     });
@@ -119,15 +125,16 @@ export class RekycEntityDetailsFormComponent implements OnInit, DoCheck {
   }
 
   getSelectedAddressProof() {
-    const selectedDoc = this.form.get('addressProof.file.selectedDoc')?.value;
+    const selectedType = this.form.get('addressProof.file.selectedType')?.value;
     // eslint-disable-next-line no-console
-    console.log('selectedDoc', selectedDoc);
+    console.log('selectedType', selectedType);
   }
 
   get isFormValid(): boolean {
     return Object.keys(this.form.value).every((key) => {
-      const link = this.form.get(`${key}.file.name`)?.value;
-      return !link;
+      const isRequired = this.form.get(`${key}.isRequired`)?.value;
+      const link = this.form.get(`${key}.file.link`)?.value;
+      return !isRequired || !!link;
     });
   }
 
@@ -136,9 +143,9 @@ export class RekycEntityDetailsFormComponent implements OnInit, DoCheck {
   }
 
   onAddressProofChange(value: string) {
+    this.form.get('addressProof.file.selectedType')?.setValue(value);
     // eslint-disable-next-line no-console
     console.log('addressProof', value);
-    this.form.get('addressProof.file.selectedDoc')?.setValue(value);
   }
 
   onFileSelection(controlName: string, file: File): void {
@@ -151,7 +158,8 @@ export class RekycEntityDetailsFormComponent implements OnInit, DoCheck {
     if (!file || !type) return;
 
     const formData = new FormData();
-    formData.append('type', type);
+    formData.append('docType', type);
+    formData.append('entityId', 'ebitaus-CUS1234567-09042025');
     formData.append('file', file);
 
     const fileGroup = this.form.get(`${type}.file`) as FormGroup;
@@ -166,28 +174,54 @@ export class RekycEntityDetailsFormComponent implements OnInit, DoCheck {
       link: file,
     });
 
-    // eslint-disable-next-line no-console
-    console.log(`[${type}] Uploaded File Details:`, this.form.get(type)?.value);
+    this.entityDetailsFormService
+      .uploadFileProof(formData as unknown as UploadFileProof)
+      .subscribe({
+        next: (result) => {
+          const { loading, response } = result;
+          fileGroup.get('isLoading')?.setValue(loading);
 
-    // Call your upload service (if needed)
-    // this.entityDetailsFormService.uploadFileProof(formData).subscribe();
+          if (!response) return;
+
+          const { status } = response;
+
+          const fileType =
+            type !== 'addressProof' ? type.toUpperCase() : this.helperService.toTitleCase(type);
+
+          if (status === ApiStatus.SUCCESS) {
+            this.toast.success(`${fileType} uploaded successfully`);
+          } else {
+            this.toast.error(`Invalid document for ${fileType}`);
+          }
+        },
+      });
   }
 
-  submit(action: 'submit' | 'save' = 'submit'): void {
-    if (!this.isFormValid) {
-      this.toast.error('Something went wrong!');
+  removeFile(type: string): void {
+    const fileGroup = this.form.get(`${type}.file`) as FormGroup;
+    if (!fileGroup) {
       // eslint-disable-next-line no-console
-      console.warn('Form is not valid');
+      console.warn(`No form group found for type: ${type}`);
       return;
     }
 
-    this.getSelectedAddressProof();
+    fileGroup.get('name')?.setValue('');
+    fileGroup.get('link')?.setValue('');
+  }
 
+  submit(action: 'submit' | 'save' = 'submit'): void {
     if (action === 'submit') {
+      if (!this.isFormValid) {
+        this.toast.error('Something went wrong!');
+        // eslint-disable-next-line no-console
+        console.warn('Form is not valid');
+        return;
+      }
+
       this.toast.success('Form sumitted successfully!');
+      this.formNavigation.emit('next');
     } else {
       this.toast.info('Form saved successfully!');
     }
-    this.formNavigation.emit('next');
   }
 }

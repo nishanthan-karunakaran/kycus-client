@@ -30,7 +30,7 @@ export class RekycFormComponent implements OnInit, DoCheck {
     FormStep.KYC_FORM,
     FormStep.E_SIGN,
   ];
-  isAuthenticated = false;
+  isAuthenticated = true;
   applicationToken: string | null = null;
   ausInfo: AusInfo | null = null;
 

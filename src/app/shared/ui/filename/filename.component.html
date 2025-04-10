@@ -17,5 +17,16 @@
       {{ fileName }}
     </p>
   </div>
-  <lucide-icon name="x" size="20" />
+  <lucide-icon
+    *ngIf="canRemove"
+    name="x"
+    size="20"
+    [ngClass]="{
+      'cursor-pointer': canRemove,
+    }"
+    (click)="deleteFile()"
+    (keydown.enter)="deleteFile()"
+    (keydown.space)="deleteFile()"
+    tabindex="0"
+  />
 </div>

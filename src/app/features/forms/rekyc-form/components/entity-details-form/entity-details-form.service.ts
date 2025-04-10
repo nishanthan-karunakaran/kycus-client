@@ -10,6 +10,6 @@ export class EntityDetailsFormService {
   constructor(private api: ApiService) {}
 
   uploadFileProof(data: UploadFileProof) {
-    return this.api.post(API_URL.REKYC.UPLOAD_EXCEL, data);
+    return this.api.post(API_URL.APPLICATION.REKYC.ENTITY_DETAILS_FORM.ENTITY_DOCS_UPLOAD, data);
   }
 }

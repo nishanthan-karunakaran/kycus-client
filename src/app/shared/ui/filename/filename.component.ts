@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 
 @Component({
   selector: 'ui-filename',
@@ -6,12 +6,19 @@ import { Component, Input } from '@angular/core';
 })
 export class FilenameComponent {
   @Input() fileName = '';
-  @Input() fileLink: null | string = null;
+  @Input() fileLink: string | null = null;
   @Input() canRemove = true;
+  @Output() removeFile = new EventEmitter<boolean>();
 
   openFileInNewTab(): void {
     if (this.fileLink) {
       window.open(this.fileLink, '_blank');
+    }
+  }
+
+  deleteFile(): void {
+    if (this.canRemove) {
+      this.removeFile.emit(true);
     }
   }
 }

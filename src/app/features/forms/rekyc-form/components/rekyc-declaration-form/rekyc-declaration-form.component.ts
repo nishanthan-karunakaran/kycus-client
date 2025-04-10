@@ -18,7 +18,7 @@ interface Director {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class RekycDeclarationFormComponent {
-  currentScreen = signal<Screens>('bo');
+  currentScreen = signal<Screens>('directors');
   screenHeaders: ScreenHeader[] = [
     {
       label: 'Directors',

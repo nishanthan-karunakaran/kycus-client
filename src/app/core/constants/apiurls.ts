@@ -16,6 +16,9 @@ export const API_URL = {
         REQUEST_OTP: '/kycus/rekyc/auth/request-otp',
         VERIFY_OTP: '/kycus/rekyc/auth/verify-otp',
       },
+      ENTITY_DETAILS_FORM: {
+        ENTITY_DOCS_UPLOAD: '/kycus/rekyc/entityDocs/uploads',
+      },
       APPLICATIONS: '/kycus/rekyc/applications',
     },
   },
