@@ -11,6 +11,7 @@ import { RekycPersonalDetailsComponent } from './components/rekyc-personal-detai
 import { RekycKycFormComponent } from './components/rekyc-kyc-form/rekyc-kyc-form.component';
 import { RekycHeaderSectionComponent } from './components/rekyc-kyc-form/components/rekyc-header-section/rekyc-header-section.component';
 import { RekycEmailValidationComponent } from './components/email-validation/email-validation.component';
+import { RekycDirectorsFormComponent } from './components/rekyc-declaration-form/components/rekyc-bo-form/rekyc-directors-form/rekyc-directors-form.component';
 
 @NgModule({
   imports: [SharedModule, RekycFormRoutingModule],
@@ -20,6 +21,7 @@ import { RekycEmailValidationComponent } from './components/email-validation/ema
     RekycEmailValidationComponent,
     RekycEntityDetailsFormComponent,
     RekycDeclarationFormComponent,
+    RekycDirectorsFormComponent,
     RekycBoFormComponent,
     RekycFormUploadWrapperComponent,
     RekycPersonalDetailsComponent,

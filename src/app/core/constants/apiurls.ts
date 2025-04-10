@@ -12,6 +12,7 @@ export const API_URL = {
   },
   APPLICATION: {
     REKYC: {
+      APPLICATIONS: '/kycus/rekyc/applications',
       AUTH: {
         REQUEST_OTP: '/kycus/rekyc/auth/request-otp',
         VERIFY_OTP: '/kycus/rekyc/auth/verify-otp',
@@ -19,7 +20,9 @@ export const API_URL = {
       ENTITY_DETAILS_FORM: {
         ENTITY_DOCS_UPLOAD: '/kycus/rekyc/entityDocs/uploads',
       },
-      APPLICATIONS: '/kycus/rekyc/applications',
+      DECLARATION_FORM: {
+        DIRECTORS: '/kycus/rekyc/declaration/directors',
+      },
     },
   },
 };

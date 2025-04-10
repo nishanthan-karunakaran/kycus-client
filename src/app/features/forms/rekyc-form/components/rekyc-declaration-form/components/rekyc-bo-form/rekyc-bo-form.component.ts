@@ -1,4 +1,11 @@
-import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  EventEmitter,
+  Input,
+  OnInit,
+  Output,
+} from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 @Component({
@@ -16,6 +23,7 @@ export class RekycBoFormComponent implements OnInit {
     }
     this._addBO = value;
   }
+  @Output() updateAddBtnClicked = new EventEmitter<boolean>();
 
   form = this.fb.group({
     boDetails: this.fb.array([]),
@@ -61,6 +69,7 @@ export class RekycBoFormComponent implements OnInit {
 
   addBoDetail() {
     this.boDetails.push(this.createBoDetail());
+    this.updateAddBtnClicked.emit(true);
   }
 
   removeLastBoDetail() {

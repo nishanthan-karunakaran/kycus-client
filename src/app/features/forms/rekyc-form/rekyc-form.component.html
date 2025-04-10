@@ -87,7 +87,10 @@
             class="w-full"
             (formNavigation)="onFormNavigation($event)"
           />
-          <rekyc-declaration-form *ngSwitchCase="FormStep.DECLARATION" />
+          <rekyc-declaration-form
+            *ngSwitchCase="FormStep.DECLARATION"
+            [ausInfo]="ausInfo"
+          />
           <rekyc-personal-details
             *ngSwitchCase="FormStep.PERSONAL_DETAILS"
             (formNavigation)="onFormNavigation($event)"
