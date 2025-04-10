@@ -1,17 +1,18 @@
+import { DestroyRef, inject, Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
-import { Injectable } from '@angular/core';
-import { BehaviorSubject, of } from 'rxjs';
+import { BehaviorSubject, of, defer } from 'rxjs';
 import { catchError, finalize, map, startWith } from 'rxjs/operators';
 import { ApiResponse, ApiResult } from 'src/app/core/constants/api.response';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 type BodyType = object | FormData;
 
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable({ providedIn: 'root' })
 export class ApiService {
   private globalLoadingSubject = new BehaviorSubject<boolean>(false);
   globalLoading$ = this.globalLoadingSubject.asObservable();
+
+  private readonly destroyRef = inject(DestroyRef); // abortController
 
   constructor(private http: HttpClient) {}
 
@@ -22,28 +23,36 @@ export class ApiService {
     params?: HttpParams,
     headers?: HttpHeaders,
   ): ApiResult<T> {
-    return this.http.request<ApiResponse<T>>(method, url, { body, params, headers }).pipe(
-      map((response: ApiResponse<T>) => ({
-        loading: false,
-        response, // Pass the actual API response
-      })),
-      startWith({ loading: true, response: null }),
-      catchError((error) =>
-        of({
-          loading: false,
-          response: error?.error ?? {
-            status: 'error',
-            message: error.message || 'An unexpected error occurred',
-            data: null,
-            errors: null,
-          },
-        }),
-      ),
-      finalize(() => this.globalLoadingSubject.next(false)),
+    return defer(() =>
+      this.http
+        .request<ApiResponse<T>>(method, url, {
+          body,
+          params,
+          headers,
+        })
+        .pipe(
+          takeUntilDestroyed(this.destroyRef),
+          map((response: ApiResponse<T>) => ({
+            loading: false,
+            response,
+          })),
+          startWith({ loading: true, response: null }),
+          catchError((error) =>
+            of({
+              loading: false,
+              response: error?.error ?? {
+                status: 'error',
+                message: error.message || 'An unexpected error occurred',
+                data: null,
+                errors: null,
+              },
+            }),
+          ),
+          finalize(() => this.globalLoadingSubject.next(false)),
+        ),
     );
   }
 
-  // Shorthand methods
   get<T>(url: string, params?: HttpParams, headers?: HttpHeaders) {
     return this.request<T>('GET', url, undefined, params, headers);
   }
