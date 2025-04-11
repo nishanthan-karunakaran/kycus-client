@@ -17,6 +17,9 @@ export const API_URL = {
         REQUEST_OTP: '/kycus/rekyc/auth/request-otp',
         VERIFY_OTP: '/kycus/rekyc/auth/verify-otp',
       },
+      ENTITY_INFO: {
+        ENTITY_FILLED_BY: '/kycus/rekyc/entityFilledBy',
+      },
       ENTITY_DETAILS_FORM: {
         ENTITY_DOCS_UPLOAD: '/kycus/rekyc/entityDocs/uploads',
       },
@@ -28,7 +31,7 @@ export const API_URL = {
         BO: '/kycus/rekyc/declaration/beneficiaryOwner',
       },
       PERSONAL_FORM: {
-        PERSONAL_DOCS_UPLOAD: '/kycus/rekyc/peronalDocs/uploads',
+        PERSONAL_DOCS_UPLOAD: '/kycus/rekyc/ausDocs/uploads',
       },
     },
   },

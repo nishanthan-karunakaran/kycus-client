@@ -12,6 +12,7 @@ import { RekycKycFormComponent } from './components/rekyc-kyc-form/rekyc-kyc-for
 import { RekycHeaderSectionComponent } from './components/rekyc-kyc-form/components/rekyc-header-section/rekyc-header-section.component';
 import { RekycEmailValidationComponent } from './components/email-validation/email-validation.component';
 import { RekycDirectorsFormComponent } from './components/rekyc-declaration-form/components/rekyc-bo-form/rekyc-directors-form/rekyc-directors-form.component';
+import { RekycEntityFilledbyComponent } from './components/entity-filledby/entity-filledby.component';
 
 @NgModule({
   imports: [SharedModule, RekycFormRoutingModule],
@@ -19,6 +20,7 @@ import { RekycDirectorsFormComponent } from './components/rekyc-declaration-form
     RekycFormComponent,
     RekycFormHeaderComponent,
     RekycEmailValidationComponent,
+    RekycEntityFilledbyComponent,
     RekycEntityDetailsFormComponent,
     RekycDeclarationFormComponent,
     RekycDirectorsFormComponent,
