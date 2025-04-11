@@ -35,6 +35,7 @@
       *ngSwitchCase="'directors'"
       [addBtnClicked]="this.addBtnTrigger"
       (updateAddBtnClicked)="handleAddBtn()"
+      (formNavigation)="setCurrentScreen('bo')"
     />
     <rekyc-bo-form
       *ngSwitchCase="'bo'"

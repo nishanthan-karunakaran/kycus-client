@@ -36,13 +36,10 @@
           </span>
         </p>
 
-        <p>{{ form.value.proofOfIdentity.file.selectedType }}</p>
-
         <ui-select
           [options]="proofOfIdentityList"
           (valueChange)="onProofDocChange('proofOfIdentity', $event)"
           placeholder="Choose Proof of Identity"
-          [defaultValue]="form.value.proofOfIdentity.file.selectedType"
         ></ui-select>
 
         <ui-upload-button
@@ -56,6 +53,7 @@
         <ui-filename
           *ngIf="form.get('proofOfIdentity.file.name')?.value"
           [fileName]="form.get('proofOfIdentity.file.name')?.value"
+          (removeFile)="removeFile('proofOfIdentity')"
         />
       </ui-rekycform-uploadwrapper>
 
@@ -73,7 +71,6 @@
           [options]="proofOfAddressList"
           (valueChange)="onProofDocChange('proofOfAddress', $event)"
           placeholder="Choose Proof of Address"
-          [defaultValue]="'water_bill'"
         ></ui-select>
 
         <ui-upload-button
@@ -87,6 +84,7 @@
         <ui-filename
           *ngIf="form.get('proofOfAddress.file.name')?.value"
           [fileName]="form.get('proofOfAddress.file.name')?.value"
+          (removeFile)="removeFile('proofOfAddress')"
         />
       </ui-rekycform-uploadwrapper>
 
@@ -112,6 +110,7 @@
         <ui-filename
           *ngIf="form.get('photograph.file.name')?.value"
           [fileName]="form.get('photograph.file.name')?.value"
+          (removeFile)="removeFile('photograph')"
         />
       </ui-rekycform-uploadwrapper>
 
@@ -137,6 +136,7 @@
         <ui-filename
           *ngIf="form.get('signature.file.name')?.value"
           [fileName]="form.get('signature.file.name')?.value"
+          (removeFile)="removeFile('signature')"
         />
       </ui-rekycform-uploadwrapper>
     </div>

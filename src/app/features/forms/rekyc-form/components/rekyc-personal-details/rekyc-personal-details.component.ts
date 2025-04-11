@@ -131,7 +131,7 @@ export class RekycPersonalDetailsComponent implements OnInit {
       file: this.fb.group({
         name: [''],
         link: [''],
-        selectedType: '',
+        selectedType: 'driving_license',
       }),
       isRequired: this.fb.control(true),
     });
@@ -140,7 +140,7 @@ export class RekycPersonalDetailsComponent implements OnInit {
       file: this.fb.group({
         name: [''],
         link: [''],
-        selectedType: '',
+        selectedType: 'driving_license',
       }),
       isRequired: this.fb.control(true),
     });
@@ -165,7 +165,7 @@ export class RekycPersonalDetailsComponent implements OnInit {
   get isFormValid(): boolean {
     return Object.keys(this.form.value).every((key) => {
       const link = this.form.get(`${key}.file.name`)?.value;
-      return !link;
+      return !!link;
     });
   }
 
@@ -181,6 +181,20 @@ export class RekycPersonalDetailsComponent implements OnInit {
     if (!file) return;
 
     this.uploadFileProof(controlName, file);
+  }
+
+  removeFile(controlName: string): void {
+    const fileGroup = this.form.get(`${controlName}.file`) as FormGroup;
+    if (!fileGroup) {
+      // eslint-disable-next-line no-console
+      console.warn(`No form group found for type: ${controlName}`);
+      return;
+    }
+
+    fileGroup.patchValue({
+      name: '',
+      link: '',
+    });
   }
 
   uploadFileProof(type: string, file: File): void {
@@ -233,7 +247,8 @@ export class RekycPersonalDetailsComponent implements OnInit {
       return;
     }
 
-    this.getSelectedAddressProof();
+    // eslint-disable-next-line no-console
+    console.log(this.form.value);
 
     if (action === 'submit') {
       this.toast.success('Form sumitted successfully!');

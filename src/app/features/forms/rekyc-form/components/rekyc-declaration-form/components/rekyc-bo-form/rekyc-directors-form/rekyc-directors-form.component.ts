@@ -136,6 +136,7 @@ export class RekycDirectorsFormComponent implements OnInit, OnChanges {
     const formData = new FormData();
     formData.append('form32', this.form32.name);
     formData.append('data', JSON.stringify(data));
+    formData.append('flag', 'save');
 
     this.declarationService.saveDraft(formData as unknown as SaveDirectorsDraft).subscribe({
       next: (result) => {

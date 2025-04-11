@@ -102,7 +102,7 @@ export class RekycEntityDetailsFormComponent implements OnInit, DoCheck {
       file: this.fb.group({
         name: [''],
         link: [''],
-        selectedType: '',
+        selectedType: 'electricity_bill',
         isLoading: false,
       }),
       isRequired: this.fb.control(true),
