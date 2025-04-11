@@ -26,15 +26,20 @@
   >
     <div class="grid w-full grid-cols-1 gap-4 md:grid-cols-2">
       <ui-rekycform-uploadwrapper>
-        <p>
-          Select Proof of Identity
-          <span
-            *ngIf="form.get('proofOfIdentity.isRequired')?.value"
-            class="text-red-500"
-          >
-            *
-          </span>
-        </p>
+        <div>
+          <p>
+            Select Proof of Identity
+            <span
+              *ngIf="form.get('proofOfIdentity.isRequired')?.value"
+              class="text-red-500"
+            >
+              *
+            </span>
+          </p>
+          <p class="text-xs text-gray-500">
+            Name will fetched and validated with this
+          </p>
+        </div>
 
         <ui-select
           [options]="proofOfIdentityList"
@@ -58,15 +63,21 @@
       </ui-rekycform-uploadwrapper>
 
       <ui-rekycform-uploadwrapper>
-        <p>
-          Select Proof of Address
-          <span
-            *ngIf="form.get('proofOfAddress.isRequired')?.value"
-            class="text-red-500"
-          >
-            *
-          </span>
-        </p>
+        <div>
+          <p>
+            Select Proof of Address
+            <span
+              *ngIf="form.get('proofOfAddress.isRequired')?.value"
+              class="text-red-500"
+            >
+              *
+            </span>
+          </p>
+          <p class="text-xs text-gray-500">
+            Address will fetched and validated with this
+          </p>
+        </div>
+
         <ui-select
           [options]="proofOfAddressList"
           (valueChange)="onProofDocChange('proofOfAddress', $event)"
@@ -89,15 +100,22 @@
       </ui-rekycform-uploadwrapper>
 
       <ui-rekycform-uploadwrapper>
-        <p>
-          Upload Photograph
-          <span
-            *ngIf="form.get('photograph.isRequired')?.value"
-            class="text-red-500"
-          >
-            *
+        <div>
+          <p>
+            Upload Photograph
+            <span
+              *ngIf="form.get('photograph.isRequired')?.value"
+              class="text-red-500"
+            >
+              *
+            </span>
+          </p>
+          <p class="text-xs font-semibold text-primary">Supports JPG, PNG</p>
+          <span class="text-xs text-gray-500">
+            Max size
+            <strong>2mb</strong>
           </span>
-        </p>
+        </div>
 
         <ui-upload-button
           accept=".jpg, .png"
@@ -115,15 +133,25 @@
       </ui-rekycform-uploadwrapper>
 
       <ui-rekycform-uploadwrapper>
-        <p>
-          Upload Specimen Signature
-          <span
-            *ngIf="form.get('signature.isRequired')?.value"
-            class="text-red-500"
-          >
-            *
+        <div>
+          <p>
+            Upload Specimen Signature
+            <span
+              *ngIf="form.get('signature.isRequired')?.value"
+              class="text-red-500"
+            >
+              *
+            </span>
+          </p>
+          <p class="text-xs text-gray-500">
+            Sign on white background, capture a clear picture and upload it
+          </p>
+          <p class="text-xs text-primary">Supports JPG, PNG</p>
+          <span class="text-xs text-gray-500">
+            Max size
+            <strong>2mb</strong>
           </span>
-        </p>
+        </div>
 
         <ui-upload-button
           accept=".jpg, .png"
