@@ -1,9 +1,19 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, OnInit, Output } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  EventEmitter,
+  OnInit,
+  Output,
+  signal,
+} from '@angular/core';
+import { FormBuilder, FormGroup } from '@angular/forms';
 import { ApiStatus } from '@core/constants/api.response';
 import { HelperService } from '@core/services/helpers.service';
+import {
+  UploadFileProof,
+  UploadFileProofResponse,
+} from '@features/forms/rekyc-form/rekyc-form.model';
 import { ToastService } from '@src/app/shared/ui/toast/toast.service';
-import { UploadFileProof } from '@features/forms/rekyc-form/rekyc-form.model';
 import { RekycPersonalFormService } from './rekyc-personal.service';
 
 interface Doc {
@@ -12,6 +22,8 @@ interface Doc {
   file: { name: string | null; link: string | null };
   isRequired: boolean;
 }
+
+type FileType = 'identityProof' | 'addressProof' | 'photograph' | 'signature';
 
 @Component({
   selector: 'rekyc-personal-details',
@@ -23,7 +35,7 @@ export class RekycPersonalDetailsComponent implements OnInit {
   entityDocs: Doc[] = [
     {
       label: 'Select Proof of Identity',
-      type: 'proofOfIdentity',
+      type: 'identityProof',
       file: {
         name: null,
         link: null,
@@ -58,11 +70,11 @@ export class RekycPersonalDetailsComponent implements OnInit {
       isRequired: true,
     },
   ];
-  proofOfIdentityList = [
+  identityProofList = [
     {
       id: 1,
       label: 'Driving License',
-      value: 'driving_license',
+      value: 'drivingLicense',
     },
     {
       id: 2,
@@ -72,19 +84,19 @@ export class RekycPersonalDetailsComponent implements OnInit {
     {
       id: 3,
       label: 'Voter ID',
-      value: 'voter_id',
+      value: 'voterId',
     },
     {
       id: 4,
       label: 'Pan',
-      value: 'Pan',
+      value: 'pan',
     },
   ];
-  proofOfAddressList = [
+  addressProofList = [
     {
       id: 1,
       label: 'Driving License',
-      value: 'driving_license',
+      value: 'drivingLicense',
     },
     {
       id: 2,
@@ -94,7 +106,7 @@ export class RekycPersonalDetailsComponent implements OnInit {
     {
       id: 3,
       label: 'Voter ID',
-      value: 'voter_id',
+      value: 'voterId',
     },
     {
       id: 4,
@@ -102,6 +114,12 @@ export class RekycPersonalDetailsComponent implements OnInit {
       value: 'Pan',
     },
   ];
+  isFileLoading = signal({
+    identityProof: false,
+    addressProof: false,
+    photograph: false,
+    signature: false,
+  });
   @Output() formNavigation = new EventEmitter<string>();
 
   constructor(
@@ -120,27 +138,27 @@ export class RekycPersonalDetailsComponent implements OnInit {
         file: this.fb.group({
           name: [''],
           link: [''],
-          selectedType: 'driving_license',
+          selectedType: 'drivingLicense',
           isLoading: false,
         }),
         isRequired: this.fb.control(true),
       });
     });
 
-    groupObj['proofOfIdentity'] = this.fb.group({
+    groupObj['identityProof'] = this.fb.group({
       file: this.fb.group({
         name: [''],
         link: [''],
-        selectedType: 'driving_license',
+        selectedType: 'drivingLicense',
       }),
       isRequired: this.fb.control(true),
     });
 
-    groupObj['proofOfAddress'] = this.fb.group({
+    groupObj['addressProof'] = this.fb.group({
       file: this.fb.group({
         name: [''],
         link: [''],
-        selectedType: 'driving_license',
+        selectedType: 'drivingLicense',
       }),
       isRequired: this.fb.control(true),
     });
@@ -152,20 +170,30 @@ export class RekycPersonalDetailsComponent implements OnInit {
     return doc.type;
   }
 
-  get addressProofTypeControl(): FormControl<string> {
-    return this.form.get('addressProof.type') as FormControl<string>;
-  }
-
-  getSelectedAddressProof() {
-    const selectedType = this.form.get('addressProof.file.selectedType')?.value;
-    // eslint-disable-next-line no-console
-    console.log('selectedType', selectedType);
-  }
-
   get isFormValid(): boolean {
     return Object.keys(this.form.value).every((key) => {
       const link = this.form.get(`${key}.file.name`)?.value;
       return !!link;
+    });
+  }
+
+  isFileLoadingType(type: FileType): boolean {
+    return this.isFileLoading()[type];
+  }
+
+  updateErrorMessages() {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    Object.entries(this.form.controls).forEach(([key, control]) => {
+      if (control instanceof FormGroup) {
+        const isRequired = control.get('isRequired')?.value;
+        const nameControl = control.get('file.name');
+
+        if (isRequired && !nameControl?.value) {
+          nameControl?.setErrors({ required: true });
+        } else {
+          nameControl?.setErrors(null);
+        }
+      }
     });
   }
 
@@ -175,6 +203,7 @@ export class RekycPersonalDetailsComponent implements OnInit {
 
   onProofDocChange(doc: string, value: string) {
     this.form.get(`${doc}.file.selectedType`)?.setValue(value);
+    this.removeFile(doc);
   }
 
   onFileSelection(controlName: string, file: File): void {
@@ -197,25 +226,32 @@ export class RekycPersonalDetailsComponent implements OnInit {
     });
   }
 
+  setIsFileLoading(key: FileType, value: boolean) {
+    const obj = this.isFileLoading();
+    obj[key] = value;
+    this.isFileLoading.set(obj);
+  }
+
   uploadFileProof(type: string, file: File): void {
     if (!file || !type) return;
 
-    const formData = new FormData();
-    formData.append('docType', type);
-    formData.append('entityId', 'ebitaus-CUS1234567-09042025');
-    formData.append('ausId', 'ebitaus-CUS1234567-09042025-AUS3');
-    formData.append('file', file);
-
     const fileGroup = this.form.get(`${type}.file`) as FormGroup;
+
     if (!fileGroup) {
       // eslint-disable-next-line no-console
       console.warn(`No form group found for type: ${type}`);
       return;
     }
 
+    const formData = new FormData();
+    formData.append('entityId', 'ebitaus-CUS1234567-09042025');
+    formData.append('ausId', 'ebitaus-CUS1234567-09042025-AUS3');
+    formData.append('file', file);
+    formData.append('docType', type);
+    formData.append('selectedType', fileGroup.get('selectedType')?.value);
+
     fileGroup.patchValue({
       name: file.name,
-      link: file,
     });
 
     this.personalFormService.uploadProofDocument(formData as unknown as UploadFileProof).subscribe({
@@ -227,34 +263,38 @@ export class RekycPersonalDetailsComponent implements OnInit {
 
         const { status } = response;
 
-        const fileType =
-          type !== 'addressProof' ? type.toUpperCase() : this.helperService.toTitleCase(type);
+        const fileType = this.helperService.toTitleCase(type);
 
         if (status === ApiStatus.SUCCESS) {
+          const { data } = response as { data: UploadFileProofResponse };
+          fileGroup.get('name')?.setValue(data?.docName);
+          fileGroup.get('link')?.setValue(data?.storedPath);
           this.toast.success(`${fileType} uploaded successfully`);
         } else {
           this.toast.error(`Invalid document for ${fileType}`);
+          // fileGroup.patchValue({
+          // name: '',
+          // });
         }
       },
     });
   }
 
   submit(action: 'submit' | 'save' = 'submit'): void {
-    if (!this.isFormValid) {
-      this.toast.error('Something went wrong!');
-      // eslint-disable-next-line no-console
-      console.warn('Form is not valid');
-      return;
-    }
-
-    // eslint-disable-next-line no-console
-    console.log(this.form.value);
-
     if (action === 'submit') {
+      this.form.markAllAsTouched();
+      this.updateErrorMessages();
+
+      if (!this.isFormValid) {
+        // eslint-disable-next-line no-console
+        console.warn('Form is not valid');
+        return;
+      }
+
       this.toast.success('Form sumitted successfully!');
+      this.formNavigation.emit('next');
     } else {
       this.toast.info('Form saved successfully!');
     }
-    this.formNavigation.emit('next');
   }
 }
