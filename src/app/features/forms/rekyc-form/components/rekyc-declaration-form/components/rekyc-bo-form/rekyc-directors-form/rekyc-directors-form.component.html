@@ -40,12 +40,30 @@
               />
             </div>
           </div>
+
+          <div
+            *ngIf="directorsList.length === 0"
+            class="flex-center min-h-14 flex-1 border"
+          >
+            <p>You must add Directors</p>
+          </div>
         </div>
         <div
           class="flex w-[250px] items-center justify-center border border-l-0"
           *ngIf="isDirDetChanged()"
         >
-          <ui-upload-button accept=".pdf" label="Upload Form 32" />
+          <ui-upload-button
+            *ngIf="form32.name.length === 0"
+            accept=".pdf, .xlsx"
+            label="Upload Form 32"
+            (selectedFile)="onForm32Change($event)"
+          />
+
+          <ui-filename
+            *ngIf="form32.name.length > 0"
+            [fileName]="form32.name"
+            (removeFile)="removeForm32()"
+          />
         </div>
       </div>
     </div>
@@ -57,12 +75,12 @@
     <ui-button
       label="Save Draft"
       class="btn-outline"
-      (btnClick)="submit('save')"
+      (btnClick)="saveDraft()"
     />
     <ui-button
       type="submit"
       label="Next"
-      [disabled]="!isFormValid"
+      [disabled]="!isFormValid()"
       class="py-[7px]"
     />
     <!-- (btnClick)="tabNavigation()" -->

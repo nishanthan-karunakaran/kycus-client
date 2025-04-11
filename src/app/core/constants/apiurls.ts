@@ -21,7 +21,10 @@ export const API_URL = {
         ENTITY_DOCS_UPLOAD: '/kycus/rekyc/entityDocs/uploads',
       },
       DECLARATION_FORM: {
-        DIRECTORS: '/kycus/rekyc/declaration/directors',
+        DIRECTORS: {
+          DIRECTORS: '/kycus/rekyc/declaration/directors',
+          SAVE_DRAFT: '/kycus/rekyc/declaration/directors',
+        },
         BO: '/kycus/rekyc/declaration/beneficiaryOwner',
       },
       PERSONAL_FORM: {

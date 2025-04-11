@@ -8,13 +8,10 @@ import {
   signal,
   SimpleChanges,
 } from '@angular/core';
+import { ApiStatus } from '@core/constants/api.response';
 import { RekycDeclarationService } from '@features/forms/rekyc-form/components/rekyc-declaration-form/rekyc-declaration.service';
-import { AusInfo } from '@features/forms/rekyc-form/rekyc-form.model';
-
-interface Director {
-  name: string;
-  din: string;
-}
+import { AusInfo, Director, SaveDirectorsDraft } from '@features/forms/rekyc-form/rekyc-form.model';
+import { ToastService } from '@src/app/shared/ui/toast/toast.service';
 
 @Component({
   selector: 'rekyc-directors-form',
@@ -41,13 +38,17 @@ export class RekycDirectorsFormComponent implements OnInit, OnChanges {
   ];
   isDirDetChanged = signal(false);
   form32 = {
-    name: null,
-    link: null,
+    name: '',
+    link: '',
   };
   isForm32ModalOpen = signal(false);
   selectedDirDin: string | null = null;
+  isLoading = signal(false);
 
-  constructor(private declarationService: RekycDeclarationService) {}
+  constructor(
+    private declarationService: RekycDeclarationService,
+    private toast: ToastService,
+  ) {}
 
   ngOnInit(): void {
     this.fetchDirectors();
@@ -66,8 +67,29 @@ export class RekycDirectorsFormComponent implements OnInit, OnChanges {
     return dir.din;
   }
 
-  isFormValid() {
+  onForm32Change(file: File) {
+    if (!file) return;
+    // eslint-disable-next-line no-console
+    console.log(file.name);
+    this.form32.name = file.name;
+    this.form32.link = file.name;
+
+    // this.uploadFileProof(controlName, file);
+  }
+
+  isFormValid(): boolean {
+    if (this.directorsList.length === 0) return false;
+
+    if (this.isDirDetChanged()) {
+      return this.form32.name.length > 0 && this.form32.link.length > 0;
+    }
+
     return true;
+  }
+
+  removeForm32() {
+    this.form32.name = '';
+    this.form32.link = '';
   }
 
   handleForm32Modal() {
@@ -104,6 +126,33 @@ export class RekycDirectorsFormComponent implements OnInit, OnChanges {
         this.removeDirector();
       }
     }
+  }
+
+  saveDraft() {
+    const data = {
+      ausId: 'ebitaus-CUS1234567-09042025-AUS3',
+      directorsList: this.directorsList,
+    };
+    const formData = new FormData();
+    formData.append('form32', this.form32.name);
+    formData.append('data', JSON.stringify(data));
+
+    this.declarationService.saveDraft(formData as unknown as SaveDirectorsDraft).subscribe({
+      next: (result) => {
+        const { loading, response } = result;
+        this.isLoading.set(loading);
+
+        if (!response) return;
+
+        const { status } = response;
+
+        if (status === ApiStatus.SUCCESS) {
+          this.toast.success('Directors details saved successfully!');
+        } else {
+          this.toast.error(response.message || 'Something went wrong!');
+        }
+      },
+    });
   }
 
   submit(value: string) {

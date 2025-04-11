@@ -47,6 +47,19 @@ export interface UploadFileProof {
   ausId?: string;
 }
 
+export interface Director {
+  name: string;
+  din: string;
+}
+
+export interface SaveDirectorsDraft {
+  form32: File;
+  data: {
+    ausId: string;
+    directorsList: Director[];
+  };
+}
+
 export interface BoDetail {
   name: string;
   addressLine: string;
