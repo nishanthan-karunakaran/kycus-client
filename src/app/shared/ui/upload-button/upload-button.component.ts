@@ -15,13 +15,28 @@ import {
       class="flex items-center gap-1 border-2 border-dashed border-secondaryBlue bg-transparent px-3 py-2 text-xs focus:ring-0"
       [ngClass]="btnClass"
       (click)="fileInput.click()"
-      [disabled]="disabled"
+      [disabled]="disabled || loading"
     >
-      <lucide-icon name="cloud-upload" color="#4076C9" size="16" />
-      <span class="text-secondaryBlue">{{ label }}</span>
+      <ng-container *ngIf="!loading">
+        <lucide-icon name="cloud-upload" color="#4076C9" size="16" />
+        <span class="text-secondaryBlue">{{ label }}</span>
+      </ng-container>
+      <div *ngIf="loading" class="loader"></div>
     </button>
     <input #fileInput type="file" hidden (change)="handleChange($event)" [accept]="accept" />
   `,
+  styles: [
+    `
+      .loader {
+        @apply relative flex w-14 items-center justify-center px-3 py-2 text-transparent;
+      }
+
+      .loader::before {
+        content: '';
+        @apply absolute h-5 w-5 animate-spin rounded-full border-[3px] border-secondaryBlue border-t-transparent;
+      }
+    `,
+  ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class UploadButtonComponent implements OnChanges {
@@ -35,9 +50,9 @@ export class UploadButtonComponent implements OnChanges {
 
   btnClass = {};
 
+  // loader: this.loading,
   ngOnChanges() {
     this.btnClass = {
-      // loading: this.loading,
       [this.class]: !!this.class,
       ...this.ngClass,
     };

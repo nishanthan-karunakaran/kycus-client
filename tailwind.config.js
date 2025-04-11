@@ -43,6 +43,15 @@ export default {
         '2xl': '1536px',
         '3xl': '1920px',
       },
+      animation: {
+        'slow-spin': 'slow-spin 3s linear infinite',
+      },
+      keyframes: {
+        'slow-spin': {
+          from: { transform: 'rotate(0deg)' },
+          to: { transform: 'rotate(360deg)' },
+        },
+      },
     },
   },
   plugins: [forms, typography],

@@ -22,6 +22,8 @@ import {
   Info,
   Landmark,
   LaptopMinimalCheck,
+  Loader,
+  LoaderCircle,
   LucideAngularModule,
   Plus,
   Search,
@@ -99,6 +101,8 @@ import { UploadButtonComponent } from './ui/upload-button/upload-button.componen
       FileMinus,
       Trash2,
       Plus,
+      Loader,
+      LoaderCircle,
     }),
   ],
   exports: [

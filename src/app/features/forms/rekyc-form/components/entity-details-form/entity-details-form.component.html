@@ -33,15 +33,44 @@
           </span>
         </p>
         <ui-upload-button
+          *ngIf="!form.get('pan.file.name')?.value"
           accept=".pdf, .xlsx"
-          *ngIf="!form.get('pan.file.link')?.value"
+          [disabled]="form.value.pan.file.selectedType === ''"
           (selectedFile)="onFileSelection('pan', $event)"
         />
-        <ui-filename
-          *ngIf="form.get('pan.file.link')?.value"
-          [fileName]="form.get('pan.file.name')?.value"
-          (removeFile)="removeFile('pan')"
-        />
+
+        <div
+          *ngIf="form.get('pan.file.name')?.value"
+          class="flex items-center gap-2"
+        >
+          <ui-filename
+            *ngIf="form.get('pan.file.name')?.value"
+            [fileName]="form.get('pan.file.name')?.value"
+            (removeFile)="removeFile('pan')"
+          />
+          <lucide-icon
+            *ngIf="isFileLoadingType('pan')"
+            class="animate-slow-spin"
+            name="loader-circle"
+            color="#e67a4c"
+            size="20"
+          />
+          <lucide-icon
+            *ngIf="!isFileLoadingType('pan')"
+            name="check"
+            color="#219B17"
+          />
+        </div>
+
+        <p
+          class="text-sm text-red-500"
+          *ngIf="
+            form.get(['pan', 'file', 'name'])?.errors?.['required'] &&
+            form.get(['pan', 'file', 'name'])?.touched
+          "
+        >
+          PAN is required
+        </p>
       </ui-rekycform-uploadwrapper>
 
       <ui-rekycform-uploadwrapper>
@@ -56,16 +85,45 @@
         </p>
 
         <ui-upload-button
+          *ngIf="!form.get('gstin.file.name')?.value"
           accept=".pdf, .xlsx"
-          *ngIf="!form.get('gstin.file.link')?.value"
+          [disabled]="form.value.gstin.file.selectedType === ''"
+          [loading]="isFileLoadingType('gstin')"
           (selectedFile)="onFileSelection('gstin', $event)"
         />
 
-        <ui-filename
+        <div
           *ngIf="form.get('gstin.file.name')?.value"
-          [fileName]="form.get('gstin.file.name')?.value"
-          (removeFile)="removeFile('gstin')"
-        />
+          class="flex items-center gap-2"
+        >
+          <ui-filename
+            *ngIf="form.get('gstin.file.name')?.value"
+            [fileName]="form.get('gstin.file.name')?.value"
+            (removeFile)="removeFile('gstin')"
+          />
+          <lucide-icon
+            *ngIf="isFileLoadingType('gstin')"
+            class="animate-slow-spin"
+            name="loader-circle"
+            color="#e67a4c"
+            size="20"
+          />
+          <lucide-icon
+            *ngIf="!isFileLoadingType('gstin')"
+            name="check"
+            color="#219B17"
+          />
+        </div>
+
+        <p
+          class="text-sm text-red-500"
+          *ngIf="
+            form.get(['gstin', 'file', 'name'])?.errors?.['required'] &&
+            form.get(['gstin', 'file', 'name'])?.touched
+          "
+        >
+          GSTIN is required
+        </p>
       </ui-rekycform-uploadwrapper>
 
       <ui-rekycform-uploadwrapper>
@@ -90,15 +148,42 @@
           *ngIf="!form.get('addressProof.file.name')?.value"
           accept=".pdf, .xlsx"
           [disabled]="form.value.addressProof.file.selectedType === ''"
-          [loading]="form.value.addressProof.file.isLoading"
+          [loading]="isFileLoadingType('addressProof')"
           (selectedFile)="onFileSelection('addressProof', $event)"
         />
 
-        <ui-filename
+        <div
           *ngIf="form.get('addressProof.file.name')?.value"
-          [fileName]="form.get('addressProof.file.name')?.value"
-          (removeFile)="removeFile('addressProof')"
-        />
+          class="flex items-center gap-2"
+        >
+          <ui-filename
+            *ngIf="form.get('addressProof.file.name')?.value"
+            [fileName]="form.get('addressProof.file.name')?.value"
+            (removeFile)="removeFile('addressProof')"
+          />
+          <lucide-icon
+            *ngIf="isFileLoadingType('addressProof')"
+            class="animate-slow-spin"
+            name="loader-circle"
+            color="#e67a4c"
+            size="20"
+          />
+          <lucide-icon
+            *ngIf="!isFileLoadingType('addressProof')"
+            name="check"
+            color="#219B17"
+          />
+        </div>
+
+        <p
+          class="text-sm text-red-500"
+          *ngIf="
+            form.get(['addressProof', 'file', 'name'])?.errors?.['required'] &&
+            form.get(['addressProof', 'file', 'name'])?.touched
+          "
+        >
+          Address Proof is required
+        </p>
       </ui-rekycform-uploadwrapper>
     </div>
 
@@ -117,16 +202,45 @@
         </p>
 
         <ui-upload-button
+          *ngIf="!form.get('coi.file.name')?.value"
           accept=".pdf, .xlsx"
-          *ngIf="!form.get('coi.file.link')?.value"
+          [disabled]="form.value.coi.file.selectedType === ''"
+          [loading]="isFileLoadingType('coi')"
           (selectedFile)="onFileSelection('coi', $event)"
         />
 
-        <ui-filename
+        <div
           *ngIf="form.get('coi.file.name')?.value"
-          [fileName]="form.get('coi.file.name')?.value"
-          (removeFile)="removeFile('coi')"
-        />
+          class="flex items-center gap-2"
+        >
+          <ui-filename
+            *ngIf="form.get('coi.file.name')?.value"
+            [fileName]="form.get('coi.file.name')?.value"
+            (removeFile)="removeFile('coi')"
+          />
+          <lucide-icon
+            *ngIf="isFileLoadingType('coi')"
+            class="animate-slow-spin"
+            name="loader-circle"
+            color="#e67a4c"
+            size="20"
+          />
+          <lucide-icon
+            *ngIf="!isFileLoadingType('coi')"
+            name="check"
+            color="#219B17"
+          />
+        </div>
+
+        <p
+          class="text-sm text-red-500"
+          *ngIf="
+            form.get(['coi', 'file', 'name'])?.errors?.['required'] &&
+            form.get(['coi', 'file', 'name'])?.touched
+          "
+        >
+          COI is required
+        </p>
       </ui-rekycform-uploadwrapper>
 
       <ui-rekycform-uploadwrapper>
@@ -138,16 +252,45 @@
         </p>
 
         <ui-upload-button
+          *ngIf="!form.get('moa.file.name')?.value"
           accept=".pdf, .xlsx"
-          *ngIf="!form.get('moa.file.link')?.value"
+          [disabled]="form.value.moa.file.selectedType === ''"
+          [loading]="isFileLoadingType('moa')"
           (selectedFile)="onFileSelection('moa', $event)"
         />
 
-        <ui-filename
+        <div
           *ngIf="form.get('moa.file.name')?.value"
-          [fileName]="form.get('moa.file.name')?.value"
-          (removeFile)="removeFile('moa')"
-        />
+          class="flex items-center gap-2"
+        >
+          <ui-filename
+            *ngIf="form.get('moa.file.name')?.value"
+            [fileName]="form.get('moa.file.name')?.value"
+            (removeFile)="removeFile('moa')"
+          />
+          <lucide-icon
+            *ngIf="isFileLoadingType('moa')"
+            class="animate-slow-spin"
+            name="loader-circle"
+            color="#e67a4c"
+            size="20"
+          />
+          <lucide-icon
+            *ngIf="!isFileLoadingType('moa')"
+            name="check"
+            color="#219B17"
+          />
+        </div>
+
+        <p
+          class="text-sm text-red-500"
+          *ngIf="
+            form.get(['moa', 'file', 'name'])?.errors?.['required'] &&
+            form.get(['moa', 'file', 'name'])?.touched
+          "
+        >
+          MOA is required
+        </p>
       </ui-rekycform-uploadwrapper>
 
       <ui-rekycform-uploadwrapper>
@@ -159,16 +302,45 @@
         </p>
 
         <ui-upload-button
+          *ngIf="!form.get('aoa.file.name')?.value"
           accept=".pdf, .xlsx"
-          *ngIf="!form.get('aoa.file.link')?.value"
+          [disabled]="form.value.aoa.file.selectedType === ''"
+          [loading]="isFileLoadingType('aoa')"
           (selectedFile)="onFileSelection('aoa', $event)"
         />
 
-        <ui-filename
+        <div
           *ngIf="form.get('aoa.file.name')?.value"
-          [fileName]="form.get('aoa.file.name')?.value"
-          (removeFile)="removeFile('aoa')"
-        />
+          class="flex items-center gap-2"
+        >
+          <ui-filename
+            *ngIf="form.get('aoa.file.name')?.value"
+            [fileName]="form.get('aoa.file.name')?.value"
+            (removeFile)="removeFile('aoa')"
+          />
+          <lucide-icon
+            *ngIf="isFileLoadingType('aoa')"
+            class="animate-slow-spin"
+            name="loader-circle"
+            color="#e67a4c"
+            size="20"
+          />
+          <lucide-icon
+            *ngIf="!isFileLoadingType('aoa')"
+            name="check"
+            color="#219B17"
+          />
+        </div>
+
+        <p
+          class="text-sm text-red-500"
+          *ngIf="
+            form.get(['aoa', 'file', 'name'])?.errors?.['required'] &&
+            form.get(['aoa', 'file', 'name'])?.touched
+          "
+        >
+          AOA is required
+        </p>
       </ui-rekycform-uploadwrapper>
     </div>
 
@@ -180,12 +352,8 @@
         class="btn-outline"
         (btnClick)="submit('save')"
       />
-      <ui-button
-        type="submit"
-        label="Submit"
-        [disabled]="!isFormValid"
-        class="py-[7px]"
-      />
+      <ui-button type="submit" label="Submit" class="py-[7px]" />
     </div>
+    <!-- [disabled]="!isFormValid" -->
   </form>
 </div>

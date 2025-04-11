@@ -47,6 +47,11 @@ export interface UploadFileProof {
   ausId?: string;
 }
 
+export interface UploadFileProofResponse {
+  docName?: string;
+  storedPath?: string;
+}
+
 export interface Director {
   name: string;
   din: string;
