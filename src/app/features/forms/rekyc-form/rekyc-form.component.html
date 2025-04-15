@@ -1,16 +1,15 @@
-<ng-container *ngIf="!isAuthenticated">
+<ng-container *ngIf="!isAuthenticated()">
   <rekyc-email-validation
     class="h-full w-full flex-1"
     [token]="applicationToken"
-    (emailVerified)="onEmailVerified($event)"
   />
 </ng-container>
 
 <section
-  *ngIf="isAuthenticated"
+  *ngIf="isAuthenticated()"
   class="flex h-screen w-screen flex-col overflow-hidden"
 >
-  <rekyc-form-header class="w-full" [ausInfo]="ausInfo" />
+  <rekyc-form-header class="w-full" />
 
   <main class="flex flex-1 items-center justify-center bg-gray-100">
     <div
@@ -89,10 +88,7 @@
             class="w-full"
             (formNavigation)="onFormNavigation($event)"
           />
-          <rekyc-declaration-form
-            *ngSwitchCase="FormStep.DECLARATION"
-            [ausInfo]="ausInfo"
-          />
+          <rekyc-declaration-form *ngSwitchCase="FormStep.DECLARATION" />
           <rekyc-personal-details
             *ngSwitchCase="FormStep.PERSONAL_DETAILS"
             (formNavigation)="onFormNavigation($event)"

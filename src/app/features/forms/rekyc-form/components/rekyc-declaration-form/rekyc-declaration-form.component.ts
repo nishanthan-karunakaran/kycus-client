@@ -1,5 +1,7 @@
-import { ChangeDetectionStrategy, Component, Input, signal } from '@angular/core';
-import { AusInfo } from '@features/forms/rekyc-form/rekyc-form.model';
+import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { Store } from '@ngrx/store';
+import { selectAusInfo } from '../rekyc-personal-details/store/personal-details.selectors';
 
 type Screens = 'directors' | 'bo';
 
@@ -14,7 +16,6 @@ interface ScreenHeader {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class RekycDeclarationFormComponent {
-  @Input() ausInfo: AusInfo | null = null;
   currentScreen = signal<Screens>('directors');
   screenHeaders: ScreenHeader[] = [
     {
@@ -27,6 +28,9 @@ export class RekycDeclarationFormComponent {
     },
   ];
   addBtnTrigger = false;
+  ausInfo = toSignal(this.store.select(selectAusInfo));
+
+  constructor(private store: Store) {}
 
   trackScreenHeader(_index: number, screen: ScreenHeader) {
     return screen.value;

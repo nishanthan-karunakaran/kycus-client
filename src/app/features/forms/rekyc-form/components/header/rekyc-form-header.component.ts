@@ -1,5 +1,7 @@
-import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
-import { AusInfo } from '@features/forms/rekyc-form/rekyc-form.model';
+import { selectAusInfo } from './../rekyc-personal-details/store/personal-details.selectors';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { Store } from '@ngrx/store';
 
 @Component({
   selector: 'rekyc-form-header',
@@ -8,16 +10,17 @@ import { AusInfo } from '@features/forms/rekyc-form/rekyc-form.model';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class RekycFormHeaderComponent {
-  @Input() ausInfo: AusInfo | null = null;
+  readonly ausInfo = toSignal(this.store.select(selectAusInfo));
+
+  constructor(private store: Store) {}
 
   get getAusType() {
-    switch (this.ausInfo?.ausType) {
+    switch (this.ausInfo()?.ausType) {
       case 'aus':
-        return 'Authorized Signatory';
       case 'others':
         return 'Others';
       default:
-        return '';
+        return 'Authorized Signatory';
     }
   }
 }

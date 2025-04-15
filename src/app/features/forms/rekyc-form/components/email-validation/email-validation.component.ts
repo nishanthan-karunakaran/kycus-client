@@ -1,26 +1,24 @@
 import {
   ChangeDetectionStrategy,
   Component,
-  Input,
-  OnInit,
-  OnDestroy,
-  signal,
-  Output,
   EventEmitter,
+  Input,
+  OnDestroy,
+  OnInit,
+  Output,
+  signal,
 } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { VerifyOtpResponse } from '@features/forms/rekyc-form/rekyc-form.model';
+import { Store } from '@ngrx/store';
+import { interval, Subscription, takeWhile } from 'rxjs';
 import { ApiStatus } from 'src/app/core/constants/api.response';
 import { InputFormat } from 'src/app/core/directives/input-format.directive';
 import { ValidatorsService } from 'src/app/core/services/validators.service';
 import { ToastService } from 'src/app/shared/ui/toast/toast.service';
-import { EmailValidationService } from './email-validation.service';
-import { interval, Subscription, takeWhile } from 'rxjs';
-import { VerifyOtpResponse } from '@features/forms/rekyc-form/rekyc-form.model';
-import { Store } from '@ngrx/store';
 import { setEntityInfo } from '../entity-filledby/store/entity-info.actions';
-import { EntityInfoState } from '../entity-filledby/store/entity-info.reducer';
 import { setAusInfo } from '../rekyc-personal-details/store/personal-details.actions';
-import { AusInfoState } from '../rekyc-personal-details/store/personal-details.reducer';
+import { EmailValidationService } from './email-validation.service';
 
 @Component({
   selector: 'rekyc-email-validation',
@@ -106,24 +104,10 @@ export class RekycEmailValidationComponent implements OnInit, OnDestroy {
         const { status, message } = response;
 
         if (status === ApiStatus.SUCCESS) {
-          const data: VerifyOtpResponse = {
-            ausId: this.ausId,
-            ausName: 'Puneet Rajkumar',
-            ausType: 'aus',
-            filledBy: null,
-          };
-          const entityInfo: EntityInfoState = {
-            entityId: 'ebitaus-CUS1234567-09042025',
-            entityName: 'TATA Consumer Products',
-            entityFilledBy: null,
-          };
-          const ausInfo: AusInfoState = {
-            ausId: this.ausId,
-            ausName: 'Puneet Rajkumar',
-            ausType: 'aus',
-          };
-          this.store.dispatch(setEntityInfo(entityInfo));
-          this.store.dispatch(setAusInfo(ausInfo));
+          const { data } = response as { data: VerifyOtpResponse };
+          data.ausInfo.isAuthenticated = true; // update the authenticated status
+          this.store.dispatch(setEntityInfo(data.entityInfo));
+          this.store.dispatch(setAusInfo(data.ausInfo));
           this.toast.success('Email Verified!');
           this.isOTPSent.set(true);
           this.emailVerified.emit(data);

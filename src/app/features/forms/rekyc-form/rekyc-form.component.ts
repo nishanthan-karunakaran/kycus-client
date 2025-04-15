@@ -1,9 +1,16 @@
-import { ChangeDetectionStrategy, Component, DoCheck, OnInit, signal } from '@angular/core';
-import { AusInfo, FormPage, FormStep } from './rekyc-form.model';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  DoCheck,
+  OnInit,
+  signal,
+} from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute } from '@angular/router';
 import { Store } from '@ngrx/store';
-import { selectEntityInfo } from './components/entity-filledby/store/entity-info.selectors';
 import { selectAusInfo } from './components/rekyc-personal-details/store/personal-details.selectors';
+import { FormPage, FormStep } from './rekyc-form.model';
 
 @Component({
   selector: 'app-rekyc-form',
@@ -12,7 +19,7 @@ import { selectAusInfo } from './components/rekyc-personal-details/store/persona
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class RekycFormComponent implements OnInit, DoCheck {
-  currentForm = signal<FormStep>(FormStep.PERSONAL_DETAILS);
+  currentForm = signal<FormStep>(FormStep.ENTITY_DETAILS);
   formList: FormPage[] = [
     { label: 'Entity Details', step: FormStep.ENTITY_DETAILS, isCompleted: false, canShow: true },
     { label: 'Declaration', step: FormStep.DECLARATION, isCompleted: false, canShow: true },
@@ -33,9 +40,9 @@ export class RekycFormComponent implements OnInit, DoCheck {
     FormStep.KYC_FORM,
     FormStep.E_SIGN,
   ];
-  isAuthenticated = false;
   applicationToken: string | null = null;
-  ausInfo: AusInfo | null = null;
+  readonly ausInfo = toSignal(this.store.select(selectAusInfo));
+  readonly isAuthenticated = computed(() => this.ausInfo()?.isAuthenticated);
 
   constructor(
     private activatedRouter: ActivatedRoute,
@@ -45,14 +52,16 @@ export class RekycFormComponent implements OnInit, DoCheck {
   ngOnInit(): void {
     this.applicationToken = this.activatedRouter.snapshot.queryParamMap.get('token');
 
-    this.store
-      .select(selectEntityInfo)
-      // eslint-disable-next-line no-console
-      .subscribe((entityInfo) => console.log('entityInfo', entityInfo));
-    this.store
-      .select(selectAusInfo)
-      // eslint-disable-next-line no-console
-      .subscribe((ausInfo) => console.log('ausInfo', ausInfo));
+    // eslint-disable-next-line no-console
+    console.log('info', this.ausInfo());
+    // this.store
+    //   .select(selectEntityInfo)
+    //   // eslint-disable-next-line no-console
+    //   .subscribe((entityInfo) => console.log('entityInfo', entityInfo));
+    // this.store
+    //   .select(selectAusInfo)
+    //   // eslint-disable-next-line no-console
+    //   .subscribe((ausInfo) => console.log('ausInfo', ausInfo));
   }
 
   ngDoCheck(): void {
@@ -62,11 +71,6 @@ export class RekycFormComponent implements OnInit, DoCheck {
 
   trackStep(_index: number, step: FormPage) {
     return step.step;
-  }
-
-  onEmailVerified(event: AusInfo) {
-    this.ausInfo = event;
-    this.isAuthenticated = true;
   }
 
   setCurrentForm(item: FormPage) {

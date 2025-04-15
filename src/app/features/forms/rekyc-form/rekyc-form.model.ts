@@ -1,3 +1,6 @@
+import { EntityInfoState } from './components/entity-filledby/store/entity-info.reducer';
+import { AusInfoState } from './components/rekyc-personal-details/store/personal-details.reducer';
+
 export enum FormStep {
   ENTITY_DETAILS,
   DECLARATION,
@@ -15,22 +18,8 @@ export enum FormStep {
 // }
 
 export interface VerifyOtpResponse {
-  ausId: string;
-  ausName: string;
-  ausType: 'aus' | 'others';
-  filledBy: string | null;
-}
-
-export interface EntityInfo {
-  entityId: string;
-  entityName: string;
-  filledBy: string | null;
-}
-
-export interface AusInfo {
-  ausId: string;
-  ausName: string;
-  ausType: 'aus' | 'others';
+  entityInfo: EntityInfoState;
+  ausInfo: AusInfoState;
 }
 
 export interface FormPage {

@@ -8,9 +8,12 @@ import {
   signal,
   SimpleChanges,
 } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { ApiStatus } from '@core/constants/api.response';
 import { RekycDeclarationService } from '@features/forms/rekyc-form/components/rekyc-declaration-form/rekyc-declaration.service';
-import { AusInfo, Director, SaveDirectorsDraft } from '@features/forms/rekyc-form/rekyc-form.model';
+import { selectAusInfo } from '@features/forms/rekyc-form/components/rekyc-personal-details/store/personal-details.selectors';
+import { Director, SaveDirectorsDraft } from '@features/forms/rekyc-form/rekyc-form.model';
+import { Store } from '@ngrx/store';
 import { ToastService } from '@src/app/shared/ui/toast/toast.service';
 
 @Component({
@@ -18,7 +21,6 @@ import { ToastService } from '@src/app/shared/ui/toast/toast.service';
   templateUrl: './rekyc-directors-form.component.html',
 })
 export class RekycDirectorsFormComponent implements OnInit, OnChanges {
-  @Input() ausInfo: AusInfo | null = null;
   @Input({ required: true }) addBtnClicked = false;
   @Output() formNavigation = new EventEmitter<boolean>();
   @Output() updateAddBtnClicked = new EventEmitter<void>();
@@ -44,10 +46,12 @@ export class RekycDirectorsFormComponent implements OnInit, OnChanges {
   isForm32ModalOpen = signal(false);
   selectedDirDin: string | null = null;
   isLoading = signal(false);
+  readonly ausInfo = toSignal(this.store.select(selectAusInfo));
 
   constructor(
     private declarationService: RekycDeclarationService,
     private toast: ToastService,
+    private store: Store,
   ) {}
 
   ngOnInit(): void {
@@ -167,7 +171,7 @@ export class RekycDirectorsFormComponent implements OnInit, OnChanges {
 
   fetchDirectors() {
     const payload = {
-      ausId: this.ausInfo?.ausId || 'ebitaus-CUS1234567-09042025-AUS3',
+      ausId: this.ausInfo()?.ausId as string,
       flag: 'preview',
     };
 
