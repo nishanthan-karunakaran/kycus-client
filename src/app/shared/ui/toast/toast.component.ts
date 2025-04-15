@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { Toast } from 'src/app/shared/ui/toast/toast.service';
+import { Toast } from './toast.service';
 
 export const DEFAULT_TOAST_OPTIONS = {
   duration: 2000,
@@ -38,7 +38,7 @@ export class ToastComponent {
 
   removeToast(toast: Toast) {
     const index = this.toasts.findIndex((t) => t.id === toast.id);
-    if (index === -1) return; // if toast not found
+    if (index === -1) return;
 
     // Update animation class first
     this.toasts[index].animationClass = 'animate-toast-out';
@@ -59,11 +59,15 @@ export class ToastComponent {
       'bg-danger text-white': toast.type === 'danger' && !toast.options.outlined,
 
       // Outlined styles with dark text
-      'border border-success bg-successLight text-success': toast.type === 'success' && toast.options.outlined,
-      'border border-error bg-failureLight text-failure': toast.type === 'error' && toast.options.outlined,
-      'border border-warning bg-warningLight text-warning': toast.type === 'warning' && toast.options.outlined,
+      'border border-success bg-successLight text-success':
+        toast.type === 'success' && toast.options.outlined,
+      'border border-error bg-failureLight text-failure':
+        toast.type === 'error' && toast.options.outlined,
+      'border border-warning bg-warningLight text-warning':
+        toast.type === 'warning' && toast.options.outlined,
       'border border-info bg-infoLight text-info': toast.type === 'info' && toast.options.outlined,
-      'border border-danger bg-dangerLight text-danger': toast.type === 'danger' && toast.options.outlined,
+      'border border-danger bg-dangerLight text-danger':
+        toast.type === 'danger' && toast.options.outlined,
 
       'rounded-lg shadow-lg px-4 py-2': true,
       'grid grid-cols-[auto_1fr_auto] items-center gap-4': true,

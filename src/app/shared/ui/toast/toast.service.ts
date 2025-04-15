@@ -1,4 +1,11 @@
-import { ApplicationRef, ComponentFactoryResolver, ComponentRef, Injectable, Injector } from '@angular/core';
+import {
+  ApplicationRef,
+  ComponentRef,
+  EnvironmentInjector,
+  Injectable,
+  Injector,
+  createComponent,
+} from '@angular/core';
 import { ToastComponent } from './toast.component';
 
 export type ToastType = 'success' | 'error' | 'warning' | 'info' | 'danger';
@@ -18,34 +25,35 @@ export interface ToastOptions {
   autoClose?: boolean;
 }
 
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable({ providedIn: 'root' })
 export class ToastService {
-  private toastContainer?: ComponentRef<ToastComponent>;
+  private toastContainerRef?: ComponentRef<ToastComponent>;
 
   constructor(
     private injector: Injector,
     private appRef: ApplicationRef,
-    private resolver: ComponentFactoryResolver,
+    private environmentInjector: EnvironmentInjector,
   ) {}
 
+  private createToastContainer() {
+    const componentRef = createComponent(ToastComponent, {
+      environmentInjector: this.environmentInjector,
+    });
+    this.toastContainerRef = componentRef;
+
+    this.appRef.attachView(componentRef.hostView);
+    document.body.appendChild(componentRef.location.nativeElement);
+  }
+
   private ensureToastContainer() {
-    if (!this.toastContainer) {
-      const factory = this.resolver.resolveComponentFactory(ToastComponent);
-      this.toastContainer = factory.create(this.injector);
-      this.appRef.attachView(this.toastContainer.hostView);
-      document.body.appendChild(this.toastContainer.location.nativeElement);
+    if (!this.toastContainerRef) {
+      this.createToastContainer();
     }
   }
 
-  show(type: ToastType, message: string, options: ToastOptions) {
+  private show(type: ToastType, message: string, options: ToastOptions = {}) {
     this.ensureToastContainer();
-    this.toastContainer?.instance.addToast({
-      type,
-      message,
-      options,
-    });
+    this.toastContainerRef?.instance.addToast({ type, message, options });
   }
 
   success(message: string, options: ToastOptions = {}) {
