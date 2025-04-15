@@ -141,7 +141,7 @@
           [options]="entityAddressProofList"
           (valueChange)="onAddressProofChange($event)"
           placeholder="Choose Proof of Address"
-          [defaultValue]="'electricity_bill'"
+          [defaultValue]="form.value.addressProof.file.selectedType"
         ></ui-select>
 
         <ui-upload-button

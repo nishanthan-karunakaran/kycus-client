@@ -41,6 +41,8 @@ export interface UploadFileProofResponse {
   storedPath?: string;
 }
 
+export type EntityDetailsFileType = 'pan' | 'gstin' | 'addressProof' | 'coi' | 'moa' | 'aoa';
+
 export interface Director {
   name: string;
   din: string;

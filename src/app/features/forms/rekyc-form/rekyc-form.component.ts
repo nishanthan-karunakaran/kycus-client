@@ -1,14 +1,8 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  computed,
-  DoCheck,
-  OnInit,
-  signal,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, DoCheck, OnInit, signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute } from '@angular/router';
 import { Store } from '@ngrx/store';
+import { selectEntityDetails } from './components/entity-details-form/store/entity-details.selectors';
 import { selectAusInfo } from './components/rekyc-personal-details/store/personal-details.selectors';
 import { FormPage, FormStep } from './rekyc-form.model';
 
@@ -42,7 +36,9 @@ export class RekycFormComponent implements OnInit, DoCheck {
   ];
   applicationToken: string | null = null;
   readonly ausInfo = toSignal(this.store.select(selectAusInfo));
-  readonly isAuthenticated = computed(() => this.ausInfo()?.isAuthenticated);
+  readonly entityDetails = toSignal(this.store.select(selectEntityDetails));
+  // readonly isAuthenticated = computed(() => this.ausInfo()?.isAuthenticated);
+  readonly isAuthenticated = () => true;
 
   constructor(
     private activatedRouter: ActivatedRoute,
