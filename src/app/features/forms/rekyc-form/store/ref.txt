@@ -1,0 +1,73 @@
+entityInfo: {
+  entityId: '',
+  entityName: '',
+  entityFilledBy: '',
+}
+
+ausInfo: {
+  ausId: '',
+  ausName: '',
+  ausType: '',
+}
+
+entityDetailsForm: {
+  pan: {
+    name: '',
+    link: '',
+  },
+  gstin: {
+    name: '',
+    link: '',
+  },
+  addressProof: {
+    name: '',
+    link: '',
+  },
+  coi: {
+    name: '',
+    link: '',
+  },
+  moa: {
+    name: '',
+    link: '',
+  },
+  aoa: {
+    name: '',
+    link: '',
+  }
+}
+
+declarationForm: {
+  form32: {
+    name: '',
+    link: '',
+  },
+  directorsList: { name:'', din: '' }[],
+  boDetails: {
+    name: '',
+    addressLine: '',
+    city: '',
+    state: '',
+    country: '',
+    pincode: '',
+  }[],
+}
+
+personalDetailsForm: {
+  identityProof: {
+    name: '',
+    link: '',
+  },
+  addressProof: {
+    name: '',
+    link: '',
+  },
+  photograph: {
+    name: '',
+    link: '',
+  },
+  signature: {
+    name: '',
+    link: '',
+  },
+}

@@ -16,6 +16,11 @@ import { ToastService } from 'src/app/shared/ui/toast/toast.service';
 import { EmailValidationService } from './email-validation.service';
 import { interval, Subscription, takeWhile } from 'rxjs';
 import { VerifyOtpResponse } from '@features/forms/rekyc-form/rekyc-form.model';
+import { Store } from '@ngrx/store';
+import { setEntityInfo } from '../entity-filledby/store/entity-info.actions';
+import { EntityInfoState } from '../entity-filledby/store/entity-info.reducer';
+import { setAusInfo } from '../rekyc-personal-details/store/personal-details.actions';
+import { AusInfoState } from '../rekyc-personal-details/store/personal-details.reducer';
 
 @Component({
   selector: 'rekyc-email-validation',
@@ -45,6 +50,7 @@ export class RekycEmailValidationComponent implements OnInit, OnDestroy {
     private validatorsService: ValidatorsService,
     private emailValidationService: EmailValidationService,
     private toast: ToastService,
+    private store: Store,
   ) {}
 
   ngOnInit(): void {
@@ -106,6 +112,18 @@ export class RekycEmailValidationComponent implements OnInit, OnDestroy {
             ausType: 'aus',
             filledBy: null,
           };
+          const entityInfo: EntityInfoState = {
+            entityId: 'ebitaus-CUS1234567-09042025',
+            entityName: 'TATA Consumer Products',
+            entityFilledBy: null,
+          };
+          const ausInfo: AusInfoState = {
+            ausId: this.ausId,
+            ausName: 'Puneet Rajkumar',
+            ausType: 'aus',
+          };
+          this.store.dispatch(setEntityInfo(entityInfo));
+          this.store.dispatch(setAusInfo(ausInfo));
           this.toast.success('Email Verified!');
           this.isOTPSent.set(true);
           this.emailVerified.emit(data);

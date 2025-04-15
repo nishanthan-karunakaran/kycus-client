@@ -1,6 +1,9 @@
 import { ChangeDetectionStrategy, Component, DoCheck, OnInit, signal } from '@angular/core';
 import { AusInfo, FormPage, FormStep } from './rekyc-form.model';
 import { ActivatedRoute } from '@angular/router';
+import { Store } from '@ngrx/store';
+import { selectEntityInfo } from './components/entity-filledby/store/entity-info.selectors';
+import { selectAusInfo } from './components/rekyc-personal-details/store/personal-details.selectors';
 
 @Component({
   selector: 'app-rekyc-form',
@@ -30,14 +33,26 @@ export class RekycFormComponent implements OnInit, DoCheck {
     FormStep.KYC_FORM,
     FormStep.E_SIGN,
   ];
-  isAuthenticated = true;
+  isAuthenticated = false;
   applicationToken: string | null = null;
   ausInfo: AusInfo | null = null;
 
-  constructor(private activatedRouter: ActivatedRoute) {}
+  constructor(
+    private activatedRouter: ActivatedRoute,
+    private store: Store,
+  ) {}
 
   ngOnInit(): void {
     this.applicationToken = this.activatedRouter.snapshot.queryParamMap.get('token');
+
+    this.store
+      .select(selectEntityInfo)
+      // eslint-disable-next-line no-console
+      .subscribe((entityInfo) => console.log('entityInfo', entityInfo));
+    this.store
+      .select(selectAusInfo)
+      // eslint-disable-next-line no-console
+      .subscribe((ausInfo) => console.log('ausInfo', ausInfo));
   }
 
   ngDoCheck(): void {
