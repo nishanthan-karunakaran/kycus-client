@@ -1,5 +1,11 @@
 import { createReducer, on } from '@ngrx/store';
-import { setAusInfo } from './personal-details.actions';
+import {
+  setAusInfo,
+  setPersonalDetails,
+  updatePartialPersonalDetails,
+  updatePersonalDetails,
+} from './personal-details.actions';
+import { initialPersonalDetails } from './personal-details.state';
 
 export interface AusInfoState {
   ausId: null | string;
@@ -20,5 +26,25 @@ export const ausInfoReducer = createReducer(
   on(setAusInfo, (state, payload) => ({
     ...state,
     ...payload,
+  })),
+);
+
+export const personalDetailsReducer = createReducer(
+  initialPersonalDetails,
+  on(setPersonalDetails, (state, payload) => {
+    return { ...state, ...payload };
+  }),
+  on(updatePersonalDetails, (state, { key, data }) => {
+    return {
+      ...state,
+      [key]: {
+        ...state[key],
+        ...data,
+      },
+    };
+  }),
+  on(updatePartialPersonalDetails, (state, { partialData }) => ({
+    ...state,
+    ...partialData,
   })),
 );

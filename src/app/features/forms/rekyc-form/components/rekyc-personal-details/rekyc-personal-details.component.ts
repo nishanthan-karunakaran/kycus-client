@@ -2,6 +2,7 @@ import {
   ChangeDetectionStrategy,
   Component,
   EventEmitter,
+  OnDestroy,
   OnInit,
   Output,
   signal,
@@ -15,6 +16,11 @@ import {
 } from '@features/forms/rekyc-form/rekyc-form.model';
 import { ToastService } from '@src/app/shared/ui/toast/toast.service';
 import { RekycPersonalFormService } from './rekyc-personal.service';
+import { selectPersonalDetails } from './store/personal-details.selectors';
+import { Store } from '@ngrx/store';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { PersonalDetails } from './store/personal-details.state';
+import { updatePartialPersonalDetails } from './store/personal-details.actions';
 
 interface Doc {
   label: string;
@@ -30,46 +36,8 @@ type FileType = 'identityProof' | 'addressProof' | 'photograph' | 'signature';
   templateUrl: './rekyc-personal-details.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class RekycPersonalDetailsComponent implements OnInit {
+export class RekycPersonalDetailsComponent implements OnInit, OnDestroy {
   form!: FormGroup;
-  entityDocs: Doc[] = [
-    {
-      label: 'Select Proof of Identity',
-      type: 'identityProof',
-      file: {
-        name: null,
-        link: null,
-      },
-      isRequired: true,
-    },
-    {
-      label: 'Select Proof of Address',
-      type: 'proofOfAddress',
-      file: {
-        name: null,
-        link: null,
-      },
-      isRequired: true,
-    },
-    {
-      label: 'Upload Photograph',
-      type: 'photograph',
-      file: {
-        name: null,
-        link: null,
-      },
-      isRequired: true,
-    },
-    {
-      label: 'Upload Specimen Signature',
-      type: 'signature',
-      file: {
-        name: null,
-        link: null,
-      },
-      isRequired: true,
-    },
-  ];
   identityProofList = [
     {
       id: 1,
@@ -121,44 +89,53 @@ export class RekycPersonalDetailsComponent implements OnInit {
     signature: false,
   });
   @Output() formNavigation = new EventEmitter<string>();
+  personalDetails = toSignal(this.store.select(selectPersonalDetails));
 
   constructor(
     private fb: FormBuilder,
     private personalFormService: RekycPersonalFormService,
     private helperService: HelperService,
     private toast: ToastService,
+    private store: Store,
   ) {}
+
   ngOnInit(): void {
-    const documentKeys = ['photograph', 'signature'];
+    const personalDetails = this.personalDetails?.();
+
+    if (!personalDetails) {
+      // eslint-disable-next-line no-console
+      console.error('Entity details are not available.');
+      return;
+    }
+
+    const documentKeys: Array<keyof PersonalDetails> = [
+      'identityProof',
+      'addressProof',
+      'photograph',
+      'signature',
+    ];
 
     const groupObj: Record<string, FormGroup> = {};
 
     documentKeys.forEach((key) => {
       groupObj[key] = this.fb.group({
         file: this.fb.group({
-          name: [''],
-          link: [''],
-          selectedType: 'drivingLicense',
-          isLoading: false,
+          name: [personalDetails[key]?.file?.name || ''],
+          link: [personalDetails[key]?.file?.link || ''],
+          isLoading: [false],
         }),
-        isRequired: this.fb.control(true),
+        isRequired: this.fb.control(
+          personalDetails[key]?.isRequired !== undefined ? personalDetails[key].isRequired : false,
+        ),
       });
-    });
-
-    groupObj['identityProof'] = this.fb.group({
-      file: this.fb.group({
-        name: [''],
-        link: [''],
-        selectedType: 'drivingLicense',
-      }),
-      isRequired: this.fb.control(true),
     });
 
     groupObj['addressProof'] = this.fb.group({
       file: this.fb.group({
-        name: [''],
-        link: [''],
-        selectedType: 'drivingLicense',
+        name: [personalDetails.addressProof?.file?.name],
+        link: [personalDetails.addressProof?.file?.link],
+        selectedType: [personalDetails.addressProof?.file?.selectedType],
+        isLoading: [false],
       }),
       isRequired: this.fb.control(true),
     });
@@ -296,5 +273,9 @@ export class RekycPersonalDetailsComponent implements OnInit {
     } else {
       this.toast.info('Form saved successfully!');
     }
+  }
+
+  ngOnDestroy(): void {
+    this.store.dispatch(updatePartialPersonalDetails({ partialData: this.form.value }));
   }
 }

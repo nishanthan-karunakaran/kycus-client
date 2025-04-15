@@ -6,3 +6,8 @@ export const selectAusInfo = createSelector(
   selectRekycFormState,
   (state: ReKYCFormState) => state.ausInfo,
 );
+
+export const selectPersonalDetails = createSelector(
+  selectRekycFormState,
+  (state: ReKYCFormState) => state.personalDetails,
+);

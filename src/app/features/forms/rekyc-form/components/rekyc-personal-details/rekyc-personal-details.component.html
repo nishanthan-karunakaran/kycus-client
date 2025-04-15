@@ -45,6 +45,7 @@
           [options]="identityProofList"
           (valueChange)="onProofDocChange('identityProof', $event)"
           placeholder="Choose Proof of Identity"
+          [defaultValue]="form.value.identityProof.file.selectedType"
         ></ui-select>
 
         <ui-upload-button
@@ -109,6 +110,7 @@
           [options]="addressProofList"
           (valueChange)="onProofDocChange('addressProof', $event)"
           placeholder="Choose Proof of Address"
+          [defaultValue]="form.value.addressProof.file.selectedType"
         ></ui-select>
 
         <ui-upload-button
