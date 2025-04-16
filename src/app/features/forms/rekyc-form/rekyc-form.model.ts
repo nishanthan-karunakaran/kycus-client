@@ -1,4 +1,5 @@
 import { EntityInfoState } from './components/entity-filledby/store/entity-info.reducer';
+import { Director } from './components/rekyc-declaration-form/components/rekyc-bo-form/rekyc-directors-form/store/declaration-directors.state';
 import { AusInfoState } from './components/rekyc-personal-details/store/personal-details.reducer';
 
 export enum FormStep {
@@ -42,11 +43,6 @@ export interface UploadFileProofResponse {
 }
 
 export type EntityDetailsFileType = 'pan' | 'gstin' | 'addressProof' | 'coi' | 'moa' | 'aoa';
-
-export interface Director {
-  name: string;
-  din: string;
-}
 
 export interface SaveDirectorsDraft {
   form32: File;

@@ -11,7 +11,7 @@
         <p class="w-[30%]">Director Name</p>
         <p class="flex-1 text-left">DIN Number</p>
         <p class="w-[50px]"></p>
-        <p class="w-[250px] pl-8" *ngIf="isDirDetChanged()">
+        <p class="w-[250px] pl-8" *ngIf="isDirectorModified$()">
           Form 32
           <span class="text-red-500">*</span>
         </p>
@@ -19,14 +19,14 @@
       <div class="flex">
         <div class="flex-1">
           <div
-            *ngFor="let dir of directorsList; trackBy: trackDir"
+            *ngFor="let dir of directorsList(); trackBy: trackDir"
             class="flex flex-1 border"
           >
             <div class="flex min-h-14 w-[30%] items-center border-r px-2">
-              {{ dir.name }}
+              <p>{{ dir.directorName }}</p>
             </div>
             <div class="flex min-h-14 flex-1 items-center border-r px-2">
-              {{ dir.din }}
+              <p>{{ dir.din }}</p>
             </div>
             <div
               class="flex min-h-14 w-[50px] items-center justify-center px-2"
@@ -42,7 +42,7 @@
           </div>
 
           <div
-            *ngIf="directorsList.length === 0"
+            *ngIf="directorsList().length === 0"
             class="flex-center min-h-14 flex-1 border"
           >
             <p>You must add Directors</p>
@@ -50,7 +50,7 @@
         </div>
         <div
           class="flex w-[250px] items-center justify-center border border-l-0"
-          *ngIf="isDirDetChanged()"
+          *ngIf="isDirectorModified$()"
         >
           <ui-upload-button
             *ngIf="form32.name.length === 0"

@@ -12,9 +12,15 @@ import { toSignal } from '@angular/core/rxjs-interop';
 import { ApiStatus } from '@core/constants/api.response';
 import { RekycDeclarationService } from '@features/forms/rekyc-form/components/rekyc-declaration-form/rekyc-declaration.service';
 import { selectAusInfo } from '@features/forms/rekyc-form/components/rekyc-personal-details/store/personal-details.selectors';
-import { Director, SaveDirectorsDraft } from '@features/forms/rekyc-form/rekyc-form.model';
+import { SaveDirectorsDraft } from '@features/forms/rekyc-form/rekyc-form.model';
 import { Store } from '@ngrx/store';
 import { ToastService } from '@src/app/shared/ui/toast/toast.service';
+import { updatePartialDirectors } from './store/declaration-directors.actions';
+import {
+  selectDeclarationDirectors,
+  selectDeclarationIsDirectorsModified,
+} from './store/declaration-directors.selectors';
+import { Director } from './store/declaration-directors.state';
 
 @Component({
   selector: 'rekyc-directors-form',
@@ -24,21 +30,20 @@ export class RekycDirectorsFormComponent implements OnInit, OnChanges {
   @Input({ required: true }) addBtnClicked = false;
   @Output() formNavigation = new EventEmitter<boolean>();
   @Output() updateAddBtnClicked = new EventEmitter<void>();
-  directorsList: Director[] = [
+  directorsList = signal<Director[]>([
     {
-      name: 'Abishek Yadav',
+      directorName: 'Abishek Yadav',
       din: '43928237',
     },
     {
-      name: 'Narayana Kumar',
+      directorName: 'Narayana Kumar',
       din: '32379523',
     },
     {
-      name: 'Chittesh Sarav',
+      directorName: 'Chittesh Sarav',
       din: '642749',
     },
-  ];
-  isDirDetChanged = signal(false);
+  ]);
   form32 = {
     name: '',
     link: '',
@@ -47,6 +52,8 @@ export class RekycDirectorsFormComponent implements OnInit, OnChanges {
   selectedDirDin: string | null = null;
   isLoading = signal(false);
   readonly ausInfo = toSignal(this.store.select(selectAusInfo));
+  readonly directors$ = toSignal(this.store.select(selectDeclarationDirectors));
+  readonly isDirectorModified$ = toSignal(this.store.select(selectDeclarationIsDirectorsModified));
 
   constructor(
     private declarationService: RekycDeclarationService,
@@ -56,6 +63,8 @@ export class RekycDirectorsFormComponent implements OnInit, OnChanges {
 
   ngOnInit(): void {
     this.fetchDirectors();
+    // eslint-disable-next-line no-console
+    console.log('directors', this.directors$());
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -84,7 +93,7 @@ export class RekycDirectorsFormComponent implements OnInit, OnChanges {
   isFormValid(): boolean {
     if (this.directorsList.length === 0) return false;
 
-    if (this.isDirDetChanged()) {
+    if (this.isDirectorModified$()) {
       return this.form32.name.length > 0 && this.form32.link.length > 0;
     }
 
@@ -108,13 +117,13 @@ export class RekycDirectorsFormComponent implements OnInit, OnChanges {
 
   removeDirector() {
     if (this.selectedDirDin) {
-      this.directorsList = this.directorsList.filter((e) => e.din !== this.selectedDirDin);
-      this.isDirDetChanged.set(true);
+      this.directorsList.set(this.directorsList().filter((e) => e.din !== this.selectedDirDin));
+      this.store.dispatch(updatePartialDirectors({ isDirectorModified: true }));
     }
   }
 
   addDirector() {
-    this.isDirDetChanged.set(true);
+    this.store.dispatch(updatePartialDirectors({ isDirectorModified: true }));
   }
 
   decideDirChange(action: 'continue' | 'cancel') {
@@ -134,7 +143,7 @@ export class RekycDirectorsFormComponent implements OnInit, OnChanges {
 
   saveDraft() {
     const data = {
-      ausId: 'ebitaus-CUS1234567-09042025-AUS3',
+      ausId: this.ausInfo()?.ausId as string,
       directorsList: this.directorsList,
     };
     const formData = new FormData();
@@ -153,6 +162,7 @@ export class RekycDirectorsFormComponent implements OnInit, OnChanges {
 
         if (status === ApiStatus.SUCCESS) {
           this.toast.success('Directors details saved successfully!');
+          this.store.dispatch(updatePartialDirectors({ directorList: this.directorsList() }));
         } else {
           this.toast.error(response.message || 'Something went wrong!');
         }
@@ -175,6 +185,25 @@ export class RekycDirectorsFormComponent implements OnInit, OnChanges {
       flag: 'preview',
     };
 
-    this.declarationService.getDirectorsList(payload).subscribe();
+    this.declarationService.getDirectorsList(payload).subscribe({
+      next: (result) => {
+        const { response } = result;
+
+        if (!response) return;
+
+        const { status } = response;
+
+        if (status === ApiStatus.SUCCESS) {
+          const { data } = response as { data: Director[] };
+          const updatedDir = [...this.directorsList(), ...data];
+          this.directorsList.set(updatedDir);
+          this.store.dispatch(
+            updatePartialDirectors({
+              directorList: [...this.directorsList(), ...data],
+            }),
+          );
+        }
+      },
+    });
   }
 }

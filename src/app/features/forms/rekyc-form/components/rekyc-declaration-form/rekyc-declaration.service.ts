@@ -10,7 +10,10 @@ export class RekycDeclarationService {
   constructor(private api: ApiService) {}
 
   getDirectorsList(payload: { ausId: string; flag: string }) {
-    return this.api.post(`${API_URL.APPLICATION.REKYC.DECLARATION_FORM.DIRECTORS}`, payload);
+    return this.api.post(
+      `${API_URL.APPLICATION.REKYC.DECLARATION_FORM.DIRECTORS.DIRECTORS}`,
+      payload,
+    );
   }
 
   saveDraft(data: SaveDirectorsDraft) {
