@@ -1,0 +1,436 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>REKYC FORM</title>
+    <link rel="stylesheet" href="./rekyc.css" />
+    <link rel="stylesheet" href="./var.css" />
+  </head>
+
+  <body>
+    <div class="pdf-page">
+      <!-- Header -->
+      <section id="form-header">
+        <div class="logo_wrapper">
+          <img src="../../images/logo/hdfc.webp" alt="HDFC" />
+        </div>
+
+        <div class="header_text">
+          <h4>CUSTOMER UPDATION FORM</h4>
+          <h4>FOR RE KYC-NON-INDIVIDUALS</h4>
+          <p>{All fields with * are mandatory}</p>
+        </div>
+
+        <div class="barcode flex-center">
+          <p>Bar Code</p>
+        </div>
+      </section>
+
+      <!-- Entity Basic Information -->
+      <section id="entity-basic-information" class="form-section">
+        <div class="form-row">
+          <div class="form-container">
+            <label for="entityCustId">
+              CUSTOMER
+              <br />
+              <span class="text-nowrap">ID OF ENTITY</span>
+            </label>
+            <input type="text" id="entityCustId" />
+          </div>
+          <div class="form-container">
+            <label for="date">Date</label>
+            <input type="text" />
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-container">
+            <label for="propKartaCustId">
+              <span class="text-nowrap">CUSTOMER ID OF</span>
+              <br />
+              <span class="text-nowrap">Properitor/ Karta</span>
+            </label>
+            <input type="text" id="propKartaCustId" />
+          </div>
+          <div class="form-container">
+            <label for="propKartaCustId">
+              <span class="text-nowrap">CUSTOMER ID OF</span>
+              <br />
+              <span class="text-nowrap">Properitor/ Karta</span>
+            </label>
+            <input type="text" id="propKartaCustId" />
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-container">
+            <label for="propKartaCustName">
+              <span class="text-nowrap">CUSTOMER NAME</span>
+              <br />
+              <span class="text-nowrap">Prefix (Mr./miss/mrs.)</span>
+            </label>
+            <input type="text" id="propKartaCustName" />
+          </div>
+          <div class="form-container">
+            <label for="propKartaName">
+              <span class="text-nowrap">Name OF</span>
+              <br />
+              <span class="text-nowrap">Properitor/ Karta</span>
+            </label>
+            <input type="text" id="propKartaName" />
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-container">
+            <label for="entityName" class="text-nowrap">NAME OF ENTITY</label>
+            <input type="text" id="entityName" />
+          </div>
+          <div class="form-container" class="text-nowrap">
+            <label for="entityName" class="text-nowrap">PAN OF ENTITY</label>
+            <input type="text" id="entityPAN" />
+          </div>
+        </div>
+      </section>
+
+      <!-- Entity Mailing Address 1 -->
+      <section id="entity-mailing-address" class="form-section">
+        <p class="text-black">*MAILING ADDRESS & CONTACT</p>
+
+        <div class="checkbox_container">
+          <div class="checkbox_wrapper">
+            <input
+              type="checkbox"
+              name="noChangeInEmailAddress"
+              id="noChangeInEmailAddress"
+            />
+            <div>
+              <p class="text-nowrap">
+                There is no changes in our mail address.
+              </p>
+              <p class="text-nowrap">(Note: Address proof to be provided)</p>
+            </div>
+          </div>
+          <div class="checkbox_wrapper">
+            <input
+              type="checkbox"
+              name="noChangeInEmailAddress"
+              id="noChangeInEmailAddress"
+            />
+            <div>
+              <p class="text-nowrap">
+                I/Wish to change my/our mailing address/contact details as
+                below.
+              </p>
+              <p class="text-nowrap">
+                (Note: Address proof to be provided for address change)
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-row shopBidg">
+          <label for="shopBidg" class="text-nowrap">*Shop no / Bidg name</label>
+          <input type="text" id="shopBidg" />
+        </div>
+
+        <div class="form-row roadName">
+          <label for="roadName" class="text-nowrap">*Road Name</label>
+          <input type="text" id="roadName" />
+        </div>
+
+        <div class="form-row landmark">
+          <label for="landmark" class="">*Landmark</label>
+          <input type="text" id="landmark" />
+        </div>
+
+        <div class="form-row city_pincode">
+          <div class="city">
+            <label for="city">*City</label>
+            <input type="text" id="city" />
+          </div>
+          <div class="pincode">
+            <label for="pincode">*Pincode</label>
+            <input type=" text" id="pincode" />
+          </div>
+        </div>
+
+        <div class="form-row state_country">
+          <div class="state">
+            <label for="state" class="w-[30%]">*State</label>
+            <input type="text" id="state" />
+          </div>
+          <div class="country">
+            <label for="country">*Country</label>
+            <input type=" text" id="country" />
+          </div>
+        </div>
+
+        <div class="form-row tel_ext_fax">
+          <div class="tel flex">
+            <div class="tel_container">
+              <label for="telOff" class="text-nowrap">*Tel (Off)</label>
+              <input type="text" id="telOff" />
+            </div>
+
+            <div class="ext flex">
+              <label for="extNo" class="text-nowrap">*Extension No</label>
+              <input type="text" id="extNo" />
+            </div>
+
+            <div class="fax flex">
+              <label for="faxNo" class="text-nowrap">*Fax No</label>
+              <input type="text" id="faxNo" />
+            </div>
+          </div>
+        </div>
+
+        <div class="form-row telR">
+          <label for="telR" class="text-nowrap">*Tel (R)</label>
+          <input type="text" id="telR" />
+        </div>
+
+        <div class="form-row mobNo">
+          <label for="mobNo" class="text-nowrap">*Mobile No</label>
+          <input type="text" id="mobNo" />
+        </div>
+
+        <div class="form-row emailID">
+          <label for="emailID" class="text-nowrap">*E-Mail ID</label>
+          <input type="text" id emailID />
+        </div>
+      </section>
+
+      <!-- Entity Mailing Address 2 -->
+      <section id="entity-contact-address" class="form-section">
+        <div class="form-row section_header">
+          <p class="text-black">*MAILING ADDRESS & CONTACT</p>
+          <div class="checkbox_container">
+            <input
+              type="checkbox"
+              name="noChangeInEmailAddress"
+              id="noChangeInEmailAddress"
+            />
+            <div>
+              <p class="text-nowrap">
+                Please tick in case of registered address is same as mailing
+                address
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-row shopBidg">
+          <label for="shopBidg" class="text-nowrap">*Shop no / Bidg name</label>
+          <input type="text" id="shopBidg" />
+        </div>
+
+        <div class="form-row roadName">
+          <label for="roadName" class="text-nowrap">*Road Name</label>
+          <input type="text" id="roadName" />
+        </div>
+
+        <div class="form-row landmark">
+          <label for="landmark" class="">*Landmark</label>
+          <input type="text" id="landmark" />
+        </div>
+
+        <div class="form-row city_pincode">
+          <div class="city">
+            <label for="city">*City</label>
+            <input type="text" id="city" />
+          </div>
+          <div class="pincode">
+            <label for="pincode">*Pincode</label>
+            <input type=" text" id="pincode" />
+          </div>
+        </div>
+
+        <div class="form-row state_country">
+          <div class="state">
+            <label for="state" class="w-[30%]">*State</label>
+            <input type="text" id="state" />
+          </div>
+          <div class="country">
+            <label for="country">*Country</label>
+            <input type=" text" id="country" />
+          </div>
+        </div>
+
+        <div class="form-row regAddressType">
+          <label for="emailID" class="text-nowrap">
+            *Registered Address Type
+          </label>
+          <div class="checkbox_wrapper">
+            <div class="checkbox_container">
+              <input type="checkbox" name="owned" id="owned" />
+              <div>
+                <p class="text-nowrap">Owned</p>
+              </div>
+            </div>
+
+            <div class="checkbox_container">
+              <input type="checkbox" name="rentedLeased" id="rentedLeased" />
+              <div>
+                <p class="text-nowrap">Rented / Leased</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Type of Entity -->
+      <section id="entity-type" class="form-section">
+        <p class="text-black">
+          *Business details (please tick on the appropriate sub category against
+          the type of entity)
+        </p>
+        <p class="text-black">Type of Entity :-</p>
+
+        <div class="checkbox_container">
+          <div class="checkbox_wrapper">
+            <input type="checkbox" name="proprietorship" id="proprietorship" />
+            <div>
+              <p class="text-nowrap">Proprietorship</p>
+            </div>
+          </div>
+
+          <div class="checkbox_wrapper">
+            <input type="checkbox" name="partnership" id="partnership" />
+            <div>
+              <p class="text-nowrap">Partnership</p>
+            </div>
+          </div>
+
+          <div class="checkbox_wrapper">
+            <input
+              type="checkbox"
+              name="limitedLiabilityPartnership"
+              id="limitedLiabilityPartnership"
+            />
+            <div>
+              <p class="text-nowrap">Limited Liability Partnership</p>
+            </div>
+          </div>
+
+          <div class="checkbox_wrapper">
+            <input
+              type="checkbox"
+              name="publicPrivateOnePersonCompany"
+              id="publicPrivateOnePersonCompany"
+            />
+            <div>
+              <p class="text-nowrap">Public / Private / One Person Company</p>
+            </div>
+          </div>
+
+          <div class="checkbox_wrapper">
+            <input type="checkbox" name="huf" id="huf" />
+            <div>
+              <p class="text-nowrap">HUF</p>
+            </div>
+          </div>
+
+          <div class="checkbox_wrapper">
+            <input type="checkbox" name="government" id="government" />
+            <div>
+              <p class="text-nowrap">Government</p>
+            </div>
+          </div>
+
+          <div class="checkbox_wrapper">
+            <input type="checkbox" name="bank" id="bank" />
+            <div>
+              <p class="text-nowrap">Bank</p>
+            </div>
+          </div>
+
+          <div class="checkbox_wrapper">
+            <input type="checkbox" name="socities" id="socities" />
+            <div>
+              <p class="text-nowrap">Socities</p>
+            </div>
+          </div>
+
+          <div class="checkbox_wrapper">
+            <input type="checkbox" name="insurance" id="insurance" />
+            <div>
+              <p class="text-nowrap">Insurance</p>
+            </div>
+          </div>
+
+          <div class="checkbox_wrapper">
+            <input
+              type="checkbox"
+              name="selfHelpedGroup"
+              id="selfHelpedGroup"
+            />
+            <div>
+              <p class="text-nowrap">Self Helped Group</p>
+            </div>
+          </div>
+
+          <div class="checkbox_wrapper">
+            <input type="checkbox" name="foreignBodies" id="foreignBodies" />
+            <div>
+              <p class="text-nowrap">Foreign Bodies</p>
+            </div>
+          </div>
+
+          <div class="checkbox_wrapper">
+            <input type="checkbox" name="clubs" id="clubs" />
+            <div>
+              <p class="text-nowrap">Clubs</p>
+            </div>
+          </div>
+
+          <div class="checkbox_wrapper">
+            <input type="checkbox" name="nonGovOrg" id="nonGovOrg" />
+            <div>
+              <p class="text-nowrap">Non-Government Organization</p>
+            </div>
+          </div>
+
+          <div class="checkbox_wrapper">
+            <input type="checkbox" name="mutualFund" id="mutualFund" />
+            <div>
+              <p class="text-nowrap">Mutual Fund</p>
+            </div>
+          </div>
+
+          <div class="checkbox_wrapper">
+            <input type="checkbox" name="association" id="association" />
+            <div>
+              <p class="text-nowrap">Association</p>
+            </div>
+          </div>
+
+          <div class="checkbox_wrapper">
+            <input type="checkbox" name="trust" id="trust" />
+            <div>
+              <p class="text-nowrap">Trust</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Sub Category of Entity -->
+      <section id="entity-sub-category" class="form-section">
+        <p class="text-black">Sub Category of Entity :-</p>
+        <div class="entity_sub_category_container">
+          <div class="entity_sub_category_wrapper">
+            <div>pub</div>
+            <div>association</div>
+          </div>
+          <div class="entity_sub_category_wrapper">Government</div>
+          <div class="entity_sub_category_wrapper">Foreign Bodies</div>
+          <div class="entity_sub_category_wrapper">Trust</div>
+          <div class="entity_sub_category_wrapper">
+            <div>Bank</div>
+            <div>Socities</div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </body>
+</html>

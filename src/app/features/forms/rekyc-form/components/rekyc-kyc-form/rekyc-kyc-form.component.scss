@@ -5,7 +5,7 @@
   padding: 0.5rem 0;
   border-bottom: 2px solid #99a1af;
   font-weight: 600;
-  font-size: small !important;
+  font-size: smaller !important;
   color: #4b4b4d;
 
   input:not(input[type='checkbox']) {
@@ -48,4 +48,10 @@ label {
   width: 50%;
   display: flex;
   align-items: center;
+}
+
+.entity-sub-category-container {
+  display: flex;
+  border: 1px solid;
+  border-collapse: collapse;
 }

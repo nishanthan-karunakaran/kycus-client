@@ -1,4 +1,5 @@
 import { Component, ElementRef, AfterViewInit, ViewChild, ViewEncapsulation } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'rekyc-kyc-form',
@@ -7,120 +8,41 @@ import { Component, ElementRef, AfterViewInit, ViewChild, ViewEncapsulation } fr
   encapsulation: ViewEncapsulation.None,
 })
 export class RekycKycFormComponent implements AfterViewInit {
-  @ViewChild('pdfContent', { static: false }) pdfContent!: ElementRef;
-  @ViewChild('pdfViewer', { static: false }) pdfViewer!: ElementRef;
+  @ViewChild('pdfViewer', { static: false }) pdfViewer!: ElementRef<HTMLIFrameElement>;
+
+  constructor(private http: HttpClient) {}
 
   ngAfterViewInit(): void {
-    this.renderPdfLikePreview();
+    const iframe = this.pdfViewer.nativeElement;
+    iframe.onload = () => {
+      // eslint-disable-next-line no-console
+      console.log('PDF form iframe loaded');
+    };
   }
 
-  // renderPdfLikePreview() {
-  //   const iframe: HTMLIFrameElement = this.pdfViewer.nativeElement;
-  //   const doc = iframe.contentDocument || iframe.contentWindow?.document;
-  //   const htmlContent = this.pdfContent.nativeElement.innerHTML;
-
-  //   const fullHtml = `
-  //     <html>
-  //       <head>
-  //         <style>
-  //           body {
-  //             margin: 0;
-  //             padding: 0;
-  //             font-family: Arial, sans-serif;
-  //             background: #f0f0f0;
-  //           }
-  //           .pdf-page {
-  //             width: 210mm;
-  //             height: 297mm;
-  //             margin: 10px auto;
-  //             padding: 20mm;
-  //             background: white;
-  //             box-shadow: 0 0 4px rgba(0, 0, 0, 0.1);
-  //             box-sizing: border-box;
-  //             overflow: hidden;
-  //             page-break-after: always;
-  //           }
-
-  //           @media print {
-  //             body {
-  //               background: white;
-  //             }
-  //             .pdf-page {
-  //               box-shadow: none;
-  //               margin: 0;
-  //               page-break-after: always;
-  //             }
-  //           }
-  //         </style>
-  //       </head>
-  //       <body>
-  //         ${htmlContent}
-  //       </body>
-  //     </html>
-  //   `;
-
-  //   if (doc) {
-  //     doc.open();
-  //     doc.write(fullHtml);
-  //     doc.close();
-  //   }
-  // }
-
-  renderPdfLikePreview() {
-    const iframe: HTMLIFrameElement = this.pdfViewer.nativeElement;
+  getIframeHtml(): string | null {
+    const iframe = this.pdfViewer.nativeElement;
     const doc = iframe.contentDocument || iframe.contentWindow?.document;
+    return doc?.documentElement.outerHTML ?? null;
+  }
 
-    const pdfContent = this.pdfContent.nativeElement;
-
-    // Collect styles from document <head>
-    const styleTags = Array.from(document.head.querySelectorAll('style, link[rel="stylesheet"]'))
-      .map((tag) => tag.outerHTML)
-      .join('\n');
-
-    const html = `
-    <html>
-      <head>
-        ${styleTags}
-        <style>
-          body {
-            margin: 0;
-            padding: 0;
-            background: #eee !important;
-          }
-          .pdf-page {
-            width: 210mm;
-            height: 297mm;
-            margin: 10px auto;
-            padding: 5mm;
-            background: white;
-            box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
-            box-sizing: border-box;
-            overflow: hidden;
-            page-break-after: always;
-          }
-
-          @media print {
-            body {
-              background: white;
-            }
-            .pdf-page {
-              box-shadow: none;
-              margin: 0;
-              page-break-after: always;
-            }
-          }
-        </style>
-      </head>
-      <body>
-        ${pdfContent.innerHTML}
-      </body>
-    </html>
-  `;
-
-    if (doc) {
-      doc.open();
-      doc.write(html);
-      doc.close();
+  sendHtmlToServer() {
+    const html = this.getIframeHtml();
+    if (html) {
+      this.http
+        .post('/api/generate-pdf', { html }, { responseType: 'blob' })
+        .subscribe((pdfBlob) => {
+          // Optionally download the PDF
+          const blobUrl = URL.createObjectURL(pdfBlob);
+          const a = document.createElement('a');
+          a.href = blobUrl;
+          a.download = 'generated.pdf';
+          a.click();
+          URL.revokeObjectURL(blobUrl);
+        });
+    } else {
+      // eslint-disable-next-line no-console
+      console.warn('Iframe HTML is empty or not loaded yet');
     }
   }
 }
