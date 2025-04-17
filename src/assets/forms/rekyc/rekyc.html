@@ -5,12 +5,13 @@
     <title>REKYC FORM</title>
     <link rel="stylesheet" href="./rekyc.css" />
     <link rel="stylesheet" href="./var.css" />
+    <script src="./rekyc.js"></script>
   </head>
 
   <body>
     <div class="pdf-page">
       <!-- Header -->
-      <section id="form-header">
+      <section id="form-header" class="form-section">
         <div class="logo_wrapper">
           <img src="../../images/logo/hdfc.webp" alt="HDFC" />
         </div>
@@ -48,7 +49,7 @@
             <label for="propKartaCustId">
               <span class="text-nowrap">CUSTOMER ID OF</span>
               <br />
-              <span class="text-nowrap">Properitor/ Karta</span>
+              <span class="text-nowrap">PROPERITOR/KARTA</span>
             </label>
             <input type="text" id="propKartaCustId" />
           </div>
@@ -56,7 +57,7 @@
             <label for="propKartaCustId">
               <span class="text-nowrap">CUSTOMER ID OF</span>
               <br />
-              <span class="text-nowrap">Properitor/ Karta</span>
+              <span class="text-nowrap">PROPERITOR/KARTA</span>
             </label>
             <input type="text" id="propKartaCustId" />
           </div>
@@ -75,7 +76,7 @@
             <label for="propKartaName">
               <span class="text-nowrap">Name OF</span>
               <br />
-              <span class="text-nowrap">Properitor/ Karta</span>
+              <span class="text-nowrap">PROPERITOR/KARTA</span>
             </label>
             <input type="text" id="propKartaName" />
           </div>
@@ -261,15 +262,15 @@
           <label for="emailID" class="text-nowrap">
             *Registered Address Type
           </label>
-          <div class="checkbox_wrapper">
-            <div class="checkbox_container">
+          <div class="checkbox_container">
+            <div class="checkbox_wrapper">
               <input type="checkbox" name="owned" id="owned" />
               <div>
                 <p class="text-nowrap">Owned</p>
               </div>
             </div>
 
-            <div class="checkbox_container">
+            <div class="checkbox_wrapper">
               <input type="checkbox" name="rentedLeased" id="rentedLeased" />
               <div>
                 <p class="text-nowrap">Rented / Leased</p>
@@ -419,15 +420,364 @@
         <p class="text-black">Sub Category of Entity :-</p>
         <div class="entity_sub_category_container">
           <div class="entity_sub_category_wrapper">
-            <div>pub</div>
-            <div>association</div>
+            <div class="pubPvtLtdCompany">
+              <div class="title"><p>PUB / PVT LTD COMPANY</p></div>
+              <div class="checkbox_container">
+                <div class="checkbox_wrapper">
+                  <input
+                    type="checkbox"
+                    name="proprietorship"
+                    id="proprietorship"
+                  />
+                  <div>
+                    <p class="text-nowrap">Financial Services Company</p>
+                  </div>
+                </div>
+                <div class="checkbox_wrapper">
+                  <input
+                    type="checkbox"
+                    name="proprietorship"
+                    id="proprietorship"
+                  />
+                  <div>
+                    <p class="text-nowrap">PSU</p>
+                  </div>
+                </div>
+                <div class="checkbox_wrapper">
+                  <input
+                    type="checkbox"
+                    name="proprietorship"
+                    id="proprietorship"
+                  />
+                  <div>
+                    <p class="text-nowrap">Others</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="association">
+              <div class="title"><p>ASSOCIATION</p></div>
+              <div class="checkbox_container">
+                <div class="checkbox_wrapper">
+                  <input
+                    type="checkbox"
+                    name="proprietorship"
+                    id="proprietorship"
+                  />
+                  <div>
+                    <p class="text-nowrap">Business Association</p>
+                  </div>
+                </div>
+                <div class="checkbox_wrapper">
+                  <input
+                    type="checkbox"
+                    name="proprietorship"
+                    id="proprietorship"
+                  />
+                  <div>
+                    <p class="text-nowrap">Unregistered Association</p>
+                  </div>
+                </div>
+                <div class="checkbox_wrapper">
+                  <input
+                    type="checkbox"
+                    name="proprietorship"
+                    id="proprietorship"
+                  />
+                  <div>
+                    <p class="text-nowrap">Other Association</p>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
-          <div class="entity_sub_category_wrapper">Government</div>
-          <div class="entity_sub_category_wrapper">Foreign Bodies</div>
-          <div class="entity_sub_category_wrapper">Trust</div>
           <div class="entity_sub_category_wrapper">
-            <div>Bank</div>
-            <div>Socities</div>
+            <div class="government">
+              <div class="title">
+                <p>GOVERNMENT</p>
+              </div>
+
+              <div class="checkbox_container">
+                <div class="checkbox_wrapper">
+                  <input
+                    type="checkbox"
+                    name="proprietorship"
+                    id="proprietorship"
+                  />
+                  <div>
+                    <p class="text-nowrap">Central</p>
+                  </div>
+                </div>
+                <div class="checkbox_wrapper">
+                  <input
+                    type="checkbox"
+                    name="proprietorship"
+                    id="proprietorship"
+                  />
+                  <div>
+                    <p class="text-nowrap">State</p>
+                  </div>
+                </div>
+                <div class="checkbox_wrapper">
+                  <input
+                    type="checkbox"
+                    name="proprietorship"
+                    id="proprietorship"
+                  />
+                  <div>
+                    <p class="text-nowrap">Local Authoities</p>
+                  </div>
+                </div>
+                <div class="checkbox_wrapper">
+                  <input
+                    type="checkbox"
+                    name="proprietorship"
+                    id="proprietorship"
+                  />
+                  <div>
+                    <p class="text-nowrap">State Electricity Boards</p>
+                  </div>
+                </div>
+                <div class="checkbox_wrapper">
+                  <input
+                    type="checkbox"
+                    name="proprietorship"
+                    id="proprietorship"
+                  />
+                  <div>
+                    <p class="text-nowrap">Quasi Government Bodiews</p>
+                  </div>
+                </div>
+                <div class="checkbox_wrapper">
+                  <input
+                    type="checkbox"
+                    name="proprietorship"
+                    id="proprietorship"
+                  />
+                  <div>
+                    <p class="text-nowrap">Others</p>
+                  </div>
+                </div>
+                <div class="checkbox_wrapper"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="entity_sub_category_wrapper">
+            <div class="foreignBodies">
+              <div class="title"><p>FOREIGN BODIES</p></div>
+
+              <div class="checkbox_container">
+                <div class="checkbox_wrapper">
+                  <input
+                    type="checkbox"
+                    name="proprietorship"
+                    id="proprietorship"
+                  />
+                  <div>
+                    <p class="text-nowrap">Foreign Govt</p>
+                  </div>
+                </div>
+                <div class="checkbox_wrapper">
+                  <input
+                    type="checkbox"
+                    name="proprietorship"
+                    id="proprietorship"
+                  />
+                  <div>
+                    <p class="text-nowrap">Project Office</p>
+                  </div>
+                </div>
+                <div class="checkbox_wrapper">
+                  <input
+                    type="checkbox"
+                    name="proprietorship"
+                    id="proprietorship"
+                  />
+                  <div>
+                    <p class="text-nowrap">Branch Office</p>
+                  </div>
+                </div>
+                <div class="checkbox_wrapper">
+                  <input
+                    type="checkbox"
+                    name="proprietorship"
+                    id="proprietorship"
+                  />
+                  <div>
+                    <p class="text-nowrap">Liaison Office</p>
+                  </div>
+                </div>
+                <div class="checkbox_wrapper">
+                  <input
+                    type="checkbox"
+                    name="proprietorship"
+                    id="proprietorship"
+                  />
+                  <div>
+                    <p class="text-nowrap">Consulates / Embassies</p>
+                  </div>
+                </div>
+                <div class="checkbox_wrapper">
+                  <input
+                    type="checkbox"
+                    name="proprietorship"
+                    id="proprietorship"
+                  />
+                  <div>
+                    <p class="text-nowrap">Other</p>
+                  </div>
+                </div>
+                <div class="checkbox_wrapper"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="entity_sub_category_wrapper">
+            <div class="trust">
+              <div class="title"><p>TRUST</p></div>
+
+              <div class="checkbox_container">
+                <div class="checkbox_wrapper">
+                  <input
+                    type="checkbox"
+                    name="proprietorship"
+                    id="proprietorship"
+                  />
+                  <div>
+                    <p class="text-nowrap">Charitable Trust</p>
+                  </div>
+                </div>
+                <div class="checkbox_wrapper">
+                  <input
+                    type="checkbox"
+                    name="proprietorship"
+                    id="proprietorship"
+                  />
+                  <div>
+                    <p class="text-nowrap">Public Trust</p>
+                  </div>
+                </div>
+                <div class="checkbox_wrapper">
+                  <input
+                    type="checkbox"
+                    name="proprietorship"
+                    id="proprietorship"
+                  />
+                  <div>
+                    <p class="text-nowrap">Pivate Trust</p>
+                  </div>
+                </div>
+                <div class="checkbox_wrapper">
+                  <input
+                    type="checkbox"
+                    name="proprietorship"
+                    id="proprietorship"
+                  />
+                  <div>
+                    <p class="text-nowrap">Religious Trust</p>
+                  </div>
+                </div>
+                <div class="checkbox_wrapper">
+                  <input
+                    type="checkbox"
+                    name="proprietorship"
+                    id="proprietorship"
+                  />
+                  <div>
+                    <p class="text-nowrap">Educational Trust</p>
+                  </div>
+                </div>
+                <div class="checkbox_wrapper">
+                  <input
+                    type="checkbox"
+                    name="proprietorship"
+                    id="proprietorship"
+                  />
+                  <div>
+                    <p class="text-nowrap">PF Trust</p>
+                  </div>
+                </div>
+                <div class="checkbox_wrapper"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="entity_sub_category_wrapper">
+            <div class="bank">
+              <div class="title"><p>BANK</p></div>
+
+              <div class="checkbox_container">
+                <div class="checkbox_wrapper">
+                  <input
+                    type="checkbox"
+                    name="proprietorship"
+                    id="proprietorship"
+                  />
+                  <div>
+                    <p class="text-nowrap">Indian Commercial Bank</p>
+                  </div>
+                </div>
+                <div class="checkbox_wrapper">
+                  <input
+                    type="checkbox"
+                    name="proprietorship"
+                    id="proprietorship"
+                  />
+                  <div>
+                    <p class="text-nowrap">Foreign Resident Bank</p>
+                  </div>
+                </div>
+                <div class="checkbox_wrapper">
+                  <input
+                    type="checkbox"
+                    name="proprietorship"
+                    id="proprietorship"
+                  />
+                  <div>
+                    <p class="text-nowrap">Co-Operative Bank</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="socities">
+              <div class="title"><p>SOCITIES</p></div>
+
+              <div class="checkbox_container">
+                <div class="checkbox_wrapper">
+                  <input
+                    type="checkbox"
+                    name="proprietorship"
+                    id="proprietorship"
+                  />
+                  <div>
+                    <p class="text-nowrap">Credit Co-Operative</p>
+                  </div>
+                </div>
+                <div class="checkbox_wrapper">
+                  <input
+                    type="checkbox"
+                    name="proprietorship"
+                    id="proprietorship"
+                  />
+                  <div>
+                    <p class="text-nowrap">Non Credit Co-Operative</p>
+                  </div>
+                </div>
+                <div class="checkbox_wrapper">
+                  <input
+                    type="checkbox"
+                    name="proprietorship"
+                    id="proprietorship"
+                  />
+                  <div>
+                    <p class="text-nowrap">Proprietorship</p>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </section>
