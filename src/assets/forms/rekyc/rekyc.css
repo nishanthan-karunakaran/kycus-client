@@ -317,3 +317,26 @@ body {
     }
   }
 }
+
+#self-employeed-professional {
+  .checkbox_container {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    margin-top: 0.5rem;
+
+    .checkbox_wrapper {
+      border-top: 1px solid;
+      border-left: 1px solid;
+      padding: 0.25rem;
+    }
+
+    .checkbox_wrapper:nth-child(n + 4):nth-child(-n + 6) {
+      border-bottom: 1px solid;
+      border-left: 1px solid;
+    }
+
+    .checkbox_wrapper:nth-child(3n) {
+      border-right: 1px solid;
+    }
+  }
+}
