@@ -35,16 +35,16 @@ h6 {
 .form-section {
   padding: 0.5rem 0;
   border-bottom: 2px solid var(--primary-border);
+}
 
-  input:not(input[type='checkbox']) {
-    all: unset !important;
-    border-bottom: 1px solid black !important;
-    margin-left: 0.5rem !important;
-  }
+input:not(input[type='checkbox']) {
+  all: unset !important;
+  border-bottom: 1px solid black !important;
+  margin-left: 0.5rem !important;
+}
 
-  input:not(.no-reset):not(input[type='checkbox']) {
-    width: 100% !important;
-  }
+input:not(.no-reset):not(input[type='checkbox']) {
+  width: 100% !important;
 }
 
 .section-title {
