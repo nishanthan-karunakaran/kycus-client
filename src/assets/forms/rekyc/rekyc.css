@@ -340,3 +340,31 @@ body {
     }
   }
 }
+
+#nature-of-business {
+  .checkbox_container {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    margin-top: 0.5rem;
+
+    .checkbox_wrapper {
+      border-top: 1px solid;
+      border-left: 1px solid;
+      padding: 0.25rem;
+    }
+
+    .checkbox_wrapper:nth-child(8) {
+      grid-column: span 3;
+    }
+
+    .checkbox_wrapper:nth-child(n + 6):nth-child(-n + 8) {
+      border-bottom: 1px solid;
+      border-left: 1px solid;
+    }
+
+    .checkbox_wrapper:nth-child(5),
+    .checkbox_wrapper:nth-child(8) {
+      border-right: 1px solid;
+    }
+  }
+}
