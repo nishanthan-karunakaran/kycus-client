@@ -375,3 +375,32 @@ body {
     gap: 1rem;
   }
 }
+
+#nature-of-industry {
+  .checkbox_container {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    margin-top: 0.5rem;
+
+    .checkbox_wrapper {
+      border-top: 1px solid;
+      border-left: 1px solid;
+      padding: 0.25rem;
+
+      &:last-child {
+        grid-column: span 2;
+      }
+
+      &:nth-child(4n),
+      &:last-child {
+        border-right: 1px solid;
+      }
+
+      &:nth-child(41),
+      &:nth-child(42),
+      &:nth-child(43) {
+        border-bottom: 1px solid;
+      }
+    }
+  }
+}
