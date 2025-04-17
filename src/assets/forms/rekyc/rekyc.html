@@ -9,6 +9,7 @@
   </head>
 
   <body>
+    <!-- Page 1 -->
     <div class="pdf-page">
       <!-- Header -->
       <section id="form-header" class="form-section">
@@ -96,7 +97,7 @@
 
       <!-- Entity Mailing Address 1 -->
       <section id="entity-mailing-address" class="form-section">
-        <p class="text-black">*MAILING ADDRESS & CONTACT</p>
+        <p class="section-title">*MAILING ADDRESS & CONTACT</p>
 
         <div class="checkbox_container">
           <div class="checkbox_wrapper">
@@ -205,7 +206,7 @@
       <!-- Entity Mailing Address 2 -->
       <section id="entity-contact-address" class="form-section">
         <div class="form-row section_header">
-          <p class="text-black">*MAILING ADDRESS & CONTACT</p>
+          <p class="section-title">*REGISTERED OFFICE ADDRESS</p>
           <div class="checkbox_container">
             <input
               type="checkbox"
@@ -282,11 +283,11 @@
 
       <!-- Type of Entity -->
       <section id="entity-type" class="form-section">
-        <p class="text-black">
+        <p class="section-title">
           *Business details (please tick on the appropriate sub category against
           the type of entity)
         </p>
-        <p class="text-black">Type of Entity :-</p>
+        <p class="section-title">Type of Entity :-</p>
 
         <div class="checkbox_container">
           <div class="checkbox_wrapper">
@@ -417,7 +418,7 @@
 
       <!-- Sub Category of Entity -->
       <section id="entity-sub-category" class="form-section">
-        <p class="text-black">Sub Category of Entity :-</p>
+        <p class="section-title">Sub Category of Entity :-</p>
         <div class="entity_sub_category_container">
           <div class="entity_sub_category_wrapper">
             <div class="pubPvtLtdCompany">
@@ -783,6 +784,7 @@
       </section>
     </div>
 
+    <!-- Page 2 -->
     <div class="pdf-page">
       <!-- Self Employeed Professional -->
       <section id="self-employeed-professional" class="form-selection">
@@ -968,7 +970,6 @@
           </div>
           <div>
             <div class="form-container">
-              <label for="date" class="text-nowrap">2)</label>
               <input type="text" />
             </div>
           </div>
@@ -978,7 +979,6 @@
           </div>
           <div>
             <div class="form-container">
-              <label for="date" class="text-nowrap">2)</label>
               <input type="text" />
             </div>
           </div>
@@ -1022,6 +1022,255 @@
           I/We hereby solemnly declare that the information provided above with
           respect to my/our account is up to date and correct.
         </p>
+      </section>
+    </div>
+
+    <!-- Page 3 -->
+    <div class="pdf-page">
+      <!-- Extended Annexure -->
+      <section id="extended-annexure" class="form-section">
+        <div class="header text-center">
+          <h4 class="text-black">
+            Extended Annexure - CKYC For Non-Individual Entities (For Account
+            opening and Re-KYC)
+          </h4>
+          <p>{All fields are mandatory}</p>
+        </div>
+
+        <div class="basic_details">
+          <div class="date_afo">
+            <div class="form-container">
+              <label for="date" class="text-nowrap">Date</label>
+              <input type="text" />
+            </div>
+            <div class="form-container">
+              <label for="date" class="text-nowrap">AOF Number</label>
+              <input type="text" />
+            </div>
+          </div>
+          <div class="form-container">
+            <label for="date" class="text-nowrap">Name of the entity</label>
+            <input type="text" />
+          </div>
+          <div class="form-container">
+            <label for="date" class="text-nowrap">
+              Customer ID
+              <br />
+              (Applicable for existing customer)
+            </label>
+            <input type="text" />
+          </div>
+        </div>
+
+        <div class="proof_doc_container">
+          <p class="section-title">
+            Document submitted for Identity of Entity (Please tick and mention
+            document number):
+          </p>
+
+          <div class="doc_list">
+            <div class="form_row">
+              <div class="checkbox_wrapper">
+                <input
+                  type="checkbox"
+                  name="proprietorship"
+                  id="proprietorship"
+                />
+                <div>
+                  <p class="text-nowrap">Certificate of Incoporation</p>
+                  <input type="text" name="cio" id="cio" />
+                </div>
+              </div>
+            </div>
+            <div class="form_row">
+              <div class="checkbox_wrapper">
+                <input
+                  type="checkbox"
+                  name="proprietorship"
+                  id="proprietorship"
+                />
+                <div>
+                  <p class="text-nowrap">Registration Certificate</p>
+                  <input type="text" name="cio" id="cio" />
+                </div>
+              </div>
+            </div>
+            <div class="form_row">
+              <div class="checkbox_wrapper">
+                <input
+                  type="checkbox"
+                  name="proprietorship"
+                  id="proprietorship"
+                />
+                <div>
+                  <p class="text-nowrap">Trust Deed</p>
+                </div>
+              </div>
+            </div>
+            <div class="form_row">
+              <div class="checkbox_wrapper">
+                <input
+                  type="checkbox"
+                  name="proprietorship"
+                  id="proprietorship"
+                />
+                <div>
+                  <p class="text-nowrap">Memorandum & Article of Association</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="proof_doc_container">
+          <p class="section-title">
+            Document submitted for Mailing Address (Please tick and mention
+            document number):
+          </p>
+
+          <div class="doc_list">
+            <div class="form_row">
+              <div class="checkbox_wrapper">
+                <input
+                  type="checkbox"
+                  name="proprietorship"
+                  id="proprietorship"
+                />
+                <div>
+                  <p class="text-nowrap">Certificate of Incoporation</p>
+                  <input type="text" name="cio" id="cio" />
+                </div>
+              </div>
+            </div>
+            <div class="form_row">
+              <div class="checkbox_wrapper">
+                <input
+                  type="checkbox"
+                  name="proprietorship"
+                  id="proprietorship"
+                />
+                <div>
+                  <p class="text-nowrap">Registration Certificate</p>
+                  <input type="text" name="cio" id="cio" />
+                </div>
+              </div>
+            </div>
+            <div class="form_row">
+              <div class="checkbox_wrapper">
+                <input
+                  type="checkbox"
+                  name="proprietorship"
+                  id="proprietorship"
+                />
+                <div>
+                  <p class="text-nowrap">Any Other Document</p>
+                  <input type="text" name="cio" id="cio" />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="bo_details">
+          <h5>Beneficial Owner details {All fields are mandatory}</h5>
+
+          <div class="bo_container">
+            <div class="bo_wrapper">
+              <div class="row">
+                <div class="desc">
+                  <p>Name of Beneficial Owner</p>
+                </div>
+                <div class="value">
+                  <div>
+                    <label for="date" class="text-nowrap">1)</label>
+                    <input type="text" />
+                  </div>
+                </div>
+                <div class="value">
+                  <div>
+                    <label for="date" class="text-nowrap">2)</label>
+                    <input type="text" />
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="desc">
+                  <p>Address - Line</p>
+                </div>
+                <div class="value">
+                  <div>
+                    <input type="text" />
+                  </div>
+                </div>
+                <div class="value">
+                  <div>
+                    <input type="text" />
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="desc">
+                  <p>Address - City</p>
+                </div>
+                <div class="value">
+                  <div>
+                    <input type="text" />
+                  </div>
+                </div>
+                <div class="value">
+                  <div>
+                    <input type="text" />
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="desc">
+                  <p>Address - State</p>
+                </div>
+                <div class="value">
+                  <div>
+                    <input type="text" />
+                  </div>
+                </div>
+                <div class="value">
+                  <div>
+                    <input type="text" />
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="desc">
+                  <p>Address - Country</p>
+                </div>
+                <div class="value">
+                  <div>
+                    <input type="text" />
+                  </div>
+                </div>
+                <div class="value">
+                  <div>
+                    <input type="text" />
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="desc">
+                  <p>Address - Pincode</p>
+                </div>
+                <div class="value">
+                  <div>
+                    <input type="text" />
+                  </div>
+                </div>
+                <div class="value">
+                  <div>
+                    <input type="text" />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </section>
     </div>
   </body>
