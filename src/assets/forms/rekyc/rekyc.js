@@ -47,7 +47,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
   const container = document.querySelector('#nature-of-industry .checkbox_container');
 
-  // Only one can be selected, so natureOfIndustry is a string
   let natureOfIndustry = '';
 
   for (let i = 0; i < labels.length; i++) {
@@ -70,20 +69,16 @@ document.addEventListener('DOMContentLoaded', function () {
     wrapper.appendChild(labelDiv);
     container.appendChild(wrapper);
 
-    // On change: allow only one to be checked
     checkbox.addEventListener('change', function () {
       if (checkbox.checked) {
-        // Uncheck all other checkboxes
         const allCheckboxes = container.querySelectorAll('input[type="checkbox"]');
         allCheckboxes.forEach((cb) => {
           if (cb !== checkbox) cb.checked = false;
         });
 
-        // Update state to selected label
         natureOfIndustry = labels[i];
         console.log(`Selected nature of industry: ${natureOfIndustry}`);
       } else {
-        // If unchecking the same checkbox, reset value
         natureOfIndustry = '';
         console.log(`Cleared selection`);
       }
