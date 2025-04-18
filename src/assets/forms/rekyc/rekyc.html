@@ -90,7 +90,7 @@
           </div>
           <div class="form-container" class="text-nowrap">
             <label for="entityName" class="text-nowrap">PAN OF ENTITY</label>
-            <input type="text" id="entityPAN" />
+            <input type="text" id="entityPan" />
           </div>
         </div>
       </section>
@@ -116,8 +116,8 @@
           <div class="checkbox_wrapper">
             <input
               type="checkbox"
-              name="noChangeInEmailAddress"
-              id="noChangeInEmailAddress"
+              name="changeInEmailAddress"
+              id="changeInEmailAddress"
             />
             <div>
               <p class="text-nowrap">
@@ -289,131 +289,7 @@
         </p>
         <p class="section-title">Type of Entity :-</p>
 
-        <div class="checkbox_container">
-          <div class="checkbox_wrapper">
-            <input type="checkbox" name="proprietorship" id="proprietorship" />
-            <div>
-              <p class="text-nowrap">Proprietorship</p>
-            </div>
-          </div>
-
-          <div class="checkbox_wrapper">
-            <input type="checkbox" name="partnership" id="partnership" />
-            <div>
-              <p class="text-nowrap">Partnership</p>
-            </div>
-          </div>
-
-          <div class="checkbox_wrapper">
-            <input
-              type="checkbox"
-              name="limitedLiabilityPartnership"
-              id="limitedLiabilityPartnership"
-            />
-            <div>
-              <p class="text-nowrap">Limited Liability Partnership</p>
-            </div>
-          </div>
-
-          <div class="checkbox_wrapper">
-            <input
-              type="checkbox"
-              name="publicPrivateOnePersonCompany"
-              id="publicPrivateOnePersonCompany"
-            />
-            <div>
-              <p class="text-nowrap">Public / Private / One Person Company</p>
-            </div>
-          </div>
-
-          <div class="checkbox_wrapper">
-            <input type="checkbox" name="huf" id="huf" />
-            <div>
-              <p class="text-nowrap">HUF</p>
-            </div>
-          </div>
-
-          <div class="checkbox_wrapper">
-            <input type="checkbox" name="government" id="government" />
-            <div>
-              <p class="text-nowrap">Government</p>
-            </div>
-          </div>
-
-          <div class="checkbox_wrapper">
-            <input type="checkbox" name="bank" id="bank" />
-            <div>
-              <p class="text-nowrap">Bank</p>
-            </div>
-          </div>
-
-          <div class="checkbox_wrapper">
-            <input type="checkbox" name="socities" id="socities" />
-            <div>
-              <p class="text-nowrap">Socities</p>
-            </div>
-          </div>
-
-          <div class="checkbox_wrapper">
-            <input type="checkbox" name="insurance" id="insurance" />
-            <div>
-              <p class="text-nowrap">Insurance</p>
-            </div>
-          </div>
-
-          <div class="checkbox_wrapper">
-            <input
-              type="checkbox"
-              name="selfHelpedGroup"
-              id="selfHelpedGroup"
-            />
-            <div>
-              <p class="text-nowrap">Self Helped Group</p>
-            </div>
-          </div>
-
-          <div class="checkbox_wrapper">
-            <input type="checkbox" name="foreignBodies" id="foreignBodies" />
-            <div>
-              <p class="text-nowrap">Foreign Bodies</p>
-            </div>
-          </div>
-
-          <div class="checkbox_wrapper">
-            <input type="checkbox" name="clubs" id="clubs" />
-            <div>
-              <p class="text-nowrap">Clubs</p>
-            </div>
-          </div>
-
-          <div class="checkbox_wrapper">
-            <input type="checkbox" name="nonGovOrg" id="nonGovOrg" />
-            <div>
-              <p class="text-nowrap">Non-Government Organization</p>
-            </div>
-          </div>
-
-          <div class="checkbox_wrapper">
-            <input type="checkbox" name="mutualFund" id="mutualFund" />
-            <div>
-              <p class="text-nowrap">Mutual Fund</p>
-            </div>
-          </div>
-
-          <div class="checkbox_wrapper">
-            <input type="checkbox" name="association" id="association" />
-            <div>
-              <p class="text-nowrap">Association</p>
-            </div>
-          </div>
-
-          <div class="checkbox_wrapper">
-            <input type="checkbox" name="trust" id="trust" />
-            <div>
-              <p class="text-nowrap">Trust</p>
-            </div>
-          </div>
-        </div>
+        <div class="checkbox_container"></div>
       </section>
 
       <!-- Sub Category of Entity -->
@@ -451,7 +327,13 @@
                     id="proprietorship"
                   />
                   <div>
-                    <p class="text-nowrap">Others</p>
+                    <input
+                      type="text"
+                      name="other"
+                      id="other"
+                      data-other-input
+                      placeholder="Others"
+                    />
                   </div>
                 </div>
               </div>
@@ -557,7 +439,13 @@
                     id="proprietorship"
                   />
                   <div>
-                    <p class="text-nowrap">Others</p>
+                    <input
+                      type="text"
+                      name="other"
+                      id="other"
+                      data-other-input
+                      placeholder="Others"
+                    />
                   </div>
                 </div>
                 <div class="checkbox_wrapper"></div>
@@ -627,7 +515,13 @@
                     id="proprietorship"
                   />
                   <div>
-                    <p class="text-nowrap">Other</p>
+                    <input
+                      type="text"
+                      name="other"
+                      id="other"
+                      data-other-input
+                      placeholder="Others"
+                    />
                   </div>
                 </div>
                 <div class="checkbox_wrapper"></div>
@@ -823,7 +717,13 @@
           <div class="checkbox_wrapper">
             <input type="checkbox" name="proprietorship" id="proprietorship" />
             <div>
-              <p class="text-nowrap">Others</p>
+              <input
+                type="text"
+                name="other"
+                id="other"
+                data-other-input
+                placeholder="Others"
+              />
             </div>
           </div>
         </div>
@@ -878,7 +778,13 @@
           <div class="checkbox_wrapper">
             <input type="checkbox" name="proprietorship" id="proprietorship" />
             <div>
-              <p class="text-nowrap">Others</p>
+              <input
+                type="text"
+                name="other"
+                id="other"
+                data-other-input
+                placeholder="Others"
+              />
             </div>
           </div>
         </div>
@@ -956,6 +862,7 @@
           </div>
           <div class="proof_list">
             <div class="form-container">
+              <label for="date" class="text-nowrap">1)</label>
               <input type="text" />
             </div>
             <div class="form-container">
@@ -1322,11 +1229,13 @@
                 </td>
                 <td>
                   <div>
+                    <label for="date" class="text-nowrap">Voter ID</label>
                     <input type="text" />
                   </div>
                 </td>
                 <td>
                   <div>
+                    <label for="date" class="text-nowrap">Voter ID</label>
                     <input type="text" />
                   </div>
                 </td>
@@ -1337,11 +1246,13 @@
                 </td>
                 <td>
                   <div>
+                    <label for="date" class="text-nowrap">Aadhaar</label>
                     <input type="text" />
                   </div>
                 </td>
                 <td>
                   <div>
+                    <label for="date" class="text-nowrap">Aadhaar</label>
                     <input type="text" />
                   </div>
                 </td>
