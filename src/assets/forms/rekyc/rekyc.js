@@ -6,6 +6,8 @@ document.addEventListener('DOMContentLoaded', async function () {
   await entityMailingAddress();
   await entityType();
   await entitySubCategory();
+  await selfEmployedProfessional();
+  await natureOfBusiness();
   await renderNatureOfIndustry();
 });
 
@@ -253,6 +255,8 @@ function fun() {
         entityMailingAddress: 'noChangeInEmailAddress',
         entityType: 'Private',
         subCategory: 'pubPvtLtdCompany: Financial Services Company',
+        selfEmployeedProfessional: '',
+        natureOfBusiness: '',
       },
     },
   };
@@ -445,6 +449,152 @@ function entitySubCategory() {
         });
 
         data.editedData.entityDetails.subCategory = `${categoryClass}-others: ${inputEl.value.trim()}`;
+      });
+    }
+  });
+}
+
+function selfEmployedProfessional() {
+  const container = document.querySelector('#self-employeed-professional');
+  if (!container) return;
+
+  const allCheckboxes = container.querySelectorAll('.checkbox_wrapper input[type="checkbox"]');
+  const allTextInputs = container.querySelectorAll('.checkbox_wrapper input[type="text"]');
+
+  const preSelected = data.editedData?.entityDetails?.selfEmployeedProfessional || '';
+
+  // Reset initially
+  allCheckboxes.forEach((cb) => (cb.checked = false));
+  allTextInputs.forEach((input) => (input.value = ''));
+
+  // Pre-select based on existing data
+  allCheckboxes.forEach((checkbox) => {
+    const wrapper = checkbox.closest('.checkbox_wrapper');
+    const label = wrapper?.querySelector('.text-nowrap')?.textContent.trim();
+    const inputEl = wrapper.querySelector('input[type="text"]');
+
+    if (preSelected.startsWith('Others:') && inputEl) {
+      checkbox.checked = true;
+      inputEl.value = preSelected.split(':')[1].trim();
+    } else if (label && label === preSelected) {
+      checkbox.checked = true;
+    }
+
+    // Handle checkbox selection
+    checkbox.addEventListener('change', () => {
+      if (checkbox.checked) {
+        // Uncheck all others
+        allCheckboxes.forEach((cb) => {
+          if (cb !== checkbox) cb.checked = false;
+        });
+        allTextInputs.forEach((input) => {
+          if (input !== inputEl) input.value = '';
+        });
+
+        if (inputEl) {
+          inputEl.focus();
+          data.editedData.entityDetails.selfEmployeedProfessional = `Others: ${inputEl.value.trim()}`;
+        } else {
+          data.editedData.entityDetails.selfEmployeedProfessional = label;
+        }
+      } else {
+        data.editedData.entityDetails.selfEmployeedProfessional = null;
+      }
+
+      console.log('Updated:', data.editedData.entityDetails.selfEmployeedProfessional);
+    });
+
+    // Handle typing in "Others"
+    if (inputEl) {
+      inputEl.addEventListener('input', () => {
+        checkbox.checked = true;
+
+        allCheckboxes.forEach((cb) => {
+          if (cb !== checkbox) cb.checked = false;
+        });
+        allTextInputs.forEach((input) => {
+          if (input !== inputEl) input.value = '';
+        });
+
+        data.editedData.entityDetails.selfEmployeedProfessional = `Others: ${inputEl.value.trim()}`;
+        console.log('Updated:', data.editedData.entityDetails.selfEmployeedProfessional);
+      });
+    }
+  });
+}
+
+function natureOfBusiness() {
+  const container = document.querySelector('#nature-of-business');
+  if (!container) return;
+
+  const allCheckboxes = container.querySelectorAll('.checkbox_wrapper input[type="checkbox"]');
+  const allTextInputs = container.querySelectorAll('.checkbox_wrapper input[type="text"]');
+
+  const preSelected = data.editedData?.entityDetails?.natureOfBusiness || '';
+
+  // Reset all checkboxes and inputs
+  allCheckboxes.forEach((cb) => (cb.checked = false));
+  allTextInputs.forEach((input) => (input.value = ''));
+
+  allCheckboxes.forEach((checkbox) => {
+    const wrapper = checkbox.closest('.checkbox_wrapper');
+    const label = wrapper?.querySelector('.text-nowrap')?.textContent?.trim();
+    const inputEl = wrapper.querySelector('input[type="text"]');
+
+    // Pre-selection
+    if (preSelected.startsWith('Others:') && inputEl) {
+      checkbox.checked = true;
+      inputEl.value = preSelected.split(':')[1].trim();
+    } else if (label && label === preSelected) {
+      checkbox.checked = true;
+    }
+
+    // Handle checkbox change
+    checkbox.addEventListener('change', () => {
+      if (checkbox.checked) {
+        allCheckboxes.forEach((cb) => {
+          if (cb !== checkbox) cb.checked = false;
+        });
+        allTextInputs.forEach((input) => {
+          if (input !== inputEl) input.value = '';
+        });
+
+        if (inputEl) {
+          inputEl.focus();
+          data.editedData.entityDetails.natureOfBusiness = `Others: ${inputEl.value.trim()}`;
+        } else {
+          data.editedData.entityDetails.natureOfBusiness = label;
+        }
+      } else {
+        data.editedData.entityDetails.natureOfBusiness = null;
+      }
+
+      console.log('Updated:', data.editedData.entityDetails.natureOfBusiness);
+    });
+
+    // Handle "Others" typing
+    if (inputEl) {
+      inputEl.addEventListener('input', () => {
+        checkbox.checked = true;
+
+        allCheckboxes.forEach((cb) => {
+          if (cb !== checkbox) cb.checked = false;
+        });
+        allTextInputs.forEach((input) => {
+          if (input !== inputEl) input.value = '';
+        });
+
+        data.editedData.entityDetails.natureOfBusiness = `Others: ${inputEl.value.trim()}`;
+        console.log('Updated:', data.editedData.entityDetails.natureOfBusiness);
+      });
+
+      // Handle blur: if input is empty, unselect it
+      inputEl.addEventListener('blur', () => {
+        if (inputEl.value.trim() === '') {
+          checkbox.checked = false;
+          data.editedData.entityDetails.natureOfBusiness = null;
+          console.log('Cleared Others due to empty input');
+        }
       });
     }
   });
