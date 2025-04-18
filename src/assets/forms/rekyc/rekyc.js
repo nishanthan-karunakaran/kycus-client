@@ -9,7 +9,7 @@ document.addEventListener('DOMContentLoaded', async function () {
   await selfEmployedProfessional();
   await natureOfBusiness();
   await businessDetails();
-  await renderNatureOfIndustry();
+  await natureOfIndustry();
 });
 
 function fun() {
@@ -257,7 +257,8 @@ function fun() {
         entityType: 'Private',
         subCategory: 'pubPvtLtdCompany: Financial Services Company',
         selfEmployeedProfessional: '',
-        natureOfBusiness: '',
+        natureOfBusiness: 'Real Estate',
+        natureOfIndustry: 'Engineering Goods',
       },
       businessDetails: {
         detailsOfActivity: 'detailsOfActivity',
@@ -673,7 +674,7 @@ function businessDetails() {
   });
 }
 
-function renderNatureOfIndustry() {
+function natureOfIndustry() {
   const labels = [
     'Automobile',
     'Restaurants',
@@ -721,10 +722,10 @@ function renderNatureOfIndustry() {
   ];
 
   const container = document.querySelector('#nature-of-industry .checkbox_container');
+  const selectedValue = data.editedData?.entityDetails?.natureOfIndustry || '';
+  let othersInput = null;
 
-  let natureOfIndustry = '';
-
-  for (let i = 0; i < labels.length; i++) {
+  labels.forEach((label, i) => {
     const wrapper = document.createElement('div');
     wrapper.className = 'checkbox_wrapper';
 
@@ -732,30 +733,76 @@ function renderNatureOfIndustry() {
     checkbox.type = 'checkbox';
     checkbox.name = `industry`;
     checkbox.id = `industry-${i}`;
-    checkbox.checked = false;
 
     const labelDiv = document.createElement('div');
     const labelText = document.createElement('p');
     labelText.className = 'text-nowrap';
-    labelText.textContent = labels[i];
+    labelText.textContent = label;
 
     labelDiv.appendChild(labelText);
     wrapper.appendChild(checkbox);
     wrapper.appendChild(labelDiv);
     container.appendChild(wrapper);
 
-    checkbox.addEventListener('change', function () {
-      if (checkbox.checked) {
-        const allCheckboxes = container.querySelectorAll('input[type="checkbox"]');
-        allCheckboxes.forEach((cb) => {
-          if (cb !== checkbox) cb.checked = false;
-        });
+    // Prefill logic
+    const isCustomOthers = label === 'Others' && selectedValue && !labels.includes(selectedValue);
+    if (selectedValue === label || isCustomOthers) {
+      checkbox.checked = true;
+      if (isCustomOthers) {
+        createAndAttachOthersInput(wrapper, selectedValue);
+      }
+    }
 
-        natureOfIndustry = labels[i];
-        console.log(`Selected nature of industry: ${natureOfIndustry}`);
+    checkbox.addEventListener('change', function () {
+      const allCheckboxes = container.querySelectorAll('input[type="checkbox"]');
+      allCheckboxes.forEach((cb) => {
+        if (cb !== checkbox) cb.checked = false;
+      });
+
+      if (othersInput && label !== 'Others') {
+        othersInput.remove();
+        othersInput = null;
+      }
+
+      if (checkbox.checked) {
+        if (label === 'Others') {
+          createAndAttachOthersInput(wrapper);
+          data.editedData.entityDetails.natureOfIndustry = '';
+        } else {
+          data.editedData.entityDetails.natureOfIndustry = label;
+        }
       } else {
-        natureOfIndustry = '';
-        console.log(`Cleared selection`);
+        data.editedData.entityDetails.natureOfIndustry = '';
+        if (othersInput) {
+          othersInput.remove();
+          othersInput = null;
+        }
+      }
+    });
+  });
+
+  function createAndAttachOthersInput(wrapper, prefill = '') {
+    othersInput = document.createElement('input');
+    othersInput.type = 'text';
+    othersInput.placeholder = 'Please specify...';
+    othersInput.className = 'others-industry-input';
+    othersInput.style.marginTop = '4px';
+    othersInput.value = prefill;
+
+    wrapper.appendChild(othersInput);
+    othersInput.focus();
+
+    othersInput.addEventListener('input', () => {
+      data.editedData.entityDetails.natureOfIndustry = othersInput.value.trim();
+    });
+
+    othersInput.addEventListener('blur', () => {
+      if (!othersInput.value.trim()) {
+        const othersCheckbox = wrapper.querySelector('input[type="checkbox"]');
+        if (othersCheckbox) othersCheckbox.checked = false;
+        data.editedData.entityDetails.natureOfIndustry = '';
+        othersInput.remove();
+        othersInput = null;
       }
     });
   }
