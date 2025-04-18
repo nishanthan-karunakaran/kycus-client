@@ -11,6 +11,8 @@ document.addEventListener('DOMContentLoaded', async function () {
   await businessDetails();
   await natureOfIndustry();
   await entityProofDeclaration();
+  await extendedAnnexure();
+  await boDetailsTable();
 });
 
 function fun() {
@@ -275,6 +277,59 @@ function fun() {
         identityProof: 'PAN',
         date: '18/4/25',
       },
+      extendedAnnexure: {
+        basicDetails: {
+          date: '18/04/25',
+          aofNo: 'AFO1234',
+          nameOfEntity: 'Ebitaus',
+          custId: 'CUS1234',
+        },
+        docEntity: {
+          coi: 'COI1234',
+          rc: '',
+          td: '',
+          moa_aoa: true,
+        },
+        mailAddress: {
+          coi: 'COI1234',
+          rc: '',
+          other: 'Pan Doc',
+        },
+      },
+      boDetails: [
+        {
+          boName: 'Rajeev Sharma',
+          addressLine: 'Flat No 101, Green Residency',
+          city: 'Hyderabad',
+          state: 'Telangana',
+          country: 'India',
+          pin: '500032',
+        },
+        {
+          boName: 'Vikram Rao',
+          addressLine: 'A-24, Sector 3',
+          city: 'Noida',
+          state: 'Uttar Pradesh',
+          country: 'India',
+          pin: '201301',
+        },
+        {
+          boName: 'Rajeev Sharma',
+          addressLine: 'Flat No 101, Green Residency',
+          city: 'Hyderabad',
+          state: 'Telangana',
+          country: 'India',
+          pin: '500032',
+        },
+        {
+          boName: 'Vikram Rao',
+          addressLine: 'A-24, Sector 3',
+          city: 'Noida',
+          state: 'Uttar Pradesh',
+          country: 'India',
+          pin: '201301',
+        },
+      ],
     },
   };
 }
@@ -857,4 +912,168 @@ function entityProofDeclaration() {
   inputs[4].addEventListener('input', (e) => {
     data.editedData.entityProofDeclaration.date = e.target.value.trim();
   });
+}
+
+function extendedAnnexure() {
+  const extended = data.editedData.extendedAnnexure;
+
+  // Prefill + bind basic details
+  const basicFields = ['date', 'aofNo', 'nameOfEntity', 'custId'];
+  basicFields.forEach((key) => {
+    const input = document.getElementById(`basic-${key}`);
+    if (input) {
+      input.value = extended.basicDetails[key] || '';
+      input.addEventListener('input', () => {
+        extended.basicDetails[key] = input.value;
+      });
+    }
+  });
+
+  // Prefill + bind document entity
+  const docEntityFields = ['coi', 'rc', 'td', 'moa_aoa'];
+  docEntityFields.forEach((key) => {
+    const input = document.getElementById(`docEntity-${key}`);
+    const check = document.getElementById(`docEntity-${key}-check`);
+
+    if (typeof extended.docEntity[key] !== 'undefined') {
+      if (check) check.checked = !!extended.docEntity[key];
+      if (input && typeof extended.docEntity[key] === 'string') {
+        input.value = extended.docEntity[key];
+      }
+    }
+
+    if (check) {
+      check.addEventListener('change', () => {
+        if (!check.checked) {
+          extended.docEntity[key] = '';
+          if (input) input.value = '';
+        } else {
+          extended.docEntity[key] = input ? input.value || true : true;
+        }
+      });
+    }
+
+    if (input) {
+      input.addEventListener('input', () => {
+        if (check?.checked) {
+          extended.docEntity[key] = input.value;
+        }
+      });
+    }
+  });
+
+  // Prefill + bind mailing address
+  const mailFields = ['coi', 'rc', 'other'];
+  mailFields.forEach((key) => {
+    const input = document.getElementById(`mailAddress-${key}`);
+    const check = document.getElementById(`mailAddress-${key}-check`);
+
+    if (typeof extended.mailAddress[key] !== 'undefined') {
+      if (check) check.checked = !!extended.mailAddress[key];
+      if (input && typeof extended.mailAddress[key] === 'string') {
+        input.value = extended.mailAddress[key];
+      }
+    }
+
+    if (check) {
+      check.addEventListener('change', () => {
+        if (!check.checked) {
+          extended.mailAddress[key] = '';
+          if (input) input.value = '';
+        } else {
+          extended.mailAddress[key] = input ? input.value : '';
+        }
+      });
+    }
+
+    if (input) {
+      input.addEventListener('input', () => {
+        if (check?.checked) {
+          extended.mailAddress[key] = input.value;
+        }
+      });
+    }
+  });
+}
+
+function boDetailsTable() {
+  const boDetails = data.editedData.boDetails; // Assuming data.boDetails contains the details
+  const container = document.querySelector('#extended-annexure');
+  const detailsContainer = document.querySelector('.bo_details');
+  const boContainer = document.createElement('div');
+  boContainer.classList.add('bo_container');
+
+  const boLength = boDetails.length;
+
+  // Loop for half the length of boDetails
+  for (let i = 0; i < Math.ceil(boLength / 2); i++) {
+    const boWrapper = document.createElement('div');
+    boWrapper.classList.add('bo_wrapper');
+
+    // Define columns with descriptions and keys
+    const columns = [
+      { label: 'Name of Beneficial Owner', key: 'boName' },
+      { label: 'Address - Line', key: 'addressLine' },
+      { label: 'Address - City', key: 'city' },
+      { label: 'Address - State', key: 'state' },
+      { label: 'Address - Country', key: 'country' },
+      { label: 'Address - Pincode', key: 'pin' },
+    ];
+
+    // Handle the pair of BOs for each iteration
+    const currentBo = boDetails[i];
+    const nextBo = boDetails[i + 1];
+
+    columns.forEach((col) => {
+      const row = document.createElement('div');
+      row.classList.add('row');
+
+      // Description part (first column)
+      const descDiv = document.createElement('div');
+      descDiv.classList.add('desc');
+      const label = document.createElement('p');
+      label.innerText = col.label;
+      descDiv.appendChild(label);
+
+      // Value part (second column - for first input of BO[i])
+      const valueDiv1 = document.createElement('div');
+      valueDiv1.classList.add('value');
+      const input1 = document.createElement('input');
+      input1.type = 'text';
+      input1.value = currentBo[col.key] || ''; // Prefill the value if available
+      input1.addEventListener('input', (event) => {
+        boDetails[i][col.key] = event.target.value;
+      });
+      valueDiv1.appendChild(input1);
+
+      // Value part (third column - for second input, either for BO[i+1] or empty)
+      const valueDiv2 = document.createElement('div');
+      valueDiv2.classList.add('value');
+      const input2 = document.createElement('input');
+      input2.type = 'text';
+      if (nextBo) {
+        input2.value = nextBo[col.key] || ''; // Prefill the value if available
+        input2.addEventListener('input', (event) => {
+          boDetails[i + 1][col.key] = event.target.value;
+        });
+      } else {
+        input2.disabled = true; // If no next BO, disable input
+      }
+      valueDiv2.appendChild(input2);
+
+      // Append all three parts to the row
+      row.appendChild(descDiv);
+      row.appendChild(valueDiv1);
+      row.appendChild(valueDiv2);
+
+      // Append row to the wrapper
+      boWrapper.appendChild(row);
+    });
+
+    // Append the wrapper to the boContainer
+    boContainer.appendChild(boWrapper);
+
+    // Append boContainer to the detailsContainer
+    detailsContainer.appendChild(boContainer);
+  }
 }

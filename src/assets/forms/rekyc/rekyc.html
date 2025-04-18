@@ -962,25 +962,27 @@
         <div class="basic_details">
           <div class="date_afo">
             <div class="form-container">
-              <label for="date" class="text-nowrap">Date</label>
-              <input type="text" />
+              <label for="basic-date" class="text-nowrap">Date</label>
+              <input type="text" id="basic-date" />
             </div>
             <div class="form-container">
-              <label for="date" class="text-nowrap">AOF Number</label>
-              <input type="text" />
+              <label for="basic-aofNo" class="text-nowrap">AOF Number</label>
+              <input type="text" id="basic-aofNo" />
             </div>
           </div>
           <div class="form-container">
-            <label for="date" class="text-nowrap">Name of the entity</label>
-            <input type="text" />
+            <label for="basic-nameOfEntity" class="text-nowrap">
+              Name of the entity
+            </label>
+            <input type="text" id="basic-nameOfEntity" />
           </div>
           <div class="form-container">
-            <label for="date" class="text-nowrap">
+            <label for="basic-custId" class="text-nowrap">
               Customer ID
               <br />
               (Applicable for existing customer)
             </label>
-            <input type="text" />
+            <input type="text" id="basic-custId" />
           </div>
         </div>
 
@@ -989,55 +991,40 @@
             Document submitted for Identity of Entity (Please tick and mention
             document number):
           </p>
-
           <div class="doc_list">
             <div class="form_row">
               <div class="checkbox_wrapper">
-                <input
-                  type="checkbox"
-                  name="proprietorship"
-                  id="proprietorship"
-                />
+                <input type="checkbox" id="docEntity-coi-check" />
                 <div>
-                  <p class="text-nowrap">Certificate of Incoporation</p>
-                  <input type="text" name="cio" id="cio" />
+                  <p class="text-nowrap">Certificate of Incorporation</p>
+                  <input type="text" id="docEntity-coi" />
                 </div>
               </div>
             </div>
             <div class="form_row">
               <div class="checkbox_wrapper">
-                <input
-                  type="checkbox"
-                  name="proprietorship"
-                  id="proprietorship"
-                />
+                <input type="checkbox" id="docEntity-rc-check" />
                 <div>
                   <p class="text-nowrap">Registration Certificate</p>
-                  <input type="text" name="cio" id="cio" />
+                  <input type="text" id="docEntity-rc" />
                 </div>
               </div>
             </div>
             <div class="form_row">
               <div class="checkbox_wrapper">
-                <input
-                  type="checkbox"
-                  name="proprietorship"
-                  id="proprietorship"
-                />
+                <input type="checkbox" id="docEntity-td-check" />
                 <div>
                   <p class="text-nowrap">Trust Deed</p>
+                  <input type="text" id="docEntity-td" />
                 </div>
               </div>
             </div>
             <div class="form_row">
               <div class="checkbox_wrapper">
-                <input
-                  type="checkbox"
-                  name="proprietorship"
-                  id="proprietorship"
-                />
+                <input type="checkbox" id="docEntity-moa_aoa-check" />
                 <div>
                   <p class="text-nowrap">Memorandum & Article of Association</p>
+                  <input type="text" id="docEntity-moa_aoa" />
                 </div>
               </div>
             </div>
@@ -1049,44 +1036,31 @@
             Document submitted for Mailing Address (Please tick and mention
             document number):
           </p>
-
           <div class="doc_list">
             <div class="form_row">
               <div class="checkbox_wrapper">
-                <input
-                  type="checkbox"
-                  name="proprietorship"
-                  id="proprietorship"
-                />
+                <input type="checkbox" id="mailAddress-coi-check" />
                 <div>
-                  <p class="text-nowrap">Certificate of Incoporation</p>
-                  <input type="text" name="cio" id="cio" />
+                  <p class="text-nowrap">Certificate of Incorporation</p>
+                  <input type="text" id="mailAddress-coi" />
                 </div>
               </div>
             </div>
             <div class="form_row">
               <div class="checkbox_wrapper">
-                <input
-                  type="checkbox"
-                  name="proprietorship"
-                  id="proprietorship"
-                />
+                <input type="checkbox" id="mailAddress-rc-check" />
                 <div>
                   <p class="text-nowrap">Registration Certificate</p>
-                  <input type="text" name="cio" id="cio" />
+                  <input type="text" id="mailAddress-rc" />
                 </div>
               </div>
             </div>
             <div class="form_row">
               <div class="checkbox_wrapper">
-                <input
-                  type="checkbox"
-                  name="proprietorship"
-                  id="proprietorship"
-                />
+                <input type="checkbox" id="mailAddress-other-check" />
                 <div>
                   <p class="text-nowrap">Any Other Document</p>
-                  <input type="text" name="cio" id="cio" />
+                  <input type="text" id="mailAddress-other" />
                 </div>
               </div>
             </div>
@@ -1095,103 +1069,6 @@
 
         <div class="bo_details">
           <h5>Beneficial Owner details {All fields are mandatory}</h5>
-
-          <div class="bo_container">
-            <div class="bo_wrapper">
-              <div class="row">
-                <div class="desc">
-                  <p>Name of Beneficial Owner</p>
-                </div>
-                <div class="value">
-                  <div>
-                    <label for="date" class="text-nowrap">1)</label>
-                    <input type="text" />
-                  </div>
-                </div>
-                <div class="value">
-                  <div>
-                    <label for="date" class="text-nowrap">2)</label>
-                    <input type="text" />
-                  </div>
-                </div>
-              </div>
-              <div class="row">
-                <div class="desc">
-                  <p>Address - Line</p>
-                </div>
-                <div class="value">
-                  <div>
-                    <input type="text" />
-                  </div>
-                </div>
-                <div class="value">
-                  <div>
-                    <input type="text" />
-                  </div>
-                </div>
-              </div>
-              <div class="row">
-                <div class="desc">
-                  <p>Address - City</p>
-                </div>
-                <div class="value">
-                  <div>
-                    <input type="text" />
-                  </div>
-                </div>
-                <div class="value">
-                  <div>
-                    <input type="text" />
-                  </div>
-                </div>
-              </div>
-              <div class="row">
-                <div class="desc">
-                  <p>Address - State</p>
-                </div>
-                <div class="value">
-                  <div>
-                    <input type="text" />
-                  </div>
-                </div>
-                <div class="value">
-                  <div>
-                    <input type="text" />
-                  </div>
-                </div>
-              </div>
-              <div class="row">
-                <div class="desc">
-                  <p>Address - Country</p>
-                </div>
-                <div class="value">
-                  <div>
-                    <input type="text" />
-                  </div>
-                </div>
-                <div class="value">
-                  <div>
-                    <input type="text" />
-                  </div>
-                </div>
-              </div>
-              <div class="row">
-                <div class="desc">
-                  <p>Address - Pincode</p>
-                </div>
-                <div class="value">
-                  <div>
-                    <input type="text" />
-                  </div>
-                </div>
-                <div class="value">
-                  <div>
-                    <input type="text" />
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
         </div>
       </section>
     </div>
