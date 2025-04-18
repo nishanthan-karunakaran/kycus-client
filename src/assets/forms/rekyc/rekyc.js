@@ -8,6 +8,7 @@ document.addEventListener('DOMContentLoaded', async function () {
   await entitySubCategory();
   await selfEmployedProfessional();
   await natureOfBusiness();
+  await businessDetails();
   await renderNatureOfIndustry();
 });
 
@@ -257,6 +258,13 @@ function fun() {
         subCategory: 'pubPvtLtdCompany: Financial Services Company',
         selfEmployeedProfessional: '',
         natureOfBusiness: '',
+      },
+      businessDetails: {
+        detailsOfActivity: 'detailsOfActivity',
+        dateOfIncorporation: 'dateOfIncorporation',
+        annualTurnOverFigures: 'annualTurnOverFigures',
+        annualTurnOverWords: 'annualTurnOverWords',
+        involvedIn: 'Import',
       },
     },
   };
@@ -597,6 +605,71 @@ function natureOfBusiness() {
         }
       });
     }
+  });
+}
+
+function businessDetails() {
+  const section = document.querySelector('#business-details');
+  if (!section) return;
+
+  const detailsOfActivityInput = section.querySelector('#detailsOfActivity');
+  const dateOfIncorporationInput = section.querySelector('#dateOfIncorporation');
+  const annualTurnOverFiguresInput = section.querySelector('#annualTurnOverFigures');
+  const annualTurnOverWordsInput = section.querySelector('#annualTurnOverWords');
+  const importCheckbox = section.querySelector('#import');
+  const exportCheckbox = section.querySelector('#export');
+
+  // Pre-fill if any data exists
+  const dataSet = data.editedData?.businessDetails || {};
+
+  detailsOfActivityInput.value = dataSet.detailsOfActivity || '';
+  dateOfIncorporationInput.value = dataSet.dateOfIncorporation || '';
+  annualTurnOverFiguresInput.value = dataSet.annualTurnOverFigures || '';
+  annualTurnOverWordsInput.value = dataSet.annualTurnOverWords || '';
+
+  if (dataSet.involvedIn === 'Import') importCheckbox.checked = true;
+  else if (dataSet.involvedIn === 'Export') exportCheckbox.checked = true;
+
+  // Input listeners
+  detailsOfActivityInput.addEventListener('input', () => {
+    data.editedData.businessDetails.detailsOfActivity = detailsOfActivityInput.value.trim();
+    console.log(data.editedData.businessDetails.detailsOfActivity);
+  });
+
+  dateOfIncorporationInput.addEventListener('input', () => {
+    data.editedData.businessDetails.dateOfIncorporation = dateOfIncorporationInput.value.trim();
+    console.log(data.editedData.businessDetails.dateOfIncorporation);
+  });
+
+  annualTurnOverFiguresInput.addEventListener('input', () => {
+    data.editedData.businessDetails.annualTurnOverFigures = annualTurnOverFiguresInput.value.trim();
+    console.log(data.editedData.businessDetails.annualTurnOverFigures);
+  });
+
+  annualTurnOverWordsInput.addEventListener('input', () => {
+    data.editedData.businessDetails.annualTurnOverWords = annualTurnOverWordsInput.value.trim();
+    console.log(data.editedData.businessDetails.annualTurnOverWords);
+  });
+
+  // Checkbox logic (like radio)
+  importCheckbox.addEventListener('change', () => {
+    if (importCheckbox.checked) {
+      exportCheckbox.checked = false;
+      data.editedData.businessDetails.involvedIn = 'Import';
+    } else {
+      data.editedData.businessDetails.involvedIn = '';
+    }
+    console.log(data.editedData.businessDetails.involvedIn);
+  });
+
+  exportCheckbox.addEventListener('change', () => {
+    if (exportCheckbox.checked) {
+      importCheckbox.checked = false;
+      data.editedData.businessDetails.involvedIn = 'Export';
+    } else {
+      data.editedData.businessDetails.involvedIn = '';
+    }
+    console.log(data.editedData.businessDetails.involvedIn);
   });
 }
 
