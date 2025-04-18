@@ -10,6 +10,7 @@ document.addEventListener('DOMContentLoaded', async function () {
   await natureOfBusiness();
   await businessDetails();
   await natureOfIndustry();
+  await entityProofDeclaration();
 });
 
 function fun() {
@@ -266,6 +267,13 @@ function fun() {
         annualTurnOverFigures: 'annualTurnOverFigures',
         annualTurnOverWords: 'annualTurnOverWords',
         involvedIn: 'Import',
+      },
+      entityProofDeclaration: {
+        entityProof1: 'Certificate of Incorporation',
+        entityProof2: 'MOA (Memorandum of Association) ',
+        addressProof: 'Electricity Bill',
+        identityProof: 'PAN',
+        date: '18/4/25',
       },
     },
   };
@@ -806,4 +814,47 @@ function natureOfIndustry() {
       }
     });
   }
+}
+
+function entityProofDeclaration() {
+  const section = document.querySelector('#entity-proof-declaration');
+
+  const inputs = section.querySelectorAll('input');
+
+  // Destructure and assign fields from your data object
+  const {
+    entityProof1 = '',
+    entityProof2 = '',
+    addressProof = '',
+    identityProof = '',
+    date = '',
+  } = data.editedData?.entityProofDeclaration || {};
+
+  // Prefill values
+  inputs[0].value = entityProof1;
+  inputs[1].value = entityProof2;
+  inputs[2].value = addressProof;
+  inputs[3].value = identityProof;
+  inputs[4].value = date;
+
+  // Update on input
+  inputs[0].addEventListener('input', (e) => {
+    data.editedData.entityProofDeclaration.entityProof1 = e.target.value.trim();
+  });
+
+  inputs[1].addEventListener('input', (e) => {
+    data.editedData.entityProofDeclaration.entityProof2 = e.target.value.trim();
+  });
+
+  inputs[2].addEventListener('input', (e) => {
+    data.editedData.entityProofDeclaration.addressProof = e.target.value.trim();
+  });
+
+  inputs[3].addEventListener('input', (e) => {
+    data.editedData.entityProofDeclaration.identityProof = e.target.value.trim();
+  });
+
+  inputs[4].addEventListener('input', (e) => {
+    data.editedData.entityProofDeclaration.date = e.target.value.trim();
+  });
 }
