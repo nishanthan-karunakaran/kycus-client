@@ -1,8 +1,8 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap');
 
 :root {
-  --title-text: 12px;
-  --body-text: 10px;
+  --title-text: 14px;
+  --body-text: 12px;
   --primary-text: #4b4b4d;
   --primary-blue: #01327e;
   --primary-orange: #ff8754;
@@ -33,6 +33,13 @@ body {
   box-sizing: border-box;
   overflow: hidden;
   page-break-after: always;
+}
+
+.page1 {
+  font-size: 10px !important;
+  .section-title {
+    font-size: 12px !important;
+  }
 }
 
 .form-container {

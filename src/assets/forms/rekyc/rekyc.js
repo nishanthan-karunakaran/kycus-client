@@ -13,6 +13,7 @@ document.addEventListener('DOMContentLoaded', async function () {
   await entityProofDeclaration();
   await extendedAnnexure();
   await boDetailsTable();
+  await ausDetails();
 });
 
 function fun() {
@@ -264,10 +265,10 @@ function fun() {
         natureOfIndustry: 'Engineering Goods',
       },
       businessDetails: {
-        detailsOfActivity: 'detailsOfActivity',
-        dateOfIncorporation: 'dateOfIncorporation',
-        annualTurnOverFigures: 'annualTurnOverFigures',
-        annualTurnOverWords: 'annualTurnOverWords',
+        detailsOfActivity: 'FinTech',
+        dateOfIncorporation: '30/03/20253',
+        annualTurnOverFigures: '10,00,00,000',
+        annualTurnOverWords: '10 Crores',
         involvedIn: 'Import',
       },
       entityProofDeclaration: {
@@ -330,6 +331,104 @@ function fun() {
           pin: '201301',
         },
       ],
+      ausData: [
+        {
+          nameoftheauthorisedsignatory: 'Alice Johnson',
+          fathersname: 'Robert Johnson',
+          proofofidentity: 'Passport',
+          proofofaddress: 'Utility Bill',
+          addressline: '123 Baker Street',
+          addresscity: 'London',
+          addressstate: 'Greater London',
+          addresscountry: 'United Kingdom',
+          addresspincode: 'NW1 6XE',
+          // signature and photograph will be handled separately
+        },
+        {
+          nameoftheauthorisedsignatory: 'Bob Smith',
+          fathersname: 'Edward Smith',
+          proofofidentity: "Driver's License",
+          proofofaddress: 'Bank Statement',
+          addressline: '456 Queen Street',
+          addresscity: 'Toronto',
+          addressstate: 'Ontario',
+          addresscountry: 'Canada',
+          addresspincode: 'M5V 2B6',
+          // signature and photograph will be handled separately
+        },
+        {
+          nameoftheauthorisedsignatory: 'Alice Johnson',
+          fathersname: 'Robert Johnson',
+          proofofidentity: 'Passport',
+          proofofaddress: 'Utility Bill',
+          addressline: '123 Baker Street',
+          addresscity: 'London',
+          addressstate: 'Greater London',
+          addresscountry: 'United Kingdom',
+          addresspincode: 'NW1 6XE',
+          // signature and photograph will be handled separately
+        },
+        {
+          nameoftheauthorisedsignatory: 'Bob Smith',
+          fathersname: 'Edward Smith',
+          proofofidentity: "Driver's License",
+          proofofaddress: 'Bank Statement',
+          addressline: '456 Queen Street',
+          addresscity: 'Toronto',
+          addressstate: 'Ontario',
+          addresscountry: 'Canada',
+          addresspincode: 'M5V 2B6',
+          // signature and photograph will be handled separately
+        },
+        {
+          nameoftheauthorisedsignatory: 'Alice Johnson',
+          fathersname: 'Robert Johnson',
+          proofofidentity: 'Passport',
+          proofofaddress: 'Utility Bill',
+          addressline: '123 Baker Street',
+          addresscity: 'London',
+          addressstate: 'Greater London',
+          addresscountry: 'United Kingdom',
+          addresspincode: 'NW1 6XE',
+          // signature and photograph will be handled separately
+        },
+        {
+          nameoftheauthorisedsignatory: 'Bob Smith',
+          fathersname: 'Edward Smith',
+          proofofidentity: "Driver's License",
+          proofofaddress: 'Bank Statement',
+          addressline: '456 Queen Street',
+          addresscity: 'Toronto',
+          addressstate: 'Ontario',
+          addresscountry: 'Canada',
+          addresspincode: 'M5V 2B6',
+          // signature and photograph will be handled separately
+        },
+        {
+          nameoftheauthorisedsignatory: 'Alice Johnson',
+          fathersname: 'Robert Johnson',
+          proofofidentity: 'Passport',
+          proofofaddress: 'Utility Bill',
+          addressline: '123 Baker Street',
+          addresscity: 'London',
+          addressstate: 'Greater London',
+          addresscountry: 'United Kingdom',
+          addresspincode: 'NW1 6XE',
+          // signature and photograph will be handled separately
+        },
+        {
+          nameoftheauthorisedsignatory: 'Bob Smith',
+          fathersname: 'Edward Smith',
+          proofofidentity: "Driver's License",
+          proofofaddress: 'Bank Statement',
+          addressline: '456 Queen Street',
+          addresscity: 'Toronto',
+          addressstate: 'Ontario',
+          addresscountry: 'Canada',
+          addresspincode: 'M5V 2B6',
+          // signature and photograph will be handled separately
+        },
+      ],
     },
   };
 }
@@ -338,9 +437,9 @@ function entityBasicInfo() {
   const entityCustId = document.getElementById('entityCustId');
   const entityName = document.getElementById('entityName');
   const entityPan = document.getElementById('entityPan');
-  entityCustId.value = data.entityCustId;
-  entityName.value = data.entityName;
-  entityPan.value = data.entityDetails.pan.panNumber;
+  entityCustId.value = data?.entityCustId || '';
+  entityName.value = data?.entityName || '';
+  entityPan.value = data?.entityDetails?.pan?.panNumber || '';
 }
 
 function entityMailingAddress() {
@@ -1075,5 +1174,118 @@ function boDetailsTable() {
 
     // Append boContainer to the detailsContainer
     detailsContainer.appendChild(boContainer);
+  }
+}
+
+function ausDetails() {
+  const ausData = data?.editedData?.ausData || [];
+  const labels = [
+    'Name of the Authorised Signatory',
+    "Father's name",
+    'Proof of Identity',
+    'Proof of Address',
+    'Address - Line',
+    'Address - City',
+    'Address - State',
+    'Address - Country',
+    'Address - Pincode',
+    'Signature',
+    'Photograph',
+  ];
+
+  const toKey = (label) => label.toLowerCase().replace(/[^a-z0-9]/gi, '');
+
+  for (let i = 0; i < ausData.length; i += 2) {
+    const aus1 = ausData[i];
+    const aus2 = ausData[i + 1];
+
+    const pdfPage = document.createElement('div');
+    pdfPage.classList.add('pdf-page', 'ausDetail');
+
+    const section = document.createElement('section');
+    section.id = 'aus-details';
+    section.classList.add('form_section');
+
+    const header = document.createElement('div');
+    header.classList.add('header', 'text-center');
+    const h2 = document.createElement('h2');
+    h2.classList.add('text-black');
+    h2.textContent = 'Authorised Signatories details';
+    const p = document.createElement('p');
+    p.textContent = 'All fields are mandatory';
+    header.appendChild(h2);
+    header.appendChild(p);
+    section.appendChild(header);
+
+    const container = document.createElement('div');
+    container.classList.add('aus_container');
+
+    const table = document.createElement('table');
+    table.classList.add('table');
+    const tbody = document.createElement('tbody');
+
+    labels.forEach((label, rowIndex) => {
+      const tr = document.createElement('tr');
+
+      // Label Column
+      const labelTd = document.createElement('td');
+      labelTd.innerHTML = `<p>${label}</p>`;
+      tr.appendChild(labelTd);
+      tr.style.minHeight = '60px';
+
+      // AUS 1
+      const aus1Td = document.createElement('td');
+      const aus1Div = document.createElement('div');
+
+      if (rowIndex === 9) {
+        aus1Div.className = 'sign_container';
+        aus1Div.innerHTML = `<div class="sign_wrapper"></div>`;
+      } else if (rowIndex === 10) {
+        aus1Div.className = 'photo_container';
+        aus1Div.innerHTML = `<div class="photo_wrapper"></div>`;
+      } else {
+        const input = document.createElement('input');
+        input.type = 'text';
+        const key = toKey(label);
+        input.value = aus1?.[key] || '';
+        input.addEventListener('input', (e) => {
+          if (aus1) aus1[key] = e.target.value;
+        });
+        aus1Div.appendChild(input);
+      }
+      aus1Td.appendChild(aus1Div);
+      tr.appendChild(aus1Td);
+
+      // AUS 2
+      const aus2Td = document.createElement('td');
+      const aus2Div = document.createElement('div');
+
+      if (rowIndex === 9) {
+        aus2Div.className = 'sign_container';
+        aus2Div.innerHTML = `<div class="sign_wrapper"></div>`;
+      } else if (rowIndex === 10) {
+        aus2Div.className = 'photo_container';
+        aus2Div.innerHTML = `<div class="photo_wrapper"></div>`;
+      } else {
+        const input = document.createElement('input');
+        input.type = 'text';
+        const key = toKey(label);
+        input.value = aus2?.[key] || '';
+        input.addEventListener('input', (e) => {
+          if (aus2) aus2[key] = e.target.value;
+        });
+        aus2Div.appendChild(input);
+      }
+      aus2Td.appendChild(aus2Div);
+      tr.appendChild(aus2Td);
+
+      tbody.appendChild(tr);
+    });
+
+    table.appendChild(tbody);
+    container.appendChild(table);
+    section.appendChild(container);
+    pdfPage.appendChild(section);
+    document.body.appendChild(pdfPage);
   }
 }
