@@ -15,34 +15,25 @@ const routes: Routes = [
       {
         path: 'wallet',
         loadChildren: () =>
-          import('../../features/wallet/wallet.module').then(
-            (m) => m.WalletModule,
-          ),
+          import('../../features/wallet/wallet.module').then((m) => m.WalletModule),
       },
       {
         path: 'entity',
         loadChildren: () =>
-          import('../../features/entity/entity.module').then(
-            (m) => m.EntityModule,
-          ),
+          import('../../features/entity/entity.module').then((m) => m.EntityModule),
       },
       {
         path: 'consent',
         loadChildren: () =>
-          import('../../features/consent/consent.module').then(
-            (m) => m.ConsentModule,
-          ),
+          import('../../features/consent/consent.module').then((m) => m.ConsentModule),
       },
       {
         path: 'reKYC',
-        loadChildren: () =>
-          import('../../features/rekyc/rekyc.module').then(
-            (m) => m.RekycModule,
-          ),
+        loadChildren: () => import('../../features/rekyc/rekyc.module').then((m) => m.RekycModule),
       },
       {
         path: '**',
-        redirectTo: 'wallet',
+        redirectTo: 'reKYC',
       },
     ],
   },
