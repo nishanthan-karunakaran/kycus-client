@@ -1,5 +1,7 @@
-<header class="relative flex justify-between bg-white px-4 py-3 drop-shadow-lg">
-  <div class="flex items-center gap-6">
+<header
+  class="relative flex justify-between bg-white px-10 py-3 drop-shadow-lg"
+>
+  <div class="flex items-center gap-4">
     <div>
       <img
         src="./assets/images/logo/kycus-logo.webp"
@@ -8,7 +10,7 @@
       />
     </div>
 
-    <div class="flex flex-col items-start gap-1 border-l-2 pl-2 text-primary">
+    <div class="flex flex-col items-start gap-1 border-l-2 pl-4 text-primary">
       <p>RE KYC - NON INDIVIDUAL</p>
       <img
         src="./assets/images/logo/hdfc.webp"
@@ -18,18 +20,20 @@
     </div>
   </div>
 
-  <div class="flex items-center gap-2">
-    <div class="flex flex-col border-r-2 pr-2 text-end text-primary">
+  <div class="flex items-center gap-4">
+    <div class="flex flex-col border-r-2 pr-4 text-end text-primary">
       <p>TATA Consumer Products</p>
       <span class="text-xs">Private Limited</span>
     </div>
 
-    <div>
-      <p>{{ ausInfo()?.ausName }}</p>
-      <span class="text-xs text-gray-500">{{ getAusType }}</span>
-    </div>
-    <div>
-      <img src="./assets/svgs/user.svg" alt="User" />
+    <div class="flex items-center gap-3">
+      <div>
+        <p>{{ ausInfo()?.ausName }}</p>
+        <span class="text-xs text-gray-500">{{ getAusType }}</span>
+      </div>
+      <div>
+        <img src="./assets/svgs/user.svg" alt="User" />
+      </div>
     </div>
   </div>
 </header>
