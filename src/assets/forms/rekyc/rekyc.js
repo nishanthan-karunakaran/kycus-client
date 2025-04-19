@@ -1,9 +1,12 @@
+let isFormDataProcessed = false; // Flag to track if form data has been processed
 let data = {};
 
 document.addEventListener('DOMContentLoaded', async function () {
   await fun();
+  await ausDetails();
   await entityBasicInfo();
   await entityMailingAddress();
+  await entityRegisteredAddress();
   await entityType();
   await entitySubCategory();
   await selfEmployedProfessional();
@@ -13,257 +16,278 @@ document.addEventListener('DOMContentLoaded', async function () {
   await entityProofDeclaration();
   await extendedAnnexure();
   await boDetailsTable();
-  await ausDetails();
+  // await downloadPDF();
+});
+
+function sendSaveData() {
+  console.log(
+    'Iframe received TRIGGER_SAVE',
+    data.editedData.entityDetails.entityRegisteredAddress.sameAsMailing,
+  );
+  window.parent.postMessage(
+    {
+      type: 'SAVE_DATA',
+      source: 'kyc-form',
+      payload: data.editedData || { message: 'nothing loaded yet' },
+    },
+    '*',
+  );
+}
+
+window.addEventListener('message', (event) => {
+  const { type, payload } = event.data || {};
+
+  switch (type) {
+    case 'SET_FORM_DATA':
+      console.log('Iframe received form data:', payload);
+      data = payload;
+      break;
+
+    case 'TRIGGER_SAVE':
+      sendSaveData();
+      break;
+
+    default:
+      break;
+  }
 });
 
 function fun() {
-  // fetch('http://3.109.141.220:3002/kycus/rekyc/rekycForm/ebitaus123-123456789-09042025', {
-  //   method: 'GET',
-  //   headers: {
-  //     'Content-Type': 'application/json',
-  //   },
-  // })
-  //   .then((response) => response.json())
-  //   .then((data) => {
-  //     console.log(data);
-  //   });
   data = {
-    _id: '67f63f970345d33252eb1858',
-    entityId: 'ebitaus123-123456789-09042025',
-    bankName: 'HDFC Bank',
-    entityName: 'EBITAUS PRIVATE LIMITED',
-    reason: 'Re-KYC',
-    entityType: 'Private',
-    entityFilledBy: 'ebitaus123-123456789-09042025-OTHER',
-    entityDetails: {
-      cin: {
-        cinNumber: 'U62099TN2023PTC158659',
-        isVerified: false,
-        verifiedSource: 'Protean',
-        timestamp: '2025-04-09T17:58:18.204Z',
-      },
-      gstin: {
-        gstinNumber: '33AAHCE4484E1ZQ',
-        isVerified: true,
-        verifiedSource: 'API Sethu',
-        timestamp: '2025-04-09T12:43:02.396Z',
-      },
-      pan: {
-        panNumber: 'AAHC1885M',
-        isVerified: true,
-        verifiedSource: 'OpenAI',
-        timestamp: '2025-04-09T11:45:29.994Z',
-      },
-      iec: {
-        iecNumber: '',
-        isVerified: false,
-        verifiedSource: '',
-        timestamp: '',
-      },
-      businessType: '',
-      natureOfBusiness: '',
-      natureOfIndustry: '',
-      dateOfIncorporation: '',
-      annualTurnover: '',
-      employeeCount: 0,
-      importExport: false,
-      status: 'in-progress',
-      documents: {
-        entityDocs: [
-          {
-            type: 'PAN',
-            fileName: 'Screenshot 2025-04-09 161525.png',
-            fileType: 'image/png',
-            url: '/uploads\\ebitaus123-123456789-09042025\\entityPan/Screenshot 2025-04-09 161525.png',
-            isVerified: false,
-            verifiedSource: '',
-            timestamp: '2025-04-09T11:45:19.063Z',
-          },
-          {
-            type: 'GSTIN',
-            fileName: 'Screenshot 2025-04-09 123904.png',
-            fileType: 'image/png',
-            url: '/uploads\\ebitaus123-123456789-09042025\\entityGstin/Screenshot 2025-04-09 123904.png',
-            isVerified: true,
-            verifiedSource: 'Protean',
-            timestamp: '2025-04-09T12:42:52.594Z',
-          },
-          {
-            type: 'MOM',
-            fileName: 'GEPL-MOA-and-AOA-August.pdf',
-            fileType: 'application/pdf',
-            url: '/uploads\\ebitaus123-123456789-09042025\\entityDocs/GEPL-MOA-and-AOA-August.pdf',
-            isVerified: false,
-            verifiedSource: '',
-            timestamp: '2025-04-10T09:19:04.969Z',
-          },
-        ],
-        entityProofs: [
-          {
-            type: 'COI',
-            fileName: 'Ebitaus P Ltd - Certificate of Incorporation.pdf',
-            fileType: 'application/pdf',
-            url: '/uploads\\ebitaus123-123456789-09042025\\entityProofs/Ebitaus P Ltd - Certificate of Incorporation.pdf',
-            isVerified: false,
-            verifiedSource: '',
-            timestamp: '2025-04-09T17:57:57.397Z',
-          },
-          {
-            type: 'MOA',
-            fileName: 'GEPL-MOA-and-AOA-August.pdf',
-            fileType: 'application/pdf',
-            url: '/uploads\\ebitaus123-123456789-09042025\\entityProofs/GEPL-MOA-and-AOA-August.pdf',
-            isVerified: false,
-            verifiedSource: '',
-            timestamp: '2025-04-10T09:39:48.696Z',
-          },
-          {
-            type: 'AOA',
-            fileName: 'Tata Communications - MoA-AoA-Amended.pdf',
-            fileType: 'application/pdf',
-            url: '/uploads\\ebitaus123-123456789-09042025\\entityProofs/Tata Communications - MoA-AoA-Amended.pdf',
-            isVerified: false,
-            verifiedSource: '',
-            timestamp: '2025-04-10T04:59:03.735Z',
-          },
-        ],
-        entityAddressProof: {
-          type: 'addressProof',
-          fileName: 'Hathway.pdf',
-          fileType: 'application/pdf',
-          url: '/uploads\\ebitaus123-123456789-09042025\\entityAddressProofs/Hathway.pdf',
-          isVerified: true,
-          verifiedSource: 'Internal',
-          timestamp: '2025-04-11T05:48:39.666Z',
+    editedData: {
+      _id: '67f63f970345d33252eb1858',
+      entityId: 'ebitaus123-123456789-09042025',
+      bankName: 'HDFC Bank',
+      entityName: 'EBITAUS PRIVATE LIMITED',
+      reason: 'Re-KYC',
+      entityType: 'Private',
+      entityFilledBy: 'ebitaus123-123456789-09042025-OTHER',
+      entityDetails: {
+        cin: {
+          cinNumber: 'U62099TN2023PTC158659',
+          isVerified: false,
+          verifiedSource: 'Protean',
+          timestamp: '2025-04-09T17:58:18.204Z',
         },
-        form32: {
-          type: 'form32',
-          fileName: 'form32.pdf',
-          fileType: 'application/pdf',
-          url: '/uploads\\ebitaus123-123456789-09042025\\form32/form32.pdf',
+        gstin: {
+          gstinNumber: '33AAHCE4484E1ZQ',
+          isVerified: true,
+          verifiedSource: 'API Sethu',
+          timestamp: '2025-04-09T12:43:02.396Z',
+        },
+        pan: {
+          panNumber: 'AAHC1885M',
+          isVerified: true,
+          verifiedSource: 'OpenAI',
+          timestamp: '2025-04-09T11:45:29.994Z',
+        },
+        iec: {
+          iecNumber: '',
           isVerified: false,
           verifiedSource: '',
-          timestamp: '2025-04-10T11:46:09.113Z',
+          timestamp: '',
         },
-      },
-      registeredOfficeAddress: {
-        buildingName: 'PM Towers',
-        street: 'Greams Road, Thousand Lights',
-        city: 'Chennai',
-        state: 'Tamil Nadu',
-        country: 'India',
-        pin: '600006',
-        landline: '',
-        mobile: '9786190876',
-        email: 'kumar.nagaraji@ebitaus.com',
-        ownership: '',
-      },
-    },
-    authorizedSignatoriesDetails: [
-      {
-        ausId: 'ebitaus123-123456789-09042025-AUS1',
-        name: 'Harichandana',
-        email: 'harichandana.vegesna@ebitaus.com',
-        emailLink:
-          'http://localhost:4020/rekyc/customer/eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiJlYml0YXVzMTIzLTEyMzQ1Njc4OS0wOTA0MjAyNSIsImNvbXBhbnlOYW1lIjoiRWJpdGF1czEyMyIsImN1c3RJZCI6MTIzNDU2Nzg5LCJlbnRpdHlUeXBlIjoiUHJpdmF0ZSIsImlhdCI6MTc0NDE5MTM4MywiZXhwIjoxNzc1NzI3MzgzfQ.fTgp5B4oFlh8JOkJ156Immn9hYDf6_oCiLFLMdtuXzk',
-        isVerified: false,
-        status: 'pending',
-        isSigned: false,
-        personalDetails: {
-          name: 'Vegesna Harichandana',
-          fatherName: '',
-          dateOfBirth: '10/04/1996',
-          designation: '',
-          din: '',
-          companyEmail: '',
-          mobile: '',
-          address: '8-3-169/23 3rd FLOOR, SIDARTH NAGAR, MADHURA NAGAR, HYDERABAD',
-          documents: {
-            identityProof: {
-              type: 'identityProof',
-              fileName: 'Image.png',
-              fileType: 'image/png',
-              url: '/uploads\\ebitaus123-123456789-09042025\\ebitaus123-123456789-09042025-AUS1\\identityProof/Image.png',
-              isVerified: true,
-              verifiedSource: 'Internal',
-              timestamp: '2025-04-11T10:50:07.826Z',
-            },
-            photograph: {
-              type: 'photograph',
-              fileName: 'Screenshot 2025-04-11 172215.png',
-              fileType: 'image/png',
-              url: '/uploads/ebitaus123-123456789-09042025/ebitaus123-123456789-09042025-AUS1/photograph/Screenshot 2025-04-11 172215.png',
-              isVerified: false,
-              verifiedSource: '',
-              timestamp: '2025-04-15T05:47:46.324Z',
-            },
-            signature: {
-              type: 'signature',
-              fileName: 'Screenshot 2025-04-11 172310.png',
-              fileType: 'image/png',
-              url: '/uploads\\ebitaus123-123456789-09042025\\ebitaus123-123456789-09042025-AUS1\\signature/Screenshot 2025-04-11 172310.png',
-              isVerified: false,
-              verifiedSource: '',
-              timestamp: '2025-04-11T12:02:07.177Z',
-            },
-            addressProof: {
-              type: 'addressProof',
-              fileName: 'Image4.png',
-              fileType: 'image/png',
-              url: '/uploads\\ebitaus123-123456789-09042025\\ebitaus123-123456789-09042025-AUS1\\addressProof/Image4.png',
-              isVerified: true,
-              verifiedSource: 'Internal',
-              timestamp: '2025-04-11T12:31:46.488Z',
-            },
-          },
-        },
-      },
-    ],
-    directorDetails: [
-      {
-        din: '10061417',
-        directorName: 'PITCHAI VENKATESH',
-        directorEmail: '',
-        mailUrl: '',
-        isSigned: false,
-        status: 'active',
-      },
-      {
-        din: '10099999',
-        directorName: '.KOKIL',
-        directorEmail: '',
-        mailUrl: '',
-        isSigned: false,
-        status: 'active',
-      },
-    ],
-    boDetails: [
-      {
-        boName: 'Rajeev Sharma',
-        addressLine: 'Flat No 101, Green Residency',
-        city: 'Hyderabad',
-        state: 'Telangana',
-        country: 'India',
-        pin: '500032',
-      },
-      {
-        boName: 'Vikram Rao',
-        addressLine: 'A-24, Sector 3',
-        city: 'Noida',
-        state: 'Uttar Pradesh',
-        country: 'India',
-        pin: '201301',
-      },
-    ],
-    editedData: {
-      entityDetails: {
-        entityMailingAddress: 'noChangeInEmailAddress',
+        businessType: '',
+        natureOfIndustry: '',
+        dateOfIncorporation: '',
+        annualTurnover: '',
+        employeeCount: 0,
+        importExport: false,
+        status: 'in-progress',
+
         entityType: 'Private',
         subCategory: 'pubPvtLtdCompany: Financial Services Company',
         selfEmployeedProfessional: '',
         natureOfBusiness: 'Real Estate',
         natureOfIndustry: 'Engineering Goods',
+
+        documents: {
+          entityDocs: [
+            {
+              type: 'PAN',
+              fileName: 'Screenshot 2025-04-09 161525.png',
+              fileType: 'image/png',
+              url: '/uploads\\ebitaus123-123456789-09042025\\entityPan/Screenshot 2025-04-09 161525.png',
+              isVerified: false,
+              verifiedSource: '',
+              timestamp: '2025-04-09T11:45:19.063Z',
+            },
+            {
+              type: 'GSTIN',
+              fileName: 'Screenshot 2025-04-09 123904.png',
+              fileType: 'image/png',
+              url: '/uploads\\ebitaus123-123456789-09042025\\entityGstin/Screenshot 2025-04-09 123904.png',
+              isVerified: true,
+              verifiedSource: 'Protean',
+              timestamp: '2025-04-09T12:42:52.594Z',
+            },
+            {
+              type: 'MOM',
+              fileName: 'GEPL-MOA-and-AOA-August.pdf',
+              fileType: 'application/pdf',
+              url: '/uploads\\ebitaus123-123456789-09042025\\entityDocs/GEPL-MOA-and-AOA-August.pdf',
+              isVerified: false,
+              verifiedSource: '',
+              timestamp: '2025-04-10T09:19:04.969Z',
+            },
+          ],
+          entityProofs: [
+            {
+              type: 'COI',
+              fileName: 'Ebitaus P Ltd - Certificate of Incorporation.pdf',
+              fileType: 'application/pdf',
+              url: '/uploads\\ebitaus123-123456789-09042025\\entityProofs/Ebitaus P Ltd - Certificate of Incorporation.pdf',
+              isVerified: false,
+              verifiedSource: '',
+              timestamp: '2025-04-09T17:57:57.397Z',
+            },
+            {
+              type: 'MOA',
+              fileName: 'GEPL-MOA-and-AOA-August.pdf',
+              fileType: 'application/pdf',
+              url: '/uploads\\ebitaus123-123456789-09042025\\entityProofs/GEPL-MOA-and-AOA-August.pdf',
+              isVerified: false,
+              verifiedSource: '',
+              timestamp: '2025-04-10T09:39:48.696Z',
+            },
+            {
+              type: 'AOA',
+              fileName: 'Tata Communications - MoA-AoA-Amended.pdf',
+              fileType: 'application/pdf',
+              url: '/uploads\\ebitaus123-123456789-09042025\\entityProofs/Tata Communications - MoA-AoA-Amended.pdf',
+              isVerified: false,
+              verifiedSource: '',
+              timestamp: '2025-04-10T04:59:03.735Z',
+            },
+          ],
+          entityAddressProof: {
+            type: 'addressProof',
+            fileName: 'Hathway.pdf',
+            fileType: 'application/pdf',
+            url: '/uploads\\ebitaus123-123456789-09042025\\entityAddressProofs/Hathway.pdf',
+            isVerified: true,
+            verifiedSource: 'Internal',
+            timestamp: '2025-04-11T05:48:39.666Z',
+          },
+          form32: {
+            type: 'form32',
+            fileName: 'form32.pdf',
+            fileType: 'application/pdf',
+            url: '/uploads\\ebitaus123-123456789-09042025\\form32/form32.pdf',
+            isVerified: false,
+            verifiedSource: '',
+            timestamp: '2025-04-10T11:46:09.113Z',
+          },
+        },
+        registeredOfficeAddress: {
+          buildingName: 'PM Towers',
+          street: 'Greams Road, Thousand Lights',
+          city: 'Chennai',
+          state: 'Tamil Nadu',
+          country: 'India',
+          pin: '600006',
+          landline: '',
+          mobile: '9786190876',
+          email: 'kumar.nagaraji@ebitaus.com',
+          ownership: '',
+        },
       },
+      authorizedSignatoriesDetails: [
+        {
+          ausId: 'ebitaus123-123456789-09042025-AUS1',
+          name: 'Harichandana',
+          email: 'harichandana.vegesna@ebitaus.com',
+          emailLink:
+            'http://localhost:4020/rekyc/customer/eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiJlYml0YXVzMTIzLTEyMzQ1Njc4OS0wOTA0MjAyNSIsImNvbXBhbnlOYW1lIjoiRWJpdGF1czEyMyIsImN1c3RJZCI6MTIzNDU2Nzg5LCJlbnRpdHlUeXBlIjoiUHJpdmF0ZSIsImlhdCI6MTc0NDE5MTM4MywiZXhwIjoxNzc1NzI3MzgzfQ.fTgp5B4oFlh8JOkJ156Immn9hYDf6_oCiLFLMdtuXzk',
+          isVerified: false,
+          status: 'pending',
+          isSigned: false,
+          personalDetails: {
+            name: 'Vegesna Harichandana',
+            fatherName: '',
+            dateOfBirth: '10/04/1996',
+            designation: '',
+            din: '',
+            companyEmail: '',
+            mobile: '',
+            address: '8-3-169/23 3rd FLOOR, SIDARTH NAGAR, MADHURA NAGAR, HYDERABAD',
+            documents: {
+              identityProof: {
+                type: 'identityProof',
+                fileName: 'Image.png',
+                fileType: 'image/png',
+                url: '/uploads\\ebitaus123-123456789-09042025\\ebitaus123-123456789-09042025-AUS1\\identityProof/Image.png',
+                isVerified: true,
+                verifiedSource: 'Internal',
+                timestamp: '2025-04-11T10:50:07.826Z',
+              },
+              photograph: {
+                type: 'photograph',
+                fileName: 'Screenshot 2025-04-11 172215.png',
+                fileType: 'image/png',
+                url: '/uploads/ebitaus123-123456789-09042025/ebitaus123-123456789-09042025-AUS1/photograph/Screenshot 2025-04-11 172215.png',
+                isVerified: false,
+                verifiedSource: '',
+                timestamp: '2025-04-15T05:47:46.324Z',
+              },
+              signature: {
+                type: 'signature',
+                fileName: 'Screenshot 2025-04-11 172310.png',
+                fileType: 'image/png',
+                url: '/uploads\\ebitaus123-123456789-09042025\\ebitaus123-123456789-09042025-AUS1\\signature/Screenshot 2025-04-11 172310.png',
+                isVerified: false,
+                verifiedSource: '',
+                timestamp: '2025-04-11T12:02:07.177Z',
+              },
+              addressProof: {
+                type: 'addressProof',
+                fileName: 'Image4.png',
+                fileType: 'image/png',
+                url: '/uploads\\ebitaus123-123456789-09042025\\ebitaus123-123456789-09042025-AUS1\\addressProof/Image4.png',
+                isVerified: true,
+                verifiedSource: 'Internal',
+                timestamp: '2025-04-11T12:31:46.488Z',
+              },
+            },
+          },
+        },
+      ],
+      directorDetails: [
+        {
+          din: '10061417',
+          directorName: 'PITCHAI VENKATESH',
+          directorEmail: '',
+          mailUrl: '',
+          isSigned: false,
+          status: 'active',
+        },
+        {
+          din: '10099999',
+          directorName: '.KOKIL',
+          directorEmail: '',
+          mailUrl: '',
+          isSigned: false,
+          status: 'active',
+        },
+      ],
+      boDetails: [
+        {
+          boName: 'Rajeev Sharma',
+          addressLine: 'Flat No 101, Green Residency',
+          city: 'Hyderabad',
+          state: 'Telangana',
+          country: 'India',
+          pin: '500032',
+        },
+        {
+          boName: 'Vikram Rao',
+          addressLine: 'A-24, Sector 3',
+          city: 'Noida',
+          state: 'Uttar Pradesh',
+          country: 'India',
+          pin: '201301',
+        },
+      ],
       businessDetails: {
         detailsOfActivity: 'FinTech',
         dateOfIncorporation: '30/03/20253',
@@ -342,6 +366,10 @@ function fun() {
           addressstate: 'Greater London',
           addresscountry: 'United Kingdom',
           addresspincode: 'NW1 6XE',
+          signature:
+            'https://static.vecteezy.com/system/resources/previews/025/866/358/non_2x/fake-autograph-samples-hand-drawn-signatures-examples-of-documents-certificates-and-contracts-with-inked-and-handwritten-lettering-vector.jpg',
+          photo:
+            'https://www.biowritingservice.com/wp-content/themes/tuborg/images/Executive%20Bio%20Sample%20Photo.png',
           // signature and photograph will be handled separately
         },
         {
@@ -354,6 +382,10 @@ function fun() {
           addressstate: 'Ontario',
           addresscountry: 'Canada',
           addresspincode: 'M5V 2B6',
+          signature:
+            'https://static.vecteezy.com/system/resources/previews/025/866/358/non_2x/fake-autograph-samples-hand-drawn-signatures-examples-of-documents-certificates-and-contracts-with-inked-and-handwritten-lettering-vector.jpg',
+          photo:
+            'https://images.pexels.com/photos/1222271/pexels-photo-1222271.jpeg?cs=srgb&dl=pexels-justin-shaifer-501272-1222271.jpg&fm=jpg',
           // signature and photograph will be handled separately
         },
         {
@@ -366,6 +398,10 @@ function fun() {
           addressstate: 'Greater London',
           addresscountry: 'United Kingdom',
           addresspincode: 'NW1 6XE',
+          signature:
+            'https://static.vecteezy.com/system/resources/previews/025/866/358/non_2x/fake-autograph-samples-hand-drawn-signatures-examples-of-documents-certificates-and-contracts-with-inked-and-handwritten-lettering-vector.jpg',
+          photo:
+            'https://images.unsplash.com/photo-1544005313-94ddf0286df2?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8cGVyc29ufGVufDB8fDB8fHww',
           // signature and photograph will be handled separately
         },
         {
@@ -378,6 +414,10 @@ function fun() {
           addressstate: 'Ontario',
           addresscountry: 'Canada',
           addresspincode: 'M5V 2B6',
+          signature:
+            'https://static.vecteezy.com/system/resources/previews/025/866/358/non_2x/fake-autograph-samples-hand-drawn-signatures-examples-of-documents-certificates-and-contracts-with-inked-and-handwritten-lettering-vector.jpg',
+          photo:
+            'https://www.biowritingservice.com/wp-content/themes/tuborg/images/Executive%20Bio%20Sample%20Photo.png',
           // signature and photograph will be handled separately
         },
         {
@@ -390,6 +430,10 @@ function fun() {
           addressstate: 'Greater London',
           addresscountry: 'United Kingdom',
           addresspincode: 'NW1 6XE',
+          signature:
+            'https://static.vecteezy.com/system/resources/previews/025/866/358/non_2x/fake-autograph-samples-hand-drawn-signatures-examples-of-documents-certificates-and-contracts-with-inked-and-handwritten-lettering-vector.jpg',
+          photo:
+            'https://www.biowritingservice.com/wp-content/themes/tuborg/images/Executive%20Bio%20Sample%20Photo.png',
           // signature and photograph will be handled separately
         },
         {
@@ -402,6 +446,10 @@ function fun() {
           addressstate: 'Ontario',
           addresscountry: 'Canada',
           addresspincode: 'M5V 2B6',
+          signature:
+            'https://static.vecteezy.com/system/resources/previews/025/866/358/non_2x/fake-autograph-samples-hand-drawn-signatures-examples-of-documents-certificates-and-contracts-with-inked-and-handwritten-lettering-vector.jpg',
+          photo:
+            'https://images.pexels.com/photos/1222271/pexels-photo-1222271.jpeg?cs=srgb&dl=pexels-justin-shaifer-501272-1222271.jpg&fm=jpg',
           // signature and photograph will be handled separately
         },
         {
@@ -414,6 +462,10 @@ function fun() {
           addressstate: 'Greater London',
           addresscountry: 'United Kingdom',
           addresspincode: 'NW1 6XE',
+          signature:
+            'https://static.vecteezy.com/system/resources/previews/025/866/358/non_2x/fake-autograph-samples-hand-drawn-signatures-examples-of-documents-certificates-and-contracts-with-inked-and-handwritten-lettering-vector.jpg',
+          photo:
+            'https://images.unsplash.com/photo-1544005313-94ddf0286df2?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8cGVyc29ufGVufDB8fDB8fHww',
           // signature and photograph will be handled separately
         },
         {
@@ -426,6 +478,10 @@ function fun() {
           addressstate: 'Ontario',
           addresscountry: 'Canada',
           addresspincode: 'M5V 2B6',
+          signature:
+            'https://static.vecteezy.com/system/resources/previews/025/866/358/non_2x/fake-autograph-samples-hand-drawn-signatures-examples-of-documents-certificates-and-contracts-with-inked-and-handwritten-lettering-vector.jpg',
+          photo:
+            'https://www.biowritingservice.com/wp-content/themes/tuborg/images/Executive%20Bio%20Sample%20Photo.png',
           // signature and photograph will be handled separately
         },
       ],
@@ -437,25 +493,196 @@ function entityBasicInfo() {
   const entityCustId = document.getElementById('entityCustId');
   const entityName = document.getElementById('entityName');
   const entityPan = document.getElementById('entityPan');
-  entityCustId.value = data?.entityCustId || '';
-  entityName.value = data?.entityName || '';
-  entityPan.value = data?.entityDetails?.pan?.panNumber || '';
+
+  // Pre-fill the form with existing data
+  entityCustId.value = data?.editedData?.entityCustId || '';
+  entityCustId.autofocus = true;
+  entityName.value = data?.editedData?.entityName || '';
+  entityPan.value = data?.editedData?.entityDetails?.pan?.panNumber || '';
+
+  entityCustId.oninput = (e) => {
+    data.editedData.entityCustId = e.target.value.trim();
+  };
+
+  entityName.oninput = (e) => {
+    data.editedData.entityName = e.target.value.trim();
+  };
+
+  entityPan.oninput = (e) => {
+    if (!data.editedData.entityDetails) data.editedData.entityDetails = {};
+    if (!data.editedData.entityDetails.pan) data.editedData.entityDetails.pan = {};
+
+    data.editedData.entityDetails.pan.panNumber = e.target.value.trim();
+  };
 }
 
 function entityMailingAddress() {
-  const noChangeInEmailAddress = document.getElementById('noChangeInEmailAddress');
-  const changeInEmailAddress = document.getElementById('changeInEmailAddress');
+  if (!data.editedData.entityDetails.entityMailingAddress) {
+    data.editedData.entityDetails.entityMailingAddress = {};
+  }
 
-  const entityMailingAddress = data?.editedData?.entityDetails?.entityMailingAddress;
+  const mailingAddress = data.editedData.entityDetails.entityMailingAddress;
 
-  console.log(entityMailingAddress);
+  // Checkbox elements
+  const noChangeCheckbox = document.getElementById('noChangeInEmailAddress');
+  const changeCheckbox = document.getElementById('changeInEmailAddress');
 
-  noChangeInEmailAddress.checked = entityMailingAddress
-    ? entityMailingAddress === 'noChangeInEmailAddress'
-    : true;
-  changeInEmailAddress.checked = entityMailingAddress
-    ? entityMailingAddress === 'changeInEmailAddress'
-    : false;
+  // Set initial checkbox state
+  const updateCheckboxState = () => {
+    const type = mailingAddress.addressType;
+    if (noChangeCheckbox) noChangeCheckbox.checked = type === 'noChange';
+    if (changeCheckbox) changeCheckbox.checked = type === 'change';
+  };
+
+  updateCheckboxState();
+
+  if (noChangeCheckbox) {
+    noChangeCheckbox.onchange = () => {
+      if (noChangeCheckbox.checked) {
+        mailingAddress.addressType = 'noChange';
+        if (changeCheckbox) changeCheckbox.checked = false;
+      } else if (!changeCheckbox?.checked) {
+        mailingAddress.addressType = null;
+      }
+    };
+  }
+
+  if (changeCheckbox) {
+    changeCheckbox.onchange = () => {
+      if (changeCheckbox.checked) {
+        mailingAddress.addressType = 'change';
+        if (noChangeCheckbox) noChangeCheckbox.checked = false;
+      } else if (!noChangeCheckbox?.checked) {
+        mailingAddress.addressType = null;
+      }
+    };
+  }
+
+  // Input field binding
+  const fields = [
+    'shopBidg',
+    'roadName',
+    'landmark',
+    'city',
+    'pincode',
+    'state',
+    'country',
+    'telOff',
+    'extNo',
+    'faxNo',
+    'telR',
+    'mobNo',
+    'emailID',
+  ];
+
+  fields.forEach((field) => {
+    const input = document.getElementById(`entity-mailing-address-${field}`);
+    if (!input) return;
+
+    input.value = mailingAddress[field] || '';
+
+    input.oninput = (e) => {
+      mailingAddress[field] = e.target.value.trim();
+    };
+  });
+}
+
+function entityRegisteredAddress() {
+  const entityDetails = data.editedData.entityDetails;
+
+  // Ensure entityRegisteredAddress exists
+  if (!entityDetails.entityRegisteredAddress) {
+    entityDetails.entityRegisteredAddress = {};
+  }
+
+  const registeredAddress = entityDetails.entityRegisteredAddress;
+  const mailingAddress = entityDetails.entityMailingAddress || {}; // assumed field for "same as mailing"
+
+  // Checkbox elements for "Owned", "Rented / Leased" and "Same as Mailing Address"
+  const owned = document.getElementById('entity-contact-address-owned');
+  const rented = document.getElementById('entity-contact-address-rentedLeased');
+  const sameAsMailing = document.getElementById('entity-contact-address-sameAsMailingAddress');
+
+  // Input field ids
+  const fields = ['shopBidg', 'roadName', 'landmark', 'city', 'pincode', 'state', 'country'];
+
+  // Initialize the input fields
+  fields.forEach((field) => {
+    const input = document.getElementById(`entity-contact-address-${field}`);
+    if (!input) return;
+
+    input.value = registeredAddress[field] || ''; // Set initial value from registeredAddress
+    input.disabled = !!sameAsMailing?.checked; // Disable inputs if "Same as Mailing" is checked
+
+    // Handle input changes to update registeredAddress
+    input.oninput = (e) => {
+      registeredAddress[field] = e.target.value.trim();
+    };
+  });
+
+  // Checkbox logic: Owned vs Rented
+  const updateOwnershipCheckboxState = () => {
+    const type = registeredAddress.addressType;
+    if (owned) owned.checked = type === 'owned';
+    if (rented) rented.checked = type === 'rented';
+  };
+
+  // Handle checkbox changes for "Owned"
+  if (owned) {
+    owned.onchange = () => {
+      if (owned.checked) {
+        registeredAddress.addressType = 'owned';
+        if (rented) rented.checked = false;
+      } else if (!rented?.checked) {
+        registeredAddress.addressType = null; // or leave it empty/null for clarity
+      }
+      updateOwnershipCheckboxState();
+    };
+  }
+
+  // Handle checkbox changes for "Rented / Leased"
+  if (rented) {
+    rented.onchange = () => {
+      if (rented.checked) {
+        registeredAddress.addressType = 'rented';
+        if (owned) owned.checked = false;
+      } else if (!owned?.checked) {
+        registeredAddress.addressType = null;
+      }
+      updateOwnershipCheckboxState();
+    };
+  }
+
+  // Checkbox logic: Same as mailing address
+  if (sameAsMailing) {
+    sameAsMailing.onchange = () => {
+      const isSame = sameAsMailing.checked;
+      // Track the state of the "sameAsMailing" checkbox in registeredAddress
+      registeredAddress.sameAsMailing = isSame;
+
+      fields.forEach((field) => {
+        const input = document.getElementById(`entity-contact-address-${field}`);
+        if (!input) return;
+
+        if (isSame) {
+          // If "same as mailing" is checked, copy values from mailingAddress
+          input.value = mailingAddress[field] || '';
+          registeredAddress[field] = mailingAddress[field] || ''; // Update registeredAddress with mailing data
+        }
+
+        // Disable the inputs if "same as mailing" is checked
+        input.disabled = isSame;
+      });
+    };
+  }
+
+  // Initialize checkbox states and inputs on page load
+  updateOwnershipCheckboxState();
+
+  // Initialize "Same as Mailing" checkbox based on the registeredAddress data
+  if (sameAsMailing && registeredAddress.sameAsMailing !== undefined) {
+    sameAsMailing.checked = registeredAddress.sameAsMailing;
+  }
 }
 
 function entityType() {
@@ -508,7 +735,6 @@ function entityType() {
         if (cb !== input) cb.checked = false;
       });
       data.editedData.entityDetails.entityType = input.checked ? label : null;
-      console.log(data.editedData.entityDetails.entityType);
     });
   });
 }
@@ -671,8 +897,6 @@ function selfEmployedProfessional() {
       } else {
         data.editedData.entityDetails.selfEmployeedProfessional = null;
       }
-
-      console.log('Updated:', data.editedData.entityDetails.selfEmployeedProfessional);
     });
 
     // Handle typing in "Others"
@@ -688,7 +912,6 @@ function selfEmployedProfessional() {
         });
 
         data.editedData.entityDetails.selfEmployeedProfessional = `Others: ${inputEl.value.trim()}`;
-        console.log('Updated:', data.editedData.entityDetails.selfEmployeedProfessional);
       });
     }
   });
@@ -739,8 +962,6 @@ function natureOfBusiness() {
       } else {
         data.editedData.entityDetails.natureOfBusiness = null;
       }
-
-      console.log('Updated:', data.editedData.entityDetails.natureOfBusiness);
     });
 
     // Handle "Others" typing
@@ -756,7 +977,6 @@ function natureOfBusiness() {
         });
 
         data.editedData.entityDetails.natureOfBusiness = `Others: ${inputEl.value.trim()}`;
-        console.log('Updated:', data.editedData.entityDetails.natureOfBusiness);
       });
 
       // Handle blur: if input is empty, unselect it
@@ -764,7 +984,6 @@ function natureOfBusiness() {
         if (inputEl.value.trim() === '') {
           checkbox.checked = false;
           data.editedData.entityDetails.natureOfBusiness = null;
-          console.log('Cleared Others due to empty input');
         }
       });
     }
@@ -796,22 +1015,18 @@ function businessDetails() {
   // Input listeners
   detailsOfActivityInput.addEventListener('input', () => {
     data.editedData.businessDetails.detailsOfActivity = detailsOfActivityInput.value.trim();
-    console.log(data.editedData.businessDetails.detailsOfActivity);
   });
 
   dateOfIncorporationInput.addEventListener('input', () => {
     data.editedData.businessDetails.dateOfIncorporation = dateOfIncorporationInput.value.trim();
-    console.log(data.editedData.businessDetails.dateOfIncorporation);
   });
 
   annualTurnOverFiguresInput.addEventListener('input', () => {
     data.editedData.businessDetails.annualTurnOverFigures = annualTurnOverFiguresInput.value.trim();
-    console.log(data.editedData.businessDetails.annualTurnOverFigures);
   });
 
   annualTurnOverWordsInput.addEventListener('input', () => {
     data.editedData.businessDetails.annualTurnOverWords = annualTurnOverWordsInput.value.trim();
-    console.log(data.editedData.businessDetails.annualTurnOverWords);
   });
 
   // Checkbox logic (like radio)
@@ -822,7 +1037,6 @@ function businessDetails() {
     } else {
       data.editedData.businessDetails.involvedIn = '';
     }
-    console.log(data.editedData.businessDetails.involvedIn);
   });
 
   exportCheckbox.addEventListener('change', () => {
@@ -832,7 +1046,6 @@ function businessDetails() {
     } else {
       data.editedData.businessDetails.involvedIn = '';
     }
-    console.log(data.editedData.businessDetails.involvedIn);
   });
 }
 
@@ -1208,12 +1421,12 @@ function ausDetails() {
 
     const header = document.createElement('div');
     header.classList.add('header', 'text-center');
-    const h2 = document.createElement('h2');
-    h2.classList.add('text-black');
-    h2.textContent = 'Authorised Signatories details';
+    const h4 = document.createElement('h4');
+    h4.classList.add('text-black');
+    h4.textContent = 'Authorised Signatories details';
     const p = document.createElement('p');
-    p.textContent = 'All fields are mandatory';
-    header.appendChild(h2);
+    p.textContent = '{All fields are mandatory}';
+    header.appendChild(h4);
     header.appendChild(p);
     section.appendChild(header);
 
@@ -1233,51 +1446,60 @@ function ausDetails() {
       tr.appendChild(labelTd);
       tr.style.minHeight = '60px';
 
-      // AUS 1
-      const aus1Td = document.createElement('td');
-      const aus1Div = document.createElement('div');
+      tr.appendChild(createAusCell(aus1, label, rowIndex));
+      tr.appendChild(createAusCell(aus2, label, rowIndex));
 
-      if (rowIndex === 9) {
-        aus1Div.className = 'sign_container';
-        aus1Div.innerHTML = `<div class="sign_wrapper"></div>`;
-      } else if (rowIndex === 10) {
-        aus1Div.className = 'photo_container';
-        aus1Div.innerHTML = `<div class="photo_wrapper"></div>`;
-      } else {
-        const input = document.createElement('input');
-        input.type = 'text';
-        const key = toKey(label);
-        input.value = aus1?.[key] || '';
-        input.addEventListener('input', (e) => {
-          if (aus1) aus1[key] = e.target.value;
-        });
-        aus1Div.appendChild(input);
+      // Function to create an input or static media display
+      function createAusCell(ausData, label, rowIndex) {
+        const td = document.createElement('td');
+        const div = document.createElement('div');
+
+        if (rowIndex === 9) {
+          // Signature row
+          div.className = 'sign_container';
+
+          const wrapper = document.createElement('div');
+          wrapper.className = 'sign_wrapper';
+
+          if (ausData?.signature) {
+            const img = document.createElement('img');
+            img.src = ausData.signature;
+            img.style.maxWidth = '100%';
+            img.style.height = 'auto';
+            img.style.objectFit = 'contain';
+            wrapper.appendChild(img);
+          }
+
+          div.appendChild(wrapper);
+        } else if (rowIndex === 10) {
+          // Photo row
+          div.className = 'photo_container';
+
+          const wrapper = document.createElement('div');
+          wrapper.className = 'photo_wrapper';
+
+          if (ausData?.photo) {
+            const img = document.createElement('img');
+            img.src = ausData.photo;
+            wrapper.appendChild(img);
+          }
+
+          div.appendChild(wrapper);
+        } else {
+          // Input field for other rows
+          const input = document.createElement('input');
+          input.type = 'text';
+          const key = toKey(label);
+          input.value = ausData?.[key] || '';
+          input.addEventListener('input', (e) => {
+            if (ausData) ausData[key] = e.target.value;
+          });
+          div.appendChild(input);
+        }
+
+        td.appendChild(div);
+        return td;
       }
-      aus1Td.appendChild(aus1Div);
-      tr.appendChild(aus1Td);
-
-      // AUS 2
-      const aus2Td = document.createElement('td');
-      const aus2Div = document.createElement('div');
-
-      if (rowIndex === 9) {
-        aus2Div.className = 'sign_container';
-        aus2Div.innerHTML = `<div class="sign_wrapper"></div>`;
-      } else if (rowIndex === 10) {
-        aus2Div.className = 'photo_container';
-        aus2Div.innerHTML = `<div class="photo_wrapper"></div>`;
-      } else {
-        const input = document.createElement('input');
-        input.type = 'text';
-        const key = toKey(label);
-        input.value = aus2?.[key] || '';
-        input.addEventListener('input', (e) => {
-          if (aus2) aus2[key] = e.target.value;
-        });
-        aus2Div.appendChild(input);
-      }
-      aus2Td.appendChild(aus2Div);
-      tr.appendChild(aus2Td);
 
       tbody.appendChild(tr);
     });
@@ -1288,4 +1510,32 @@ function ausDetails() {
     pdfPage.appendChild(section);
     document.body.appendChild(pdfPage);
   }
+}
+
+function downloadPDF() {
+  fetch('http://localhost:3000/generate-pdf', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json', // Set the content type to JSON
+    },
+    body: JSON.stringify({ data }), // Convert the data object to a JSON string
+  })
+    .then((response) => {
+      if (response.ok) {
+        return response.blob(); // Get the PDF file as a Blob
+      }
+      throw new Error('Failed to generate PDF');
+    })
+    .then((blob) => {
+      // Create a link element to download the file
+      const link = document.createElement('a');
+      const url = window.URL.createObjectURL(blob);
+      link.href = url;
+      link.download = 'report.pdf'; // Set the file name for the download
+      link.click(); // Trigger the download
+      window.URL.revokeObjectURL(url); // Clean up the object URL
+    })
+    .catch((error) => {
+      console.error('Error:', error);
+    });
 }

@@ -8,7 +8,7 @@
     <script src="./rekyc.js"></script>
   </head>
 
-  <body>
+  <body id="pdf-container">
     <!-- Page 1 -->
     <div class="pdf-page page1">
       <!-- Header -->
@@ -133,38 +133,38 @@
 
         <div class="form-row shopBidg">
           <label for="shopBidg" class="text-nowrap">*Shop no / Bidg name</label>
-          <input type="text" id="shopBidg" />
+          <input type="text" id="entity-mailing-address-shopBidg" />
         </div>
 
         <div class="form-row roadName">
           <label for="roadName" class="text-nowrap">*Road Name</label>
-          <input type="text" id="roadName" />
+          <input type="text" id="entity-mailing-address-roadName" />
         </div>
 
         <div class="form-row landmark">
           <label for="landmark" class="">*Landmark</label>
-          <input type="text" id="landmark" />
+          <input type="text" id="entity-mailing-address-landmark" />
         </div>
 
         <div class="form-row city_pincode">
           <div class="city">
             <label for="city">*City</label>
-            <input type="text" id="city" />
+            <input type="text" id="entity-mailing-address-city" />
           </div>
           <div class="pincode">
             <label for="pincode">*Pincode</label>
-            <input type=" text" id="pincode" />
+            <input type=" text" id="entity-mailing-address-pincode" />
           </div>
         </div>
 
         <div class="form-row state_country">
           <div class="state">
             <label for="state" class="w-[30%]">*State</label>
-            <input type="text" id="state" />
+            <input type="text" id="entity-mailing-address-state" />
           </div>
           <div class="country">
             <label for="country">*Country</label>
-            <input type=" text" id="country" />
+            <input type=" text" id="entity-mailing-address-country" />
           </div>
         </div>
 
@@ -172,34 +172,34 @@
           <div class="tel flex">
             <div class="tel_container">
               <label for="telOff" class="text-nowrap">*Tel (Off)</label>
-              <input type="text" id="telOff" />
+              <input type="text" id="entity-mailing-address-telOff" />
             </div>
 
             <div class="ext flex">
               <label for="extNo" class="text-nowrap">*Extension No</label>
-              <input type="text" id="extNo" />
+              <input type="text" id="entity-mailing-address-extNo" />
             </div>
 
             <div class="fax flex">
               <label for="faxNo" class="text-nowrap">*Fax No</label>
-              <input type="text" id="faxNo" />
+              <input type="text" id="entity-mailing-address-faxNo" />
             </div>
           </div>
         </div>
 
         <div class="form-row telR">
           <label for="telR" class="text-nowrap">*Tel (R)</label>
-          <input type="text" id="telR" />
+          <input type="text" id="entity-mailing-address-telR" />
         </div>
 
         <div class="form-row mobNo">
           <label for="mobNo" class="text-nowrap">*Mobile No</label>
-          <input type="text" id="mobNo" />
+          <input type="text" id="entity-mailing-address-mobNo" />
         </div>
 
         <div class="form-row emailID">
           <label for="emailID" class="text-nowrap">*E-Mail ID</label>
-          <input type="text" id emailID />
+          <input type="text" id="entity-mailing-address-emailID" />
         </div>
       </section>
 
@@ -210,8 +210,8 @@
           <div class="checkbox_container">
             <input
               type="checkbox"
-              name="noChangeInEmailAddress"
-              id="noChangeInEmailAddress"
+              name="sameAsMailingAddress"
+              id="entity-contact-address-sameAsMailingAddress"
             />
             <div>
               <p class="text-nowrap">
@@ -224,38 +224,38 @@
 
         <div class="form-row shopBidg">
           <label for="shopBidg" class="text-nowrap">*Shop no / Bidg name</label>
-          <input type="text" id="shopBidg" />
+          <input type="text" id="entity-contact-address-shopBidg" />
         </div>
 
         <div class="form-row roadName">
           <label for="roadName" class="text-nowrap">*Road Name</label>
-          <input type="text" id="roadName" />
+          <input type="text" id="entity-contact-address-roadName" />
         </div>
 
         <div class="form-row landmark">
           <label for="landmark" class="">*Landmark</label>
-          <input type="text" id="landmark" />
+          <input type="text" id="entity-contact-address-landmark" />
         </div>
 
         <div class="form-row city_pincode">
           <div class="city">
             <label for="city">*City</label>
-            <input type="text" id="city" />
+            <input type="text" id="entity-contact-address-city" />
           </div>
           <div class="pincode">
             <label for="pincode">*Pincode</label>
-            <input type=" text" id="pincode" />
+            <input type=" text" id="entity-contact-address-pincode" />
           </div>
         </div>
 
         <div class="form-row state_country">
           <div class="state">
             <label for="state" class="w-[30%]">*State</label>
-            <input type="text" id="state" />
+            <input type="text" id="entity-contact-address-state" />
           </div>
           <div class="country">
             <label for="country">*Country</label>
-            <input type=" text" id="country" />
+            <input type=" text" id="entity-contact-address-country" />
           </div>
         </div>
 
@@ -265,14 +265,22 @@
           </label>
           <div class="checkbox_container">
             <div class="checkbox_wrapper">
-              <input type="checkbox" name="owned" id="owned" />
+              <input
+                type="checkbox"
+                name="owned"
+                id="entity-contact-address-owned"
+              />
               <div>
                 <p class="text-nowrap">Owned</p>
               </div>
             </div>
 
             <div class="checkbox_wrapper">
-              <input type="checkbox" name="rentedLeased" id="rentedLeased" />
+              <input
+                type="checkbox"
+                name="rentedLeased"
+                id="entity-contact-address-rentedLeased"
+              />
               <div>
                 <p class="text-nowrap">Rented / Leased</p>
               </div>
@@ -952,11 +960,12 @@
       <!-- Extended Annexure -->
       <section id="extended-annexure" class="form-section">
         <div class="header text-center">
-          <h4 class="text-black">
-            Extended Annexure - CKYC For Non-Individual Entities
-            <br />
-            (For Account opening and Re-KYC)
-          </h4>
+          <div>
+            <h4 class="text-black">
+              Extended Annexure - CKYC For Non-Individual Entities
+            </h4>
+            <h6>(For Account opening and Re-KYC)</h6>
+          </div>
           <p>{All fields are mandatory}</p>
         </div>
 
@@ -1069,7 +1078,9 @@
         </div>
 
         <div class="bo_details">
-          <h5>Beneficial Owner details {All fields are mandatory}</h5>
+          <h6 class="bo-header">
+            Beneficial Owner details {All fields are mandatory}
+          </h6>
         </div>
       </section>
     </div>
