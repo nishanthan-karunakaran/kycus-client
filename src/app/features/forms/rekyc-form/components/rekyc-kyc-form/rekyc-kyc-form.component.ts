@@ -56,18 +56,19 @@ export class RekycKycFormComponent implements OnInit {
   }
 
   fetchFormData() {
-    this.rekycKycFormService.fetchFormData('ebitaus').subscribe({
+    this.rekycKycFormService.fetchFormData('ebitaus-CUS1234567-15042025').subscribe({
       next: (result) => {
         const { response } = result;
 
         if (!response) return;
 
-        const { status, data } = response;
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const { status, data } = response as { status: ApiStatus; data: any };
 
         // eslint-disable-next-line no-console
         console.log('data is fetched');
         if (status === ApiStatus.SUCCESS) {
-          const obj = { ...(data as object), editedData: { ...(data as object) } };
+          const obj = { ...data };
           this.formData.set(obj);
           this.sendFormDataToIframe(); // Send data only once
         }
@@ -83,7 +84,7 @@ export class RekycKycFormComponent implements OnInit {
         this.formData.set(event.data.payload);
 
         // eslint-disable-next-line no-console
-        console.log(this.formData());
+        console.log('saving data', this.formData());
 
         this.rekycKycFormService.savePDF(this.formData()).subscribe();
 

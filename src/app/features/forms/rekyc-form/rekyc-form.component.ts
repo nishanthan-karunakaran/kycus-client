@@ -12,7 +12,7 @@ import { FormPage, FormStep } from './rekyc-form.model';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class RekycFormComponent implements OnInit {
-  currentForm = signal<FormStep>(FormStep.ENTITY_DETAILS);
+  currentForm = signal<FormStep>(FormStep.KYC_FORM);
   formList: FormPage[] = [
     { label: 'Entity Details', step: FormStep.ENTITY_DETAILS, isCompleted: false, canShow: true },
     { label: 'Declaration', step: FormStep.DECLARATION, isCompleted: false, canShow: true },
