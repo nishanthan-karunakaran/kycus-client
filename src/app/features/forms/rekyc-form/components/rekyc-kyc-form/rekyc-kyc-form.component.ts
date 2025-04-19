@@ -1,23 +1,35 @@
-import { Component, ElementRef, AfterViewInit, ViewChild, ViewEncapsulation } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  ElementRef,
+  OnInit,
+  signal,
+  ViewChild,
+  ViewEncapsulation,
+} from '@angular/core';
+import { ApiStatus } from '@core/constants/api.response';
+import { ToastService } from '@src/app/shared/ui/toast/toast.service';
+import { RekycKycFormService } from './rekyc-kyc-form.service';
 
 @Component({
   selector: 'rekyc-kyc-form',
   templateUrl: './rekyc-kyc-form.component.html',
   styleUrls: ['./rekyc-kyc-form.component.scss'],
   encapsulation: ViewEncapsulation.None,
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class RekycKycFormComponent implements AfterViewInit {
+export class RekycKycFormComponent implements OnInit {
   @ViewChild('pdfViewer', { static: false }) pdfViewer!: ElementRef<HTMLIFrameElement>;
+  formData = signal({});
+  private isDataSent = false; // Flag to track if data has been sent already
 
-  constructor(private http: HttpClient) {}
+  constructor(
+    private rekycKycFormService: RekycKycFormService,
+    private toast: ToastService,
+  ) {}
 
-  ngAfterViewInit(): void {
-    const iframe = this.pdfViewer.nativeElement;
-    iframe.onload = () => {
-      // eslint-disable-next-line no-console
-      console.log('PDF form iframe loaded');
-    };
+  ngOnInit(): void {
+    this.fetchFormData();
   }
 
   getIframeHtml(): string | null {
@@ -26,23 +38,61 @@ export class RekycKycFormComponent implements AfterViewInit {
     return doc?.documentElement.outerHTML ?? null;
   }
 
-  sendHtmlToServer() {
-    const html = this.getIframeHtml();
-    if (html) {
-      this.http
-        .post('/api/generate-pdf', { html }, { responseType: 'blob' })
-        .subscribe((pdfBlob) => {
-          // Optionally download the PDF
-          const blobUrl = URL.createObjectURL(pdfBlob);
-          const a = document.createElement('a');
-          a.href = blobUrl;
-          a.download = 'generated.pdf';
-          a.click();
-          URL.revokeObjectURL(blobUrl);
-        });
-    } else {
+  sendFormDataToIframe() {
+    // Send data only once during initialization
+    if (this.isDataSent) return;
+
+    const iframe = this.pdfViewer.nativeElement;
+    const data = this.formData();
+
+    // eslint-disable-next-line no-console
+    console.log('data sent', data);
+    if (iframe?.contentWindow && Object.keys(data).length > 0) {
       // eslint-disable-next-line no-console
-      console.warn('Iframe HTML is empty or not loaded yet');
+      console.log('data sent', data);
+      iframe.contentWindow.postMessage({ type: 'SET_FORM_DATA', payload: data }, '*');
+      this.isDataSent = true; // Set flag to true after data is sent
     }
+  }
+
+  fetchFormData() {
+    this.rekycKycFormService.fetchFormData('ebitaus').subscribe({
+      next: (result) => {
+        const { response } = result;
+
+        if (!response) return;
+
+        const { status, data } = response;
+
+        // eslint-disable-next-line no-console
+        console.log('data is fetched');
+        if (status === ApiStatus.SUCCESS) {
+          const obj = { ...(data as object), editedData: { ...(data as object) } };
+          this.formData.set(obj);
+          this.sendFormDataToIframe(); // Send data only once
+        }
+      },
+    });
+  }
+
+  onSave() {
+    const iframe = this.pdfViewer.nativeElement;
+
+    const handleMessage = (event: MessageEvent) => {
+      if (event.data?.type === 'SAVE_DATA' && event.data?.source === 'kyc-form') {
+        this.formData.set(event.data.payload);
+
+        // eslint-disable-next-line no-console
+        console.log(this.formData());
+
+        this.rekycKycFormService.savePDF(this.formData()).subscribe();
+
+        window.removeEventListener('message', handleMessage);
+      }
+    };
+
+    window.addEventListener('message', handleMessage);
+
+    iframe.contentWindow?.postMessage({ type: 'TRIGGER_SAVE' }, '*');
   }
 }

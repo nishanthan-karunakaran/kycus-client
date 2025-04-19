@@ -461,6 +461,8 @@ body {
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
+    padding: 0.5rem 0;
+    border-bottom: 2px solid var(--primary-border);
   }
 
   .basic_details {
@@ -493,8 +495,9 @@ body {
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
+    margin-top: 1rem;
 
-    h5 {
+    .bo-header {
       text-align: center;
       color: black;
     }
@@ -556,6 +559,8 @@ body {
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
+    padding: 0.5rem 0;
+    border-bottom: 2px solid var(--primary-border);
   }
 
   .aus_container {
@@ -613,6 +618,14 @@ body {
           display: flex;
           justify-content: center;
           align-items: center;
+          overflow: hidden;
+          padding: 1rem;
+
+          img {
+            object-fit: contain;
+            height: 90%;
+            width: 100%;
+          }
         }
       }
 
@@ -623,11 +636,18 @@ body {
 
         .photo_wrapper {
           height: 150px;
-          width: 50%;
+          width: 120px;
           border: 1px solid;
           display: flex;
           justify-content: center;
           align-items: center;
+          overflow: hidden;
+
+          img {
+            object-fit: contain;
+            height: 90%;
+            width: 100%;
+          }
         }
       }
     }

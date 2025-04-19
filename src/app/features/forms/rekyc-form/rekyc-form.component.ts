@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, DoCheck, OnInit, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute } from '@angular/router';
 import { Store } from '@ngrx/store';
@@ -11,7 +11,7 @@ import { FormPage, FormStep } from './rekyc-form.model';
   styleUrls: ['./rekyc-form.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class RekycFormComponent implements OnInit, DoCheck {
+export class RekycFormComponent implements OnInit {
   currentForm = signal<FormStep>(FormStep.ENTITY_DETAILS);
   formList: FormPage[] = [
     { label: 'Entity Details', step: FormStep.ENTITY_DETAILS, isCompleted: false, canShow: true },
@@ -45,9 +45,6 @@ export class RekycFormComponent implements OnInit, DoCheck {
 
   ngOnInit(): void {
     this.applicationToken = this.activatedRouter.snapshot.queryParamMap.get('token');
-
-    // eslint-disable-next-line no-console
-    console.log('info', this.ausInfo());
     // this.store
     //   .select(selectEntityInfo)
     //   // eslint-disable-next-line no-console
@@ -56,11 +53,6 @@ export class RekycFormComponent implements OnInit, DoCheck {
     //   .select(selectAusInfo)
     //   // eslint-disable-next-line no-console
     //   .subscribe((ausInfo) => console.log('ausInfo', ausInfo));
-  }
-
-  ngDoCheck(): void {
-    // eslint-disable-next-line no-console
-    console.log('rekyc global form rendeing');
   }
 
   trackStep(_index: number, step: FormPage) {
