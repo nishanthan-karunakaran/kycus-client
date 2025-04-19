@@ -9,7 +9,7 @@ import { ApiService } from '@core/services/api.service';
 export class RekycKycFormService {
   constructor(private api: ApiService) {}
 
-  downloadReKycForm(data: unknown) {
+  downloadReKycForm(data: any) {
     fetch('http://localhost:3000/generate-pdf', {
       method: 'POST',
       headers: {
