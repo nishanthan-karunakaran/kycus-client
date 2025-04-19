@@ -3,7 +3,6 @@ let data = {};
 
 document.addEventListener('DOMContentLoaded', async function () {
   await fun();
-  await ausDetails();
   await entityBasicInfo();
   await entityMailingAddress();
   await entityRegisteredAddress();
@@ -16,14 +15,12 @@ document.addEventListener('DOMContentLoaded', async function () {
   await entityProofDeclaration();
   await extendedAnnexure();
   await boDetailsTable();
+  await ausDetails();
   // await downloadPDF();
 });
 
 function sendSaveData() {
-  console.log(
-    'Iframe received TRIGGER_SAVE',
-    data.editedData.entityDetails.entityRegisteredAddress.sameAsMailing,
-  );
+  console.log('Iframe received TRIGGER_SAVE', data.editedData.asuDate);
   window.parent.postMessage(
     {
       type: 'SAVE_DATA',
@@ -486,6 +483,7 @@ function fun() {
         },
       ],
     },
+    editedContent: {},
   };
 }
 
@@ -705,7 +703,7 @@ function entityType() {
     { id: 'trust', label: 'Trust' },
   ];
 
-  const selectedLabel = data.editedData.entityDetails.entityType;
+  const selectedLabel = data.editedData.entityType;
   const selector = '#entity-type .checkbox_container';
   const container = document.querySelector(selector);
   container.innerHTML = '';
@@ -734,7 +732,7 @@ function entityType() {
       document.querySelectorAll(`${selector} input[type="checkbox"]`).forEach((cb) => {
         if (cb !== input) cb.checked = false;
       });
-      data.editedData.entityDetails.entityType = input.checked ? label : null;
+      data.editedData.entityType = input.checked ? label : null;
     });
   });
 }
