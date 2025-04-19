@@ -8,8 +8,8 @@
       />
     </div>
 
-    <div class="flex flex-col items-start gap-1 text-primary">
-      <h6>RE KYC - NON INDIVIDUAL</h6>
+    <div class="flex flex-col items-start gap-1 border-l-2 pl-2 text-primary">
+      <p>RE KYC - NON INDIVIDUAL</p>
       <img
         src="./assets/images/logo/hdfc.webp"
         alt="HDFC"
@@ -18,14 +18,12 @@
     </div>
   </div>
 
-  <div
-    class="absolute left-1/2 top-1/2 flex translate-x-[-50%] translate-y-[-50%] flex-col gap-1 text-center text-primary"
-  >
-    <h6>TATA Consumer Products</h6>
-    <span>Private Limited</span>
-  </div>
-
   <div class="flex items-center gap-2">
+    <div class="flex flex-col border-r-2 pr-2 text-end text-primary">
+      <p>TATA Consumer Products</p>
+      <span class="text-xs">Private Limited</span>
+    </div>
+
     <div>
       <p>{{ ausInfo()?.ausName }}</p>
       <span class="text-xs text-gray-500">{{ getAusType }}</span>
