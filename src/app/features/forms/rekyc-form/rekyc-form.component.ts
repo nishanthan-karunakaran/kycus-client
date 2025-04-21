@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, OnInit, signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { selectEntityInfo } from './components/entity-filledby/store/entity-info.selectors';
 import { selectAusInfo } from './components/rekyc-personal-details/store/personal-details.selectors';
@@ -42,11 +42,33 @@ export class RekycFormComponent implements OnInit {
 
   constructor(
     private activatedRouter: ActivatedRoute,
+    private router: Router,
     private store: Store,
   ) {}
 
   ngOnInit(): void {
+    this.handleInitialRoute();
     this.applicationToken = this.activatedRouter.snapshot.queryParamMap.get('token');
+  }
+
+  handleInitialRoute() {
+    const rekycData = localStorage.getItem('rekyc');
+    let activeRoute = 'entity-details';
+
+    const parsed = rekycData ? JSON.parse(rekycData) : null;
+    if (parsed?.activeRoute) {
+      activeRoute = parsed.activeRoute;
+    }
+
+    if (
+      this.activatedRouter.snapshot.routeConfig?.path === '' &&
+      this.activatedRouter.snapshot.children.length === 0
+    ) {
+      this.router.navigate([activeRoute], {
+        relativeTo: this.activatedRouter,
+        queryParamsHandling: 'preserve',
+      });
+    }
   }
 
   trackStep(_index: number, step: FormPage) {
@@ -56,6 +78,18 @@ export class RekycFormComponent implements OnInit {
   setCurrentForm(item: FormPage) {
     if (item.canShow) {
       this.currentForm.set(item.step);
+
+      const rekycData = localStorage.getItem('rekyc');
+      const currentRekyc = rekycData ? JSON.parse(rekycData) : { activeRoute: '' };
+
+      currentRekyc.activeRoute = item.step; // Update only activeRoute
+      localStorage.setItem('rekyc', JSON.stringify(currentRekyc));
+
+      // Navigate to the new route, preserve query params (like token)
+      this.router.navigate([item.step], {
+        relativeTo: this.activatedRouter,
+        queryParamsHandling: 'preserve', // keeps the token query param
+      });
     }
   }
 
