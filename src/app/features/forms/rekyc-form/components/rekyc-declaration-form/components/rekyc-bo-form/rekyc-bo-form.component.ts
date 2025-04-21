@@ -64,12 +64,12 @@ export class RekycBoFormComponent implements OnInit {
 
   createBoDetail(): FormGroup {
     return this.fb.group({
-      name: ['q', Validators.required],
-      addressLine: ['q', Validators.required],
-      city: ['q', Validators.required],
-      state: ['q', Validators.required],
-      country: ['q', Validators.required],
-      pincode: ['1', [Validators.required, Validators.pattern(/^\d{6}$/)]],
+      name: ['', Validators.required],
+      addressLine: ['', Validators.required],
+      city: ['', Validators.required],
+      state: ['', Validators.required],
+      country: ['', Validators.required],
+      pincode: ['', [Validators.required, Validators.pattern(/^\d{6}$/)]],
     });
   }
 

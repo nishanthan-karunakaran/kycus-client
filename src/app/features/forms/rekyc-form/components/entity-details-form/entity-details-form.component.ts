@@ -85,6 +85,11 @@ export class RekycEntityDetailsFormComponent implements OnInit, DoCheck, OnDestr
       label: 'Landline Bill (not more than 2 months old)',
       value: 'landline_bill',
     },
+    {
+      id: 4,
+      label: 'Internet Bill (not more than 2 months old)',
+      value: 'internet_bill',
+    },
   ];
   isFileLoading = signal({
     pan: false,
@@ -160,12 +165,6 @@ export class RekycEntityDetailsFormComponent implements OnInit, DoCheck, OnDestr
 
   isFileLoadingType(type: EntityDetailsFileType): boolean {
     return this.isFileLoading()[type];
-  }
-
-  getSelectedAddressProof() {
-    const selectedType = this.form.get('addressProof.file.selectedType')?.value;
-    // eslint-disable-next-line no-console
-    console.log('selectedType', selectedType);
   }
 
   setIsFileLoading(key: EntityDetailsFileType, value: boolean) {

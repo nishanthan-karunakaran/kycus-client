@@ -1835,7 +1835,8 @@ function boDetailsTable() {
 }
 
 function ausDetails() {
-  const ausData = data?.editedData?.ausData || [];
+  console.log('reached auss');
+  const ausData = data?.editedData?.authorizedSignatoriesDetails || [];
   const labels = [
     'Name of the Authorised Signatory',
     "Father's name",
@@ -1849,6 +1850,19 @@ function ausDetails() {
     'Signature',
     'Photograph',
   ];
+  const labelKey = {
+    'Name of the Authorised Signatory': 'name',
+    "Father's name": 'fatherName',
+    'Proof of Identity': 'identityProof',
+    'Proof of Address': 'addressProof',
+    'Address - Line': 'addressLine',
+    'Address - City': 'city',
+    'Address - State': 'state',
+    'Address - Country': 'country',
+    'Address - Pincode': 'pincode',
+    Signature: 'signature',
+    Photograph: 'photo',
+  };
 
   const toKey = (label) => label.toLowerCase().replace(/[^a-z0-9]/gi, '');
 
@@ -1933,7 +1947,7 @@ function ausDetails() {
           // Input field for other rows
           const input = document.createElement('input');
           input.type = 'text';
-          const key = toKey(label);
+          const key = labelKey[label];
           input.value = ausData?.[key] || '';
           input.addEventListener('input', (e) => {
             if (ausData) ausData[key] = e.target.value;

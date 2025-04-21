@@ -86,7 +86,19 @@ export class RekycKycFormComponent implements OnInit {
         // eslint-disable-next-line no-console
         console.log('saving data', this.formData());
 
-        this.rekycKycFormService.savePDF(this.formData()).subscribe();
+        this.rekycKycFormService.savePDF(this.formData()).subscribe({
+          next: (result) => {
+            const { response } = result;
+
+            if (!response) return;
+
+            const { status } = response;
+
+            if (status === ApiStatus.SUCCESS) {
+              this.toast.success('Form saved!');
+            }
+          },
+        });
 
         window.removeEventListener('message', handleMessage);
       }
