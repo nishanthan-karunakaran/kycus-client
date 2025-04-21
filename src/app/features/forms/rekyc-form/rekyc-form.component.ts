@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component, OnInit, signal } from '@angular/cor
 import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute } from '@angular/router';
 import { Store } from '@ngrx/store';
+import { selectEntityInfo } from './components/entity-filledby/store/entity-info.selectors';
 import { selectAusInfo } from './components/rekyc-personal-details/store/personal-details.selectors';
 import { FormPage, FormStep } from './rekyc-form.model';
 
@@ -12,7 +13,7 @@ import { FormPage, FormStep } from './rekyc-form.model';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class RekycFormComponent implements OnInit {
-  currentForm = signal<FormStep>(FormStep.KYC_FORM);
+  currentForm = signal<FormStep>(FormStep.ENTITY_DETAILS);
   formList: FormPage[] = [
     { label: 'Entity Details', step: FormStep.ENTITY_DETAILS, isCompleted: false, canShow: true },
     { label: 'Declaration', step: FormStep.DECLARATION, isCompleted: false, canShow: true },
@@ -35,6 +36,7 @@ export class RekycFormComponent implements OnInit {
   ];
   applicationToken: string | null = null;
   readonly ausInfo = toSignal(this.store.select(selectAusInfo));
+  readonly entityInfo = toSignal(this.store.select(selectEntityInfo));
   // readonly isAuthenticated = computed(() => this.ausInfo()?.isAuthenticated);
   readonly isAuthenticated = () => true;
 
@@ -45,14 +47,6 @@ export class RekycFormComponent implements OnInit {
 
   ngOnInit(): void {
     this.applicationToken = this.activatedRouter.snapshot.queryParamMap.get('token');
-    // this.store
-    //   .select(selectEntityInfo)
-    //   // eslint-disable-next-line no-console
-    //   .subscribe((entityInfo) => console.log('entityInfo', entityInfo));
-    // this.store
-    //   .select(selectAusInfo)
-    //   // eslint-disable-next-line no-console
-    //   .subscribe((ausInfo) => console.log('ausInfo', ausInfo));
   }
 
   trackStep(_index: number, step: FormPage) {

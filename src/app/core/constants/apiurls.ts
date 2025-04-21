@@ -13,12 +13,13 @@ export const API_URL = {
   APPLICATION: {
     REKYC: {
       APPLICATIONS: '/kycus/rekyc/applications',
+      AUS_LIST: (ausId: string) => `/kycus/rekyc/ausListDropdown/${ausId}`,
       AUTH: {
         REQUEST_OTP: '/kycus/rekyc/auth/request-otp',
         VERIFY_OTP: '/kycus/rekyc/auth/verify-otp',
       },
       ENTITY_INFO: {
-        ENTITY_FILLED_BY: '/kycus/rekyc/entityFilledBy',
+        ENTITY_FILLED_BY: '/kycus/rekyc/entityInfo/entityFilledBy',
       },
       ENTITY_DETAILS_FORM: {
         ENTITY_DOCS_UPLOAD: '/kycus/rekyc/entityDocs/uploads',
