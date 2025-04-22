@@ -15,8 +15,9 @@ export class RekycFormHeaderComponent {
   constructor(private store: Store) {}
 
   get getAusType() {
-    switch (this.ausInfo()?.ausType) {
+    switch (this.ausInfo()?.ausType?.toLowerCase()) {
       case 'aus':
+        return 'Authorized Signatory';
       case 'others':
         return 'Others';
       default:
