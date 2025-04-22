@@ -1,114 +1,29 @@
 <div class="flex flex-col gap-4">
   <div class="flex items-center justify-between">
-    <div>
-      <div class="flex items-center gap-2">
-        <img src="./assets/svgs/thunder.svg" alt="" />
-        <p class="font-medium text-secondary">Autofill form</p>
+    <div class="flex items-center">
+      <div
+        *ngFor="let item of screenHeaders; trackBy: trackScreenHeader"
+        class="border-b-2 border-gray-300 px-4 py-2"
+        [ngClass]="{
+          'border-b-primary': currentScreen() === item.value,
+        }"
+      >
+        <ui-button
+          class="btn-nostyle font-medium"
+          [ngClass]="{
+            'text-gray-500': currentScreen() !== item.value,
+            'text-primary': currentScreen() === item.value,
+          }"
+          [label]="item.label"
+          (btnClick)="setCurrentScreen(item.value)"
+        />
       </div>
-      <p class="text-xs font-medium text-gray-500">
-        Please upload the required entity documents and proofs.
-      </p>
-    </div>
-
-    <div>
-      <p class="font-medium text-secondary">Supports JPG, PNG, PDF</p>
-      <p class="text-end text-xs text-gray-500">
-        Max file size
-        <strong>2 mb</strong>
-      </p>
     </div>
   </div>
 
-  <form
-    [formGroup]="form"
-    (ngSubmit)="submit('submit')"
-    class="flex flex-col gap-4"
-  >
-    <div class="divide-y-2 rounded-lg border">
-      <div
-        *ngFor="let doc of documentKeys; trackBy: trackDoc"
-        class="flex items-center justify-between px-4 py-4"
-      >
-        <div class="w-[42%]">
-          <div class="flex flex-col gap-2">
-            <p>
-              {{ form.get(doc + '.label')?.value }}
-              <span
-                *ngIf="form.get(doc + '.isRequired')?.value"
-                class="text-red-500"
-              >
-                *
-              </span>
-            </p>
-
-            <ui-select
-              *ngIf="doc === 'addressProof'"
-              [options]="entityAddressProofList"
-              (valueChange)="onAddressProofChange($event)"
-              placeholder="Choose Proof of Address"
-              [defaultValue]="form.value.addressProof.file.selectedType"
-            ></ui-select>
-          </div>
-
-          <span
-            class="text-xs text-red-500"
-            *ngIf="
-              form.get([doc, 'file', 'name'])?.errors?.['required'] &&
-              form.get([doc, 'file', 'name'])?.touched
-            "
-          >
-            {{ doc === 'addressProof' ? 'Address Proof' : doc.toUpperCase() }}
-            is required
-          </span>
-        </div>
-
-        <div>
-          <ui-upload-button
-            *ngIf="!form.get(doc + '.file.name')?.value"
-            accept=".pdf, .xlsx"
-            [disabled]="
-              doc === 'addressProof'
-                ? form.get(doc + '.file.selectedType')?.value === ''
-                : false
-            "
-            (selectedFile)="onFileSelection(doc, $event)"
-          ></ui-upload-button>
-
-          <div
-            *ngIf="form.get(doc + '.file.name')?.value"
-            class="flex items-center gap-2"
-          >
-            <ui-filename
-              *ngIf="form.get(doc + '.file.name')?.value"
-              [fileName]="form.get(doc + '.file.name')?.value"
-              (removeFile)="removeFile(doc)"
-            />
-            <lucide-icon
-              *ngIf="isFileLoadingType(doc)"
-              class="animate-slow-spin"
-              name="loader-circle"
-              color="#e67a4c"
-              size="20"
-            />
-            <lucide-icon
-              *ngIf="!isFileLoadingType(doc)"
-              name="check"
-              color="#219B17"
-            />
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div
-      class="flex items-center justify-end gap-2 border-t border-gray-300 py-4"
-    >
-      <ui-button
-        label="Save Draft"
-        class="btn-outline"
-        (btnClick)="submit('save')"
-      />
-      <ui-button type="submit" label="Submit" class="py-[7px]" />
-    </div>
-  </form>
+  <ng-container [ngSwitch]="currentScreen()">
+    <rekyc-entity-details *ngSwitchCase="'entity-details'" />
+    <rekyc-directors-form *ngSwitchCase="'directors'" />
+    <rekyc-bo-form *ngSwitchCase="'bo'" />
+  </ng-container>
 </div>

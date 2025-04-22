@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { StoreModule } from '@ngrx/store';
 import { SharedModule } from '@src/app/shared/shared.module';
 import { RekycEmailValidationComponent } from './components/email-validation/email-validation.component';
-import { RekycEntityDetailsFormComponent } from './components/entity-details-form/entity-details-form.component';
+import { EntityDetailsComponent } from './components/entity-details-form/components/entity-details/entity-details.component';
 import { RekycEntityFilledbyComponent } from './components/entity-filledby/entity-filledby.component';
 import { RekycFormHeaderComponent } from './components/header/rekyc-form-header.component';
 import { RekycBoFormComponent } from './components/rekyc-declaration-form/components/rekyc-bo-form/rekyc-bo-form.component';
@@ -15,6 +15,7 @@ import { RekycPersonalDetailsComponent } from './components/rekyc-personal-detai
 import { RekycFormRoutingModule } from './rekyc-form-routing.module';
 import { RekycFormComponent } from './rekyc-form.component';
 import { rekycFormReducers } from './store/rekyc-form.reducer';
+import { RekycEntityDetailsFormComponent } from './components/entity-details-form/entity-details-form.component';
 
 @NgModule({
   imports: [
@@ -28,6 +29,7 @@ import { rekycFormReducers } from './store/rekyc-form.reducer';
     RekycEmailValidationComponent,
     RekycEntityFilledbyComponent,
     RekycEntityDetailsFormComponent,
+    EntityDetailsComponent,
     RekycDeclarationFormComponent,
     RekycDirectorsFormComponent,
     RekycBoFormComponent,

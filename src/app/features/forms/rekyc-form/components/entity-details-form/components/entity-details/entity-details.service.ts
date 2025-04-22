@@ -6,7 +6,7 @@ import { UploadFileProof } from '@features/forms/rekyc-form/rekyc-form.model';
 @Injectable({
   providedIn: 'root',
 })
-export class EntityDetailsFormService {
+export class EntityDetailsService {
   constructor(private api: ApiService) {}
 
   uploadFileProof(data: UploadFileProof) {

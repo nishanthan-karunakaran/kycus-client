@@ -16,9 +16,9 @@ export class RekycFormComponent implements OnInit {
   currentForm = signal<FormStep>(FormStep.ENTITY_DETAILS);
   formList: FormPage[] = [
     { label: 'Entity Details', step: FormStep.ENTITY_DETAILS, isCompleted: false, canShow: true },
-    { label: 'Declaration', step: FormStep.DECLARATION, isCompleted: false, canShow: true },
+    // { label: 'Declaration', step: FormStep.DECLARATION, isCompleted: false, canShow: true },
     {
-      label: 'Personal Details',
+      label: 'AUS Details',
       step: FormStep.PERSONAL_DETAILS,
       isCompleted: false,
       canShow: true,
@@ -59,6 +59,8 @@ export class RekycFormComponent implements OnInit {
     if (parsed?.activeRoute) {
       activeRoute = parsed.activeRoute;
     }
+
+    this.currentForm.set(activeRoute as FormStep);
 
     if (
       this.activatedRouter.snapshot.routeConfig?.path === '' &&

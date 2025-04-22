@@ -27,7 +27,7 @@ import { Director } from './store/declaration-directors.state';
   templateUrl: './rekyc-directors-form.component.html',
 })
 export class RekycDirectorsFormComponent implements OnInit, OnChanges {
-  @Input({ required: true }) addBtnClicked = false;
+  @Input() addBtnClicked = false;
   @Output() formNavigation = new EventEmitter<boolean>();
   @Output() updateAddBtnClicked = new EventEmitter<void>();
   directorsList = signal<Director[]>([

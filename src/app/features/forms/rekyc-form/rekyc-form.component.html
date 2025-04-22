@@ -22,7 +22,7 @@
           *ngFor="let item of formList; let i = index; trackBy: trackStep"
         >
           <div
-            class="flex cursor-pointer items-center gap-1 text-gray-500"
+            class="flex cursor-pointer items-center gap-1 text-nowrap text-gray-500"
             [ngClass]="{
               'text-success': item.isCompleted,
               'text-secondary':
@@ -50,7 +50,7 @@
 
           <div
             *ngIf="i < formList.length - 1"
-            class="mx-2 h-[1.5px] w-14"
+            class="mx-2 h-[1.6px] w-[90%]"
             [ngClass]="{
               'bg-success': item.isCompleted,
               'bg-secondary': currentForm() === item.step && !item.isCompleted,
