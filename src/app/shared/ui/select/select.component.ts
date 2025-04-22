@@ -3,8 +3,9 @@ import {
   Component,
   EventEmitter,
   Input,
-  Output,
+  OnChanges,
   OnInit,
+  Output,
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
@@ -18,6 +19,7 @@ export interface SelectOption<T = unknown> {
   template: `
     <select
       class="w-full rounded border bg-white p-2"
+      [ngClass]="ngClass"
       (change)="onSelectChange($event)"
       [disabled]="disabled"
     >
@@ -39,12 +41,14 @@ export interface SelectOption<T = unknown> {
     },
   ],
 })
-export class SelectComponent<T = unknown> implements ControlValueAccessor, OnInit {
+export class SelectComponent<T = unknown> implements ControlValueAccessor, OnInit, OnChanges {
   @Input() options: Array<SelectOption<T>> = [];
   @Input() placeholder = '';
+  @Input() class = '';
   @Input() optional = false;
   @Input() disabled = false;
   @Input() defaultValue: T | null = null;
+  ngClass = {};
 
   @Output() valueChange = new EventEmitter<T>();
 
@@ -62,6 +66,12 @@ export class SelectComponent<T = unknown> implements ControlValueAccessor, OnIni
       this.selectedValue = this.defaultValue;
       this.writeValue(this.defaultValue);
     }
+  }
+
+  ngOnChanges(): void {
+    this.ngClass = {
+      [this.class]: !!this.class,
+    };
   }
 
   isSelected(value: T): boolean {

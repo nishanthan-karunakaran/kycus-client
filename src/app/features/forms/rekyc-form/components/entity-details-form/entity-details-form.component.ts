@@ -9,7 +9,7 @@ import {
   signal,
 } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import { FormArray, FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { ApiStatus } from '@core/constants/api.response';
 import {
   EntityDetailsFileType,
@@ -24,13 +24,6 @@ import { updatePartialEntityDetails } from './store/entity-details.actions';
 import { selectEntityDetails } from './store/entity-details.selectors';
 import { EntityDetails } from './store/entity-details.state';
 
-interface Doc {
-  label: string;
-  type: string;
-  file: { name: string | null; link: string | null };
-  isRequired: boolean;
-}
-
 @Component({
   selector: 'rekyc-entity-details-form',
   templateUrl: './entity-details-form.component.html',
@@ -40,35 +33,6 @@ interface Doc {
 export class RekycEntityDetailsFormComponent implements OnInit, DoCheck, OnDestroy {
   @Output() formNavigation = new EventEmitter<string>();
   form!: FormGroup;
-  entityDocs: Doc[] = [
-    {
-      label: "Company's PAN",
-      type: 'pan',
-      file: {
-        name: null,
-        link: null,
-      },
-      isRequired: true,
-    },
-    {
-      label: "Company's GSTIN",
-      type: 'gstin',
-      file: {
-        name: null,
-        link: null,
-      },
-      isRequired: true,
-    },
-    {
-      label: 'Select Proof of Address',
-      type: 'pan',
-      file: {
-        name: null,
-        link: null,
-      },
-      isRequired: true,
-    },
-  ];
   entityAddressProofList = [
     {
       id: 1,
@@ -100,6 +64,7 @@ export class RekycEntityDetailsFormComponent implements OnInit, DoCheck, OnDestr
     aoa: false,
   });
   entityDetails = toSignal(this.store.select(selectEntityDetails));
+  documentKeys = Object.keys(this.entityDetails);
 
   constructor(
     private fb: FormBuilder,
@@ -110,7 +75,8 @@ export class RekycEntityDetailsFormComponent implements OnInit, DoCheck, OnDestr
   ) {}
 
   ngOnInit(): void {
-    const entityDetails = this.entityDetails?.();
+    const group: Record<string, FormGroup> = {};
+    const entityDetails = this.entityDetails();
 
     if (!entityDetails) {
       // eslint-disable-next-line no-console
@@ -118,36 +84,24 @@ export class RekycEntityDetailsFormComponent implements OnInit, DoCheck, OnDestr
       return;
     }
 
-    const documentKeys: Array<keyof EntityDetails> = ['pan', 'gstin', 'coi', 'moa', 'aoa'];
+    this.documentKeys = Object.keys(entityDetails);
 
-    const groupObj: Record<string, FormGroup> = {};
+    this.documentKeys.forEach((key) => {
+      const doc = entityDetails[key as keyof EntityDetails];
 
-    documentKeys.forEach((key) => {
-      groupObj[key] = this.fb.group({
+      group[key] = this.fb.group({
+        label: [doc?.label],
+        type: [doc?.type],
+        isRequired: [doc?.isRequired],
         file: this.fb.group({
-          name: [entityDetails[key]?.file?.name || ''],
-          link: [entityDetails[key]?.file?.link || ''],
-          isLoading: [false],
+          name: [doc?.file?.name],
+          link: [doc?.file?.link],
+          selectedType: [doc?.file?.selectedType ?? ''],
         }),
-        isRequired: this.fb.control(
-          entityDetails[key]?.isRequired !== undefined
-            ? entityDetails[key].isRequired
-            : key !== 'gstin',
-        ),
       });
     });
 
-    groupObj['addressProof'] = this.fb.group({
-      file: this.fb.group({
-        name: [entityDetails.addressProof?.file?.name],
-        link: [entityDetails.addressProof?.file?.link],
-        selectedType: [entityDetails.addressProof?.file?.selectedType],
-        isLoading: [false],
-      }),
-      isRequired: this.fb.control(true),
-    });
-
-    this.form = this.fb.group(groupObj);
+    this.form = this.fb.group(group);
   }
 
   ngDoCheck(): void {
@@ -155,15 +109,20 @@ export class RekycEntityDetailsFormComponent implements OnInit, DoCheck, OnDestr
     console.log('Entity details form rendeing');
   }
 
-  trackDoc(_index: number, doc: Doc): string {
-    return doc.type;
+  trackDoc(_index: number, doc: string): string {
+    return doc;
+  }
+
+  get documents(): FormArray {
+    return this.form.get('documents') as FormArray;
   }
 
   get addressProofTypeControl(): FormControl<string> {
     return this.form.get('addressProof.type') as FormControl<string>;
   }
 
-  isFileLoadingType(type: EntityDetailsFileType): boolean {
+  isFileLoadingType(doc: string): boolean {
+    const type = doc as EntityDetailsFileType;
     return this.isFileLoading()[type];
   }
 
@@ -174,7 +133,7 @@ export class RekycEntityDetailsFormComponent implements OnInit, DoCheck, OnDestr
   }
 
   get isFormValid(): boolean {
-    return Object.keys(this.form.value).every((key) => {
+    return this.documentKeys.every((key) => {
       const isRequired = this.form.get(`${key}.isRequired`)?.value;
       const name = this.form.get(`${key}.file.name`)?.value;
       return !isRequired || !!name;
@@ -197,12 +156,11 @@ export class RekycEntityDetailsFormComponent implements OnInit, DoCheck, OnDestr
     return '';
   }
 
-  updateErrorMessages() {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    Object.entries(this.form.controls).forEach(([key, control]) => {
+  updateErrorMessages(): void {
+    Object.values(this.form.controls).forEach((control) => {
       if (control instanceof FormGroup) {
         const isRequired = control.get('isRequired')?.value;
-        const nameControl = control.get('file.name');
+        const nameControl = control.get(['file', 'name']);
 
         if (isRequired && !nameControl?.value) {
           nameControl?.setErrors({ required: true });
@@ -217,13 +175,13 @@ export class RekycEntityDetailsFormComponent implements OnInit, DoCheck, OnDestr
     return this.form.get(`${doc}.file.${control}`);
   }
 
-  onAddressProofChange(value: string) {
-    this.form.get('addressProof.file.selectedType')?.setValue(value);
-    // eslint-disable-next-line no-console
-    console.log('addressProof', value);
+  onAddressProofChange(value: string): void {
+    this.form.get(['addressProof', 'file', 'selectedType'])?.setValue(value);
   }
 
-  onFileSelection(controlName: EntityDetailsFileType, file: File): void {
+  onFileSelection(doc: string, file: File): void {
+    const controlName = doc as EntityDetailsFileType;
+
     if (!file) return;
 
     this.uploadFileProof(controlName, file);
@@ -278,7 +236,8 @@ export class RekycEntityDetailsFormComponent implements OnInit, DoCheck, OnDestr
       });
   }
 
-  removeFile(type: EntityDetailsFileType): void {
+  removeFile(doc: string): void {
+    const type = doc as EntityDetailsFileType;
     const fileGroup = this.form.get(`${type}.file`) as FormGroup;
     if (!fileGroup) {
       // eslint-disable-next-line no-console
@@ -289,8 +248,6 @@ export class RekycEntityDetailsFormComponent implements OnInit, DoCheck, OnDestr
     fileGroup.get('name')?.setValue('');
     fileGroup.get('link')?.setValue('');
     this.setIsFileLoading(type, false);
-    // eslint-disable-next-line no-console
-    console.log('ent det remove', this.form.value[type]);
   }
 
   submit(action: 'submit' | 'save' = 'submit'): void {
@@ -299,6 +256,7 @@ export class RekycEntityDetailsFormComponent implements OnInit, DoCheck, OnDestr
       this.updateErrorMessages();
       if (!this.isFormValid) {
         // this.toast.error('Something went wrong!');
+
         // eslint-disable-next-line no-console
         console.warn('Form is not valid');
         return;
