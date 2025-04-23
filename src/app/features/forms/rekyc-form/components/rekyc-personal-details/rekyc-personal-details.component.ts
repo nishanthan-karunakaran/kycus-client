@@ -7,6 +7,7 @@ import {
   Output,
   signal,
 } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { ApiStatus } from '@core/constants/api.response';
 import { HelperService } from '@core/services/helpers.service';
@@ -14,20 +15,13 @@ import {
   UploadFileProof,
   UploadFileProofResponse,
 } from '@features/forms/rekyc-form/rekyc-form.model';
+import { Store } from '@ngrx/store';
 import { ToastService } from '@src/app/shared/ui/toast/toast.service';
 import { RekycPersonalFormService } from './rekyc-personal.service';
-import { selectPersonalDetails } from './store/personal-details.selectors';
-import { Store } from '@ngrx/store';
-import { toSignal } from '@angular/core/rxjs-interop';
-import { PersonalDetails } from './store/personal-details.state';
 import { updatePartialPersonalDetails } from './store/personal-details.actions';
-
-interface Doc {
-  label: string;
-  type: string;
-  file: { name: string | null; link: string | null };
-  isRequired: boolean;
-}
+import { selectAusInfo, selectPersonalDetails } from './store/personal-details.selectors';
+import { PersonalDetails } from './store/personal-details.state';
+import { selectEntityInfo } from '../entity-filledby/store/entity-info.selectors';
 
 type FileType = 'identityProof' | 'addressProof' | 'photograph' | 'signature';
 
@@ -89,7 +83,13 @@ export class RekycPersonalDetailsComponent implements OnInit, OnDestroy {
     signature: false,
   });
   @Output() formNavigation = new EventEmitter<string>();
+  entityInfo = toSignal(this.store.select(selectEntityInfo));
+  ausInfo = toSignal(this.store.select(selectAusInfo));
   personalDetails = toSignal(this.store.select(selectPersonalDetails));
+  ausDocsList = toSignal(this.store.select(selectPersonalDetails));
+  documentKeys = ['identityProof', 'addressProof', 'photograph', 'signature'];
+
+  proofDoc = (doc: string) => doc === 'identityProof' || doc === 'addressProof';
 
   constructor(
     private fb: FormBuilder,
@@ -100,51 +100,41 @@ export class RekycPersonalDetailsComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    const personalDetails = this.personalDetails?.();
+    const group: Record<string, FormGroup> = {};
+    const ausDocsList = this.ausDocsList();
 
-    if (!personalDetails) {
+    if (!ausDocsList) {
       // eslint-disable-next-line no-console
-      console.error('Entity details are not available.');
+      console.warn('ausDocsList is undefined');
       return;
     }
 
-    const documentKeys: Array<keyof PersonalDetails> = [
-      'identityProof',
-      'addressProof',
-      'photograph',
-      'signature',
-    ];
+    // this.documentKeys = Object.keys(this.ausDocsList);
 
-    const groupObj: Record<string, FormGroup> = {};
+    this.documentKeys.forEach((key) => {
+      const doc = ausDocsList[key as keyof PersonalDetails];
+      const fileGroupConfig: Record<string, unknown> = {
+        name: [doc?.file?.name],
+        link: [doc?.file?.link],
+      };
 
-    documentKeys.forEach((key) => {
-      groupObj[key] = this.fb.group({
-        file: this.fb.group({
-          name: [personalDetails[key]?.file?.name || ''],
-          link: [personalDetails[key]?.file?.link || ''],
-          isLoading: [false],
-        }),
-        isRequired: this.fb.control(
-          personalDetails[key]?.isRequired !== undefined ? personalDetails[key].isRequired : false,
-        ),
+      if (doc?.type === 'identityProof' || doc?.type === 'addressProof') {
+        fileGroupConfig['selectedType'] = [doc?.file?.selectedType || ''];
+      }
+
+      group[key] = this.fb.group({
+        label: [doc?.label],
+        type: [doc?.type],
+        isRequired: [doc?.isRequired],
+        file: this.fb.group(fileGroupConfig),
       });
     });
 
-    groupObj['addressProof'] = this.fb.group({
-      file: this.fb.group({
-        name: [personalDetails.addressProof?.file?.name],
-        link: [personalDetails.addressProof?.file?.link],
-        selectedType: [personalDetails.addressProof?.file?.selectedType],
-        isLoading: [false],
-      }),
-      isRequired: this.fb.control(true),
-    });
-
-    this.form = this.fb.group(groupObj);
+    this.form = this.fb.group(group);
   }
 
-  trackDoc(_index: number, doc: Doc): string {
-    return doc.type;
+  trackDoc(_index: number) {
+    return _index;
   }
 
   get isFormValid(): boolean {
@@ -154,7 +144,8 @@ export class RekycPersonalDetailsComponent implements OnInit, OnDestroy {
     });
   }
 
-  isFileLoadingType(type: FileType): boolean {
+  isFileLoadingType(doc: string): boolean {
+    const type = doc as FileType;
     return this.isFileLoading()[type];
   }
 
@@ -220,11 +211,13 @@ export class RekycPersonalDetailsComponent implements OnInit, OnDestroy {
       return;
     }
 
+    const docType = type === 'addressProof' || type === 'identityProof' ? type : type.toUpperCase();
+
     const formData = new FormData();
-    formData.append('entityId', 'ebitaus-CUS1234567-09042025');
-    formData.append('ausId', 'ebitaus-CUS1234567-09042025-AUS3');
+    formData.append('entityId', this.entityInfo()?.entityId as string);
+    formData.append('ausId', this.ausInfo()?.ausId as string);
     formData.append('file', file);
-    formData.append('docType', type);
+    formData.append('docType', docType);
     formData.append('selectedType', fileGroup.get('selectedType')?.value);
 
     fileGroup.patchValue({
@@ -249,9 +242,6 @@ export class RekycPersonalDetailsComponent implements OnInit, OnDestroy {
           this.toast.success(`${fileType} uploaded successfully`);
         } else {
           this.toast.error(`Invalid document for ${fileType}`);
-          // fileGroup.patchValue({
-          // name: '',
-          // });
         }
       },
     });
