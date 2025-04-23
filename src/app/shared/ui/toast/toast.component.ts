@@ -3,7 +3,7 @@ import { Toast } from './toast.service';
 
 export const DEFAULT_TOAST_OPTIONS = {
   duration: 2000,
-  dismissable: true,
+  dismissable: false,
   outlined: false,
   autoClose: true,
 } as const;
@@ -68,9 +68,6 @@ export class ToastComponent {
       'border border-info bg-infoLight text-info': toast.type === 'info' && toast.options.outlined,
       'border border-danger bg-dangerLight text-danger':
         toast.type === 'danger' && toast.options.outlined,
-
-      'rounded-lg shadow-lg px-4 py-2': true,
-      'grid grid-cols-[auto_1fr_auto] items-center gap-4': true,
 
       ...(toast.animationClass ? { [toast.animationClass]: true } : {}),
     };
