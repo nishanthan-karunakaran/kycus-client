@@ -130,7 +130,7 @@
   }
 
   .btn-outline {
-    @apply border-2 border-solid border-primary bg-transparent text-primary hover:bg-primary/10 focus:ring-0;
+    @apply border border-solid border-primary bg-transparent text-primary hover:bg-primary/10 focus:ring-0;
   }
 
   .btn-outline-compact {
@@ -154,7 +154,7 @@
   }
 
   .error-msg {
-    @apply m-0 text-sm font-medium text-danger;
+    @apply mt-2 text-xs font-medium text-danger;
   }
 
   .error-input {

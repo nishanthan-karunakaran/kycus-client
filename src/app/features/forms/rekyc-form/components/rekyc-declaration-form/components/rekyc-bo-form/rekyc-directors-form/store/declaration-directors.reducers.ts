@@ -1,13 +1,59 @@
-import { on } from '@ngrx/store';
-import { updatePartialDirectors } from './declaration-directors.actions';
-import { DeclarationState } from '@features/forms/rekyc-form/components/rekyc-declaration-form/store/declaration-form.state';
+import { deduplicateBy } from '@core/utils/helpers';
+import { createReducer, on } from '@ngrx/store';
+import { removeDirector, updatePartialDirectors } from './declaration-directors.actions';
+import { DirectorState } from './declaration-directors.state';
 
-export const directorOnFns = [
-  on(updatePartialDirectors, (state: DeclarationState, data) => ({
-    ...state,
-    director: {
-      ...state.director,
-      ...data,
-    },
-  })),
-];
+export const initialDirectorState: DirectorState = {
+  directorList: [
+    //   {
+    //     dirId: 'dir1',
+    //     directorName: 'Abishek Yadav',
+    //     din: '43928237',
+    //     status: 'active',
+    //   },
+    //   {
+    //     dirId: 'dir2',
+    //     directorName: 'Narayana Kumar',
+    //     din: '32379523',
+    //     status: 'active',
+    //   },
+    //   {
+    //     dirId: 'dir3',
+    //     directorName: 'Chittesh Sarav',
+    //     din: '642749',
+    //     status: 'active',
+    //   },
+  ],
+  isDirectorModified: false,
+  form32: {
+    name: null,
+    link: null,
+  },
+};
+
+export const rekycDirectorReducer = createReducer(
+  initialDirectorState,
+  on(updatePartialDirectors, (state, data) => {
+    const newState = { ...state, ...data };
+
+    if (data.directorList) {
+      const updatedDirList = deduplicateBy(data.directorList, 'dirId');
+      newState.directorList = updatedDirList;
+    }
+
+    return newState;
+  }),
+  on(removeDirector, (state: DirectorState, data) => {
+    const directors = state.directorList.map((dir) => {
+      if (dir.dirId === data.dirId) {
+        return { ...dir, status: 'inactive' };
+      }
+      return dir;
+    });
+
+    return {
+      ...state,
+      directorList: directors,
+    };
+  }),
+);
