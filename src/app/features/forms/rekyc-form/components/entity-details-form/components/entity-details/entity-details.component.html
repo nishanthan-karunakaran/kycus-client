@@ -83,18 +83,6 @@
               [fileName]="form.get(doc + '.file.name')?.value"
               (removeFile)="removeFile(doc)"
             />
-            <lucide-icon
-              *ngIf="isFileLoadingType(doc)"
-              class="animate-slow-spin"
-              name="loader-circle"
-              color="#e67a4c"
-              size="20"
-            />
-            <lucide-icon
-              *ngIf="!isFileLoadingType(doc)"
-              name="check"
-              color="#219B17"
-            />
           </div>
         </div>
       </div>

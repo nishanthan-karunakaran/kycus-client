@@ -11,6 +11,9 @@ import {
 import { toSignal } from '@angular/core/rxjs-interop';
 import { FormArray, FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { ApiStatus } from '@core/constants/api.response';
+import { updatePartialEntityDetails } from '@features/forms/rekyc-form/components/entity-details-form/store/entity-details.actions';
+import { selectEntityDetails } from '@features/forms/rekyc-form/components/entity-details-form/store/entity-details.selectors';
+import { EntityDetails } from '@features/forms/rekyc-form/components/entity-details-form/store/entity-details.state';
 import {
   EntityDetailsFileType,
   UploadFileProof,
@@ -19,10 +22,9 @@ import {
 import { Store } from '@ngrx/store';
 import { ToastService } from '@src/app/shared/ui/toast/toast.service';
 import { HelperService } from 'src/app/core/services/helpers.service';
+import { initialEntityInfoState } from '@features/forms/rekyc-form/components/entity-filledby/store/entity-info.reducer';
+import { selectEntityInfo } from '@features/forms/rekyc-form/components/entity-filledby/store/entity-info.selectors';
 import { EntityDetailsService } from './entity-details.service';
-import { updatePartialEntityDetails } from '@features/forms/rekyc-form/components/entity-details-form/store/entity-details.actions';
-import { selectEntityDetails } from '@features/forms/rekyc-form/components/entity-details-form/store/entity-details.selectors';
-import { EntityDetails } from '@features/forms/rekyc-form/components/entity-details-form/store/entity-details.state';
 
 @Component({
   selector: 'rekyc-entity-details',
@@ -63,6 +65,9 @@ export class EntityDetailsComponent implements OnInit, DoCheck, OnDestroy {
     aoa: false,
   });
   entityDetails = toSignal(this.store.select(selectEntityDetails));
+  readonly entityInfo = toSignal(this.store.select(selectEntityInfo), {
+    initialValue: initialEntityInfoState,
+  });
   documentKeys = Object.keys(this.entityDetails);
 
   constructor(
@@ -188,10 +193,11 @@ export class EntityDetailsComponent implements OnInit, DoCheck, OnDestroy {
 
   uploadFileProof(type: EntityDetailsFileType, file: File): void {
     if (!file || !type) return;
+    const docType = type === 'addressProof' ? type : type.toUpperCase();
 
     const formData = new FormData();
-    formData.append('docType', type);
-    formData.append('entityId', 'ebitaus-CUS1234567-09042025');
+    formData.append('docType', docType);
+    formData.append('entityId', this.entityInfo()?.entityId);
     formData.append('file', file);
 
     const fileGroup = this.form.get(`${type}.file`) as FormGroup;
@@ -225,7 +231,7 @@ export class EntityDetailsComponent implements OnInit, DoCheck, OnDestroy {
           this.toast.success(`${entityDetailsFileTypeEntityDetailsFileType} uploaded successfully`);
         } else {
           this.toast.error(`Invalid document for ${entityDetailsFileTypeEntityDetailsFileType}`);
-          this.removeFile(type);
+          // this.removeFile(type);
         }
       },
     });
