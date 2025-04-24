@@ -14,6 +14,7 @@ export const API_URL = {
     REKYC: {
       APPLICATIONS: '/kycus/rekyc/applications',
       AUS_LIST: (ausId: string) => `/kycus/rekyc/ausListDropdown/${ausId}`,
+      DELETE_DOCUMENT: '/kycus/rekyc/document/delete',
       AUTH: {
         REQUEST_OTP: '/kycus/rekyc/auth/request-otp',
         VERIFY_OTP: '/kycus/rekyc/auth/verify-otp',

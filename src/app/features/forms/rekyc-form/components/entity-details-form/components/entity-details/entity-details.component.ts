@@ -14,16 +14,20 @@ import { ApiStatus } from '@core/constants/api.response';
 import { updatePartialEntityDetails } from '@features/forms/rekyc-form/components/entity-details-form/store/entity-details.actions';
 import { selectEntityDetails } from '@features/forms/rekyc-form/components/entity-details-form/store/entity-details.selectors';
 import { EntityDetails } from '@features/forms/rekyc-form/components/entity-details-form/store/entity-details.state';
+import { initialEntityInfoState } from '@features/forms/rekyc-form/components/entity-filledby/store/entity-info.reducer';
+import { selectEntityInfo } from '@features/forms/rekyc-form/components/entity-filledby/store/entity-info.selectors';
 import {
+  DeleteDocument,
   EntityDetailsFileType,
   UploadFileProof,
   UploadFileProofResponse,
 } from '@features/forms/rekyc-form/rekyc-form.model';
+import { RekycFormService } from '@features/forms/rekyc-form/rekyc-form.service';
 import { Store } from '@ngrx/store';
 import { ToastService } from '@src/app/shared/ui/toast/toast.service';
 import { HelperService } from 'src/app/core/services/helpers.service';
-import { initialEntityInfoState } from '@features/forms/rekyc-form/components/entity-filledby/store/entity-info.reducer';
-import { selectEntityInfo } from '@features/forms/rekyc-form/components/entity-filledby/store/entity-info.selectors';
+import { initialAusInfoState } from '@features/forms/rekyc-form/components/rekyc-personal-details/store/personal-details.reducer';
+import { selectAusInfo } from '@features/forms/rekyc-form/components/rekyc-personal-details/store/personal-details.selectors';
 import { EntityDetailsService } from './entity-details.service';
 
 @Component({
@@ -68,11 +72,15 @@ export class EntityDetailsComponent implements OnInit, DoCheck, OnDestroy {
   readonly entityInfo = toSignal(this.store.select(selectEntityInfo), {
     initialValue: initialEntityInfoState,
   });
+  readonly ausInfo = toSignal(this.store.select(selectAusInfo), {
+    initialValue: initialAusInfoState,
+  });
   documentKeys = Object.keys(this.entityDetails);
 
   constructor(
     private fb: FormBuilder,
     private entityDetailService: EntityDetailsService,
+    private rekycFormSerive: RekycFormService,
     private helperService: HelperService,
     private toast: ToastService,
     private store: Store,
@@ -189,6 +197,33 @@ export class EntityDetailsComponent implements OnInit, DoCheck, OnDestroy {
     if (!file) return;
 
     this.uploadFileProof(controlName, file);
+  }
+
+  // this is for deleting the doc on db
+  deleteDocument(doc: string): void {
+    const docType = doc === 'addressProof' ? doc : doc.toUpperCase();
+
+    const payload: DeleteDocument = {
+      entityId: this.entityInfo()?.entityId,
+      ausId: this.ausInfo()?.ausId as string,
+      docType: docType,
+    };
+
+    this.rekycFormSerive.deleteDocument(payload).subscribe({
+      next: (result) => {
+        const { loading, response } = result;
+
+        if (!loading || !response) return;
+
+        const { status } = response;
+
+        if (status === ApiStatus.SUCCESS) {
+          this.toast.success(`${docType} deleted`);
+          this.form.get(`${doc}.file.name`)?.setValue('');
+          this.form.get(`${doc}.file.link`)?.setValue('');
+        }
+      },
+    });
   }
 
   uploadFileProof(type: EntityDetailsFileType, file: File): void {

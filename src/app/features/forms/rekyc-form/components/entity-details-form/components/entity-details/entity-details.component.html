@@ -81,7 +81,7 @@
             <ui-filename
               *ngIf="form.get(doc + '.file.name')?.value"
               [fileName]="form.get(doc + '.file.name')?.value"
-              (removeFile)="removeFile(doc)"
+              (removeFile)="deleteDocument(doc)"
             />
           </div>
         </div>

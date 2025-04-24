@@ -1,9 +1,11 @@
 import { Injectable } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
+import { API_URL } from '@core/constants/apiurls';
+import { ApiService } from '@core/services/api.service';
 import { Store } from '@ngrx/store';
+import { DeleteDocument, FormStep } from './rekyc-form.model';
 import { FormStatus } from './store/rekyc-form.reducer';
 import { selectRekycFormStatus } from './store/rekyc-form.selectors';
-import { FormStep } from './rekyc-form.model';
 
 @Injectable({
   providedIn: 'root',
@@ -17,7 +19,10 @@ export class RekycFormService {
     'eSign',
   ];
 
-  constructor(private store: Store) {}
+  constructor(
+    private store: Store,
+    private api: ApiService,
+  ) {}
 
   getRekycLS(key: string) {
     const obj = localStorage.getItem('rekyc');
@@ -54,5 +59,9 @@ export class RekycFormService {
     }
 
     return true;
+  }
+
+  deleteDocument(payload: DeleteDocument) {
+    return this.api.post(API_URL.APPLICATION.REKYC.DELETE_DOCUMENT, payload);
   }
 }

@@ -41,6 +41,12 @@ export interface UploadFileProofResponse {
   storedPath?: string;
 }
 
+export interface DeleteDocument {
+  entityId: string;
+  ausId: string;
+  docType: string;
+}
+
 export type EntityDetailsFileType = 'pan' | 'gstin' | 'addressProof' | 'coi' | 'moa' | 'aoa';
 
 export interface SaveDirectorsDraft {
