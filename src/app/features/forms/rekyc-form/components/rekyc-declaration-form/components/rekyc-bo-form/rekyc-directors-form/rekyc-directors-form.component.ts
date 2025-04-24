@@ -11,6 +11,7 @@ import { ApiStatus } from '@core/constants/api.response';
 import { RekycDeclarationService } from '@features/forms/rekyc-form/components/rekyc-declaration-form/rekyc-declaration.service';
 import { selectAusInfo } from '@features/forms/rekyc-form/components/rekyc-personal-details/store/personal-details.selectors';
 import { SaveDirectorsDraft } from '@features/forms/rekyc-form/rekyc-form.model';
+import { updateRekycStepStatus } from '@features/forms/rekyc-form/store/rekyc-form.action';
 import { Store } from '@ngrx/store';
 import { ToastService } from '@src/app/shared/ui/toast/toast.service';
 import { removeDirector, updatePartialDirectors } from './store/declaration-directors.actions';
@@ -20,6 +21,7 @@ import {
   selectReKycDirectors,
 } from './store/declaration-directors.selectors';
 import { Director, Doc } from './store/declaration-directors.state';
+import { RekycFormService } from '@features/forms/rekyc-form/rekyc-form.service';
 
 @Component({
   selector: 'rekyc-directors-form',
@@ -46,6 +48,7 @@ export class RekycDirectorsFormComponent implements OnInit {
 
   constructor(
     private declarationService: RekycDeclarationService,
+    private rekycFormService: RekycFormService,
     private toast: ToastService,
     private store: Store,
   ) {}
@@ -247,6 +250,8 @@ export class RekycDirectorsFormComponent implements OnInit {
           this.store.dispatch(
             updatePartialDirectors({ directorList: refinedDirList, isDirectorModified: false }),
           );
+          this.store.dispatch(updateRekycStepStatus({ directorDetails: true }));
+          this.rekycFormService.updatRekycFormStep('directors');
         } else {
           this.toast.error(response.message || 'Something went wrong!');
         }

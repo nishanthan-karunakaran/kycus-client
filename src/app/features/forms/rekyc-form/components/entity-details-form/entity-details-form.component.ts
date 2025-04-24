@@ -1,7 +1,8 @@
-import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { RekycFormService } from '@features/forms/rekyc-form/rekyc-form.service';
-
-type Screens = 'entity-details' | 'directors' | 'bo';
+import { selectRekycCurrentEntityDetTab } from '@features/forms/rekyc-form/store/rekyc-form.selectors';
+import { Store } from '@ngrx/store';
 
 interface ScreenHeader {
   label: string;
@@ -15,9 +16,7 @@ interface ScreenHeader {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class RekycEntityDetailsFormComponent {
-  currentScreen = signal(
-    this.rekycFormService.getRekycLS('currentEntityDetTab') || 'entity-details',
-  );
+  currentScreen = toSignal(this.store.select(selectRekycCurrentEntityDetTab));
   screenHeaders: ScreenHeader[] = [
     {
       label: 'Entity Details',
@@ -33,14 +32,16 @@ export class RekycEntityDetailsFormComponent {
     },
   ];
 
-  constructor(private rekycFormService: RekycFormService) {}
+  constructor(
+    private rekycFormService: RekycFormService,
+    private store: Store,
+  ) {}
 
   trackScreenHeader(_index: number, screen: ScreenHeader) {
     return screen.value;
   }
 
   setCurrentScreen(value: string) {
-    this.currentScreen.set(value as Screens);
     this.rekycFormService.updateRekycLS('currentEntityDetTab', value);
   }
 

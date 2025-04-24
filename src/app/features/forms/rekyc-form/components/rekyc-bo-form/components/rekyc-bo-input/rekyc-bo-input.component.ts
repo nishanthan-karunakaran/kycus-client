@@ -1,8 +1,14 @@
 import { ChangeDetectionStrategy, Component, OnInit, signal } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ApiStatus } from '@core/constants/api.response';
 import { RekycBoService } from '@features/forms/rekyc-form/components/rekyc-bo-form/rekyc-bo.service';
+import { selectAusInfo } from '@features/forms/rekyc-form/components/rekyc-personal-details/store/personal-details.selectors';
 import { BoDetail, SaveBODetails } from '@features/forms/rekyc-form/rekyc-form.model';
+import { RekycFormService } from '@features/forms/rekyc-form/rekyc-form.service';
+import { updateRekycStepStatus } from '@features/forms/rekyc-form/store/rekyc-form.action';
+import { selectRekycStepStatus } from '@features/forms/rekyc-form/store/rekyc-form.selectors';
+import { Store } from '@ngrx/store';
 import { ToastService } from '@src/app/shared/ui/toast/toast.service';
 
 @Component({
@@ -15,11 +21,15 @@ export class RekycBoInputComponent implements OnInit {
     boDetails: this.fb.array([]),
   });
   isLoading = signal(false);
+  readonly ausInfo = toSignal(this.store.select(selectAusInfo));
+  readonly formStepStatus = toSignal(this.store.select(selectRekycStepStatus));
 
   constructor(
     private fb: FormBuilder,
     private boService: RekycBoService,
+    private rekycFormService: RekycFormService,
     private toast: ToastService,
+    private store: Store,
   ) {}
 
   ngOnInit() {
@@ -72,13 +82,13 @@ export class RekycBoInputComponent implements OnInit {
   }
 
   submit(action: 'save' | 'submit') {
-    if (!this.isFormValid) return;
+    // if (!this.isFormValid) return;
 
     if (action === 'submit') {
       const boList = this.form.value.boDetails as BoDetail[];
 
       const payload: SaveBODetails = {
-        ausId: 'ebitaus-CUS1234567-09042025-AUS3',
+        ausId: this.ausInfo()?.ausId as string,
         boList,
       };
       this.boService.saveBODetails(payload).subscribe({
@@ -91,7 +101,9 @@ export class RekycBoInputComponent implements OnInit {
           const { status } = response;
 
           if (status === ApiStatus.SUCCESS) {
-            this.toast.success('Beneficairy Owners details saved successfully!');
+            this.toast.success('Beneficairy Owners saved!');
+            this.store.dispatch(updateRekycStepStatus({ boDetails: true }));
+            this.rekycFormService.updatRekycFormStep('bo');
           } else {
             this.toast.error(response.message || 'Something went wrong!');
           }

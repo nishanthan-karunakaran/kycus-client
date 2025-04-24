@@ -17,3 +17,13 @@ export const selectRekycFormStatus = createSelector(
   selectRekycFormState,
   (state: ReKYCFormState) => state.formStatus.forms,
 );
+
+export const selectRekycCurrentEntityDetTab = createSelector(
+  selectRekycFormState,
+  (state: ReKYCFormState) => state.currentEntityDetTab,
+);
+
+export const selectRekycActiveRoute = createSelector(
+  selectRekycFormState,
+  (state: ReKYCFormState) => state.activeRoute,
+);

@@ -16,6 +16,8 @@ import { selectEntityDetails } from '@features/forms/rekyc-form/components/entit
 import { EntityDetails } from '@features/forms/rekyc-form/components/entity-details-form/store/entity-details.state';
 import { initialEntityInfoState } from '@features/forms/rekyc-form/components/entity-filledby/store/entity-info.reducer';
 import { selectEntityInfo } from '@features/forms/rekyc-form/components/entity-filledby/store/entity-info.selectors';
+import { initialAusInfoState } from '@features/forms/rekyc-form/components/rekyc-personal-details/store/personal-details.reducer';
+import { selectAusInfo } from '@features/forms/rekyc-form/components/rekyc-personal-details/store/personal-details.selectors';
 import {
   DeleteDocument,
   EntityDetailsFileType,
@@ -23,11 +25,10 @@ import {
   UploadFileProofResponse,
 } from '@features/forms/rekyc-form/rekyc-form.model';
 import { RekycFormService } from '@features/forms/rekyc-form/rekyc-form.service';
+import { updateRekycStepStatus } from '@features/forms/rekyc-form/store/rekyc-form.action';
 import { Store } from '@ngrx/store';
 import { ToastService } from '@src/app/shared/ui/toast/toast.service';
 import { HelperService } from 'src/app/core/services/helpers.service';
-import { initialAusInfoState } from '@features/forms/rekyc-form/components/rekyc-personal-details/store/personal-details.reducer';
-import { selectAusInfo } from '@features/forms/rekyc-form/components/rekyc-personal-details/store/personal-details.selectors';
 import { EntityDetailsService } from './entity-details.service';
 
 @Component({
@@ -80,7 +81,7 @@ export class EntityDetailsComponent implements OnInit, DoCheck, OnDestroy {
   constructor(
     private fb: FormBuilder,
     private entityDetailService: EntityDetailsService,
-    private rekycFormSerive: RekycFormService,
+    private rekycFormService: RekycFormService,
     private helperService: HelperService,
     private toast: ToastService,
     private store: Store,
@@ -209,7 +210,7 @@ export class EntityDetailsComponent implements OnInit, DoCheck, OnDestroy {
       docType: docType,
     };
 
-    this.rekycFormSerive.deleteDocument(payload).subscribe({
+    this.rekycFormService.deleteDocument(payload).subscribe({
       next: (result) => {
         const { loading, response } = result;
 
@@ -263,7 +264,7 @@ export class EntityDetailsComponent implements OnInit, DoCheck, OnDestroy {
           const { data } = response as { data: UploadFileProofResponse };
           fileGroup.get('name')?.setValue(data?.docName);
           fileGroup.get('link')?.setValue(data?.storedPath);
-          this.toast.success(`${entityDetailsFileTypeEntityDetailsFileType} uploaded successfully`);
+          // this.toast.success(`${entityDetailsFileTypeEntityDetailsFileType} uploaded successfully`);
         } else {
           this.toast.error(`Invalid document for ${entityDetailsFileTypeEntityDetailsFileType}`);
           // this.removeFile(type);
@@ -290,7 +291,7 @@ export class EntityDetailsComponent implements OnInit, DoCheck, OnDestroy {
     if (action === 'submit') {
       this.form.markAllAsTouched();
       this.updateErrorMessages();
-      if (!this.isFormValid) {
+      if (this.isFormValid) {
         // this.toast.error('Something went wrong!');
 
         // eslint-disable-next-line no-console
@@ -298,8 +299,10 @@ export class EntityDetailsComponent implements OnInit, DoCheck, OnDestroy {
         return;
       }
 
-      this.toast.success('Form sumitted successfully!');
+      this.toast.success('Entity Details submitted!');
       this.formNavigation.emit('next');
+      this.store.dispatch(updateRekycStepStatus({ entityDocs: true }));
+      this.rekycFormService.updatRekycFormStep('entity-details');
     } else {
       this.toast.info('Form saved successfully!');
     }

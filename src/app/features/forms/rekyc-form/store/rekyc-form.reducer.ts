@@ -7,17 +7,20 @@ import {
   ausInfoReducer,
   personalDetailsReducer,
 } from '../components/rekyc-personal-details/store/personal-details.reducer';
-import { updateRekycFormStatus, updateRekycStepStatus } from './rekyc-form.action';
-import { ReKYCFormState } from './rekyc-form.state';
+import {
+  updateActiveRoute,
+  updateCurrentEntityDetTab,
+  updateRekycFormStatus,
+  updateRekycStepStatus,
+} from './rekyc-form.action';
+import { EntityDetTab, ReKYCFormState } from './rekyc-form.state';
+import { FormStep } from '../rekyc-form.model';
 
 export interface FormStatus {
   steps: {
     entityDocs: boolean;
-    personalDocs: boolean;
     directorDetails: boolean;
     boDetails: boolean;
-    rekycForm: boolean;
-    eSign: boolean;
   };
   forms: {
     entityDetails: boolean;
@@ -30,11 +33,8 @@ export interface FormStatus {
 export const initialFormStatus: FormStatus = (() => {
   const steps = {
     entityDocs: false,
-    personalDocs: false,
     directorDetails: false,
     boDetails: false,
-    rekycForm: false,
-    eSign: false,
   };
 
   const forms = {
@@ -46,6 +46,28 @@ export const initialFormStatus: FormStatus = (() => {
 
   return { steps, forms };
 })();
+
+const getInitialTab = (): EntityDetTab => {
+  try {
+    const tab = 'entity-details' as EntityDetTab;
+    const obj = localStorage.getItem('rekyc');
+    const currentRekyc: Record<string, string> = obj ? JSON.parse(obj) : {};
+    return (currentRekyc['currentEntityDetTab'] as EntityDetTab) || tab;
+  } catch {
+    return 'entity-details';
+  }
+};
+
+const getIntialActiveRoute = () => {
+  const route = 'entity-details' as FormStep;
+  try {
+    const obj = localStorage.getItem('rekyc');
+    const currentRekyc: Record<string, string> = obj ? JSON.parse(obj) : {};
+    return (currentRekyc['activeRoute'] as FormStep) || route;
+  } catch {
+    return route;
+  }
+};
 
 export const formStatusReducer = createReducer(
   initialFormStatus,
@@ -69,6 +91,16 @@ export const formStatusReducer = createReducer(
   }),
 );
 
+export const currentEntityDetTabReducer = createReducer(
+  getInitialTab(),
+  on(updateCurrentEntityDetTab, (_state, { tab }) => tab),
+);
+
+export const activeRouteReducer = createReducer(
+  getIntialActiveRoute(),
+  on(updateActiveRoute, (_state, { activeRoute }) => activeRoute),
+);
+
 export const rekycFormReducers: ActionReducerMap<ReKYCFormState> = {
   entityInfo: entityInfoReducer,
   ausInfo: ausInfoReducer,
@@ -77,4 +109,6 @@ export const rekycFormReducers: ActionReducerMap<ReKYCFormState> = {
   bo: boReducer,
   personalDetails: personalDetailsReducer,
   formStatus: formStatusReducer,
+  currentEntityDetTab: currentEntityDetTabReducer,
+  activeRoute: activeRouteReducer,
 };

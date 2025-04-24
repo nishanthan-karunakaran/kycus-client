@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnInit, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Store } from '@ngrx/store';
@@ -6,6 +6,8 @@ import { selectEntityInfo } from './components/entity-filledby/store/entity-info
 import { selectAusInfo } from './components/rekyc-personal-details/store/personal-details.selectors';
 import { FormPage, FormStep } from './rekyc-form.model';
 import { RekycFormService } from './rekyc-form.service';
+import { updateActiveRoute } from './store/rekyc-form.action';
+import { selectRekycActiveRoute, selectRekycStatus } from './store/rekyc-form.selectors';
 
 @Component({
   selector: 'app-rekyc-form',
@@ -14,7 +16,7 @@ import { RekycFormService } from './rekyc-form.service';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class RekycFormComponent implements OnInit {
-  currentForm = signal<FormStep>(FormStep.ENTITY_DETAILS);
+  currentForm = toSignal(this.store.select(selectRekycActiveRoute));
   formList: FormPage[] = [
     { label: 'Entity Details', step: FormStep.ENTITY_DETAILS, isCompleted: false, canShow: true },
     // { label: 'Declaration', step: FormStep.DECLARATION, isCompleted: false, canShow: true },
@@ -40,6 +42,7 @@ export class RekycFormComponent implements OnInit {
   readonly entityInfo = toSignal(this.store.select(selectEntityInfo));
   // readonly isAuthenticated = computed(() => this.ausInfo()?.isAuthenticated);
   readonly isAuthenticated = () => true;
+  readonly formStatus = toSignal(this.store.select(selectRekycStatus));
 
   constructor(
     private activatedRouter: ActivatedRoute,
@@ -62,7 +65,7 @@ export class RekycFormComponent implements OnInit {
       activeRoute = parsed.activeRoute;
     }
 
-    this.currentForm.set(activeRoute as FormStep);
+    this.rekycFormService.updateRekycLS('activeRoute', activeRoute);
 
     if (
       this.activatedRouter.snapshot.routeConfig?.path === '' &&
@@ -84,8 +87,8 @@ export class RekycFormComponent implements OnInit {
   }
 
   setCurrentForm(item: FormPage) {
-    if (item.canShow && this.rekycFormService.canAccessStep(item.step)) {
-      this.currentForm.set(item.step);
+    if (item.canShow && true) {
+      this.store.dispatch(updateActiveRoute({ activeRoute: item.step }));
 
       const rekycData = localStorage.getItem('rekyc');
       const currentRekyc = rekycData ? JSON.parse(rekycData) : { activeRoute: '' };
@@ -101,18 +104,18 @@ export class RekycFormComponent implements OnInit {
     }
   }
 
-  onFormNavigation(direction: string) {
-    const current = this.currentForm();
-    const currentIndex = this.accessibleSteps.indexOf(current);
+  // onFormNavigation(direction: string) {
+  //   const current = this.currentForm();
+  //   const currentIndex = this.accessibleSteps.indexOf(current);
 
-    if (currentIndex === -1) return;
+  //   if (currentIndex === -1) return;
 
-    if (direction === 'next' && currentIndex < this.accessibleSteps.length - 1) {
-      this.currentForm.set(this.accessibleSteps[currentIndex + 1]);
-    }
+  //   if (direction === 'next' && currentIndex < this.accessibleSteps.length - 1) {
+  //     this.currentForm.set(this.accessibleSteps[currentIndex + 1]);
+  //   }
 
-    if (direction === 'prev' && currentIndex > 0) {
-      this.currentForm.set(this.accessibleSteps[currentIndex - 1]);
-    }
-  }
+  //   if (direction === 'prev' && currentIndex > 0) {
+  //     this.currentForm.set(this.accessibleSteps[currentIndex - 1]);
+  //   }
+  // }
 }
