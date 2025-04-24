@@ -1,19 +1,77 @@
-import { ActionReducerMap } from '@ngrx/store';
-import { ReKYCFormState } from './rekyc-form.state';
+import { ActionReducerMap, createReducer, on } from '@ngrx/store';
+import { entityDetailsReducer } from '../components/entity-details-form/store/entity-details.reducers';
 import { entityInfoReducer } from '../components/entity-filledby/store/entity-info.reducer';
+import { boReducer } from '../components/rekyc-bo-form/store/rekyc-bo.reducer';
+import { rekycDirectorReducer } from '../components/rekyc-declaration-form/components/rekyc-bo-form/rekyc-directors-form/store/declaration-directors.reducers';
 import {
   ausInfoReducer,
   personalDetailsReducer,
 } from '../components/rekyc-personal-details/store/personal-details.reducer';
-import { entityDetailsReducer } from '../components/entity-details-form/store/entity-details.reducers';
-import { declarationReducer } from '../components/rekyc-declaration-form/store/declaration-form.reducers';
-import { rekycDirectorReducer } from '../components/rekyc-declaration-form/components/rekyc-bo-form/rekyc-directors-form/store/declaration-directors.reducers';
+import { updateRekycFormStatus, updateRekycStepStatus } from './rekyc-form.action';
+import { ReKYCFormState } from './rekyc-form.state';
+
+export interface FormStatus {
+  steps: {
+    entityDocs: boolean;
+    personalDocs: boolean;
+    directorDetails: boolean;
+    boDetails: boolean;
+    rekycForm: boolean;
+    eSign: boolean;
+  };
+  forms: {
+    entityDetails: boolean;
+    ausDetails: boolean;
+    rekycForm: boolean;
+    eSign: boolean;
+  };
+}
+
+export const initialFormStatus: FormStatus = {
+  steps: {
+    entityDocs: false,
+    personalDocs: false,
+    directorDetails: false,
+    boDetails: false,
+    rekycForm: false,
+    eSign: false,
+  },
+  forms: {
+    entityDetails: false,
+    ausDetails: false,
+    rekycForm: false,
+    eSign: false,
+  },
+};
+
+export const formStatusReducer = createReducer(
+  initialFormStatus,
+  on(updateRekycStepStatus, (state, payload) => {
+    return {
+      ...state,
+      steps: {
+        ...state.steps,
+        ...payload,
+      },
+    };
+  }),
+  on(updateRekycFormStatus, (state, payload) => {
+    return {
+      ...state,
+      forms: {
+        ...state.forms,
+        ...payload,
+      },
+    };
+  }),
+);
 
 export const rekycFormReducers: ActionReducerMap<ReKYCFormState> = {
   entityInfo: entityInfoReducer,
   ausInfo: ausInfoReducer,
   entityDetails: entityDetailsReducer,
-  declaration: declarationReducer,
   director: rekycDirectorReducer,
+  bo: boReducer,
   personalDetails: personalDetailsReducer,
+  formStatus: formStatusReducer,
 };

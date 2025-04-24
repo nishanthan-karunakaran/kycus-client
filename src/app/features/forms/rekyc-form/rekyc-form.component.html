@@ -27,7 +27,7 @@
               'text-success': item.isCompleted,
               'text-secondary':
                 currentForm() === item.step && !item.isCompleted,
-              disabled: !item.canShow,
+              disabled: isStepDisabled(item.step, item.canShow),
             }"
             (click)="setCurrentForm(item)"
             (keydown.enter)="setCurrentForm(item)"
@@ -65,6 +65,6 @@
       </div>
     </div>
 
-    <rekyc-entity-filledby *ngIf="entityInfo()?.entityFilledBy === null" />
+    <!-- <rekyc-entity-filledby *ngIf="entityInfo()?.entityFilledBy === null" /> -->
   </main>
 </section>

@@ -5,6 +5,7 @@ import { Store } from '@ngrx/store';
 import { selectEntityInfo } from './components/entity-filledby/store/entity-info.selectors';
 import { selectAusInfo } from './components/rekyc-personal-details/store/personal-details.selectors';
 import { FormPage, FormStep } from './rekyc-form.model';
+import { RekycFormService } from './rekyc-form.service';
 
 @Component({
   selector: 'app-rekyc-form',
@@ -29,7 +30,7 @@ export class RekycFormComponent implements OnInit {
   readonly FormStep = FormStep;
   accessibleSteps = [
     FormStep.ENTITY_DETAILS,
-    FormStep.DECLARATION,
+    // FormStep.DECLARATION,
     FormStep.PERSONAL_DETAILS,
     FormStep.KYC_FORM,
     FormStep.E_SIGN,
@@ -44,6 +45,7 @@ export class RekycFormComponent implements OnInit {
     private activatedRouter: ActivatedRoute,
     private router: Router,
     private store: Store,
+    private rekycFormService: RekycFormService,
   ) {}
 
   ngOnInit(): void {
@@ -77,8 +79,12 @@ export class RekycFormComponent implements OnInit {
     return step.step;
   }
 
+  isStepDisabled(step: FormStep, canShow: boolean): boolean {
+    return !canShow || !this.rekycFormService.canAccessStep(step);
+  }
+
   setCurrentForm(item: FormPage) {
-    if (item.canShow) {
+    if (item.canShow && this.rekycFormService.canAccessStep(item.step)) {
       this.currentForm.set(item.step);
 
       const rekycData = localStorage.getItem('rekyc');

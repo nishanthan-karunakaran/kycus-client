@@ -12,7 +12,6 @@ import { AusInfoState } from './components/rekyc-personal-details/store/personal
 
 export enum FormStep {
   ENTITY_DETAILS = 'entity-details',
-  DECLARATION = 'declaration',
   PERSONAL_DETAILS = 'personal-details',
   KYC_FORM = 'rekyc-form',
   E_SIGN = 'eSign',
