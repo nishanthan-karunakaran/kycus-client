@@ -12,4 +12,8 @@ export class EntityDetailsService {
   uploadFileProof(data: UploadFileProof) {
     return this.api.post(API_URL.APPLICATION.REKYC.ENTITY_DETAILS_FORM.ENTITY_DOCS_UPLOAD, data);
   }
+
+  getEntityDetails(entityId: string) {
+    return this.api.get(API_URL.APPLICATION.REKYC.ENTITY_DETAILS_FORM.ENTITY_DETAILS(entityId));
+  }
 }

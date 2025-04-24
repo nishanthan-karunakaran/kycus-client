@@ -113,6 +113,11 @@ export class RekycPersonalDetailsComponent implements OnInit, OnDestroy {
     });
   }
 
+  ngOnInit(): void {
+    this.getPersonalDetails();
+    this.updateFormFields();
+  }
+
   patchFormWithDocs(docs: PersonalDetails): void {
     Object.entries(docs).forEach(([key, values]) => {
       const group = this.form.get(key) as FormGroup;
@@ -156,11 +161,6 @@ export class RekycPersonalDetailsComponent implements OnInit, OnDestroy {
     });
 
     this.cdr.markForCheck();
-  }
-
-  ngOnInit(): void {
-    this.getPersonalDetails();
-    this.updateFormFields();
   }
 
   updateFormFields() {
@@ -372,9 +372,6 @@ export class RekycPersonalDetailsComponent implements OnInit, OnDestroy {
 
         if (status === ApiStatus.SUCCESS) {
           const { data } = response as { status: string; data: { documents: PersonalDetails } };
-
-          // eslint-disable-next-line no-console
-          console.log(Object.keys(data.documents), 'docc');
 
           this.store.dispatch(updatePartialPersonalDetails({ partialData: data.documents }));
         }

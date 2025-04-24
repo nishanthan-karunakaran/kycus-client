@@ -1,7 +1,9 @@
 import {
   ChangeDetectionStrategy,
+  ChangeDetectorRef,
   Component,
   DoCheck,
+  effect,
   EventEmitter,
   OnDestroy,
   OnInit,
@@ -13,7 +15,10 @@ import { FormArray, FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { ApiStatus } from '@core/constants/api.response';
 import { updatePartialEntityDetails } from '@features/forms/rekyc-form/components/entity-details-form/store/entity-details.actions';
 import { selectEntityDetails } from '@features/forms/rekyc-form/components/entity-details-form/store/entity-details.selectors';
-import { EntityDetails } from '@features/forms/rekyc-form/components/entity-details-form/store/entity-details.state';
+import {
+  Doc,
+  EntityDetails,
+} from '@features/forms/rekyc-form/components/entity-details-form/store/entity-details.state';
 import { initialEntityInfoState } from '@features/forms/rekyc-form/components/entity-filledby/store/entity-info.reducer';
 import { selectEntityInfo } from '@features/forms/rekyc-form/components/entity-filledby/store/entity-info.selectors';
 import { initialAusInfoState } from '@features/forms/rekyc-form/components/rekyc-personal-details/store/personal-details.reducer';
@@ -85,9 +90,72 @@ export class EntityDetailsComponent implements OnInit, DoCheck, OnDestroy {
     private helperService: HelperService,
     private toast: ToastService,
     private store: Store,
-  ) {}
+    private cdr: ChangeDetectorRef,
+  ) {
+    effect(() => {
+      const updatedDocs = this.entityDetails();
+      if (updatedDocs) {
+        this.patchFormWithDocs(updatedDocs);
+      }
+    });
+  }
 
   ngOnInit(): void {
+    this.updateFormFields();
+    this.getEntityDetails();
+  }
+
+  ngDoCheck(): void {
+    // eslint-disable-next-line no-console
+    console.log('Entity details form rendeing');
+  }
+
+  patchFormWithDocs(docs: EntityDetails): void {
+    Object.entries(docs).forEach(([key, values]) => {
+      const group = this.form.get(key) as FormGroup;
+      if (!group) {
+        // eslint-disable-next-line no-console
+        console.warn(`No form group found for key: ${key}`);
+        return;
+      }
+
+      const typeFromForm = group.get('type')?.value;
+      if (typeFromForm !== key) {
+        // eslint-disable-next-line no-console
+        console.log(`Skipping patch for ${key} due to type mismatch: ${typeFromForm}`);
+        return;
+      }
+
+      const fileGroup = group.get('file') as FormGroup;
+      if (!fileGroup) {
+        // eslint-disable-next-line no-console
+        console.warn(`No 'file' group found in ${key}`);
+        return;
+      }
+
+      const filePatch: Partial<Doc> = {};
+
+      if ('fileName' in values && values.fileName) {
+        filePatch.name = values.fileName;
+      }
+
+      if ('fileLink' in values && values.fileLink) {
+        filePatch.link = values.fileLink;
+      }
+
+      if ('selectedType' in values && values.selectedType) {
+        filePatch.selectedType = values.selectedType;
+      }
+
+      if (Object.keys(filePatch).length > 0) {
+        fileGroup.patchValue(filePatch);
+      }
+    });
+
+    this.cdr.markForCheck();
+  }
+
+  updateFormFields() {
     const group: Record<string, FormGroup> = {};
     const entityDetails = this.entityDetails();
 
@@ -115,11 +183,6 @@ export class EntityDetailsComponent implements OnInit, DoCheck, OnDestroy {
     });
 
     this.form = this.fb.group(group);
-  }
-
-  ngDoCheck(): void {
-    // eslint-disable-next-line no-console
-    console.log('Entity details form rendeing');
   }
 
   trackDoc(_index: number, doc: string): string {
@@ -202,26 +265,29 @@ export class EntityDetailsComponent implements OnInit, DoCheck, OnDestroy {
 
   // this is for deleting the doc on db
   deleteDocument(doc: string): void {
-    const docType = doc === 'addressProof' ? doc : doc.toUpperCase();
-
     const payload: DeleteDocument = {
-      entityId: this.entityInfo()?.entityId,
+      entityId: this.entityInfo()?.entityId as string,
       ausId: this.ausInfo()?.ausId as string,
-      docType: docType,
+      docType: doc,
     };
 
     this.rekycFormService.deleteDocument(payload).subscribe({
       next: (result) => {
         const { loading, response } = result;
 
-        if (!loading || !response) return;
+        if (!loading && response) {
+          const { status } = response;
 
-        const { status } = response;
-
-        if (status === ApiStatus.SUCCESS) {
-          this.toast.success(`${docType} deleted`);
-          this.form.get(`${doc}.file.name`)?.setValue('');
-          this.form.get(`${doc}.file.link`)?.setValue('');
+          if (status === ApiStatus.SUCCESS) {
+            this.toast.success(`${this.helperService.toTitleCase(doc)} deleted`);
+            const fileGroup = this.form.get(`${doc}.file`) as FormGroup;
+            fileGroup.patchValue({
+              name: '',
+              link: '',
+            });
+            fileGroup.patchValue({ name: '', link: '' });
+            this.cdr.markForCheck();
+          }
         }
       },
     });
@@ -306,6 +372,28 @@ export class EntityDetailsComponent implements OnInit, DoCheck, OnDestroy {
     } else {
       this.toast.info('Form saved successfully!');
     }
+  }
+
+  getEntityDetails() {
+    const entityId = this.entityInfo()?.entityId as string;
+    this.entityDetailService.getEntityDetails(entityId).subscribe({
+      next: (result) => {
+        const { response } = result;
+
+        if (!response) return;
+
+        const { status } = response;
+
+        if (status === ApiStatus.SUCCESS) {
+          const { data } = response as { status: string; data: { documents: EntityDetails } };
+
+          // eslint-disable-next-line no-console
+          console.log(Object.keys(data.documents), 'docc');
+
+          this.store.dispatch(updatePartialEntityDetails({ partialData: data.documents }));
+        }
+      },
+    });
   }
 
   ngOnDestroy(): void {
