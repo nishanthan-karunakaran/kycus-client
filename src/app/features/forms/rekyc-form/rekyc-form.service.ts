@@ -3,6 +3,7 @@ import { toSignal } from '@angular/core/rxjs-interop';
 import { API_URL } from '@core/constants/apiurls';
 import { ApiService } from '@core/services/api.service';
 import { Store } from '@ngrx/store';
+import { Subject } from 'rxjs';
 import { DeleteDocument, FormStep } from './rekyc-form.model';
 import {
   updateActiveRoute,
@@ -16,7 +17,6 @@ import {
   selectRekycStepStatus,
 } from './store/rekyc-form.selectors';
 import { EntityDetTab } from './store/rekyc-form.state';
-import { ActivatedRoute, Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root',
@@ -38,12 +38,19 @@ export class RekycFormService {
   readonly rekycFormStatus = toSignal(this.store.select(selectRekycFormStatus));
   readonly rekycStepStatus = toSignal(this.store.select(selectRekycStepStatus));
 
+  private triggerFnSubject = new Subject<void>();
+  triggerFn$ = this.triggerFnSubject.asObservable();
+
+  triggerRouteHandling() {
+    this.triggerFnSubject.next();
+  }
+
   constructor(
     private store: Store,
     private api: ApiService,
-    private activatedRouter: ActivatedRoute,
-    private router: Router,
-  ) {}
+  ) {
+    this.triggerRouteHandling();
+  }
 
   getRekycLS(key: string) {
     const obj = localStorage.getItem('rekyc');
@@ -81,6 +88,7 @@ export class RekycFormService {
 
     this.store.dispatch(updateRekycFormStatus({ entityDetails: true }));
     this.updateRekycLS('activeRoute', 'personal-details');
+    this.triggerRouteHandling();
     return null;
   };
 
@@ -90,6 +98,8 @@ export class RekycFormService {
 
     // eslint-disable-next-line no-console
     console.log('currentTab', currentTab);
+    // this.updateRekycLS('activeRoute', 'personal-details');
+    // this.triggerRouteHandling();
 
     const entityTabs: EntityDetTab[] = ['entity-details', 'directors', 'bo'];
 
@@ -116,6 +126,7 @@ export class RekycFormService {
 
       // All steps done, move to next major step
       this.updateRekycLS('activeRoute', 'personal-details');
+      this.triggerRouteHandling();
       return;
     }
 
@@ -138,6 +149,7 @@ export class RekycFormService {
 
     if (nextTab) {
       this.updateRekycLS('activeRoute', nextTab);
+      this.triggerRouteHandling();
     }
   }
 

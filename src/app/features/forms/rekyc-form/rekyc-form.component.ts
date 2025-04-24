@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Store } from '@ngrx/store';
@@ -8,6 +8,7 @@ import { FormPage, FormStep } from './rekyc-form.model';
 import { RekycFormService } from './rekyc-form.service';
 import { updateActiveRoute } from './store/rekyc-form.action';
 import { selectRekycActiveRoute, selectRekycStatus } from './store/rekyc-form.selectors';
+import { Subject, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-rekyc-form',
@@ -43,15 +44,22 @@ export class RekycFormComponent implements OnInit {
   // readonly isAuthenticated = computed(() => this.ausInfo()?.isAuthenticated);
   readonly isAuthenticated = () => true;
   readonly formStatus = toSignal(this.store.select(selectRekycStatus));
+  private destroy$ = new Subject<void>();
 
   constructor(
     private activatedRouter: ActivatedRoute,
     private router: Router,
     private store: Store,
     private rekycFormService: RekycFormService,
+    private cdRef: ChangeDetectorRef,
   ) {}
 
   ngOnInit(): void {
+    this.rekycFormService.triggerFn$.pipe(takeUntil(this.destroy$)).subscribe(() => {
+      this.handleInitialRoute();
+      this.cdRef.markForCheck(); // Important with OnPush
+    });
+
     this.handleInitialRoute();
     this.applicationToken = this.activatedRouter.snapshot.queryParamMap.get('token');
   }
@@ -65,17 +73,22 @@ export class RekycFormComponent implements OnInit {
       activeRoute = parsed.activeRoute;
     }
 
-    this.rekycFormService.updateRekycLS('activeRoute', activeRoute);
+    // Construct the full path
+    const basePath = '/application/rekyc/';
+    const fullPath = basePath + activeRoute;
 
-    if (
-      this.activatedRouter.snapshot.routeConfig?.path === '' &&
-      this.activatedRouter.snapshot.children.length === 0
-    ) {
-      this.router.navigate([activeRoute], {
-        relativeTo: this.activatedRouter,
-        queryParamsHandling: 'preserve',
-      });
-    }
+    // Log the full path before navigating
+    // eslint-disable-next-line no-console
+    console.log('Full path to navigate to:', fullPath);
+
+    // Get current query parameters from the activated route (preserve them)
+    const currentParams = this.activatedRouter.snapshot.queryParams;
+
+    // Perform the navigation
+    this.router.navigate([fullPath], {
+      queryParams: currentParams, // Preserve query params like token
+      queryParamsHandling: 'preserve', // Ensure queryParams are retained
+    });
   }
 
   trackStep(_index: number, step: FormPage) {
