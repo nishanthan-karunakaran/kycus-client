@@ -291,7 +291,7 @@ export class EntityDetailsComponent implements OnInit, DoCheck, OnDestroy {
     if (action === 'submit') {
       this.form.markAllAsTouched();
       this.updateErrorMessages();
-      if (this.isFormValid) {
+      if (!this.isFormValid) {
         // this.toast.error('Something went wrong!');
 
         // eslint-disable-next-line no-console

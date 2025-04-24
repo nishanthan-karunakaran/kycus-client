@@ -23,6 +23,7 @@ export class RekycBoInputComponent implements OnInit {
   isLoading = signal(false);
   readonly ausInfo = toSignal(this.store.select(selectAusInfo));
   readonly formStepStatus = toSignal(this.store.select(selectRekycStepStatus));
+  isFormSubmitted = signal(false);
 
   constructor(
     private fb: FormBuilder,
@@ -82,7 +83,10 @@ export class RekycBoInputComponent implements OnInit {
   }
 
   submit(action: 'save' | 'submit') {
-    // if (!this.isFormValid) return;
+    if (!this.isFormValid) {
+      this.isFormSubmitted.set(true);
+      return;
+    }
 
     if (action === 'submit') {
       const boList = this.form.value.boDetails as BoDetail[];

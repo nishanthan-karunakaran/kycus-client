@@ -14,54 +14,118 @@
       >
         <h6 class="mb-2 text-primary">Beneficiary Owner {{ i + 1 }}</h6>
 
-        <ui-input
-          type="text"
-          label="Name of the Beneficiary Owner"
-          formControlName="name"
-          class="max-w-sm"
-          (valueChange)="updateBoDetail(i, 'name', $event)"
-        />
+        <div>
+          <ui-input
+            type="text"
+            label="Name of the Beneficiary Owner"
+            formControlName="name"
+            class="max-w-sm"
+            (valueChange)="updateBoDetail(i, 'name', $event)"
+          />
+          <span
+            *ngIf="group.get('name')?.errors?.['required'] && isFormSubmitted()"
+            class="error-msg"
+          >
+            Name is Required
+          </span>
+        </div>
 
         <div class="flex w-[60%] flex-col gap-2">
           <p>Current Address</p>
 
-          <ui-input
-            type="text"
-            label="Address Line"
-            formControlName="addressLine"
-            (valueChange)="updateBoDetail(i, 'addressLine', $event)"
-          />
+          <div>
+            <ui-input
+              type="text"
+              label="Address Line"
+              formControlName="addressLine"
+              (valueChange)="updateBoDetail(i, 'addressLine', $event)"
+            />
+            <span
+              *ngIf="
+                group.get('addressLine')?.errors?.['required'] &&
+                isFormSubmitted()
+              "
+              class="error-msg"
+            >
+              Adress Line is Required
+            </span>
+          </div>
 
           <div class="flex w-full gap-2">
             <div class="flex flex-1 flex-col gap-2">
-              <ui-input
-                type="text"
-                label="City"
-                formControlName="city"
-                (valueChange)="updateBoDetail(i, 'city', $event)"
-              />
-              <ui-input
-                type="text"
-                label="State"
-                formControlName="state"
-                (valueChange)="updateBoDetail(i, 'state', $event)"
-              />
+              <div>
+                <ui-input
+                  type="text"
+                  label="City"
+                  formControlName="city"
+                  (valueChange)="updateBoDetail(i, 'city', $event)"
+                />
+                <span
+                  *ngIf="
+                    group.get('city')?.errors?.['required'] && isFormSubmitted()
+                  "
+                  class="error-msg"
+                >
+                  City is Required
+                </span>
+              </div>
+
+              <div>
+                <ui-input
+                  type="text"
+                  label="State"
+                  formControlName="state"
+                  (valueChange)="updateBoDetail(i, 'state', $event)"
+                />
+                <span
+                  *ngIf="
+                    group.get('state')?.errors?.['required'] &&
+                    isFormSubmitted()
+                  "
+                  class="error-msg"
+                >
+                  State is Required
+                </span>
+              </div>
             </div>
 
             <div class="flex flex-1 flex-col gap-2">
-              <ui-input
-                type="text"
-                label="Country"
-                formControlName="country"
-                (valueChange)="updateBoDetail(i, 'country', $event)"
-              />
-              <ui-input
-                type="number"
-                label="Pin Code"
-                [maxlength]="6"
-                formControlName="pincode"
-                (valueChange)="updateBoDetail(i, 'pincode', $event)"
-              />
+              <div>
+                <ui-input
+                  type="text"
+                  label="Country"
+                  formControlName="country"
+                  (valueChange)="updateBoDetail(i, 'country', $event)"
+                />
+                <span
+                  *ngIf="
+                    group.get('country')?.errors?.['required'] &&
+                    isFormSubmitted()
+                  "
+                  class="error-msg"
+                >
+                  Country is Required
+                </span>
+              </div>
+
+              <div>
+                <ui-input
+                  type="number"
+                  label="Pin Code"
+                  [maxlength]="6"
+                  formControlName="pincode"
+                  (valueChange)="updateBoDetail(i, 'pincode', $event)"
+                />
+                <span
+                  *ngIf="
+                    group.get('pincode')?.errors?.['required'] &&
+                    isFormSubmitted()
+                  "
+                  class="error-msg"
+                >
+                  Pincode is Required
+                </span>
+              </div>
             </div>
           </div>
         </div>
