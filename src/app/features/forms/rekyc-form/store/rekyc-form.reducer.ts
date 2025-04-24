@@ -27,22 +27,25 @@ export interface FormStatus {
   };
 }
 
-export const initialFormStatus: FormStatus = {
-  steps: {
+export const initialFormStatus: FormStatus = (() => {
+  const steps = {
     entityDocs: false,
     personalDocs: false,
     directorDetails: false,
     boDetails: false,
     rekycForm: false,
     eSign: false,
-  },
-  forms: {
-    entityDetails: false,
+  };
+
+  const forms = {
+    entityDetails: steps.entityDocs && steps.directorDetails && steps.boDetails,
     ausDetails: false,
     rekycForm: false,
     eSign: false,
-  },
-};
+  };
+
+  return { steps, forms };
+})();
 
 export const formStatusReducer = createReducer(
   initialFormStatus,

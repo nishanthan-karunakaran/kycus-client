@@ -4,26 +4,7 @@ import { removeDirector, updatePartialDirectors } from './declaration-directors.
 import { DirectorState } from './declaration-directors.state';
 
 export const initialDirectorState: DirectorState = {
-  directorList: [
-    //   {
-    //     dirId: 'dir1',
-    //     directorName: 'Abishek Yadav',
-    //     din: '43928237',
-    //     status: 'active',
-    //   },
-    //   {
-    //     dirId: 'dir2',
-    //     directorName: 'Narayana Kumar',
-    //     din: '32379523',
-    //     status: 'active',
-    //   },
-    //   {
-    //     dirId: 'dir3',
-    //     directorName: 'Chittesh Sarav',
-    //     din: '642749',
-    //     status: 'active',
-    //   },
-  ],
+  directorList: [],
   isDirectorModified: false,
   form32: {
     name: null,
