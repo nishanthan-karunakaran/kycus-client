@@ -212,7 +212,7 @@ export class RekycDirectorsFormComponent implements OnInit {
   }
 
   submit() {
-    if (this.isDirectorModified$() && this.form32.file !== null) {
+    if (this.isDirectorModified$() && this.form32.file === null) {
       this.form32Error.set('Please upload Form 32');
       return;
     } else {
