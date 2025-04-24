@@ -1,14 +1,25 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  DoCheck,
+  OnInit,
+  signal,
+} from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Store } from '@ngrx/store';
+import { Subject, takeUntil } from 'rxjs';
 import { selectEntityInfo } from './components/entity-filledby/store/entity-info.selectors';
 import { selectAusInfo } from './components/rekyc-personal-details/store/personal-details.selectors';
 import { FormPage, FormStep } from './rekyc-form.model';
 import { RekycFormService } from './rekyc-form.service';
 import { updateActiveRoute } from './store/rekyc-form.action';
-import { selectRekycActiveRoute, selectRekycStatus } from './store/rekyc-form.selectors';
-import { Subject, takeUntil } from 'rxjs';
+import {
+  selectRekycActiveRoute,
+  selectRekycFormStatus,
+  selectRekycStatus,
+} from './store/rekyc-form.selectors';
 
 @Component({
   selector: 'app-rekyc-form',
@@ -16,11 +27,10 @@ import { Subject, takeUntil } from 'rxjs';
   styleUrls: ['./rekyc-form.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class RekycFormComponent implements OnInit {
+export class RekycFormComponent implements OnInit, DoCheck {
   currentForm = toSignal(this.store.select(selectRekycActiveRoute));
-  formList: FormPage[] = [
+  formList = signal<FormPage[]>([
     { label: 'Entity Details', step: FormStep.ENTITY_DETAILS, isCompleted: false, canShow: true },
-    // { label: 'Declaration', step: FormStep.DECLARATION, isCompleted: false, canShow: true },
     {
       label: 'AUS Details',
       step: FormStep.PERSONAL_DETAILS,
@@ -29,7 +39,7 @@ export class RekycFormComponent implements OnInit {
     },
     { label: 'KYC Form', step: FormStep.KYC_FORM, isCompleted: false, canShow: true },
     { label: 'E-Sign', step: FormStep.E_SIGN, isCompleted: false, canShow: true },
-  ];
+  ]);
   readonly FormStep = FormStep;
   accessibleSteps = [
     FormStep.ENTITY_DETAILS,
@@ -45,6 +55,7 @@ export class RekycFormComponent implements OnInit {
   readonly isAuthenticated = () => true;
   readonly formStatus = toSignal(this.store.select(selectRekycStatus));
   private destroy$ = new Subject<void>();
+  readonly rekycFormStatus = toSignal(this.store.select(selectRekycFormStatus));
 
   constructor(
     private activatedRouter: ActivatedRoute,
@@ -60,8 +71,52 @@ export class RekycFormComponent implements OnInit {
       this.cdRef.markForCheck(); // Important with OnPush
     });
 
+    this.updateFormList();
+
     this.handleInitialRoute();
     this.applicationToken = this.activatedRouter.snapshot.queryParamMap.get('token');
+  }
+
+  ngDoCheck(): void {
+    this.updateFormList();
+  }
+
+  updateFormList(): void {
+    const rekycFormStatus = this.rekycFormStatus();
+
+    if (!rekycFormStatus) return;
+
+    // Log to confirm that the state is updated
+    // eslint-disable-next-line no-console
+    console.log('Updated rekycFormStatus:', rekycFormStatus);
+
+    const updatedFormList = [
+      {
+        label: 'Entity Details',
+        step: FormStep.ENTITY_DETAILS,
+        isCompleted: rekycFormStatus.entityDetails, // Signal value
+        canShow: true,
+      },
+      {
+        label: 'AUS Details',
+        step: FormStep.PERSONAL_DETAILS,
+        isCompleted: rekycFormStatus.ausDetails, // Signal value
+        canShow: true,
+      },
+      {
+        label: 'KYC Form',
+        step: FormStep.KYC_FORM,
+        isCompleted: rekycFormStatus.rekycForm, // Signal value
+        canShow: true,
+      },
+      { label: 'E-Sign', step: FormStep.E_SIGN, isCompleted: rekycFormStatus.eSign, canShow: true },
+    ];
+
+    // Set the updated form list
+    this.formList.set(updatedFormList);
+
+    // Trigger change detection
+    this.cdRef.markForCheck(); // Notify Angular to check the component again
   }
 
   handleInitialRoute() {
@@ -100,7 +155,7 @@ export class RekycFormComponent implements OnInit {
   }
 
   setCurrentForm(item: FormPage) {
-    if (item.canShow && true) {
+    if (item.canShow && this.rekycFormService.canAccessStep(item.step)) {
       this.store.dispatch(updateActiveRoute({ activeRoute: item.step }));
 
       const rekycData = localStorage.getItem('rekyc');
