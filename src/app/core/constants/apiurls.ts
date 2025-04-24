@@ -24,6 +24,7 @@ export const API_URL = {
       },
       ENTITY_DETAILS_FORM: {
         ENTITY_DOCS_UPLOAD: '/kycus/rekyc/entityDocs/uploads',
+        ENTITY_DETAILS: (entityId: string) => `/kycus/rekyc/entityDetails/${entityId}`,
       },
       DECLARATION_FORM: {
         DIRECTORS: {
@@ -34,6 +35,8 @@ export const API_URL = {
       },
       PERSONAL_FORM: {
         PERSONAL_DOCS_UPLOAD: '/kycus/rekyc/ausDocs/uploads',
+        PERSONAL_DETAILS: (entityId: string, ausId: string) =>
+          `/kycus/rekyc/ausDetails/${entityId}/${ausId}`,
       },
       REKYC_FORM: {
         GET: (entityId: string) => `/kycus/rekyc/rekycForm/${entityId}`,

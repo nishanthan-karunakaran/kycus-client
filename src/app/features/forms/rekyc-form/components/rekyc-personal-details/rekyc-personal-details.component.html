@@ -48,7 +48,7 @@
               "
               (valueChange)="onProofDocChange(doc, $event)"
               placeholder="Choose Proof of Address"
-              [defaultValue]="form.value.addressProof.file.selectedType"
+              [defaultValue]="form.get([doc, 'file', 'selectedType'])?.value"
             ></ui-select>
           </div>
 
@@ -89,7 +89,7 @@
             <ui-filename
               *ngIf="form.get(doc + '.file.name')?.value"
               [fileName]="form.get(doc + '.file.name')?.value"
-              (removeFile)="removeFile(doc)"
+              (removeFile)="deleteDocument(doc)"
             />
           </div>
         </div>

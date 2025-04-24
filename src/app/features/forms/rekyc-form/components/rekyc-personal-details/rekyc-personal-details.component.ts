@@ -1,6 +1,8 @@
 import {
   ChangeDetectionStrategy,
+  ChangeDetectorRef,
   Component,
+  effect,
   EventEmitter,
   OnDestroy,
   OnInit,
@@ -12,6 +14,7 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 import { ApiStatus } from '@core/constants/api.response';
 import { HelperService } from '@core/services/helpers.service';
 import {
+  DeleteDocument,
   UploadFileProof,
   UploadFileProofResponse,
 } from '@features/forms/rekyc-form/rekyc-form.model';
@@ -22,6 +25,8 @@ import { updatePartialPersonalDetails } from './store/personal-details.actions';
 import { selectAusInfo, selectPersonalDetails } from './store/personal-details.selectors';
 import { PersonalDetails } from './store/personal-details.state';
 import { selectEntityInfo } from '../entity-filledby/store/entity-info.selectors';
+import { RekycFormService } from '@features/forms/rekyc-form/rekyc-form.service';
+import { Doc } from '../entity-details-form/store/entity-details.state';
 
 type FileType = 'identityProof' | 'addressProof' | 'photograph' | 'signature';
 
@@ -97,9 +102,68 @@ export class RekycPersonalDetailsComponent implements OnInit, OnDestroy {
     private helperService: HelperService,
     private toast: ToastService,
     private store: Store,
-  ) {}
+    private rekycFormService: RekycFormService,
+    private cdr: ChangeDetectorRef,
+  ) {
+    effect(() => {
+      const updatedDocs = this.ausDocsList();
+      if (updatedDocs) {
+        this.patchFormWithDocs(updatedDocs);
+      }
+    });
+  }
+
+  patchFormWithDocs(docs: PersonalDetails): void {
+    Object.entries(docs).forEach(([key, values]) => {
+      const group = this.form.get(key) as FormGroup;
+      if (!group) {
+        // eslint-disable-next-line no-console
+        console.warn(`No form group found for key: ${key}`);
+        return;
+      }
+
+      const typeFromForm = group.get('type')?.value;
+      if (typeFromForm !== key) {
+        // eslint-disable-next-line no-console
+        console.log(`Skipping patch for ${key} due to type mismatch: ${typeFromForm}`);
+        return;
+      }
+
+      const fileGroup = group.get('file') as FormGroup;
+      if (!fileGroup) {
+        // eslint-disable-next-line no-console
+        console.warn(`No 'file' group found in ${key}`);
+        return;
+      }
+
+      const filePatch: Partial<Doc> = {};
+
+      if ('fileName' in values && values.fileName) {
+        filePatch.name = values.fileName;
+      }
+
+      if ('fileLink' in values && values.fileLink) {
+        filePatch.link = values.fileLink;
+      }
+
+      if ('selectedType' in values && values.selectedType) {
+        filePatch.selectedType = values.selectedType;
+      }
+
+      if (Object.keys(filePatch).length > 0) {
+        fileGroup.patchValue(filePatch);
+      }
+    });
+
+    this.cdr.markForCheck();
+  }
 
   ngOnInit(): void {
+    this.getPersonalDetails();
+    this.updateFormFields();
+  }
+
+  updateFormFields() {
     const group: Record<string, FormGroup> = {};
     const ausDocsList = this.ausDocsList();
 
@@ -194,6 +258,36 @@ export class RekycPersonalDetailsComponent implements OnInit, OnDestroy {
     });
   }
 
+  // this is for deleting the doc on db
+  deleteDocument(doc: string): void {
+    const payload: DeleteDocument = {
+      entityId: this.entityInfo()?.entityId as string,
+      ausId: this.ausInfo()?.ausId as string,
+      docType: doc,
+    };
+
+    this.rekycFormService.deleteDocument(payload).subscribe({
+      next: (result) => {
+        const { loading, response } = result;
+
+        if (!loading && response) {
+          const { status } = response;
+
+          if (status === ApiStatus.SUCCESS) {
+            this.toast.success(`${this.helperService.toTitleCase(doc)} deleted`);
+            const fileGroup = this.form.get(`${doc}.file`) as FormGroup;
+            fileGroup.patchValue({
+              name: '',
+              link: '',
+            });
+            fileGroup.patchValue({ name: '', link: '' });
+            this.cdr.markForCheck();
+          }
+        }
+      },
+    });
+  }
+
   setIsFileLoading(key: FileType, value: boolean) {
     const obj = this.isFileLoading();
     obj[key] = value;
@@ -211,7 +305,7 @@ export class RekycPersonalDetailsComponent implements OnInit, OnDestroy {
       return;
     }
 
-    const docType = type === 'addressProof' || type === 'identityProof' ? type : type.toUpperCase();
+    const docType = type === 'addressProof' || type === 'identityProof' ? type : type;
 
     const formData = new FormData();
     formData.append('entityId', this.entityInfo()?.entityId as string);
@@ -263,6 +357,29 @@ export class RekycPersonalDetailsComponent implements OnInit, OnDestroy {
     } else {
       this.toast.info('Form saved successfully!');
     }
+  }
+
+  getPersonalDetails() {
+    const entityId = this.entityInfo()?.entityId as string;
+    const ausId = this.ausInfo()?.ausId as string;
+    this.personalFormService.getPersonalDetails(entityId, ausId).subscribe({
+      next: (result) => {
+        const { response } = result;
+
+        if (!response) return;
+
+        const { status } = response;
+
+        if (status === ApiStatus.SUCCESS) {
+          const { data } = response as { status: string; data: { documents: PersonalDetails } };
+
+          // eslint-disable-next-line no-console
+          console.log(Object.keys(data.documents), 'docc');
+
+          this.store.dispatch(updatePartialPersonalDetails({ partialData: data.documents }));
+        }
+      },
+    });
   }
 
   ngOnDestroy(): void {

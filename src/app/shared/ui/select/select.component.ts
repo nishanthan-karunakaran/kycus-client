@@ -48,30 +48,29 @@ export class SelectComponent<T = unknown> implements ControlValueAccessor, OnIni
   @Input() optional = false;
   @Input() disabled = false;
   @Input() defaultValue: T | null = null;
-  ngClass = {};
 
   @Output() valueChange = new EventEmitter<T>();
 
   selectedValue: T | null = null;
+  ngClass = {};
 
   private onChange: (value: T | null) => void = () => {};
   private onTouched: () => void = () => {};
 
   ngOnInit(): void {
     if (this.placeholder && this.optional) {
-      this.options = [{ label: this.placeholder, value: null as unknown as T }, ...this.options];
+      this.options = [{ label: this.placeholder, value: null as T }, ...this.options];
     }
 
-    if (this.defaultValue !== null) {
-      this.selectedValue = this.defaultValue;
-      this.writeValue(this.defaultValue);
-    }
+    this.applyDefaultValue();
   }
 
   ngOnChanges(): void {
     this.ngClass = {
       [this.class]: !!this.class,
     };
+
+    this.applyDefaultValue(); // in case options or defaultValue changed dynamically
   }
 
   isSelected(value: T): boolean {
@@ -98,7 +97,22 @@ export class SelectComponent<T = unknown> implements ControlValueAccessor, OnIni
     this.onTouched = fn;
   }
 
-  trackOption(_index: number, option: SelectOption) {
+  trackOption(_index: number, option: SelectOption<T>): unknown {
     return option.value;
+  }
+
+  private applyDefaultValue(): void {
+    if (this.isValidDefaultValue(this.defaultValue)) {
+      this.selectedValue = this.defaultValue;
+      this.writeValue(this.defaultValue);
+    }
+  }
+
+  private isValidDefaultValue(value: T | null): boolean {
+    return (
+      value !== null &&
+      value !== ('' as unknown as T) &&
+      this.options.some((opt) => opt.value === value)
+    );
   }
 }
