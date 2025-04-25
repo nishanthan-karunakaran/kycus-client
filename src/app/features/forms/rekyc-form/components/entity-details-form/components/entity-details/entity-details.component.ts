@@ -303,10 +303,9 @@ export class EntityDetailsComponent implements OnInit, DoCheck, OnDestroy {
 
   uploadFileProof(type: EntityDetailsFileType, file: File): void {
     if (!file || !type) return;
-    const docType = type === 'addressProof' ? type : type.toUpperCase();
 
     const formData = new FormData();
-    formData.append('docType', docType);
+    formData.append('docType', type);
     formData.append('entityId', this.entityInfo()?.entityId);
     formData.append('file', file);
 
