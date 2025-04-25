@@ -119,6 +119,8 @@ export class RekycPersonalDetailsComponent implements OnInit, OnDestroy {
   }
 
   patchFormWithDocs(docs: PersonalDetails): void {
+    if (!this.form) return;
+
     Object.entries(docs).forEach(([key, values]) => {
       const group = this.form.get(key) as FormGroup;
       if (!group) {

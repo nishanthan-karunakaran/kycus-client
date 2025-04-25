@@ -111,6 +111,8 @@ export class EntityDetailsComponent implements OnInit, DoCheck, OnDestroy {
   }
 
   patchFormWithDocs(docs: EntityDetails): void {
+    if (!this.form) return;
+
     Object.entries(docs).forEach(([key, values]) => {
       const group = this.form.get(key) as FormGroup;
       if (!group) {
