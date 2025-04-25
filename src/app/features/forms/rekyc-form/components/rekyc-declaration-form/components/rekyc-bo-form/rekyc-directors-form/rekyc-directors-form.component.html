@@ -78,6 +78,7 @@
             />
           </div>
         </div>
+
         <div
           class="flex w-[250px] flex-col justify-between border border-l-0"
           *ngIf="isDirectorModified$() || form32.name"
@@ -93,13 +94,14 @@
             <ui-filename
               *ngIf="form32.name"
               [fileName]="form32.name"
+              [fileLink]="form32.link"
               (removeFile)="removeForm32()"
             />
 
             <p class="error-msg" *ngIf="form32Error()">{{ form32Error() }}</p>
           </div>
 
-          <div class="flex justify-center">
+          <div class="flex justify-center" *ngIf="isDirectorModified$()">
             <ui-button
               label="Cancel Edit"
               (btnClick)="cancelDirEdit()"

@@ -1,5 +1,6 @@
 import {
   ChangeDetectionStrategy,
+  ChangeDetectorRef,
   Component,
   EventEmitter,
   OnInit,
@@ -22,6 +23,7 @@ import {
 } from './store/declaration-directors.selectors';
 import { Director, Doc } from './store/declaration-directors.state';
 import { RekycFormService } from '@features/forms/rekyc-form/rekyc-form.service';
+import { DocResponse } from '@features/forms/rekyc-form/components/entity-details-form/entity-details-form.model';
 
 @Component({
   selector: 'rekyc-directors-form',
@@ -51,6 +53,7 @@ export class RekycDirectorsFormComponent implements OnInit {
     private rekycFormService: RekycFormService,
     private toast: ToastService,
     private store: Store,
+    private cdr: ChangeDetectorRef,
   ) {}
 
   ngOnInit(): void {
@@ -170,10 +173,10 @@ export class RekycDirectorsFormComponent implements OnInit {
 
   decideDirChange(action: 'continue' | 'cancel') {
     this.handleForm32Modal();
-    this.removeForm32();
     if (action === 'cancel') {
       this.selectedDirDin = null;
     } else {
+      this.removeForm32();
       if (this.selectedDirDin !== null) {
         this.deleteDirector();
       } else {
@@ -220,12 +223,9 @@ export class RekycDirectorsFormComponent implements OnInit {
     }
 
     const existingDir = this.directorsList();
-    const refinedDirList = existingDir.map((dir) => {
-      if (dir.status === 'new-dir') {
-        return { ...dir, status: 'active' };
-      }
-      return dir;
-    });
+    const refinedDirList = existingDir
+      .filter((dir) => dir.status === 'new-dir')
+      .map((dir) => ({ ...dir, status: 'active' }));
 
     const data = {
       ausId: this.ausInfo()?.ausId as string,
@@ -278,12 +278,21 @@ export class RekycDirectorsFormComponent implements OnInit {
         const { status } = response;
 
         if (status === ApiStatus.SUCCESS) {
-          const { data } = response as { data: Director[] };
+          const { data } = response as { data: { directors: Director[]; form32: DocResponse } };
+          const { directors, form32 } = data;
+
+          this.form32 = {
+            name: form32.fileName,
+            link: form32.url,
+          };
+
           this.store.dispatch(
             updatePartialDirectors({
-              directorList: [...this.directorsList(), ...data],
+              directorList: [...this.directorsList(), ...directors],
             }),
           );
+
+          this.cdr.markForCheck();
         }
       },
     });
