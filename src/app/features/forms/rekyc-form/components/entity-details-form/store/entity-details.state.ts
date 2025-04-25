@@ -66,7 +66,7 @@ export const initialEntityDetails: EntityDetails = {
   addressProof: createInitialProofDoc(
     'Select Proof of Address',
     'addressProof',
-    'electricity_bill',
+    'electricityBill',
     true,
   ),
   coi: createInitialDoc('COI (Certificate of Incoporation) ', 'coi', true),

@@ -48,22 +48,22 @@ export class EntityDetailsComponent implements OnInit, DoCheck, OnDestroy {
     {
       id: 1,
       label: 'Electricity Bill (not more than 2 months old)',
-      value: 'electricity_bill',
+      value: 'electricityBill',
     },
     {
       id: 2,
       label: 'Water Bill (not more than 2 months old)',
-      value: 'water_bill',
+      value: 'waterBill',
     },
     {
       id: 3,
       label: 'Landline Bill (not more than 2 months old)',
-      value: 'landline_bill',
+      value: 'landlineBill',
     },
     {
       id: 4,
       label: 'Internet Bill (not more than 2 months old)',
-      value: 'internet_bill',
+      value: 'internetBill',
     },
   ];
   isFileLoading = signal({
