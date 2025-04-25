@@ -100,11 +100,17 @@
       class="flex items-center justify-end gap-2 border-t border-gray-300 py-4"
     >
       <ui-button
-        label="Save Draft"
+        label="Preview"
         class="btn-outline"
-        (btnClick)="submit('save')"
+        (btnClick)="handlePreviewSheet()"
       />
       <ui-button type="submit" label="Submit" class="py-[7px]" />
     </div>
   </form>
+
+  <rekyc-preview-entitydet
+    [openSheet]="showPreviewSheet()"
+    (closeSheet)="handlePreviewSheet()"
+    [data]="previewData()"
+  />
 </div>

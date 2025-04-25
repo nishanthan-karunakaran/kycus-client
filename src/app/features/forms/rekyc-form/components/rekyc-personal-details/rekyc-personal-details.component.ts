@@ -78,7 +78,7 @@ export class RekycPersonalDetailsComponent implements OnInit, OnDestroy {
     {
       id: 4,
       label: 'Pan',
-      value: 'Pan',
+      value: 'pan',
     },
   ];
   isFileLoading = signal({
@@ -93,6 +93,8 @@ export class RekycPersonalDetailsComponent implements OnInit, OnDestroy {
   personalDetails = toSignal(this.store.select(selectPersonalDetails));
   ausDocsList = toSignal(this.store.select(selectPersonalDetails));
   documentKeys = ['identityProof', 'addressProof', 'photograph', 'signature'];
+  showPreviewSheet = signal(false);
+  previewData = signal([]);
 
   proofDoc = (doc: string) => doc === 'identityProof' || doc === 'addressProof';
 
@@ -199,6 +201,11 @@ export class RekycPersonalDetailsComponent implements OnInit, OnDestroy {
     this.form = this.fb.group(group);
   }
 
+  handlePreviewSheet() {
+    this.showPreviewSheet.set(!this.showPreviewSheet());
+    this.previewEntityDetails();
+  }
+
   trackDoc(_index: number) {
     return _index;
   }
@@ -237,7 +244,7 @@ export class RekycPersonalDetailsComponent implements OnInit, OnDestroy {
 
   onProofDocChange(doc: string, value: string) {
     this.form.get(`${doc}.file.selectedType`)?.setValue(value);
-    this.removeFile(doc);
+    // this.removeFile(doc);
   }
 
   onFileSelection(controlName: string, file: File): void {
@@ -376,6 +383,28 @@ export class RekycPersonalDetailsComponent implements OnInit, OnDestroy {
           const { data } = response as { status: string; data: { documents: PersonalDetails } };
 
           this.store.dispatch(updatePartialPersonalDetails({ partialData: data.documents }));
+        }
+      },
+    });
+  }
+
+  previewEntityDetails() {
+    const entityId = this.entityInfo()?.entityId as string;
+    const ausId = this.ausInfo()?.ausId as string;
+    // eslint-disable-next-line no-console
+    console.log('onnnn callin');
+    this.personalFormService.previewEntityDetails(entityId, ausId).subscribe({
+      next: (result) => {
+        const { response } = result;
+
+        if (!response) return;
+
+        const { status } = response;
+
+        if (status === ApiStatus.SUCCESS) {
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          const { data } = response as any;
+          this.previewData.set(data[0].documents);
         }
       },
     });

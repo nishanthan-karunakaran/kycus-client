@@ -39,6 +39,8 @@ export const API_URL = {
         PERSONAL_DOCS_UPLOAD: '/kycus/rekyc/ausDocs/uploads',
         PERSONAL_DETAILS: (entityId: string, ausId: string) =>
           `/kycus/rekyc/ausDetails/${entityId}/${ausId}`,
+        PREVIEW_DETAILS: (entityId: string, ausId: string) =>
+          `/kycus/rekyc/ausPreview/${entityId}/${ausId}`,
       },
       REKYC_FORM: {
         GET: (entityId: string) => `/kycus/rekyc/rekycForm/${entityId}`,
