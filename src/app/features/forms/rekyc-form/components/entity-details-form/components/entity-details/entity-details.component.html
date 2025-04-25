@@ -64,7 +64,7 @@
 
         <div>
           <ui-upload-button
-            *ngIf="!form.get(doc + '.file.name')?.value"
+            *ngIf="!form.get(doc + '.file.link')?.value"
             accept=".pdf, .xlsx"
             [disabled]="
               doc === 'addressProof'
@@ -75,12 +75,13 @@
           ></ui-upload-button>
 
           <div
-            *ngIf="form.get(doc + '.file.name')?.value"
+            *ngIf="form.get(doc + '.file.link')?.value"
             class="flex items-center gap-2"
           >
             <ui-filename
-              *ngIf="form.get(doc + '.file.name')?.value"
+              *ngIf="form.get(doc + '.file.link')?.value"
               [fileName]="form.get(doc + '.file.name')?.value"
+              [fileLink]="form.get(doc + '.file.link')?.value"
               (removeFile)="deleteDocument(doc)"
             />
           </div>

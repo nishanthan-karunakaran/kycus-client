@@ -35,6 +35,7 @@ import { Store } from '@ngrx/store';
 import { ToastService } from '@src/app/shared/ui/toast/toast.service';
 import { HelperService } from 'src/app/core/services/helpers.service';
 import { EntityDetailsService } from './entity-details.service';
+import { GetEntityResponse } from '@features/forms/rekyc-form/components/entity-details-form/entity-details-form.model';
 
 @Component({
   selector: 'rekyc-entity-details',
@@ -130,6 +131,10 @@ export class EntityDetailsComponent implements OnInit, DoCheck, OnDestroy {
         return;
       }
 
+      if (typeFromForm === 'pan') {
+        this.toast.info(docs.pan.file.name || 'ohh');
+      }
+
       const fileGroup = group.get('file') as FormGroup;
       if (!fileGroup) {
         // eslint-disable-next-line no-console
@@ -139,16 +144,14 @@ export class EntityDetailsComponent implements OnInit, DoCheck, OnDestroy {
 
       const filePatch: Partial<Doc> = {};
 
-      if ('fileName' in values && values.fileName) {
-        filePatch.name = values.fileName;
-      }
+      // Check if the file object exists and then patch the name, link, and selectedType
+      if (values.file) {
+        const { name, link, selectedType } = values.file;
 
-      if ('fileLink' in values && values.fileLink) {
-        filePatch.link = values.fileLink;
-      }
-
-      if ('selectedType' in values && values.selectedType) {
-        filePatch.selectedType = values.selectedType;
+        // Patch name, link, and selectedType only if available
+        if (name !== undefined) filePatch.name = name; // Check values.file.name
+        if (link !== undefined) filePatch.link = link;
+        if (selectedType !== undefined) filePatch.selectedType = selectedType;
       }
 
       if (Object.keys(filePatch).length > 0) {
@@ -382,22 +385,33 @@ export class EntityDetailsComponent implements OnInit, DoCheck, OnDestroy {
   }
 
   getEntityDetails() {
+    const entityDetails = this.entityDetails();
+
+    if (!entityDetails) return;
+
     const entityId = this.entityInfo()?.entityId as string;
     this.entityDetailService.getEntityDetails(entityId).subscribe({
       next: (result) => {
         const { response } = result;
-
         if (!response) return;
 
         const { status } = response;
-
         if (status === ApiStatus.SUCCESS) {
-          const { data } = response as { status: string; data: { documents: EntityDetails } };
+          const { data } = response as GetEntityResponse;
 
-          // eslint-disable-next-line no-console
-          console.log(Object.keys(data.documents), 'docc 1');
+          if (!data || !data.documents) {
+            // eslint-disable-next-line no-console
+            console.warn('Documents data is missing or undefined');
+            return;
+          }
 
-          this.store.dispatch(updatePartialEntityDetails({ partialData: data.documents }));
+          // Proceed with transformation and dispatching the data
+          const updatedEntityDetails = this.entityDetailService.transformToEntityDetails(
+            data.documents,
+            entityDetails,
+          );
+
+          this.store.dispatch(updatePartialEntityDetails({ partialData: updatedEntityDetails }));
         }
       },
     });
