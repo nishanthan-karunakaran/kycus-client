@@ -3,18 +3,24 @@ import {
   ChangeDetectorRef,
   Component,
   DoCheck,
+  OnDestroy,
   OnInit,
   signal,
 } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router } from '@angular/router';
+import { ApiStatus } from '@core/constants/api.response';
 import { Store } from '@ngrx/store';
 import { Subject, takeUntil } from 'rxjs';
 import { selectEntityInfo } from './components/entity-filledby/store/entity-info.selectors';
 import { selectAusInfo } from './components/rekyc-personal-details/store/personal-details.selectors';
 import { FormPage, FormStep } from './rekyc-form.model';
 import { RekycFormService } from './rekyc-form.service';
-import { updateActiveRoute } from './store/rekyc-form.action';
+import {
+  updateActiveRoute,
+  updateRekycFormStatus,
+  updateRekycStepStatus,
+} from './store/rekyc-form.action';
 import {
   selectRekycActiveRoute,
   selectRekycFormStatus,
@@ -27,7 +33,7 @@ import {
   styleUrls: ['./rekyc-form.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class RekycFormComponent implements OnInit, DoCheck {
+export class RekycFormComponent implements OnInit, DoCheck, OnDestroy {
   currentForm = toSignal(this.store.select(selectRekycActiveRoute));
   formList = signal<FormPage[]>([
     { label: 'Entity Details', step: FormStep.ENTITY_DETAILS, isCompleted: false, canShow: true },
@@ -66,6 +72,8 @@ export class RekycFormComponent implements OnInit, DoCheck {
   ) {}
 
   ngOnInit(): void {
+    this.tabCompletionStatus();
+
     this.rekycFormService.triggerFn$.pipe(takeUntil(this.destroy$)).subscribe(() => {
       this.handleInitialRoute();
       this.cdRef.markForCheck(); // Important with OnPush
@@ -172,18 +180,61 @@ export class RekycFormComponent implements OnInit, DoCheck {
     }
   }
 
-  // onFormNavigation(direction: string) {
-  //   const current = this.currentForm();
-  //   const currentIndex = this.accessibleSteps.indexOf(current);
+  tabCompletionStatus() {
+    const ausId = this.ausInfo()?.ausId as string;
 
-  //   if (currentIndex === -1) return;
+    this.rekycFormService
+      .tabCompletionStatus(ausId)
+      // .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (response) => {
+          if (response) {
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            const { status, data } = response as any;
 
-  //   if (direction === 'next' && currentIndex < this.accessibleSteps.length - 1) {
-  //     this.currentForm.set(this.accessibleSteps[currentIndex + 1]);
-  //   }
+            if (status === ApiStatus.SUCCESS) {
+              const { ausDetails, boDetails, directorDetails, eSign, entityDocs, rekycForm } = data;
 
-  //   if (direction === 'prev' && currentIndex > 0) {
-  //     this.currentForm.set(this.accessibleSteps[currentIndex - 1]);
-  //   }
-  // }
+              const entityDetails = entityDocs && directorDetails && boDetails;
+
+              this.store.dispatch(
+                updateRekycStepStatus({ entityDocs, directorDetails, boDetails }),
+              );
+              this.store.dispatch(
+                updateRekycFormStatus({ entityDetails, ausDetails, rekycForm, eSign }),
+              );
+              this.formList.set([
+                {
+                  label: 'Entity Details',
+                  step: FormStep.ENTITY_DETAILS,
+                  isCompleted: entityDetails,
+                  canShow: true,
+                },
+                {
+                  label: 'AUS Details',
+                  step: FormStep.PERSONAL_DETAILS,
+                  isCompleted: ausDetails,
+                  canShow: true,
+                },
+                {
+                  label: 'KYC Form',
+                  step: FormStep.KYC_FORM,
+                  isCompleted: rekycForm,
+                  canShow: true,
+                },
+                { label: 'E-Sign', step: FormStep.E_SIGN, isCompleted: eSign, canShow: true },
+              ]);
+            }
+          }
+        },
+      });
+  }
+
+  ngOnDestroy(): void {
+    // this.subscription.unsubscribe();
+    // eslint-disable-next-line no-console
+    console.log('object');
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
 }

@@ -17,6 +17,7 @@ import {
   selectRekycStepStatus,
 } from './store/rekyc-form.selectors';
 import { EntityDetTab } from './store/rekyc-form.state';
+import { HttpBackend, HttpClient } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root',
@@ -40,6 +41,7 @@ export class RekycFormService {
 
   private triggerFnSubject = new Subject<void>();
   triggerFn$ = this.triggerFnSubject.asObservable();
+  private http: HttpClient;
 
   triggerRouteHandling() {
     this.triggerFnSubject.next();
@@ -47,8 +49,10 @@ export class RekycFormService {
 
   constructor(
     private store: Store,
+    private handler: HttpBackend,
     private api: ApiService,
   ) {
+    this.http = new HttpClient(handler);
     this.triggerRouteHandling();
   }
 
@@ -159,6 +163,9 @@ export class RekycFormService {
 
     const targetFormKey = this.stepFormKeyMap[step];
     const targetIndex = this.stepOrder.indexOf(targetFormKey);
+
+    if (status[targetFormKey]) return status[targetFormKey];
+
     if (targetIndex === -1) return false;
 
     for (let i = 0; i < targetIndex; i++) {
@@ -172,5 +179,11 @@ export class RekycFormService {
 
   deleteDocument(payload: DeleteDocument) {
     return this.api.post(API_URL.APPLICATION.REKYC.DELETE_DOCUMENT, payload);
+  }
+
+  tabCompletionStatus(ausId: string) {
+    return this.http.get(
+      'http://3.109.141.220:3002' + API_URL.APPLICATION.REKYC.TAB_COMPLETION_STATUS(ausId),
+    );
   }
 }
