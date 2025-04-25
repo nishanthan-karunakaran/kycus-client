@@ -1,7 +1,7 @@
 <app-sheet
   [isOpen]="openSheet"
   (closeSheet)="handleReKycSheet()"
-  class="w-[540px]"
+  class="w-[600px]"
   contentClass="px-0 py-0"
 >
   <header class="bg-slate-300 px-4 py-4">
@@ -10,16 +10,27 @@
 
   <div *ngFor="let doc of data; trackBy: trackDoc" class="divide-y-2">
     <div class="flex justify-between border p-4">
-      <p>{{ doc?.label }}</p>
+      <div class="flex flex-col gap-1">
+        <p>{{ doc?.label }}</p>
 
-      <p
-        [ngClass]="{
-          'text-success': doc?.status,
-          'text-primary': !doc?.status,
-        }"
-      >
-        {{ doc?.status ? 'Document verified!' : 'Document submitted!' }}
-      </p>
+        <p
+          [ngClass]="{
+            'text-success': doc?.isVerified,
+            'text-primary': !doc?.isVerified,
+          }"
+        >
+          {{ doc?.isVerified ? 'Document verified!' : 'Document submitted!' }}
+        </p>
+      </div>
+
+      <div class="">
+        <div *ngFor="let item of doc.data | presentValues; trackBy: trackByKey">
+          <div class="flex items-center gap-2">
+            <p class="text-gray-500">{{ item[0] }}:</p>
+            <p>{{ item[1] }}</p>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </app-sheet>

@@ -17,4 +17,10 @@ export class PreviewEntitydetComponent {
   trackDoc(_index: number, doc: string) {
     return doc;
   }
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  trackByKey(_index: number, item: any) {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+    return item[0]; // the key
+  }
 }

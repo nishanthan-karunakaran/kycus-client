@@ -49,6 +49,7 @@ import { SelectComponent } from './ui/select/select.component';
 import { SheetComponent } from './ui/sheet/sheet.component';
 import { TableComponent } from './ui/table/table.component';
 import { UploadButtonComponent } from './ui/upload-button/upload-button.component';
+import { PresentValuesPipe } from '@core/pipes/presentValues.pipe';
 
 @NgModule({
   declarations: [
@@ -71,6 +72,7 @@ import { UploadButtonComponent } from './ui/upload-button/upload-button.componen
     FormsModule,
     ReactiveFormsModule,
     InputFormatDirective,
+    PresentValuesPipe,
     LucideAngularModule.pick({
       X,
       CheckCircle,
@@ -111,6 +113,7 @@ import { UploadButtonComponent } from './ui/upload-button/upload-button.componen
     FormsModule,
     ReactiveFormsModule,
     InputFormatDirective,
+    PresentValuesPipe,
     LucideAngularModule,
     ToastComponent,
     ModalComponent,
