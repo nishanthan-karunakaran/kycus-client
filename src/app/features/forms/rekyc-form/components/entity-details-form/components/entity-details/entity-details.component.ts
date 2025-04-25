@@ -82,6 +82,8 @@ export class EntityDetailsComponent implements OnInit, DoCheck, OnDestroy {
     initialValue: initialAusInfoState,
   });
   documentKeys = Object.keys(this.entityDetails);
+  showPreviewSheet = signal(false);
+  previewData = signal([]);
 
   constructor(
     private fb: FormBuilder,
@@ -185,6 +187,11 @@ export class EntityDetailsComponent implements OnInit, DoCheck, OnDestroy {
     });
 
     this.form = this.fb.group(group);
+  }
+
+  handlePreviewSheet() {
+    this.showPreviewSheet.set(!this.showPreviewSheet());
+    this.previewEntityDetails();
   }
 
   trackDoc(_index: number, doc: string): string {
@@ -390,9 +397,30 @@ export class EntityDetailsComponent implements OnInit, DoCheck, OnDestroy {
           const { data } = response as { status: string; data: { documents: EntityDetails } };
 
           // eslint-disable-next-line no-console
-          console.log(Object.keys(data.documents), 'docc');
+          console.log(Object.keys(data.documents), 'docc 1');
 
           this.store.dispatch(updatePartialEntityDetails({ partialData: data.documents }));
+        }
+      },
+    });
+  }
+
+  previewEntityDetails() {
+    const entityId = this.entityInfo()?.entityId as string;
+    // eslint-disable-next-line no-console
+    console.log('onnnn callin');
+    this.entityDetailService.previewEntityDetails(entityId).subscribe({
+      next: (result) => {
+        const { response } = result;
+
+        if (!response) return;
+
+        const { status } = response;
+
+        if (status === ApiStatus.SUCCESS) {
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          const { data } = response as any;
+          this.previewData.set(data);
         }
       },
     });

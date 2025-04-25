@@ -18,6 +18,7 @@ import { RekycEntityDetailsFormComponent } from './components/entity-details-for
 import { RekycBoFormComponent } from './components/rekyc-bo-form/rekyc-bo-form.component';
 import { RekycBoInputComponent } from './components/rekyc-bo-form/components/rekyc-bo-input/rekyc-bo-input.component';
 import { RekycBoFileuploadComponent } from './components/rekyc-bo-form/components/rekyc-bo-fileupload/rekyc-bo-fileupload.component';
+import { PreviewEntitydetComponent } from './components/entity-details-form/components/preview-entitydet/preview-entitydet.component';
 
 @NgModule({
   imports: [
@@ -32,6 +33,7 @@ import { RekycBoFileuploadComponent } from './components/rekyc-bo-form/component
     RekycEntityFilledbyComponent,
     RekycEntityDetailsFormComponent,
     EntityDetailsComponent,
+    PreviewEntitydetComponent,
     RekycDeclarationFormComponent,
     RekycDirectorsFormComponent,
     RekycBoFormComponent,

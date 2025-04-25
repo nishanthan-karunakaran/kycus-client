@@ -1,0 +1,25 @@
+<app-sheet
+  [isOpen]="openSheet"
+  (closeSheet)="handleReKycSheet()"
+  class="w-[540px]"
+  contentClass="px-0 py-0"
+>
+  <header class="bg-slate-300 px-4 py-4">
+    <h5 class="text-primary">Preview Document</h5>
+  </header>
+
+  <div *ngFor="let doc of data; trackBy: trackDoc" class="divide-y-2">
+    <div class="flex justify-between border p-4">
+      <p>{{ doc?.label }}</p>
+
+      <p
+        [ngClass]="{
+          'text-success': doc?.status,
+          'text-primary': !doc?.status,
+        }"
+      >
+        {{ doc?.status ? 'Document verified!' : 'Document submitted!' }}
+      </p>
+    </div>
+  </div>
+</app-sheet>

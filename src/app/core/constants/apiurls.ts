@@ -26,6 +26,7 @@ export const API_URL = {
       ENTITY_DETAILS_FORM: {
         ENTITY_DOCS_UPLOAD: '/kycus/rekyc/entityDocs/uploads',
         ENTITY_DETAILS: (entityId: string) => `/kycus/rekyc/entityDetails/${entityId}`,
+        PREVIEW_DETAILS: (entityId: string) => `/kycus/rekyc/entityPreview/${entityId}`,
       },
       DECLARATION_FORM: {
         DIRECTORS: {

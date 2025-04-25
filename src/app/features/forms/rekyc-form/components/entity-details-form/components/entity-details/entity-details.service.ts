@@ -16,4 +16,8 @@ export class EntityDetailsService {
   getEntityDetails(entityId: string) {
     return this.api.get(API_URL.APPLICATION.REKYC.ENTITY_DETAILS_FORM.ENTITY_DETAILS(entityId));
   }
+
+  previewEntityDetails(entityId: string) {
+    return this.api.get(API_URL.APPLICATION.REKYC.ENTITY_DETAILS_FORM.PREVIEW_DETAILS(entityId));
+  }
 }
