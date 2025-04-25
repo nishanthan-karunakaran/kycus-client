@@ -131,10 +131,6 @@ export class EntityDetailsComponent implements OnInit, DoCheck, OnDestroy {
         return;
       }
 
-      if (typeFromForm === 'pan') {
-        this.toast.info(docs.pan.file.name || 'ohh');
-      }
-
       const fileGroup = group.get('file') as FormGroup;
       if (!fileGroup) {
         // eslint-disable-next-line no-console
@@ -307,8 +303,10 @@ export class EntityDetailsComponent implements OnInit, DoCheck, OnDestroy {
   uploadFileProof(type: EntityDetailsFileType, file: File): void {
     if (!file || !type) return;
 
+    const docType = type === 'addressProof' ? this.form.value.addressProof.file.selectedType : type;
+
     const formData = new FormData();
-    formData.append('docType', type);
+    formData.append('docType', docType);
     formData.append('entityId', this.entityInfo()?.entityId);
     formData.append('file', file);
 
@@ -327,22 +325,23 @@ export class EntityDetailsComponent implements OnInit, DoCheck, OnDestroy {
       next: (result) => {
         const { loading, response } = result;
         fileGroup.get('isLoading')?.setValue(loading);
-        this.setIsFileLoading(type, loading);
+        // this.setIsFileLoading(type, loading);
 
         if (!response) return;
 
         const { status } = response;
 
-        const entityDetailsFileTypeEntityDetailsFileType =
-          type !== 'addressProof' ? type.toUpperCase() : this.helperService.toTitleCase(type);
+        // const entityDetailsFileTypeEntityDetailsFileType =
+        //   type !== 'addressProof' ? type.toUpperCase() : this.helperService.toTitleCase(type);
 
         if (status === ApiStatus.SUCCESS) {
           const { data } = response as { data: UploadFileProofResponse };
           fileGroup.get('name')?.setValue(data?.docName);
           fileGroup.get('link')?.setValue(data?.storedPath);
+          this.cdr.markForCheck();
           // this.toast.success(`${entityDetailsFileTypeEntityDetailsFileType} uploaded successfully`);
         } else {
-          this.toast.error(`Invalid document for ${entityDetailsFileTypeEntityDetailsFileType}`);
+          // this.toast.error(`Invalid document for ${entityDetailsFileTypeEntityDetailsFileType}`);
           // this.removeFile(type);
         }
       },
