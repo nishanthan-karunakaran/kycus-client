@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, OnInit, signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ApiStatus } from '@core/constants/api.response';
 import { RekycBoService } from '@features/forms/rekyc-form/components/rekyc-bo-form/rekyc-bo.service';
 import { selectAusInfo } from '@features/forms/rekyc-form/components/rekyc-personal-details/store/personal-details.selectors';
@@ -39,8 +39,10 @@ export class RekycBoInputComponent implements OnInit {
     this.addBoDetail();
   }
 
-  trackBO(index: number) {
-    return index;
+  trackBO(index: number, group: AbstractControl): number | string {
+    const id = group.get('id')?.value;
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+    return id ?? index; // If `id` is `null` or `undefined`, fall back to `index`
   }
 
   get boDetails(): FormArray {
@@ -56,6 +58,7 @@ export class RekycBoInputComponent implements OnInit {
 
   createBoDetail(): FormGroup {
     return this.fb.group({
+      id: [crypto.randomUUID()],
       name: ['', Validators.required],
       addressLine: ['', Validators.required],
       city: ['', Validators.required],
@@ -76,10 +79,8 @@ export class RekycBoInputComponent implements OnInit {
     this.boDetails.push(this.createBoDetail());
   }
 
-  removeLastBoDetail() {
-    if (this.boDetails.length > 0) {
-      this.boDetails.removeAt(this.boDetails.length - 1);
-    }
+  removeBoDetail(index: number): void {
+    this.boDetails.removeAt(index);
   }
 
   submit(action: 'save' | 'submit') {

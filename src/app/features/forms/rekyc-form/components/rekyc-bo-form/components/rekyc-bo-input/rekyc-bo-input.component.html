@@ -14,23 +14,40 @@
       >
         <h6 class="mb-2 text-primary">Beneficiary Owner {{ i + 1 }}</h6>
 
-        <div>
-          <ui-input
-            type="text"
-            label="Name of the Beneficiary Owner"
-            formControlName="name"
-            class="max-w-sm"
-            (valueChange)="updateBoDetail(i, 'name', $event)"
-          />
-          <span
-            *ngIf="group.get('name')?.errors?.['required'] && isFormSubmitted()"
-            class="error-msg"
-          >
-            Name is Required
-          </span>
-        </div>
-
         <div class="flex w-[60%] flex-col gap-2">
+          <div class="flex items-center justify-between">
+            <div class="w-1/2">
+              <ui-input
+                type="text"
+                label="Name of the Beneficiary Owner"
+                formControlName="name"
+                class="w-full"
+                (valueChange)="updateBoDetail(i, 'name', $event)"
+              />
+              <span
+                *ngIf="
+                  group.get('name')?.errors?.['required'] && isFormSubmitted()
+                "
+                class="error-msg"
+              >
+                Name is Required
+              </span>
+            </div>
+
+            <div
+              *ngIf="i > 1"
+              class="group self-end rounded-md bg-secondary/20 p-2 hover:bg-secondary/30 group-hover:bg-red-50"
+            >
+              <lucide-icon
+                name="trash-2"
+                color="#FF0000"
+                size="16"
+                class="hover:scale-110"
+                (click)="removeBoDetail(i)"
+              />
+            </div>
+          </div>
+
           <p>Current Address</p>
 
           <div>
