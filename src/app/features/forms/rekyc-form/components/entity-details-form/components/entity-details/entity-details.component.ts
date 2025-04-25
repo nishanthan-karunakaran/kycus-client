@@ -276,7 +276,6 @@ export class EntityDetailsComponent implements OnInit, DoCheck, OnDestroy {
   deleteDocument(doc: string): void {
     const payload: DeleteDocument = {
       entityId: this.entityInfo()?.entityId as string,
-      ausId: this.ausInfo()?.ausId as string,
       docType: doc,
     };
 

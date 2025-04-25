@@ -42,8 +42,8 @@ export interface UploadFileProofResponse {
 }
 
 export interface DeleteDocument {
-  entityId: string;
-  ausId: string;
+  entityId?: string;
+  ausId?: string;
   docType: string;
 }
 
