@@ -3,10 +3,8 @@ import {
   ChangeDetectorRef,
   Component,
   effect,
-  EventEmitter,
   OnDestroy,
   OnInit,
-  Output,
   signal,
 } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
@@ -18,15 +16,16 @@ import {
   UploadFileProof,
   UploadFileProofResponse,
 } from '@features/forms/rekyc-form/rekyc-form.model';
+import { RekycFormService } from '@features/forms/rekyc-form/rekyc-form.service';
+import { updateRekycFormStatus } from '@features/forms/rekyc-form/store/rekyc-form.action';
 import { Store } from '@ngrx/store';
 import { ToastService } from '@src/app/shared/ui/toast/toast.service';
+import { Doc } from '../entity-details-form/store/entity-details.state';
+import { selectEntityInfo } from '../entity-filledby/store/entity-info.selectors';
 import { RekycPersonalFormService } from './rekyc-personal.service';
 import { updatePartialPersonalDetails } from './store/personal-details.actions';
 import { selectAusInfo, selectPersonalDetails } from './store/personal-details.selectors';
 import { PersonalDetails } from './store/personal-details.state';
-import { selectEntityInfo } from '../entity-filledby/store/entity-info.selectors';
-import { RekycFormService } from '@features/forms/rekyc-form/rekyc-form.service';
-import { Doc } from '../entity-details-form/store/entity-details.state';
 
 type FileType = 'identityProof' | 'addressProof' | 'photograph' | 'signature';
 
@@ -55,7 +54,7 @@ export class RekycPersonalDetailsComponent implements OnInit, OnDestroy {
     },
     {
       id: 4,
-      label: 'Pan',
+      label: 'PAN',
       value: 'pan',
     },
   ];
@@ -77,7 +76,7 @@ export class RekycPersonalDetailsComponent implements OnInit, OnDestroy {
     },
     {
       id: 4,
-      label: 'Pan',
+      label: 'PAN',
       value: 'pan',
     },
   ];
@@ -87,7 +86,6 @@ export class RekycPersonalDetailsComponent implements OnInit, OnDestroy {
     photograph: false,
     signature: false,
   });
-  @Output() formNavigation = new EventEmitter<string>();
   entityInfo = toSignal(this.store.select(selectEntityInfo));
   ausInfo = toSignal(this.store.select(selectAusInfo));
   personalDetails = toSignal(this.store.select(selectPersonalDetails));
@@ -176,8 +174,6 @@ export class RekycPersonalDetailsComponent implements OnInit, OnDestroy {
       console.warn('ausDocsList is undefined');
       return;
     }
-
-    // this.documentKeys = Object.keys(this.ausDocsList);
 
     this.documentKeys.forEach((key) => {
       const doc = ausDocsList[key as keyof PersonalDetails];
@@ -362,7 +358,8 @@ export class RekycPersonalDetailsComponent implements OnInit, OnDestroy {
       }
 
       this.toast.success('Form sumitted successfully!');
-      this.formNavigation.emit('next');
+      this.store.dispatch(updateRekycFormStatus({ ausDetails: true }));
+      this.rekycFormService.updatRekycFormStep('personal-details');
     } else {
       this.toast.info('Form saved successfully!');
     }
