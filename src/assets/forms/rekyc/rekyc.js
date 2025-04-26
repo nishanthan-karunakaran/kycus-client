@@ -20,30 +20,20 @@ async function renderAll() {
 function entityBasicInfo() {
   if (!data) data = {};
   if (!data.originalData) data.originalData = {};
+  if (!data.editedData) data.editedData = {};
 
   const entityCustId = document.getElementById('entityCustId');
   const entityName = document.getElementById('entityName');
   const entityPan = document.getElementById('entityPan');
 
   entityCustId.value = data.originalData.entityCustId || '';
-  entityCustId.autofocus = true;
   entityName.value = data.originalData.entityName || '';
   entityPan.value = data.originalData.entityDetails?.pan?.panNumber || '';
 
-  entityCustId.oninput = (e) => {
-    data.originalData.entityCustId = e.target.value.trim();
-  };
-
-  entityName.oninput = (e) => {
-    data.originalData.entityName = e.target.value.trim();
-  };
-
-  entityPan.oninput = (e) => {
-    if (!data.originalData.entityDetails) data.originalData.entityDetails = {};
-    if (!data.originalData.entityDetails.pan) data.originalData.entityDetails.pan = {};
-
-    data.originalData.entityDetails.pan.panNumber = e.target.value.trim();
-  };
+  // Attach tracking
+  attachInputTracking(entityCustId, ['entityCustId']);
+  attachInputTracking(entityName, ['entityName']);
+  attachInputTracking(entityPan, ['entityDetails', 'pan', 'panNumber']);
 
   const date = document.getElementById('date-input');
   if (date) {
@@ -51,9 +41,9 @@ function entityBasicInfo() {
     const day = String(today.getDate()).padStart(2, '0');
     const month = String(today.getMonth() + 1).padStart(2, '0');
     const year = today.getFullYear();
-
     date.value = `${day}-${month}-${year}`;
     date.readOnly = true;
+    date.style.setProperty('color', 'blue', 'important');
   }
 }
 
