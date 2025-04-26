@@ -1,10 +1,6 @@
-let isFormDataProcessed = false; // Flag to track if form data has been processed
 let data = {};
 
-// document.addEventListener('DOMContentLoaded', renderAll());
-
 async function renderAll() {
-  await fun();
   await entityBasicInfo();
   await entityMailingAddress();
   await entityRegisteredAddress();
@@ -21,947 +17,61 @@ async function renderAll() {
   // await downloadPDF();
 }
 
-function sendSaveData() {
-  console.log('Iframe received TRIGGER_SAVE', data);
-  window.parent.postMessage(
-    {
-      type: 'SAVE_DATA',
-      source: 'kyc-form',
-      payload: data || { message: 'nothing loaded yet' },
-    },
-    '*',
-  );
-}
-
-window.addEventListener('message', (event) => {
-  const { type, payload } = event.data || {};
-
-  switch (type) {
-    case 'SET_FORM_DATA':
-      // console.log('Iframe received form data:', payload);
-      // if (data.editedData === undefined) {
-      //   data = { editedData: payload, originalData: payload };
-      //   console.log('data setted on 1', payload);
-      // } else {
-      //   console.log('data setted on 1');
-      //   data = payload;
-      // }
-      data = payload;
-      renderAll();
-      console.log('data setted', data);
-
-      break;
-
-    case 'TRIGGER_SAVE':
-      sendSaveData();
-      break;
-
-    default:
-      break;
-  }
-});
-
-function fun() {
-  // data = {
-  //   editedData: {
-  //     _id: '67f63f970345d33252eb1858',
-  //     entityId: 'ebitaus123-123456789-09042025',
-  //     bankName: 'HDFC Bank',
-  //     entityName: 'EBITAUS PRIVATE LIMITED',
-  //     reason: 'Re-KYC',
-  //     entityType: 'Private',
-  //     entityFilledBy: 'ebitaus123-123456789-09042025-OTHER',
-  //     entityDetails: {
-  //       cin: {
-  //         cinNumber: 'U62099TN2023PTC158659',
-  //         isVerified: false,
-  //         verifiedSource: 'Protean',
-  //         timestamp: '2025-04-09T17:58:18.204Z',
-  //       },
-  //       gstin: {
-  //         gstinNumber: '33AAHCE4484E1ZQ',
-  //         isVerified: true,
-  //         verifiedSource: 'API Sethu',
-  //         timestamp: '2025-04-09T12:43:02.396Z',
-  //       },
-  //       pan: {
-  //         panNumber: 'AAHC1885M',
-  //         isVerified: true,
-  //         verifiedSource: 'OpenAI',
-  //         timestamp: '2025-04-09T11:45:29.994Z',
-  //       },
-  //       iec: {
-  //         iecNumber: '',
-  //         isVerified: false,
-  //         verifiedSource: '',
-  //         timestamp: '',
-  //       },
-  //       businessType: '',
-  //       natureOfIndustry: '',
-  //       dateOfIncorporation: '',
-  //       annualTurnover: '',
-  //       employeeCount: 0,
-  //       importExport: false,
-  //       status: 'in-progress',
-  //       entityType: 'Private',
-  //       subCategory: 'pubPvtLtdCompany: Financial Services Company',
-  //       selfEmployeedProfessional: '',
-  //       natureOfBusiness: 'Real Estate',
-  //       natureOfIndustry: 'Engineering Goods',
-  //       documents: {
-  //         entityDocs: [
-  //           {
-  //             type: 'PAN',
-  //             fileName: 'Screenshot 2025-04-09 161525.png',
-  //             fileType: 'image/png',
-  //             url: '/uploads\\ebitaus123-123456789-09042025\\entityPan/Screenshot 2025-04-09 161525.png',
-  //             isVerified: false,
-  //             verifiedSource: '',
-  //             timestamp: '2025-04-09T11:45:19.063Z',
-  //           },
-  //           {
-  //             type: 'GSTIN',
-  //             fileName: 'Screenshot 2025-04-09 123904.png',
-  //             fileType: 'image/png',
-  //             url: '/uploads\\ebitaus123-123456789-09042025\\entityGstin/Screenshot 2025-04-09 123904.png',
-  //             isVerified: true,
-  //             verifiedSource: 'Protean',
-  //             timestamp: '2025-04-09T12:42:52.594Z',
-  //           },
-  //           {
-  //             type: 'MOM',
-  //             fileName: 'GEPL-MOA-and-AOA-August.pdf',
-  //             fileType: 'application/pdf',
-  //             url: '/uploads\\ebitaus123-123456789-09042025\\entityDocs/GEPL-MOA-and-AOA-August.pdf',
-  //             isVerified: false,
-  //             verifiedSource: '',
-  //             timestamp: '2025-04-10T09:19:04.969Z',
-  //           },
-  //         ],
-  //         entityProofs: [
-  //           {
-  //             type: 'COI',
-  //             fileName: 'Ebitaus P Ltd - Certificate of Incorporation.pdf',
-  //             fileType: 'application/pdf',
-  //             url: '/uploads\\ebitaus123-123456789-09042025\\entityProofs/Ebitaus P Ltd - Certificate of Incorporation.pdf',
-  //             isVerified: false,
-  //             verifiedSource: '',
-  //             timestamp: '2025-04-09T17:57:57.397Z',
-  //           },
-  //           {
-  //             type: 'MOA',
-  //             fileName: 'GEPL-MOA-and-AOA-August.pdf',
-  //             fileType: 'application/pdf',
-  //             url: '/uploads\\ebitaus123-123456789-09042025\\entityProofs/GEPL-MOA-and-AOA-August.pdf',
-  //             isVerified: false,
-  //             verifiedSource: '',
-  //             timestamp: '2025-04-10T09:39:48.696Z',
-  //           },
-  //           {
-  //             type: 'AOA',
-  //             fileName: 'Tata Communications - MoA-AoA-Amended.pdf',
-  //             fileType: 'application/pdf',
-  //             url: '/uploads\\ebitaus123-123456789-09042025\\entityProofs/Tata Communications - MoA-AoA-Amended.pdf',
-  //             isVerified: false,
-  //             verifiedSource: '',
-  //             timestamp: '2025-04-10T04:59:03.735Z',
-  //           },
-  //         ],
-  //         entityAddressProof: {
-  //           type: 'addressProof',
-  //           fileName: 'Hathway.pdf',
-  //           fileType: 'application/pdf',
-  //           url: '/uploads\\ebitaus123-123456789-09042025\\entityAddressProofs/Hathway.pdf',
-  //           isVerified: true,
-  //           verifiedSource: 'Internal',
-  //           timestamp: '2025-04-11T05:48:39.666Z',
-  //         },
-  //         form32: {
-  //           type: 'form32',
-  //           fileName: 'form32.pdf',
-  //           fileType: 'application/pdf',
-  //           url: '/uploads\\ebitaus123-123456789-09042025\\form32/form32.pdf',
-  //           isVerified: false,
-  //           verifiedSource: '',
-  //           timestamp: '2025-04-10T11:46:09.113Z',
-  //         },
-  //       },
-  //       registeredOfficeAddress: {
-  //         buildingName: 'PM Towers',
-  //         street: 'Greams Road, Thousand Lights',
-  //         city: 'Chennai',
-  //         state: 'Tamil Nadu',
-  //         country: 'India',
-  //         pin: '600006',
-  //         landline: '',
-  //         mobile: '9786190876',
-  //         email: 'kumar.nagaraji@ebitaus.com',
-  //         ownership: '',
-  //       },
-  //     },
-  //     authorizedSignatoriesDetails: [
-  //       {
-  //         ausId: 'ebitaus123-123456789-09042025-AUS1',
-  //         name: 'Harichandana',
-  //         email: 'harichandana.vegesna@ebitaus.com',
-  //         emailLink:
-  //           'http://localhost:4020/rekyc/customer/eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiJlYml0YXVzMTIzLTEyMzQ1Njc4OS0wOTA0MjAyNSIsImNvbXBhbnlOYW1lIjoiRWJpdGF1czEyMyIsImN1c3RJZCI6MTIzNDU2Nzg5LCJlbnRpdHlUeXBlIjoiUHJpdmF0ZSIsImlhdCI6MTc0NDE5MTM4MywiZXhwIjoxNzc1NzI3MzgzfQ.fTgp5B4oFlh8JOkJ156Immn9hYDf6_oCiLFLMdtuXzk',
-  //         isVerified: false,
-  //         status: 'pending',
-  //         isSigned: false,
-  //         personalDetails: {
-  //           name: 'Vegesna Harichandana',
-  //           fatherName: '',
-  //           dateOfBirth: '10/04/1996',
-  //           designation: '',
-  //           din: '',
-  //           companyEmail: '',
-  //           mobile: '',
-  //           address: '8-3-169/23 3rd FLOOR, SIDARTH NAGAR, MADHURA NAGAR, HYDERABAD',
-  //           documents: {
-  //             identityProof: {
-  //               type: 'identityProof',
-  //               fileName: 'Image.png',
-  //               fileType: 'image/png',
-  //               url: '/uploads\\ebitaus123-123456789-09042025\\ebitaus123-123456789-09042025-AUS1\\identityProof/Image.png',
-  //               isVerified: true,
-  //               verifiedSource: 'Internal',
-  //               timestamp: '2025-04-11T10:50:07.826Z',
-  //             },
-  //             photograph: {
-  //               type: 'photograph',
-  //               fileName: 'Screenshot 2025-04-11 172215.png',
-  //               fileType: 'image/png',
-  //               url: '/uploads/ebitaus123-123456789-09042025/ebitaus123-123456789-09042025-AUS1/photograph/Screenshot 2025-04-11 172215.png',
-  //               isVerified: false,
-  //               verifiedSource: '',
-  //               timestamp: '2025-04-15T05:47:46.324Z',
-  //             },
-  //             signature: {
-  //               type: 'signature',
-  //               fileName: 'Screenshot 2025-04-11 172310.png',
-  //               fileType: 'image/png',
-  //               url: '/uploads\\ebitaus123-123456789-09042025\\ebitaus123-123456789-09042025-AUS1\\signature/Screenshot 2025-04-11 172310.png',
-  //               isVerified: false,
-  //               verifiedSource: '',
-  //               timestamp: '2025-04-11T12:02:07.177Z',
-  //             },
-  //             addressProof: {
-  //               type: 'addressProof',
-  //               fileName: 'Image4.png',
-  //               fileType: 'image/png',
-  //               url: '/uploads\\ebitaus123-123456789-09042025\\ebitaus123-123456789-09042025-AUS1\\addressProof/Image4.png',
-  //               isVerified: true,
-  //               verifiedSource: 'Internal',
-  //               timestamp: '2025-04-11T12:31:46.488Z',
-  //             },
-  //           },
-  //         },
-  //       },
-  //     ],
-  //     directorDetails: [
-  //       {
-  //         din: '10061417',
-  //         directorName: 'PITCHAI VENKATESH',
-  //         directorEmail: '',
-  //         mailUrl: '',
-  //         isSigned: false,
-  //         status: 'active',
-  //       },
-  //       {
-  //         din: '10099999',
-  //         directorName: '.KOKIL',
-  //         directorEmail: '',
-  //         mailUrl: '',
-  //         isSigned: false,
-  //         status: 'active',
-  //       },
-  //     ],
-  //     boDetails: [
-  //       {
-  //         boName: 'Rajeev Sharma',
-  //         addressLine: 'Flat No 101, Green Residency',
-  //         city: 'Hyderabad',
-  //         state: 'Telangana',
-  //         country: 'India',
-  //         pin: '500032',
-  //       },
-  //       {
-  //         boName: 'Vikram Rao',
-  //         addressLine: 'A-24, Sector 3',
-  //         city: 'Noida',
-  //         state: 'Uttar Pradesh',
-  //         country: 'India',
-  //         pin: '201301',
-  //       },
-  //     ],
-  //     businessDetails: {
-  //       detailsOfActivity: 'FinTech',
-  //       dateOfIncorporation: '30/03/20253',
-  //       annualTurnOverFigures: '10,00,00,000',
-  //       annualTurnOverWords: '10 Crores',
-  //       involvedIn: 'Import',
-  //     },
-  //     entityProofDeclaration: {
-  //       entityProof1: 'Certificate of Incorporation',
-  //       entityProof2: 'MOA (Memorandum of Association) ',
-  //       addressProof: 'Electricity Bill',
-  //       identityProof: 'PAN',
-  //       date: '18/4/25',
-  //     },
-  //     extendedAnnexure: {
-  //       basicDetails: {
-  //         date: '18/04/25',
-  //         aofNo: 'AFO1234',
-  //         nameOfEntity: 'Ebitaus',
-  //         custId: 'CUS1234',
-  //       },
-  //       docEntity: {
-  //         coi: 'COI1234',
-  //         rc: '',
-  //         td: '',
-  //         moa_aoa: true,
-  //       },
-  //       mailAddress: {
-  //         coi: 'COI1234',
-  //         rc: '',
-  //         other: 'Pan Doc',
-  //       },
-  //     },
-  //     boDetails: [
-  //       {
-  //         boName: 'Rajeev Sharma',
-  //         addressLine: 'Flat No 101, Green Residency',
-  //         city: 'Hyderabad',
-  //         state: 'Telangana',
-  //         country: 'India',
-  //         pin: '500032',
-  //       },
-  //       {
-  //         boName: 'Vikram Rao',
-  //         addressLine: 'A-24, Sector 3',
-  //         city: 'Noida',
-  //         state: 'Uttar Pradesh',
-  //         country: 'India',
-  //         pin: '201301',
-  //       },
-  //       {
-  //         boName: 'Rajeev Sharma',
-  //         addressLine: 'Flat No 101, Green Residency',
-  //         city: 'Hyderabad',
-  //         state: 'Telangana',
-  //         country: 'India',
-  //         pin: '500032',
-  //       },
-  //       {
-  //         boName: 'Vikram Rao',
-  //         addressLine: 'A-24, Sector 3',
-  //         city: 'Noida',
-  //         state: 'Uttar Pradesh',
-  //         country: 'India',
-  //         pin: '201301',
-  //       },
-  //     ],
-  //     ausData: [
-  //       {
-  //         nameoftheauthorisedsignatory: 'Alice Johnson',
-  //         fathersname: 'Robert Johnson',
-  //         proofofidentity: 'Passport',
-  //         proofofaddress: 'Utility Bill',
-  //         addressline: '123 Baker Street',
-  //         addresscity: 'London',
-  //         addressstate: 'Greater London',
-  //         addresscountry: 'United Kingdom',
-  //         addresspincode: 'NW1 6XE',
-  //         signature:
-  //           'https://static.vecteezy.com/system/resources/previews/025/866/358/non_2x/fake-autograph-samples-hand-drawn-signatures-examples-of-documents-certificates-and-contracts-with-inked-and-handwritten-lettering-vector.jpg',
-  //         photo:
-  //           'https://www.biowritingservice.com/wp-content/themes/tuborg/images/Executive%20Bio%20Sample%20Photo.png',
-  //         // signature and photograph will be handled separately
-  //       },
-  //       {
-  //         nameoftheauthorisedsignatory: 'Bob Smith',
-  //         fathersname: 'Edward Smith',
-  //         proofofidentity: "Driver's License",
-  //         proofofaddress: 'Bank Statement',
-  //         addressline: '456 Queen Street',
-  //         addresscity: 'Toronto',
-  //         addressstate: 'Ontario',
-  //         addresscountry: 'Canada',
-  //         addresspincode: 'M5V 2B6',
-  //         signature:
-  //           'https://static.vecteezy.com/system/resources/previews/025/866/358/non_2x/fake-autograph-samples-hand-drawn-signatures-examples-of-documents-certificates-and-contracts-with-inked-and-handwritten-lettering-vector.jpg',
-  //         photo:
-  //           'https://images.pexels.com/photos/1222271/pexels-photo-1222271.jpeg?cs=srgb&dl=pexels-justin-shaifer-501272-1222271.jpg&fm=jpg',
-  //         // signature and photograph will be handled separately
-  //       },
-  //       {
-  //         nameoftheauthorisedsignatory: 'Alice Johnson',
-  //         fathersname: 'Robert Johnson',
-  //         proofofidentity: 'Passport',
-  //         proofofaddress: 'Utility Bill',
-  //         addressline: '123 Baker Street',
-  //         addresscity: 'London',
-  //         addressstate: 'Greater London',
-  //         addresscountry: 'United Kingdom',
-  //         addresspincode: 'NW1 6XE',
-  //         signature:
-  //           'https://static.vecteezy.com/system/resources/previews/025/866/358/non_2x/fake-autograph-samples-hand-drawn-signatures-examples-of-documents-certificates-and-contracts-with-inked-and-handwritten-lettering-vector.jpg',
-  //         photo:
-  //           'https://images.unsplash.com/photo-1544005313-94ddf0286df2?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8cGVyc29ufGVufDB8fDB8fHww',
-  //         // signature and photograph will be handled separately
-  //       },
-  //       {
-  //         nameoftheauthorisedsignatory: 'Bob Smith',
-  //         fathersname: 'Edward Smith',
-  //         proofofidentity: "Driver's License",
-  //         proofofaddress: 'Bank Statement',
-  //         addressline: '456 Queen Street',
-  //         addresscity: 'Toronto',
-  //         addressstate: 'Ontario',
-  //         addresscountry: 'Canada',
-  //         addresspincode: 'M5V 2B6',
-  //         signature:
-  //           'https://static.vecteezy.com/system/resources/previews/025/866/358/non_2x/fake-autograph-samples-hand-drawn-signatures-examples-of-documents-certificates-and-contracts-with-inked-and-handwritten-lettering-vector.jpg',
-  //         photo:
-  //           'https://www.biowritingservice.com/wp-content/themes/tuborg/images/Executive%20Bio%20Sample%20Photo.png',
-  //         // signature and photograph will be handled separately
-  //       },
-  //       {
-  //         nameoftheauthorisedsignatory: 'Alice Johnson',
-  //         fathersname: 'Robert Johnson',
-  //         proofofidentity: 'Passport',
-  //         proofofaddress: 'Utility Bill',
-  //         addressline: '123 Baker Street',
-  //         addresscity: 'London',
-  //         addressstate: 'Greater London',
-  //         addresscountry: 'United Kingdom',
-  //         addresspincode: 'NW1 6XE',
-  //         signature:
-  //           'https://static.vecteezy.com/system/resources/previews/025/866/358/non_2x/fake-autograph-samples-hand-drawn-signatures-examples-of-documents-certificates-and-contracts-with-inked-and-handwritten-lettering-vector.jpg',
-  //         photo:
-  //           'https://www.biowritingservice.com/wp-content/themes/tuborg/images/Executive%20Bio%20Sample%20Photo.png',
-  //         // signature and photograph will be handled separately
-  //       },
-  //       {
-  //         nameoftheauthorisedsignatory: 'Bob Smith',
-  //         fathersname: 'Edward Smith',
-  //         proofofidentity: "Driver's License",
-  //         proofofaddress: 'Bank Statement',
-  //         addressline: '456 Queen Street',
-  //         addresscity: 'Toronto',
-  //         addressstate: 'Ontario',
-  //         addresscountry: 'Canada',
-  //         addresspincode: 'M5V 2B6',
-  //         signature:
-  //           'https://static.vecteezy.com/system/resources/previews/025/866/358/non_2x/fake-autograph-samples-hand-drawn-signatures-examples-of-documents-certificates-and-contracts-with-inked-and-handwritten-lettering-vector.jpg',
-  //         photo:
-  //           'https://images.pexels.com/photos/1222271/pexels-photo-1222271.jpeg?cs=srgb&dl=pexels-justin-shaifer-501272-1222271.jpg&fm=jpg',
-  //         // signature and photograph will be handled separately
-  //       },
-  //       {
-  //         nameoftheauthorisedsignatory: 'Alice Johnson',
-  //         fathersname: 'Robert Johnson',
-  //         proofofidentity: 'Passport',
-  //         proofofaddress: 'Utility Bill',
-  //         addressline: '123 Baker Street',
-  //         addresscity: 'London',
-  //         addressstate: 'Greater London',
-  //         addresscountry: 'United Kingdom',
-  //         addresspincode: 'NW1 6XE',
-  //         signature:
-  //           'https://static.vecteezy.com/system/resources/previews/025/866/358/non_2x/fake-autograph-samples-hand-drawn-signatures-examples-of-documents-certificates-and-contracts-with-inked-and-handwritten-lettering-vector.jpg',
-  //         photo:
-  //           'https://images.unsplash.com/photo-1544005313-94ddf0286df2?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8cGVyc29ufGVufDB8fDB8fHww',
-  //         // signature and photograph will be handled separately
-  //       },
-  //       {
-  //         nameoftheauthorisedsignatory: 'Bob Smith',
-  //         fathersname: 'Edward Smith',
-  //         proofofidentity: "Driver's License",
-  //         proofofaddress: 'Bank Statement',
-  //         addressline: '456 Queen Street',
-  //         addresscity: 'Toronto',
-  //         addressstate: 'Ontario',
-  //         addresscountry: 'Canada',
-  //         addresspincode: 'M5V 2B6',
-  //         signature:
-  //           'https://static.vecteezy.com/system/resources/previews/025/866/358/non_2x/fake-autograph-samples-hand-drawn-signatures-examples-of-documents-certificates-and-contracts-with-inked-and-handwritten-lettering-vector.jpg',
-  //         photo:
-  //           'https://www.biowritingservice.com/wp-content/themes/tuborg/images/Executive%20Bio%20Sample%20Photo.png',
-  //         // signature and photograph will be handled separately
-  //       },
-  //     ],
-  //   },
-  //   originalData: {
-  //     _id: '67f63f970345d33252eb1858',
-  //     entityId: 'ebitaus123-123456789-09042025',
-  //     bankName: 'HDFC Bank',
-  //     entityName: 'EBITAUS PRIVATE LIMITED',
-  //     reason: 'Re-KYC',
-  //     entityType: 'Private',
-  //     entityFilledBy: 'ebitaus123-123456789-09042025-OTHER',
-  //     entityDetails: {
-  //       cin: {
-  //         cinNumber: 'U62099TN2023PTC158659',
-  //         isVerified: false,
-  //         verifiedSource: 'Protean',
-  //         timestamp: '2025-04-09T17:58:18.204Z',
-  //       },
-  //       gstin: {
-  //         gstinNumber: '33AAHCE4484E1ZQ',
-  //         isVerified: true,
-  //         verifiedSource: 'API Sethu',
-  //         timestamp: '2025-04-09T12:43:02.396Z',
-  //       },
-  //       pan: {
-  //         panNumber: 'AAHC1885M',
-  //         isVerified: true,
-  //         verifiedSource: 'OpenAI',
-  //         timestamp: '2025-04-09T11:45:29.994Z',
-  //       },
-  //       iec: {
-  //         iecNumber: '',
-  //         isVerified: false,
-  //         verifiedSource: '',
-  //         timestamp: '',
-  //       },
-  //       businessType: '',
-  //       natureOfIndustry: '',
-  //       dateOfIncorporation: '',
-  //       annualTurnover: '',
-  //       employeeCount: 0,
-  //       importExport: false,
-  //       status: 'in-progress',
-  //       entityType: 'Private',
-  //       subCategory: 'pubPvtLtdCompany: Financial Services Company',
-  //       selfEmployeedProfessional: '',
-  //       natureOfBusiness: 'Real Estate',
-  //       natureOfIndustry: 'Engineering Goods',
-  //       documents: {
-  //         entityDocs: [
-  //           {
-  //             type: 'PAN',
-  //             fileName: 'Screenshot 2025-04-09 161525.png',
-  //             fileType: 'image/png',
-  //             url: '/uploads\\ebitaus123-123456789-09042025\\entityPan/Screenshot 2025-04-09 161525.png',
-  //             isVerified: false,
-  //             verifiedSource: '',
-  //             timestamp: '2025-04-09T11:45:19.063Z',
-  //           },
-  //           {
-  //             type: 'GSTIN',
-  //             fileName: 'Screenshot 2025-04-09 123904.png',
-  //             fileType: 'image/png',
-  //             url: '/uploads\\ebitaus123-123456789-09042025\\entityGstin/Screenshot 2025-04-09 123904.png',
-  //             isVerified: true,
-  //             verifiedSource: 'Protean',
-  //             timestamp: '2025-04-09T12:42:52.594Z',
-  //           },
-  //           {
-  //             type: 'MOM',
-  //             fileName: 'GEPL-MOA-and-AOA-August.pdf',
-  //             fileType: 'application/pdf',
-  //             url: '/uploads\\ebitaus123-123456789-09042025\\entityDocs/GEPL-MOA-and-AOA-August.pdf',
-  //             isVerified: false,
-  //             verifiedSource: '',
-  //             timestamp: '2025-04-10T09:19:04.969Z',
-  //           },
-  //         ],
-  //         entityProofs: [
-  //           {
-  //             type: 'COI',
-  //             fileName: 'Ebitaus P Ltd - Certificate of Incorporation.pdf',
-  //             fileType: 'application/pdf',
-  //             url: '/uploads\\ebitaus123-123456789-09042025\\entityProofs/Ebitaus P Ltd - Certificate of Incorporation.pdf',
-  //             isVerified: false,
-  //             verifiedSource: '',
-  //             timestamp: '2025-04-09T17:57:57.397Z',
-  //           },
-  //           {
-  //             type: 'MOA',
-  //             fileName: 'GEPL-MOA-and-AOA-August.pdf',
-  //             fileType: 'application/pdf',
-  //             url: '/uploads\\ebitaus123-123456789-09042025\\entityProofs/GEPL-MOA-and-AOA-August.pdf',
-  //             isVerified: false,
-  //             verifiedSource: '',
-  //             timestamp: '2025-04-10T09:39:48.696Z',
-  //           },
-  //           {
-  //             type: 'AOA',
-  //             fileName: 'Tata Communications - MoA-AoA-Amended.pdf',
-  //             fileType: 'application/pdf',
-  //             url: '/uploads\\ebitaus123-123456789-09042025\\entityProofs/Tata Communications - MoA-AoA-Amended.pdf',
-  //             isVerified: false,
-  //             verifiedSource: '',
-  //             timestamp: '2025-04-10T04:59:03.735Z',
-  //           },
-  //         ],
-  //         entityAddressProof: {
-  //           type: 'addressProof',
-  //           fileName: 'Hathway.pdf',
-  //           fileType: 'application/pdf',
-  //           url: '/uploads\\ebitaus123-123456789-09042025\\entityAddressProofs/Hathway.pdf',
-  //           isVerified: true,
-  //           verifiedSource: 'Internal',
-  //           timestamp: '2025-04-11T05:48:39.666Z',
-  //         },
-  //         form32: {
-  //           type: 'form32',
-  //           fileName: 'form32.pdf',
-  //           fileType: 'application/pdf',
-  //           url: '/uploads\\ebitaus123-123456789-09042025\\form32/form32.pdf',
-  //           isVerified: false,
-  //           verifiedSource: '',
-  //           timestamp: '2025-04-10T11:46:09.113Z',
-  //         },
-  //       },
-  //       registeredOfficeAddress: {
-  //         buildingName: 'PM Towers',
-  //         street: 'Greams Road, Thousand Lights',
-  //         city: 'Chennai',
-  //         state: 'Tamil Nadu',
-  //         country: 'India',
-  //         pin: '600006',
-  //         landline: '',
-  //         mobile: '9786190876',
-  //         email: 'kumar.nagaraji@ebitaus.com',
-  //         ownership: '',
-  //       },
-  //     },
-  //     authorizedSignatoriesDetails: [
-  //       {
-  //         ausId: 'ebitaus123-123456789-09042025-AUS1',
-  //         name: 'Harichandana',
-  //         email: 'harichandana.vegesna@ebitaus.com',
-  //         emailLink:
-  //           'http://localhost:4020/rekyc/customer/eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiJlYml0YXVzMTIzLTEyMzQ1Njc4OS0wOTA0MjAyNSIsImNvbXBhbnlOYW1lIjoiRWJpdGF1czEyMyIsImN1c3RJZCI6MTIzNDU2Nzg5LCJlbnRpdHlUeXBlIjoiUHJpdmF0ZSIsImlhdCI6MTc0NDE5MTM4MywiZXhwIjoxNzc1NzI3MzgzfQ.fTgp5B4oFlh8JOkJ156Immn9hYDf6_oCiLFLMdtuXzk',
-  //         isVerified: false,
-  //         status: 'pending',
-  //         isSigned: false,
-  //         personalDetails: {
-  //           name: 'Vegesna Harichandana',
-  //           fatherName: '',
-  //           dateOfBirth: '10/04/1996',
-  //           designation: '',
-  //           din: '',
-  //           companyEmail: '',
-  //           mobile: '',
-  //           address: '8-3-169/23 3rd FLOOR, SIDARTH NAGAR, MADHURA NAGAR, HYDERABAD',
-  //           documents: {
-  //             identityProof: {
-  //               type: 'identityProof',
-  //               fileName: 'Image.png',
-  //               fileType: 'image/png',
-  //               url: '/uploads\\ebitaus123-123456789-09042025\\ebitaus123-123456789-09042025-AUS1\\identityProof/Image.png',
-  //               isVerified: true,
-  //               verifiedSource: 'Internal',
-  //               timestamp: '2025-04-11T10:50:07.826Z',
-  //             },
-  //             photograph: {
-  //               type: 'photograph',
-  //               fileName: 'Screenshot 2025-04-11 172215.png',
-  //               fileType: 'image/png',
-  //               url: '/uploads/ebitaus123-123456789-09042025/ebitaus123-123456789-09042025-AUS1/photograph/Screenshot 2025-04-11 172215.png',
-  //               isVerified: false,
-  //               verifiedSource: '',
-  //               timestamp: '2025-04-15T05:47:46.324Z',
-  //             },
-  //             signature: {
-  //               type: 'signature',
-  //               fileName: 'Screenshot 2025-04-11 172310.png',
-  //               fileType: 'image/png',
-  //               url: '/uploads\\ebitaus123-123456789-09042025\\ebitaus123-123456789-09042025-AUS1\\signature/Screenshot 2025-04-11 172310.png',
-  //               isVerified: false,
-  //               verifiedSource: '',
-  //               timestamp: '2025-04-11T12:02:07.177Z',
-  //             },
-  //             addressProof: {
-  //               type: 'addressProof',
-  //               fileName: 'Image4.png',
-  //               fileType: 'image/png',
-  //               url: '/uploads\\ebitaus123-123456789-09042025\\ebitaus123-123456789-09042025-AUS1\\addressProof/Image4.png',
-  //               isVerified: true,
-  //               verifiedSource: 'Internal',
-  //               timestamp: '2025-04-11T12:31:46.488Z',
-  //             },
-  //           },
-  //         },
-  //       },
-  //     ],
-  //     directorDetails: [
-  //       {
-  //         din: '10061417',
-  //         directorName: 'PITCHAI VENKATESH',
-  //         directorEmail: '',
-  //         mailUrl: '',
-  //         isSigned: false,
-  //         status: 'active',
-  //       },
-  //       {
-  //         din: '10099999',
-  //         directorName: '.KOKIL',
-  //         directorEmail: '',
-  //         mailUrl: '',
-  //         isSigned: false,
-  //         status: 'active',
-  //       },
-  //     ],
-  //     boDetails: [
-  //       {
-  //         boName: 'Rajeev Sharma',
-  //         addressLine: 'Flat No 101, Green Residency',
-  //         city: 'Hyderabad',
-  //         state: 'Telangana',
-  //         country: 'India',
-  //         pin: '500032',
-  //       },
-  //       {
-  //         boName: 'Vikram Rao',
-  //         addressLine: 'A-24, Sector 3',
-  //         city: 'Noida',
-  //         state: 'Uttar Pradesh',
-  //         country: 'India',
-  //         pin: '201301',
-  //       },
-  //     ],
-  //     businessDetails: {
-  //       detailsOfActivity: 'FinTech',
-  //       dateOfIncorporation: '30/03/20253',
-  //       annualTurnOverFigures: '10,00,00,000',
-  //       annualTurnOverWords: '10 Crores',
-  //       involvedIn: 'Import',
-  //     },
-  //     entityProofDeclaration: {
-  //       entityProof1: 'Certificate of Incorporation',
-  //       entityProof2: 'MOA (Memorandum of Association) ',
-  //       addressProof: 'Electricity Bill',
-  //       identityProof: 'PAN',
-  //       date: '18/4/25',
-  //     },
-  //     extendedAnnexure: {
-  //       basicDetails: {
-  //         date: '18/04/25',
-  //         aofNo: 'AFO1234',
-  //         nameOfEntity: 'Ebitaus',
-  //         custId: 'CUS1234',
-  //       },
-  //       docEntity: {
-  //         coi: 'COI1234',
-  //         rc: '',
-  //         td: '',
-  //         moa_aoa: true,
-  //       },
-  //       mailAddress: {
-  //         coi: 'COI1234',
-  //         rc: '',
-  //         other: 'Pan Doc',
-  //       },
-  //     },
-  //     boDetails: [
-  //       {
-  //         boName: 'Rajeev Sharma',
-  //         addressLine: 'Flat No 101, Green Residency',
-  //         city: 'Hyderabad',
-  //         state: 'Telangana',
-  //         country: 'India',
-  //         pin: '500032',
-  //       },
-  //       {
-  //         boName: 'Vikram Rao',
-  //         addressLine: 'A-24, Sector 3',
-  //         city: 'Noida',
-  //         state: 'Uttar Pradesh',
-  //         country: 'India',
-  //         pin: '201301',
-  //       },
-  //       {
-  //         boName: 'Rajeev Sharma',
-  //         addressLine: 'Flat No 101, Green Residency',
-  //         city: 'Hyderabad',
-  //         state: 'Telangana',
-  //         country: 'India',
-  //         pin: '500032',
-  //       },
-  //       {
-  //         boName: 'Vikram Rao',
-  //         addressLine: 'A-24, Sector 3',
-  //         city: 'Noida',
-  //         state: 'Uttar Pradesh',
-  //         country: 'India',
-  //         pin: '201301',
-  //       },
-  //     ],
-  //     ausData: [
-  //       {
-  //         nameoftheauthorisedsignatory: 'Alice Johnson',
-  //         fathersname: 'Robert Johnson',
-  //         proofofidentity: 'Passport',
-  //         proofofaddress: 'Utility Bill',
-  //         addressline: '123 Baker Street',
-  //         addresscity: 'London',
-  //         addressstate: 'Greater London',
-  //         addresscountry: 'United Kingdom',
-  //         addresspincode: 'NW1 6XE',
-  //         signature:
-  //           'https://static.vecteezy.com/system/resources/previews/025/866/358/non_2x/fake-autograph-samples-hand-drawn-signatures-examples-of-documents-certificates-and-contracts-with-inked-and-handwritten-lettering-vector.jpg',
-  //         photo:
-  //           'https://www.biowritingservice.com/wp-content/themes/tuborg/images/Executive%20Bio%20Sample%20Photo.png',
-  //         // signature and photograph will be handled separately
-  //       },
-  //       {
-  //         nameoftheauthorisedsignatory: 'Bob Smith',
-  //         fathersname: 'Edward Smith',
-  //         proofofidentity: "Driver's License",
-  //         proofofaddress: 'Bank Statement',
-  //         addressline: '456 Queen Street',
-  //         addresscity: 'Toronto',
-  //         addressstate: 'Ontario',
-  //         addresscountry: 'Canada',
-  //         addresspincode: 'M5V 2B6',
-  //         signature:
-  //           'https://static.vecteezy.com/system/resources/previews/025/866/358/non_2x/fake-autograph-samples-hand-drawn-signatures-examples-of-documents-certificates-and-contracts-with-inked-and-handwritten-lettering-vector.jpg',
-  //         photo:
-  //           'https://images.pexels.com/photos/1222271/pexels-photo-1222271.jpeg?cs=srgb&dl=pexels-justin-shaifer-501272-1222271.jpg&fm=jpg',
-  //         // signature and photograph will be handled separately
-  //       },
-  //       {
-  //         nameoftheauthorisedsignatory: 'Alice Johnson',
-  //         fathersname: 'Robert Johnson',
-  //         proofofidentity: 'Passport',
-  //         proofofaddress: 'Utility Bill',
-  //         addressline: '123 Baker Street',
-  //         addresscity: 'London',
-  //         addressstate: 'Greater London',
-  //         addresscountry: 'United Kingdom',
-  //         addresspincode: 'NW1 6XE',
-  //         signature:
-  //           'https://static.vecteezy.com/system/resources/previews/025/866/358/non_2x/fake-autograph-samples-hand-drawn-signatures-examples-of-documents-certificates-and-contracts-with-inked-and-handwritten-lettering-vector.jpg',
-  //         photo:
-  //           'https://images.unsplash.com/photo-1544005313-94ddf0286df2?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8cGVyc29ufGVufDB8fDB8fHww',
-  //         // signature and photograph will be handled separately
-  //       },
-  //       {
-  //         nameoftheauthorisedsignatory: 'Bob Smith',
-  //         fathersname: 'Edward Smith',
-  //         proofofidentity: "Driver's License",
-  //         proofofaddress: 'Bank Statement',
-  //         addressline: '456 Queen Street',
-  //         addresscity: 'Toronto',
-  //         addressstate: 'Ontario',
-  //         addresscountry: 'Canada',
-  //         addresspincode: 'M5V 2B6',
-  //         signature:
-  //           'https://static.vecteezy.com/system/resources/previews/025/866/358/non_2x/fake-autograph-samples-hand-drawn-signatures-examples-of-documents-certificates-and-contracts-with-inked-and-handwritten-lettering-vector.jpg',
-  //         photo:
-  //           'https://www.biowritingservice.com/wp-content/themes/tuborg/images/Executive%20Bio%20Sample%20Photo.png',
-  //         // signature and photograph will be handled separately
-  //       },
-  //       {
-  //         nameoftheauthorisedsignatory: 'Alice Johnson',
-  //         fathersname: 'Robert Johnson',
-  //         proofofidentity: 'Passport',
-  //         proofofaddress: 'Utility Bill',
-  //         addressline: '123 Baker Street',
-  //         addresscity: 'London',
-  //         addressstate: 'Greater London',
-  //         addresscountry: 'United Kingdom',
-  //         addresspincode: 'NW1 6XE',
-  //         signature:
-  //           'https://static.vecteezy.com/system/resources/previews/025/866/358/non_2x/fake-autograph-samples-hand-drawn-signatures-examples-of-documents-certificates-and-contracts-with-inked-and-handwritten-lettering-vector.jpg',
-  //         photo:
-  //           'https://www.biowritingservice.com/wp-content/themes/tuborg/images/Executive%20Bio%20Sample%20Photo.png',
-  //         // signature and photograph will be handled separately
-  //       },
-  //       {
-  //         nameoftheauthorisedsignatory: 'Bob Smith',
-  //         fathersname: 'Edward Smith',
-  //         proofofidentity: "Driver's License",
-  //         proofofaddress: 'Bank Statement',
-  //         addressline: '456 Queen Street',
-  //         addresscity: 'Toronto',
-  //         addressstate: 'Ontario',
-  //         addresscountry: 'Canada',
-  //         addresspincode: 'M5V 2B6',
-  //         signature:
-  //           'https://static.vecteezy.com/system/resources/previews/025/866/358/non_2x/fake-autograph-samples-hand-drawn-signatures-examples-of-documents-certificates-and-contracts-with-inked-and-handwritten-lettering-vector.jpg',
-  //         photo:
-  //           'https://images.pexels.com/photos/1222271/pexels-photo-1222271.jpeg?cs=srgb&dl=pexels-justin-shaifer-501272-1222271.jpg&fm=jpg',
-  //         // signature and photograph will be handled separately
-  //       },
-  //       {
-  //         nameoftheauthorisedsignatory: 'Alice Johnson',
-  //         fathersname: 'Robert Johnson',
-  //         proofofidentity: 'Passport',
-  //         proofofaddress: 'Utility Bill',
-  //         addressline: '123 Baker Street',
-  //         addresscity: 'London',
-  //         addressstate: 'Greater London',
-  //         addresscountry: 'United Kingdom',
-  //         addresspincode: 'NW1 6XE',
-  //         signature:
-  //           'https://static.vecteezy.com/system/resources/previews/025/866/358/non_2x/fake-autograph-samples-hand-drawn-signatures-examples-of-documents-certificates-and-contracts-with-inked-and-handwritten-lettering-vector.jpg',
-  //         photo:
-  //           'https://images.unsplash.com/photo-1544005313-94ddf0286df2?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8cGVyc29ufGVufDB8fDB8fHww',
-  //         // signature and photograph will be handled separately
-  //       },
-  //       {
-  //         nameoftheauthorisedsignatory: 'Bob Smith',
-  //         fathersname: 'Edward Smith',
-  //         proofofidentity: "Driver's License",
-  //         proofofaddress: 'Bank Statement',
-  //         addressline: '456 Queen Street',
-  //         addresscity: 'Toronto',
-  //         addressstate: 'Ontario',
-  //         addresscountry: 'Canada',
-  //         addresspincode: 'M5V 2B6',
-  //         signature:
-  //           'https://static.vecteezy.com/system/resources/previews/025/866/358/non_2x/fake-autograph-samples-hand-drawn-signatures-examples-of-documents-certificates-and-contracts-with-inked-and-handwritten-lettering-vector.jpg',
-  //         photo:
-  //           'https://www.biowritingservice.com/wp-content/themes/tuborg/images/Executive%20Bio%20Sample%20Photo.png',
-  //         // signature and photograph will be handled separately
-  //       },
-  //     ],
-  //   },
-  // };
-}
-
 function entityBasicInfo() {
+  if (!data) data = {};
+  if (!data.originalData) data.originalData = {};
+
   const entityCustId = document.getElementById('entityCustId');
   const entityName = document.getElementById('entityName');
   const entityPan = document.getElementById('entityPan');
 
-  // Pre-fill the form with existing data
-
-  console.log('data check', data);
-
-  entityCustId.value = data?.editedData?.entityCustId || '';
+  entityCustId.value = data.originalData.entityCustId || '';
   entityCustId.autofocus = true;
-  entityName.value = data?.editedData?.entityName || '';
-  entityPan.value = data?.editedData?.entityDetails?.pan?.panNumber || '';
+  entityName.value = data.originalData.entityName || '';
+  entityPan.value = data.originalData.entityDetails?.pan?.panNumber || '';
 
   entityCustId.oninput = (e) => {
-    data.editedData.entityCustId = e.target.value.trim();
+    data.originalData.entityCustId = e.target.value.trim();
   };
 
   entityName.oninput = (e) => {
-    data.editedData.entityName = e.target.value.trim();
+    data.originalData.entityName = e.target.value.trim();
   };
 
   entityPan.oninput = (e) => {
-    if (!data.editedData.entityDetails) data.editedData.entityDetails = {};
-    if (!data.editedData.entityDetails.pan) data.editedData.entityDetails.pan = {};
+    if (!data.originalData.entityDetails) data.originalData.entityDetails = {};
+    if (!data.originalData.entityDetails.pan) data.originalData.entityDetails.pan = {};
 
-    data.editedData.entityDetails.pan.panNumber = e.target.value.trim();
+    data.originalData.entityDetails.pan.panNumber = e.target.value.trim();
   };
+
+  const date = document.getElementById('date-input');
+  if (date) {
+    const today = new Date();
+    const day = String(today.getDate()).padStart(2, '0');
+    const month = String(today.getMonth() + 1).padStart(2, '0');
+    const year = today.getFullYear();
+
+    date.value = `${day}-${month}-${year}`;
+    date.readOnly = true;
+  }
 }
 
 function entityMailingAddress() {
-  if (!data.editedData.entityDetails.entityMailingAddress) {
+  if (data?.editedData?.entityDetails?.entityMailingAddress === undefined) {
+    // Ensure that editedData and entityDetails are also defined before assigning an empty object to entityMailingAddress
+    if (!data.editedData) {
+      data.editedData = {};
+    }
+
+    if (!data.editedData.entityDetails) {
+      data.editedData.entityDetails = {};
+    }
+
     data.editedData.entityDetails.entityMailingAddress = {};
   }
 
-  const mailingAddress = data.editedData.entityDetails.entityMailingAddress;
+  const mailingAddress = data?.editedData.entityDetails.entityMailingAddress;
 
   // Checkbox elements
   const noChangeCheckbox = document.getElementById('noChangeInEmailAddress');
@@ -1028,7 +138,7 @@ function entityMailingAddress() {
 }
 
 function entityRegisteredAddress() {
-  const entityDetails = data.editedData.entityDetails;
+  const entityDetails = data?.editedData.entityDetails;
 
   // Ensure entityRegisteredAddress exists
   if (!entityDetails.entityRegisteredAddress) {
@@ -1145,7 +255,7 @@ function entityType() {
     { id: 'trust', label: 'Trust' },
   ];
 
-  const selectedLabel = data.editedData.entityType;
+  const selectedLabel = data?.editedData.entityType;
   const selector = '#entity-type .checkbox_container';
   const container = document.querySelector(selector);
   container.innerHTML = '';
@@ -1215,7 +325,7 @@ function entitySubCategory() {
   if (!container) return;
 
   const allCheckboxes = container.querySelectorAll('.checkbox_wrapper input[type="checkbox"]');
-  const preSelected = data.editedData?.entityDetails?.subCategory || '';
+  const preSelected = data?.editedData?.entityDetails?.subCategory || '';
   const [categoryRaw, valueRaw] = preSelected.split(':').map((s) => s.trim());
   const isOther = categoryRaw.includes('-others');
   const baseCategory = isOther ? categoryRaw.replace('-others', '') : categoryRaw;
@@ -1298,7 +408,7 @@ function selfEmployedProfessional() {
   const allCheckboxes = container.querySelectorAll('.checkbox_wrapper input[type="checkbox"]');
   const allTextInputs = container.querySelectorAll('.checkbox_wrapper input[type="text"]');
 
-  const preSelected = data.editedData?.entityDetails?.selfEmployeedProfessional || '';
+  const preSelected = data?.editedData?.entityDetails?.selfEmployeedProfessional || '';
 
   // Reset initially
   allCheckboxes.forEach((cb) => (cb.checked = false));
@@ -1364,7 +474,7 @@ function natureOfBusiness() {
   const allCheckboxes = container.querySelectorAll('.checkbox_wrapper input[type="checkbox"]');
   const allTextInputs = container.querySelectorAll('.checkbox_wrapper input[type="text"]');
 
-  const preSelected = data.editedData?.entityDetails?.natureOfBusiness || '';
+  const preSelected = data?.editedData?.entityDetails?.natureOfBusiness || '';
 
   // Reset all checkboxes and inputs
   allCheckboxes.forEach((cb) => (cb.checked = false));
@@ -1442,7 +552,7 @@ function businessDetails() {
   const exportCheckbox = section.querySelector('#export');
 
   // Pre-fill if any data exists
-  const dataSet = data.editedData?.businessDetails || {};
+  const dataSet = data?.editedData?.businessDetails || {};
 
   detailsOfActivityInput.value = dataSet.detailsOfActivity || '';
   dateOfIncorporationInput.value = dataSet.dateOfIncorporation || '';
@@ -1537,7 +647,7 @@ function natureOfIndustry() {
   ];
 
   const container = document.querySelector('#nature-of-industry .checkbox_container');
-  const selectedValue = data.editedData?.entityDetails?.natureOfIndustry || '';
+  const selectedValue = data?.editedData?.entityDetails?.natureOfIndustry || '';
   let othersInput = null;
 
   labels.forEach((label, i) => {
@@ -1635,7 +745,7 @@ function entityProofDeclaration() {
     addressProof = '',
     identityProof = '',
     date = '',
-  } = data.editedData?.entityProofDeclaration || {};
+  } = data?.editedData?.entityProofDeclaration || {};
 
   // Prefill values
   inputs[0].value = entityProof1;
@@ -1667,7 +777,7 @@ function entityProofDeclaration() {
 }
 
 function extendedAnnexure() {
-  const extended = data.editedData.extendedAnnexure || {
+  const extended = data?.editedData.extendedAnnexure || {
     basicDetails: {},
     docEntity: {},
     mailAddress: {},
@@ -1753,7 +863,7 @@ function extendedAnnexure() {
 }
 
 function boDetailsTable() {
-  const boDetails = data.editedData.boDetails; // Assuming data.boDetails contains the details
+  const boDetails = data?.editedData?.boDetails; // Assuming data.boDetails contains the details
   const container = document.querySelector('#extended-annexure');
   const detailsContainer = document.querySelector('.bo_details');
   const boContainer = document.createElement('div');
