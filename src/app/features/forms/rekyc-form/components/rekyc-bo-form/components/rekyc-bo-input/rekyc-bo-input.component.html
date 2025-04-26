@@ -20,9 +20,9 @@
               <ui-input
                 type="text"
                 label="Name of the Beneficiary Owner"
-                formControlName="name"
+                formControlName="boName"
                 class="w-full"
-                (valueChange)="updateBoDetail(i, 'name', $event)"
+                (valueChange)="updateBoDetail(i, 'boName', $event)"
               />
               <span
                 *ngIf="
@@ -130,13 +130,12 @@
                   type="number"
                   label="Pin Code"
                   [maxlength]="6"
-                  formControlName="pincode"
-                  (valueChange)="updateBoDetail(i, 'pincode', $event)"
+                  formControlName="pin"
+                  (valueChange)="updateBoDetail(i, 'pin', $event)"
                 />
                 <span
                   *ngIf="
-                    group.get('pincode')?.errors?.['required'] &&
-                    isFormSubmitted()
+                    group.get('pin')?.errors?.['required'] && isFormSubmitted()
                   "
                   class="error-msg"
                 >

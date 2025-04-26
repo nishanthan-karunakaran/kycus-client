@@ -1,4 +1,10 @@
-import { ChangeDetectionStrategy, Component, OnInit, signal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  OnInit,
+  signal,
+} from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { AbstractControl, FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ApiStatus } from '@core/constants/api.response';
@@ -10,6 +16,7 @@ import { updateRekycStepStatus } from '@features/forms/rekyc-form/store/rekyc-fo
 import { selectRekycStepStatus } from '@features/forms/rekyc-form/store/rekyc-form.selectors';
 import { Store } from '@ngrx/store';
 import { ToastService } from '@src/app/shared/ui/toast/toast.service';
+import { selectEntityInfo } from '@features/forms/rekyc-form/components/entity-filledby/store/entity-info.selectors';
 
 @Component({
   selector: 'rekyc-bo-input',
@@ -22,6 +29,7 @@ export class RekycBoInputComponent implements OnInit {
   });
   isLoading = signal(false);
   readonly ausInfo = toSignal(this.store.select(selectAusInfo));
+  readonly entityInfo = toSignal(this.store.select(selectEntityInfo));
   readonly formStepStatus = toSignal(this.store.select(selectRekycStepStatus));
   isFormSubmitted = signal(false);
 
@@ -31,18 +39,20 @@ export class RekycBoInputComponent implements OnInit {
     private rekycFormService: RekycFormService,
     private toast: ToastService,
     private store: Store,
+    private cdr: ChangeDetectorRef,
   ) {}
 
   ngOnInit() {
+    this.getBODetails();
     // Add two initial BO entries
-    this.addBoDetail();
-    this.addBoDetail();
+    //   this.addBoDetail();
+    //   this.addBoDetail();
   }
 
   trackBO(index: number, group: AbstractControl): number | string {
-    const id = group.get('id')?.value;
+    const boId = group.get('boId')?.value;
     // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-    return id ?? index; // If `id` is `null` or `undefined`, fall back to `index`
+    return boId ?? index; // If `id` is `null` or `undefined`, fall back to `index`
   }
 
   get boDetails(): FormArray {
@@ -58,13 +68,13 @@ export class RekycBoInputComponent implements OnInit {
 
   createBoDetail(): FormGroup {
     return this.fb.group({
-      id: [crypto.randomUUID()],
-      name: ['', Validators.required],
+      boId: [crypto.randomUUID()],
+      boName: ['', Validators.required],
       addressLine: ['', Validators.required],
       city: ['', Validators.required],
       state: ['', Validators.required],
       country: ['', Validators.required],
-      pincode: ['', [Validators.required, Validators.pattern(/^\d{6}$/)]],
+      pin: ['', [Validators.required, Validators.pattern(/^\d{6}$/)]],
     });
   }
 
@@ -77,6 +87,25 @@ export class RekycBoInputComponent implements OnInit {
 
   addBoDetail() {
     this.boDetails.push(this.createBoDetail());
+  }
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  addBOFromData(data: any) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    data.forEach((bo: any) => {
+      this.boDetails.push(
+        this.fb.group({
+          boId: [bo.boId],
+          boName: [bo.boName, Validators.required],
+          addressLine: [bo.addressLine, Validators.required],
+          city: [bo.city, Validators.required],
+          state: [bo.state, Validators.required],
+          country: [bo.country, Validators.required],
+          pin: [bo.pin, [Validators.required, Validators.pattern(/^\d{6}$/)]],
+        }),
+      );
+    });
+    this.cdr.markForCheck();
   }
 
   removeBoDetail(index: number): void {
@@ -115,5 +144,39 @@ export class RekycBoInputComponent implements OnInit {
         },
       });
     }
+  }
+
+  getBODetails() {
+    const entityId = this.entityInfo()?.entityId as string;
+
+    this.boService.getBODetails(entityId).subscribe({
+      next: (result) => {
+        const { loading, response } = result;
+
+        // if (!response) return;
+
+        // Add logging to check the data structure
+        // eslint-disable-next-line no-console
+        console.log('Response:', response);
+        // eslint-disable-next-line no-console
+        console.log('Loading:', loading);
+
+        if (!loading && response) {
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          const { status, data } = response as any;
+
+          if (status === ApiStatus.SUCCESS) {
+            if (data.length > 0) {
+              this.addBOFromData(data);
+            } else {
+              // Add two initial BO entries
+              this.addBoDetail();
+              this.addBoDetail();
+              this.cdr.markForCheck();
+            }
+          }
+        }
+      },
+    });
   }
 }

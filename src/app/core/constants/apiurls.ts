@@ -33,7 +33,10 @@ export const API_URL = {
           DIRECTORS: '/kycus/rekyc/declaration/directors',
           SAVE_DRAFT: '/kycus/rekyc/declaration/directors',
         },
-        BO: '/kycus/rekyc/declaration/beneficiaryOwner',
+        BO: {
+          SAVE: '/kycus/rekyc/declaration/beneficiaryOwner',
+          GET: (entityId: string) => `/kycus/rekyc/boDetails?entityId=${entityId}`,
+        },
       },
       PERSONAL_FORM: {
         PERSONAL_DOCS_UPLOAD: '/kycus/rekyc/ausDocs/uploads',
