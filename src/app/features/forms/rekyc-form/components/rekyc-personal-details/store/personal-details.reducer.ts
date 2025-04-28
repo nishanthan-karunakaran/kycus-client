@@ -16,7 +16,7 @@ export interface AusInfoState {
 }
 
 export const initialAusInfoState: AusInfoState = {
-  ausId: 'jlnpvtltd-CUS62099-21042025-AUS3',
+  ausId: 'ebitaus-CUS62099-26042025-AUS3',
   ausName: 'Nishanthan',
   ausEmail: 'nishanthan.karunakaran@ebitaus.com',
   ausType: 'aus',

@@ -41,10 +41,7 @@ export class RekycKycFormService {
     return this.api.get(API_URL.APPLICATION.REKYC.REKYC_FORM.GET(entityId));
   }
 
-  savePDF(data: any) {
-    return this.api.put(
-      API_URL.APPLICATION.REKYC.REKYC_FORM.PUT('ebitaus-CUS1234567-15042025'),
-      data,
-    );
+  savePDF(data: any, entityId: string) {
+    return this.api.put(API_URL.APPLICATION.REKYC.REKYC_FORM.PUT(entityId), data);
   }
 }

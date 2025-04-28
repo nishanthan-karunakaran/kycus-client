@@ -2,6 +2,7 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
+  computed,
   DoCheck,
   OnDestroy,
   OnInit,
@@ -57,8 +58,8 @@ export class RekycFormComponent implements OnInit, DoCheck, OnDestroy {
   applicationToken: string | null = null;
   readonly ausInfo = toSignal(this.store.select(selectAusInfo));
   readonly entityInfo = toSignal(this.store.select(selectEntityInfo));
-  // readonly isAuthenticated = computed(() => this.ausInfo()?.isAuthenticated);
-  readonly isAuthenticated = () => true;
+  readonly isAuthenticated = computed(() => this.ausInfo()?.isAuthenticated);
+  // readonly isAuthenticated = () => true;
   readonly formStatus = toSignal(this.store.select(selectRekycStatus));
   private destroy$ = new Subject<void>();
   readonly rekycFormStatus = toSignal(this.store.select(selectRekycFormStatus));

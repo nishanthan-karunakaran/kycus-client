@@ -32,6 +32,8 @@ export class RekycBoInputComponent implements OnInit {
   readonly entityInfo = toSignal(this.store.select(selectEntityInfo));
   readonly formStepStatus = toSignal(this.store.select(selectRekycStepStatus));
   isFormSubmitted = signal(false);
+  showDeleteConfimation = signal(false);
+  selectedBOToRemove = signal<number | null>(null);
 
   constructor(
     private fb: FormBuilder,
@@ -47,6 +49,20 @@ export class RekycBoInputComponent implements OnInit {
     // Add two initial BO entries
     //   this.addBoDetail();
     //   this.addBoDetail();
+  }
+
+  setSeletedBOToRemove(index: number) {
+    this.selectedBOToRemove.set(index);
+    this.handleShowDeleteConfirmation();
+  }
+
+  handleShowDeleteConfirmation(boIndex: number | null = null) {
+    if (boIndex) {
+      this.selectedBOToRemove.set(boIndex);
+    } else {
+      this.selectedBOToRemove.set(null);
+    }
+    this.showDeleteConfimation.set(!this.showDeleteConfimation());
   }
 
   trackBO(index: number, group: AbstractControl): number | string {
@@ -108,8 +124,13 @@ export class RekycBoInputComponent implements OnInit {
     this.cdr.markForCheck();
   }
 
-  removeBoDetail(index: number): void {
+  removeBoDetail(): void {
+    const index = this.selectedBOToRemove() as number;
     this.boDetails.removeAt(index);
+
+    // eslint-disable-next-line no-console
+    console.log('index', index);
+    this.handleShowDeleteConfirmation();
   }
 
   submit(action: 'save' | 'submit') {

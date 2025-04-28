@@ -149,8 +149,8 @@ export class RekycPersonalDetailsComponent implements OnInit, OnDestroy {
         filePatch.name = values.fileName;
       }
 
-      if ('fileLink' in values && values.fileLink) {
-        filePatch.link = values.fileLink;
+      if ('url' in values && values.url) {
+        filePatch.link = values.url;
       }
 
       if ('selectedType' in values && values.selectedType) {
@@ -378,6 +378,16 @@ export class RekycPersonalDetailsComponent implements OnInit, OnDestroy {
 
         if (status === ApiStatus.SUCCESS) {
           const { data } = response as { status: string; data: { documents: PersonalDetails } };
+
+          // const docs = Object.fromEntries(
+          //   Object.entries(data.documents).map(([key, value]) => [
+          //     key,
+          //     { ...value, link: value.url || null },
+          //   ]),
+          // );
+
+          // // eslint-disable-next-line no-console
+          // console.log('docs', docs);
 
           this.store.dispatch(updatePartialPersonalDetails({ partialData: data.documents }));
         }

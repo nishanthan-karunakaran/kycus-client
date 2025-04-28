@@ -8,7 +8,7 @@ export interface EntityInfoState {
 }
 
 export const initialEntityInfoState: EntityInfoState = {
-  entityId: 'jlnpvtltd-CUS62099-21042025',
+  entityId: 'ebitaus-CUS62099-26042025',
   entityName: 'JLN Pvt Ltd',
   entityFilledBy: null,
 };

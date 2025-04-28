@@ -10,6 +10,9 @@ import {
 import { ApiStatus } from '@core/constants/api.response';
 import { ToastService } from '@src/app/shared/ui/toast/toast.service';
 import { RekycKycFormService } from './rekyc-kyc-form.service';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { Store } from '@ngrx/store';
+import { selectEntityInfo } from '../entity-filledby/store/entity-info.selectors';
 
 @Component({
   selector: 'rekyc-kyc-form',
@@ -20,12 +23,14 @@ import { RekycKycFormService } from './rekyc-kyc-form.service';
 })
 export class RekycKycFormComponent implements OnInit {
   @ViewChild('pdfViewer', { static: false }) pdfViewer!: ElementRef<HTMLIFrameElement>;
+  readonly entityInfo = toSignal(this.store.select(selectEntityInfo));
   formData = signal({});
   private isDataSent = false; // Flag to track if data has been sent already
 
   constructor(
     private rekycKycFormService: RekycKycFormService,
     private toast: ToastService,
+    private store: Store,
   ) {}
 
   ngOnInit(): void {
@@ -56,7 +61,9 @@ export class RekycKycFormComponent implements OnInit {
   }
 
   fetchFormData() {
-    this.rekycKycFormService.fetchFormData('ebitaus-CUS1234567-15042025').subscribe({
+    const entityId = this.entityInfo()?.entityId as string;
+
+    this.rekycKycFormService.fetchFormData(entityId).subscribe({
       next: (result) => {
         const { response } = result;
 
@@ -79,6 +86,7 @@ export class RekycKycFormComponent implements OnInit {
   onSave() {
     const iframe = this.pdfViewer.nativeElement;
 
+    const entityId = this.entityInfo()?.entityId as string;
     const handleMessage = (event: MessageEvent) => {
       if (event.data?.type === 'SAVE_DATA' && event.data?.source === 'kyc-form') {
         this.formData.set(event.data.payload);
@@ -86,7 +94,7 @@ export class RekycKycFormComponent implements OnInit {
         // eslint-disable-next-line no-console
         console.log('saving data', this.formData());
 
-        this.rekycKycFormService.savePDF(this.formData()).subscribe({
+        this.rekycKycFormService.savePDF(this.formData(), entityId).subscribe({
           next: (result) => {
             const { response } = result;
 

@@ -303,19 +303,20 @@ export class EntityDetailsComponent implements OnInit, DoCheck, OnDestroy {
   uploadFileProof(type: EntityDetailsFileType, file: File): void {
     if (!file || !type) return;
 
-    const docType = type === 'addressProof' ? this.form.value.addressProof.file.selectedType : type;
-
-    const formData = new FormData();
-    formData.append('docType', docType);
-    formData.append('entityId', this.entityInfo()?.entityId);
-    formData.append('file', file);
-
     const fileGroup = this.form.get(`${type}.file`) as FormGroup;
     if (!fileGroup) {
       // eslint-disable-next-line no-console
       console.warn(`No form group found for type: ${type}`);
       return;
     }
+
+    // const docType = type === 'addressProof' ? this.form.value.addressProof.file.selectedType : type;
+
+    const formData = new FormData();
+    formData.append('entityId', this.entityInfo()?.entityId);
+    formData.append('file', file);
+    formData.append('docType', type);
+    formData.append('selectedType', fileGroup.get('selectedType')?.value);
 
     fileGroup.patchValue({
       name: file.name,
