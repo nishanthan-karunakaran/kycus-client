@@ -69,9 +69,7 @@ export class UploadButtonComponent implements OnChanges {
 
       // Check if the file type matches the accepted types
       if (!acceptedTypes.some((type) => file.name.endsWith(type))) {
-        this.toast.error(
-          `Invalid file type. Accepted types are: ${this.accept.replaceAll('.', ' ')}`,
-        );
+        this.toast.error(`Invalid file type. Accepted types: ${this.accept.replaceAll('.', ' ')}`);
         return;
       }
 

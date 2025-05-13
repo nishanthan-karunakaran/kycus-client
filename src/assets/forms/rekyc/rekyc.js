@@ -24,10 +24,10 @@ async function renderAll() {
   await extendedAnnexure();
   await boDetailsTable();
   await ausDetails();
-  await extendedDeclaration();
-  await fatcaCRS();
-  await annexure1();
-  await annexure2();
+  // await extendedDeclaration();
+  // await fatcaCRS();
+  // await annexure1();
+  // await annexure2();
 }
 
 function entityBasicInfo() {
