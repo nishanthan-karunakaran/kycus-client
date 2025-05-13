@@ -127,7 +127,6 @@ export class RekycKycFormComponent implements OnInit {
               if (isSubmitting) {
                 this.toast.success('Form submitted!');
               } else {
-                this.store.dispatch(updateRekycFormStatus({ rekycForm: true }));
                 this.toast.success('Form saved!');
               }
             }
@@ -165,6 +164,7 @@ export class RekycKycFormComponent implements OnInit {
               if (!response) return;
               const { status } = response;
               if (status === ApiStatus.SUCCESS) {
+                this.store.dispatch(updateRekycFormStatus({ rekycForm: true }));
                 this.toast.success('Report successfully generated and sent to the Bank');
               } else {
                 this.toast.error('Failed to generate report');
