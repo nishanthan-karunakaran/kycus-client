@@ -116,7 +116,7 @@ export class FilemodalComponent {
 
         if (!response) return;
 
-        const { status } = response;
+        const { status, message } = response;
 
         if (status === ApiStatus.SUCCESS) {
           const { data } = response;
@@ -132,7 +132,7 @@ export class FilemodalComponent {
           }
         } else {
           this.handlePreviewModal();
-          this.toastService.error('Failed to parse the data');
+          this.toastService.error(message || 'Failed to parse the data');
         }
       },
     });
