@@ -59,15 +59,19 @@
             </div>
           </div>
 
-          <div>
+          <div class="mr-4 w-1/2 text-xs">
             <div
               *ngFor="let item of doc.data | presentValues; trackBy: trackByKey"
+              class="flex items-center justify-end"
             >
               <div class="flex gap-2 text-xs">
-                <p *ngIf="item[0] !== 'Address'" class="text-gray-500">
+                <p
+                  *ngIf="item[0] !== 'Address'"
+                  class="text-nowrap text-gray-500"
+                >
                   {{ item[0] }}:
                 </p>
-                <p *ngIf="item[0] !== 'Address'">
+                <p *ngIf="item[0] !== 'Address'" class="text-nowrap">
                   {{ item[1] }}
                 </p>
                 <ng-container *ngIf="item[0] === 'Address'">
