@@ -43,16 +43,16 @@
       <tbody>
         <ng-container *ngIf="isApplicationsLoading()">
           <tr>
-            <th colspan="4">
+            <td class="px-2" colspan="4">
               <div
                 role="status"
-                class="flex h-[360px] items-center justify-center"
+                class="flex h-[400px] animate-pulse items-center justify-center bg-gray-200"
               >
-                <div
+                <!-- <div
                   class="loader-circle size-10 animate-spin rounded-full border-4 border-gray-300 border-t-primary"
-                ></div>
+                ></div> -->
               </div>
-            </th>
+            </td>
           </tr>
         </ng-container>
 
