@@ -1,5 +1,5 @@
 /* eslint-disable no-console */
-import { ChangeDetectionStrategy, Component, OnInit, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, effect, OnInit, signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { ApiStatus } from '@core/constants/api.response';
 import { Store } from '@ngrx/store';
@@ -43,7 +43,15 @@ export class RekycEntityFilledbyComponent implements OnInit {
     private rekycFormService: RekycFormService,
     private toast: ToastService,
     private validatorsService: ValidatorsService,
-  ) {}
+  ) {
+    effect(() => {
+      if (this.selectedFilledBy() !== 3) {
+        this.emailErrorMsg = '';
+        this.othersEmail = '';
+        console.log('on effect');
+      }
+    });
+  }
 
   ngOnInit(): void {
     this.fetchAusList();

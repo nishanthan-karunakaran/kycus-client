@@ -91,7 +91,8 @@
           <div class="w-1/2">
             <ui-input
               type="email"
-              placeholder="Others"
+              placeholder="Others Email"
+              [defaultValue]="othersEmail"
               (valueChange)="setOthersEmail($event)"
               [autofocus]="selectedFilledBy() === 3"
               [errorMessage]="emailErrorMsg"
