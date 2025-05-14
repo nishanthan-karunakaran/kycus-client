@@ -29,7 +29,7 @@
     <ng-template #renderDocs>
       <div *ngFor="let doc of data(); trackBy: trackDoc">
         <div class="flex w-full justify-between border p-4">
-          <div class="flex flex-col gap-1">
+          <div class="flex w-[40%] flex-col gap-1">
             <p>{{ doc?.label }}</p>
 
             <div class="flex items-center gap-1">
@@ -59,12 +59,15 @@
             </div>
           </div>
 
-          <div class="mr-4 w-1/2 text-xs">
-            <div
-              *ngFor="let item of doc.data | presentValues; trackBy: trackByKey"
-              class="flex items-center justify-end"
-            >
-              <div class="flex gap-2 text-xs">
+          <div class="flex w-[60%] flex-col gap-2 text-xs">
+            <div *ngIf="doc.data">
+              <div
+                *ngFor="
+                  let item of doc.data | presentValues;
+                  trackBy: trackByKey
+                "
+                class="flex items-center gap-2 text-xs"
+              >
                 <p
                   *ngIf="item[0] !== 'Address'"
                   class="text-nowrap text-gray-500"
@@ -89,7 +92,7 @@
                 </ng-container>
               </div>
             </div>
-            <p class="mt-2 text-end text-danger">{{ doc.reason }}</p>
+            <p class="text-danger">{{ doc.reason }}</p>
           </div>
         </div>
       </div>

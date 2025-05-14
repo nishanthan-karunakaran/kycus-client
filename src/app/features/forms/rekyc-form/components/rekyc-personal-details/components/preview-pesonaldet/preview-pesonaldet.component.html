@@ -31,7 +31,7 @@
         <div class="flex-1">
           <div *ngFor="let doc of data(); trackBy: trackDoc" class="divide-y-2">
             <div class="flex justify-between gap-4 border p-4">
-              <div class="flex flex-col gap-1">
+              <div class="flex w-[40%] flex-col gap-1">
                 <p>{{ doc?.label }}</p>
 
                 <div class="flex items-center gap-1">
@@ -63,38 +63,40 @@
                 </div>
               </div>
 
-              <div class="w-1/2 text-xs">
-                <div
-                  *ngFor="
-                    let item of doc.data | presentValues;
-                    trackBy: trackByKey
-                  "
-                >
-                  <div class="flex items-center gap-2">
-                    <p
-                      *ngIf="item[0] !== 'Proof of Address'"
-                      class="text-gray-500"
-                    >
-                      {{ item[0] }}:
-                    </p>
-                    <p *ngIf="item[0] !== 'Proof of Address'">
-                      {{ item[1] }}
-                    </p>
-                    <ng-container *ngIf="item[0] === 'Proof of Address'">
-                      <div
-                        *ngFor="
-                          let d of item[1] | presentValues;
-                          trackBy: trackByKey
-                        "
+              <div class="flex w-[60%] flex-col gap-2 text-xs">
+                <div *ngIf="doc.data">
+                  <div
+                    *ngFor="
+                      let item of doc.data | presentValues;
+                      trackBy: trackByKey
+                    "
+                  >
+                    <div class="flex items-center gap-2">
+                      <p
+                        *ngIf="item[0] !== 'Proof of Address'"
+                        class="text-gray-500"
                       >
-                        <div class="flex flex-col gap-2 text-xs">
-                          <p>{{ d[1] }}</p>
+                        {{ item[0] }}:
+                      </p>
+                      <p *ngIf="item[0] !== 'Proof of Address'">
+                        {{ item[1] }}
+                      </p>
+                      <ng-container *ngIf="item[0] === 'Proof of Address'">
+                        <div
+                          *ngFor="
+                            let d of item[1] | presentValues;
+                            trackBy: trackByKey
+                          "
+                        >
+                          <div class="flex flex-col gap-2 text-xs">
+                            <p>{{ d[1] }}</p>
+                          </div>
                         </div>
-                      </div>
-                    </ng-container>
+                      </ng-container>
+                    </div>
                   </div>
                 </div>
-                <p class="mt-2 text-danger">{{ doc.reason }}</p>
+                <p class="text-danger">{{ doc.reason }}</p>
               </div>
             </div>
           </div>
