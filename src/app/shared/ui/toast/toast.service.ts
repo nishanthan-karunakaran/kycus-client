@@ -3,7 +3,6 @@ import {
   ComponentRef,
   EnvironmentInjector,
   Injectable,
-  Injector,
   createComponent,
 } from '@angular/core';
 import { ToastComponent } from './toast.component';
@@ -30,7 +29,6 @@ export class ToastService {
   private toastContainerRef?: ComponentRef<ToastComponent>;
 
   constructor(
-    private injector: Injector,
     private appRef: ApplicationRef,
     private environmentInjector: EnvironmentInjector,
   ) {}

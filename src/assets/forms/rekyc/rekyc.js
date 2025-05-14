@@ -1,10 +1,6 @@
-let isFormDataProcessed = false; // Flag to track if form data has been processed
 let data = {};
 
-// document.addEventListener('DOMContentLoaded', renderAll());
-
 async function renderAll() {
-  await fun();
   await entityBasicInfo();
   await entityMailingAddress();
   await entityRegisteredAddress();
@@ -21,947 +17,51 @@ async function renderAll() {
   // await downloadPDF();
 }
 
-function sendSaveData() {
-  console.log('Iframe received TRIGGER_SAVE', data);
-  window.parent.postMessage(
-    {
-      type: 'SAVE_DATA',
-      source: 'kyc-form',
-      payload: data || { message: 'nothing loaded yet' },
-    },
-    '*',
-  );
-}
-
-window.addEventListener('message', (event) => {
-  const { type, payload } = event.data || {};
-
-  switch (type) {
-    case 'SET_FORM_DATA':
-      // console.log('Iframe received form data:', payload);
-      // if (data.editedData === undefined) {
-      //   data = { editedData: payload, originalData: payload };
-      //   console.log('data setted on 1', payload);
-      // } else {
-      //   console.log('data setted on 1');
-      //   data = payload;
-      // }
-      data = payload;
-      renderAll();
-      console.log('data setted', data);
-
-      break;
-
-    case 'TRIGGER_SAVE':
-      sendSaveData();
-      break;
-
-    default:
-      break;
-  }
-});
-
-function fun() {
-  // data = {
-  //   editedData: {
-  //     _id: '67f63f970345d33252eb1858',
-  //     entityId: 'ebitaus123-123456789-09042025',
-  //     bankName: 'HDFC Bank',
-  //     entityName: 'EBITAUS PRIVATE LIMITED',
-  //     reason: 'Re-KYC',
-  //     entityType: 'Private',
-  //     entityFilledBy: 'ebitaus123-123456789-09042025-OTHER',
-  //     entityDetails: {
-  //       cin: {
-  //         cinNumber: 'U62099TN2023PTC158659',
-  //         isVerified: false,
-  //         verifiedSource: 'Protean',
-  //         timestamp: '2025-04-09T17:58:18.204Z',
-  //       },
-  //       gstin: {
-  //         gstinNumber: '33AAHCE4484E1ZQ',
-  //         isVerified: true,
-  //         verifiedSource: 'API Sethu',
-  //         timestamp: '2025-04-09T12:43:02.396Z',
-  //       },
-  //       pan: {
-  //         panNumber: 'AAHC1885M',
-  //         isVerified: true,
-  //         verifiedSource: 'OpenAI',
-  //         timestamp: '2025-04-09T11:45:29.994Z',
-  //       },
-  //       iec: {
-  //         iecNumber: '',
-  //         isVerified: false,
-  //         verifiedSource: '',
-  //         timestamp: '',
-  //       },
-  //       businessType: '',
-  //       natureOfIndustry: '',
-  //       dateOfIncorporation: '',
-  //       annualTurnover: '',
-  //       employeeCount: 0,
-  //       importExport: false,
-  //       status: 'in-progress',
-  //       entityType: 'Private',
-  //       subCategory: 'pubPvtLtdCompany: Financial Services Company',
-  //       selfEmployeedProfessional: '',
-  //       natureOfBusiness: 'Real Estate',
-  //       natureOfIndustry: 'Engineering Goods',
-  //       documents: {
-  //         entityDocs: [
-  //           {
-  //             type: 'PAN',
-  //             fileName: 'Screenshot 2025-04-09 161525.png',
-  //             fileType: 'image/png',
-  //             url: '/uploads\\ebitaus123-123456789-09042025\\entityPan/Screenshot 2025-04-09 161525.png',
-  //             isVerified: false,
-  //             verifiedSource: '',
-  //             timestamp: '2025-04-09T11:45:19.063Z',
-  //           },
-  //           {
-  //             type: 'GSTIN',
-  //             fileName: 'Screenshot 2025-04-09 123904.png',
-  //             fileType: 'image/png',
-  //             url: '/uploads\\ebitaus123-123456789-09042025\\entityGstin/Screenshot 2025-04-09 123904.png',
-  //             isVerified: true,
-  //             verifiedSource: 'Protean',
-  //             timestamp: '2025-04-09T12:42:52.594Z',
-  //           },
-  //           {
-  //             type: 'MOM',
-  //             fileName: 'GEPL-MOA-and-AOA-August.pdf',
-  //             fileType: 'application/pdf',
-  //             url: '/uploads\\ebitaus123-123456789-09042025\\entityDocs/GEPL-MOA-and-AOA-August.pdf',
-  //             isVerified: false,
-  //             verifiedSource: '',
-  //             timestamp: '2025-04-10T09:19:04.969Z',
-  //           },
-  //         ],
-  //         entityProofs: [
-  //           {
-  //             type: 'COI',
-  //             fileName: 'Ebitaus P Ltd - Certificate of Incorporation.pdf',
-  //             fileType: 'application/pdf',
-  //             url: '/uploads\\ebitaus123-123456789-09042025\\entityProofs/Ebitaus P Ltd - Certificate of Incorporation.pdf',
-  //             isVerified: false,
-  //             verifiedSource: '',
-  //             timestamp: '2025-04-09T17:57:57.397Z',
-  //           },
-  //           {
-  //             type: 'MOA',
-  //             fileName: 'GEPL-MOA-and-AOA-August.pdf',
-  //             fileType: 'application/pdf',
-  //             url: '/uploads\\ebitaus123-123456789-09042025\\entityProofs/GEPL-MOA-and-AOA-August.pdf',
-  //             isVerified: false,
-  //             verifiedSource: '',
-  //             timestamp: '2025-04-10T09:39:48.696Z',
-  //           },
-  //           {
-  //             type: 'AOA',
-  //             fileName: 'Tata Communications - MoA-AoA-Amended.pdf',
-  //             fileType: 'application/pdf',
-  //             url: '/uploads\\ebitaus123-123456789-09042025\\entityProofs/Tata Communications - MoA-AoA-Amended.pdf',
-  //             isVerified: false,
-  //             verifiedSource: '',
-  //             timestamp: '2025-04-10T04:59:03.735Z',
-  //           },
-  //         ],
-  //         entityAddressProof: {
-  //           type: 'addressProof',
-  //           fileName: 'Hathway.pdf',
-  //           fileType: 'application/pdf',
-  //           url: '/uploads\\ebitaus123-123456789-09042025\\entityAddressProofs/Hathway.pdf',
-  //           isVerified: true,
-  //           verifiedSource: 'Internal',
-  //           timestamp: '2025-04-11T05:48:39.666Z',
-  //         },
-  //         form32: {
-  //           type: 'form32',
-  //           fileName: 'form32.pdf',
-  //           fileType: 'application/pdf',
-  //           url: '/uploads\\ebitaus123-123456789-09042025\\form32/form32.pdf',
-  //           isVerified: false,
-  //           verifiedSource: '',
-  //           timestamp: '2025-04-10T11:46:09.113Z',
-  //         },
-  //       },
-  //       registeredOfficeAddress: {
-  //         buildingName: 'PM Towers',
-  //         street: 'Greams Road, Thousand Lights',
-  //         city: 'Chennai',
-  //         state: 'Tamil Nadu',
-  //         country: 'India',
-  //         pin: '600006',
-  //         landline: '',
-  //         mobile: '9786190876',
-  //         email: 'kumar.nagaraji@ebitaus.com',
-  //         ownership: '',
-  //       },
-  //     },
-  //     authorizedSignatoriesDetails: [
-  //       {
-  //         ausId: 'ebitaus123-123456789-09042025-AUS1',
-  //         name: 'Harichandana',
-  //         email: 'harichandana.vegesna@ebitaus.com',
-  //         emailLink:
-  //           'http://localhost:4020/rekyc/customer/eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiJlYml0YXVzMTIzLTEyMzQ1Njc4OS0wOTA0MjAyNSIsImNvbXBhbnlOYW1lIjoiRWJpdGF1czEyMyIsImN1c3RJZCI6MTIzNDU2Nzg5LCJlbnRpdHlUeXBlIjoiUHJpdmF0ZSIsImlhdCI6MTc0NDE5MTM4MywiZXhwIjoxNzc1NzI3MzgzfQ.fTgp5B4oFlh8JOkJ156Immn9hYDf6_oCiLFLMdtuXzk',
-  //         isVerified: false,
-  //         status: 'pending',
-  //         isSigned: false,
-  //         personalDetails: {
-  //           name: 'Vegesna Harichandana',
-  //           fatherName: '',
-  //           dateOfBirth: '10/04/1996',
-  //           designation: '',
-  //           din: '',
-  //           companyEmail: '',
-  //           mobile: '',
-  //           address: '8-3-169/23 3rd FLOOR, SIDARTH NAGAR, MADHURA NAGAR, HYDERABAD',
-  //           documents: {
-  //             identityProof: {
-  //               type: 'identityProof',
-  //               fileName: 'Image.png',
-  //               fileType: 'image/png',
-  //               url: '/uploads\\ebitaus123-123456789-09042025\\ebitaus123-123456789-09042025-AUS1\\identityProof/Image.png',
-  //               isVerified: true,
-  //               verifiedSource: 'Internal',
-  //               timestamp: '2025-04-11T10:50:07.826Z',
-  //             },
-  //             photograph: {
-  //               type: 'photograph',
-  //               fileName: 'Screenshot 2025-04-11 172215.png',
-  //               fileType: 'image/png',
-  //               url: '/uploads/ebitaus123-123456789-09042025/ebitaus123-123456789-09042025-AUS1/photograph/Screenshot 2025-04-11 172215.png',
-  //               isVerified: false,
-  //               verifiedSource: '',
-  //               timestamp: '2025-04-15T05:47:46.324Z',
-  //             },
-  //             signature: {
-  //               type: 'signature',
-  //               fileName: 'Screenshot 2025-04-11 172310.png',
-  //               fileType: 'image/png',
-  //               url: '/uploads\\ebitaus123-123456789-09042025\\ebitaus123-123456789-09042025-AUS1\\signature/Screenshot 2025-04-11 172310.png',
-  //               isVerified: false,
-  //               verifiedSource: '',
-  //               timestamp: '2025-04-11T12:02:07.177Z',
-  //             },
-  //             addressProof: {
-  //               type: 'addressProof',
-  //               fileName: 'Image4.png',
-  //               fileType: 'image/png',
-  //               url: '/uploads\\ebitaus123-123456789-09042025\\ebitaus123-123456789-09042025-AUS1\\addressProof/Image4.png',
-  //               isVerified: true,
-  //               verifiedSource: 'Internal',
-  //               timestamp: '2025-04-11T12:31:46.488Z',
-  //             },
-  //           },
-  //         },
-  //       },
-  //     ],
-  //     directorDetails: [
-  //       {
-  //         din: '10061417',
-  //         directorName: 'PITCHAI VENKATESH',
-  //         directorEmail: '',
-  //         mailUrl: '',
-  //         isSigned: false,
-  //         status: 'active',
-  //       },
-  //       {
-  //         din: '10099999',
-  //         directorName: '.KOKIL',
-  //         directorEmail: '',
-  //         mailUrl: '',
-  //         isSigned: false,
-  //         status: 'active',
-  //       },
-  //     ],
-  //     boDetails: [
-  //       {
-  //         boName: 'Rajeev Sharma',
-  //         addressLine: 'Flat No 101, Green Residency',
-  //         city: 'Hyderabad',
-  //         state: 'Telangana',
-  //         country: 'India',
-  //         pin: '500032',
-  //       },
-  //       {
-  //         boName: 'Vikram Rao',
-  //         addressLine: 'A-24, Sector 3',
-  //         city: 'Noida',
-  //         state: 'Uttar Pradesh',
-  //         country: 'India',
-  //         pin: '201301',
-  //       },
-  //     ],
-  //     businessDetails: {
-  //       detailsOfActivity: 'FinTech',
-  //       dateOfIncorporation: '30/03/20253',
-  //       annualTurnOverFigures: '10,00,00,000',
-  //       annualTurnOverWords: '10 Crores',
-  //       involvedIn: 'Import',
-  //     },
-  //     entityProofDeclaration: {
-  //       entityProof1: 'Certificate of Incorporation',
-  //       entityProof2: 'MOA (Memorandum of Association) ',
-  //       addressProof: 'Electricity Bill',
-  //       identityProof: 'PAN',
-  //       date: '18/4/25',
-  //     },
-  //     extendedAnnexure: {
-  //       basicDetails: {
-  //         date: '18/04/25',
-  //         aofNo: 'AFO1234',
-  //         nameOfEntity: 'Ebitaus',
-  //         custId: 'CUS1234',
-  //       },
-  //       docEntity: {
-  //         coi: 'COI1234',
-  //         rc: '',
-  //         td: '',
-  //         moa_aoa: true,
-  //       },
-  //       mailAddress: {
-  //         coi: 'COI1234',
-  //         rc: '',
-  //         other: 'Pan Doc',
-  //       },
-  //     },
-  //     boDetails: [
-  //       {
-  //         boName: 'Rajeev Sharma',
-  //         addressLine: 'Flat No 101, Green Residency',
-  //         city: 'Hyderabad',
-  //         state: 'Telangana',
-  //         country: 'India',
-  //         pin: '500032',
-  //       },
-  //       {
-  //         boName: 'Vikram Rao',
-  //         addressLine: 'A-24, Sector 3',
-  //         city: 'Noida',
-  //         state: 'Uttar Pradesh',
-  //         country: 'India',
-  //         pin: '201301',
-  //       },
-  //       {
-  //         boName: 'Rajeev Sharma',
-  //         addressLine: 'Flat No 101, Green Residency',
-  //         city: 'Hyderabad',
-  //         state: 'Telangana',
-  //         country: 'India',
-  //         pin: '500032',
-  //       },
-  //       {
-  //         boName: 'Vikram Rao',
-  //         addressLine: 'A-24, Sector 3',
-  //         city: 'Noida',
-  //         state: 'Uttar Pradesh',
-  //         country: 'India',
-  //         pin: '201301',
-  //       },
-  //     ],
-  //     ausData: [
-  //       {
-  //         nameoftheauthorisedsignatory: 'Alice Johnson',
-  //         fathersname: 'Robert Johnson',
-  //         proofofidentity: 'Passport',
-  //         proofofaddress: 'Utility Bill',
-  //         addressline: '123 Baker Street',
-  //         addresscity: 'London',
-  //         addressstate: 'Greater London',
-  //         addresscountry: 'United Kingdom',
-  //         addresspincode: 'NW1 6XE',
-  //         signature:
-  //           'https://static.vecteezy.com/system/resources/previews/025/866/358/non_2x/fake-autograph-samples-hand-drawn-signatures-examples-of-documents-certificates-and-contracts-with-inked-and-handwritten-lettering-vector.jpg',
-  //         photo:
-  //           'https://www.biowritingservice.com/wp-content/themes/tuborg/images/Executive%20Bio%20Sample%20Photo.png',
-  //         // signature and photograph will be handled separately
-  //       },
-  //       {
-  //         nameoftheauthorisedsignatory: 'Bob Smith',
-  //         fathersname: 'Edward Smith',
-  //         proofofidentity: "Driver's License",
-  //         proofofaddress: 'Bank Statement',
-  //         addressline: '456 Queen Street',
-  //         addresscity: 'Toronto',
-  //         addressstate: 'Ontario',
-  //         addresscountry: 'Canada',
-  //         addresspincode: 'M5V 2B6',
-  //         signature:
-  //           'https://static.vecteezy.com/system/resources/previews/025/866/358/non_2x/fake-autograph-samples-hand-drawn-signatures-examples-of-documents-certificates-and-contracts-with-inked-and-handwritten-lettering-vector.jpg',
-  //         photo:
-  //           'https://images.pexels.com/photos/1222271/pexels-photo-1222271.jpeg?cs=srgb&dl=pexels-justin-shaifer-501272-1222271.jpg&fm=jpg',
-  //         // signature and photograph will be handled separately
-  //       },
-  //       {
-  //         nameoftheauthorisedsignatory: 'Alice Johnson',
-  //         fathersname: 'Robert Johnson',
-  //         proofofidentity: 'Passport',
-  //         proofofaddress: 'Utility Bill',
-  //         addressline: '123 Baker Street',
-  //         addresscity: 'London',
-  //         addressstate: 'Greater London',
-  //         addresscountry: 'United Kingdom',
-  //         addresspincode: 'NW1 6XE',
-  //         signature:
-  //           'https://static.vecteezy.com/system/resources/previews/025/866/358/non_2x/fake-autograph-samples-hand-drawn-signatures-examples-of-documents-certificates-and-contracts-with-inked-and-handwritten-lettering-vector.jpg',
-  //         photo:
-  //           'https://images.unsplash.com/photo-1544005313-94ddf0286df2?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8cGVyc29ufGVufDB8fDB8fHww',
-  //         // signature and photograph will be handled separately
-  //       },
-  //       {
-  //         nameoftheauthorisedsignatory: 'Bob Smith',
-  //         fathersname: 'Edward Smith',
-  //         proofofidentity: "Driver's License",
-  //         proofofaddress: 'Bank Statement',
-  //         addressline: '456 Queen Street',
-  //         addresscity: 'Toronto',
-  //         addressstate: 'Ontario',
-  //         addresscountry: 'Canada',
-  //         addresspincode: 'M5V 2B6',
-  //         signature:
-  //           'https://static.vecteezy.com/system/resources/previews/025/866/358/non_2x/fake-autograph-samples-hand-drawn-signatures-examples-of-documents-certificates-and-contracts-with-inked-and-handwritten-lettering-vector.jpg',
-  //         photo:
-  //           'https://www.biowritingservice.com/wp-content/themes/tuborg/images/Executive%20Bio%20Sample%20Photo.png',
-  //         // signature and photograph will be handled separately
-  //       },
-  //       {
-  //         nameoftheauthorisedsignatory: 'Alice Johnson',
-  //         fathersname: 'Robert Johnson',
-  //         proofofidentity: 'Passport',
-  //         proofofaddress: 'Utility Bill',
-  //         addressline: '123 Baker Street',
-  //         addresscity: 'London',
-  //         addressstate: 'Greater London',
-  //         addresscountry: 'United Kingdom',
-  //         addresspincode: 'NW1 6XE',
-  //         signature:
-  //           'https://static.vecteezy.com/system/resources/previews/025/866/358/non_2x/fake-autograph-samples-hand-drawn-signatures-examples-of-documents-certificates-and-contracts-with-inked-and-handwritten-lettering-vector.jpg',
-  //         photo:
-  //           'https://www.biowritingservice.com/wp-content/themes/tuborg/images/Executive%20Bio%20Sample%20Photo.png',
-  //         // signature and photograph will be handled separately
-  //       },
-  //       {
-  //         nameoftheauthorisedsignatory: 'Bob Smith',
-  //         fathersname: 'Edward Smith',
-  //         proofofidentity: "Driver's License",
-  //         proofofaddress: 'Bank Statement',
-  //         addressline: '456 Queen Street',
-  //         addresscity: 'Toronto',
-  //         addressstate: 'Ontario',
-  //         addresscountry: 'Canada',
-  //         addresspincode: 'M5V 2B6',
-  //         signature:
-  //           'https://static.vecteezy.com/system/resources/previews/025/866/358/non_2x/fake-autograph-samples-hand-drawn-signatures-examples-of-documents-certificates-and-contracts-with-inked-and-handwritten-lettering-vector.jpg',
-  //         photo:
-  //           'https://images.pexels.com/photos/1222271/pexels-photo-1222271.jpeg?cs=srgb&dl=pexels-justin-shaifer-501272-1222271.jpg&fm=jpg',
-  //         // signature and photograph will be handled separately
-  //       },
-  //       {
-  //         nameoftheauthorisedsignatory: 'Alice Johnson',
-  //         fathersname: 'Robert Johnson',
-  //         proofofidentity: 'Passport',
-  //         proofofaddress: 'Utility Bill',
-  //         addressline: '123 Baker Street',
-  //         addresscity: 'London',
-  //         addressstate: 'Greater London',
-  //         addresscountry: 'United Kingdom',
-  //         addresspincode: 'NW1 6XE',
-  //         signature:
-  //           'https://static.vecteezy.com/system/resources/previews/025/866/358/non_2x/fake-autograph-samples-hand-drawn-signatures-examples-of-documents-certificates-and-contracts-with-inked-and-handwritten-lettering-vector.jpg',
-  //         photo:
-  //           'https://images.unsplash.com/photo-1544005313-94ddf0286df2?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8cGVyc29ufGVufDB8fDB8fHww',
-  //         // signature and photograph will be handled separately
-  //       },
-  //       {
-  //         nameoftheauthorisedsignatory: 'Bob Smith',
-  //         fathersname: 'Edward Smith',
-  //         proofofidentity: "Driver's License",
-  //         proofofaddress: 'Bank Statement',
-  //         addressline: '456 Queen Street',
-  //         addresscity: 'Toronto',
-  //         addressstate: 'Ontario',
-  //         addresscountry: 'Canada',
-  //         addresspincode: 'M5V 2B6',
-  //         signature:
-  //           'https://static.vecteezy.com/system/resources/previews/025/866/358/non_2x/fake-autograph-samples-hand-drawn-signatures-examples-of-documents-certificates-and-contracts-with-inked-and-handwritten-lettering-vector.jpg',
-  //         photo:
-  //           'https://www.biowritingservice.com/wp-content/themes/tuborg/images/Executive%20Bio%20Sample%20Photo.png',
-  //         // signature and photograph will be handled separately
-  //       },
-  //     ],
-  //   },
-  //   originalData: {
-  //     _id: '67f63f970345d33252eb1858',
-  //     entityId: 'ebitaus123-123456789-09042025',
-  //     bankName: 'HDFC Bank',
-  //     entityName: 'EBITAUS PRIVATE LIMITED',
-  //     reason: 'Re-KYC',
-  //     entityType: 'Private',
-  //     entityFilledBy: 'ebitaus123-123456789-09042025-OTHER',
-  //     entityDetails: {
-  //       cin: {
-  //         cinNumber: 'U62099TN2023PTC158659',
-  //         isVerified: false,
-  //         verifiedSource: 'Protean',
-  //         timestamp: '2025-04-09T17:58:18.204Z',
-  //       },
-  //       gstin: {
-  //         gstinNumber: '33AAHCE4484E1ZQ',
-  //         isVerified: true,
-  //         verifiedSource: 'API Sethu',
-  //         timestamp: '2025-04-09T12:43:02.396Z',
-  //       },
-  //       pan: {
-  //         panNumber: 'AAHC1885M',
-  //         isVerified: true,
-  //         verifiedSource: 'OpenAI',
-  //         timestamp: '2025-04-09T11:45:29.994Z',
-  //       },
-  //       iec: {
-  //         iecNumber: '',
-  //         isVerified: false,
-  //         verifiedSource: '',
-  //         timestamp: '',
-  //       },
-  //       businessType: '',
-  //       natureOfIndustry: '',
-  //       dateOfIncorporation: '',
-  //       annualTurnover: '',
-  //       employeeCount: 0,
-  //       importExport: false,
-  //       status: 'in-progress',
-  //       entityType: 'Private',
-  //       subCategory: 'pubPvtLtdCompany: Financial Services Company',
-  //       selfEmployeedProfessional: '',
-  //       natureOfBusiness: 'Real Estate',
-  //       natureOfIndustry: 'Engineering Goods',
-  //       documents: {
-  //         entityDocs: [
-  //           {
-  //             type: 'PAN',
-  //             fileName: 'Screenshot 2025-04-09 161525.png',
-  //             fileType: 'image/png',
-  //             url: '/uploads\\ebitaus123-123456789-09042025\\entityPan/Screenshot 2025-04-09 161525.png',
-  //             isVerified: false,
-  //             verifiedSource: '',
-  //             timestamp: '2025-04-09T11:45:19.063Z',
-  //           },
-  //           {
-  //             type: 'GSTIN',
-  //             fileName: 'Screenshot 2025-04-09 123904.png',
-  //             fileType: 'image/png',
-  //             url: '/uploads\\ebitaus123-123456789-09042025\\entityGstin/Screenshot 2025-04-09 123904.png',
-  //             isVerified: true,
-  //             verifiedSource: 'Protean',
-  //             timestamp: '2025-04-09T12:42:52.594Z',
-  //           },
-  //           {
-  //             type: 'MOM',
-  //             fileName: 'GEPL-MOA-and-AOA-August.pdf',
-  //             fileType: 'application/pdf',
-  //             url: '/uploads\\ebitaus123-123456789-09042025\\entityDocs/GEPL-MOA-and-AOA-August.pdf',
-  //             isVerified: false,
-  //             verifiedSource: '',
-  //             timestamp: '2025-04-10T09:19:04.969Z',
-  //           },
-  //         ],
-  //         entityProofs: [
-  //           {
-  //             type: 'COI',
-  //             fileName: 'Ebitaus P Ltd - Certificate of Incorporation.pdf',
-  //             fileType: 'application/pdf',
-  //             url: '/uploads\\ebitaus123-123456789-09042025\\entityProofs/Ebitaus P Ltd - Certificate of Incorporation.pdf',
-  //             isVerified: false,
-  //             verifiedSource: '',
-  //             timestamp: '2025-04-09T17:57:57.397Z',
-  //           },
-  //           {
-  //             type: 'MOA',
-  //             fileName: 'GEPL-MOA-and-AOA-August.pdf',
-  //             fileType: 'application/pdf',
-  //             url: '/uploads\\ebitaus123-123456789-09042025\\entityProofs/GEPL-MOA-and-AOA-August.pdf',
-  //             isVerified: false,
-  //             verifiedSource: '',
-  //             timestamp: '2025-04-10T09:39:48.696Z',
-  //           },
-  //           {
-  //             type: 'AOA',
-  //             fileName: 'Tata Communications - MoA-AoA-Amended.pdf',
-  //             fileType: 'application/pdf',
-  //             url: '/uploads\\ebitaus123-123456789-09042025\\entityProofs/Tata Communications - MoA-AoA-Amended.pdf',
-  //             isVerified: false,
-  //             verifiedSource: '',
-  //             timestamp: '2025-04-10T04:59:03.735Z',
-  //           },
-  //         ],
-  //         entityAddressProof: {
-  //           type: 'addressProof',
-  //           fileName: 'Hathway.pdf',
-  //           fileType: 'application/pdf',
-  //           url: '/uploads\\ebitaus123-123456789-09042025\\entityAddressProofs/Hathway.pdf',
-  //           isVerified: true,
-  //           verifiedSource: 'Internal',
-  //           timestamp: '2025-04-11T05:48:39.666Z',
-  //         },
-  //         form32: {
-  //           type: 'form32',
-  //           fileName: 'form32.pdf',
-  //           fileType: 'application/pdf',
-  //           url: '/uploads\\ebitaus123-123456789-09042025\\form32/form32.pdf',
-  //           isVerified: false,
-  //           verifiedSource: '',
-  //           timestamp: '2025-04-10T11:46:09.113Z',
-  //         },
-  //       },
-  //       registeredOfficeAddress: {
-  //         buildingName: 'PM Towers',
-  //         street: 'Greams Road, Thousand Lights',
-  //         city: 'Chennai',
-  //         state: 'Tamil Nadu',
-  //         country: 'India',
-  //         pin: '600006',
-  //         landline: '',
-  //         mobile: '9786190876',
-  //         email: 'kumar.nagaraji@ebitaus.com',
-  //         ownership: '',
-  //       },
-  //     },
-  //     authorizedSignatoriesDetails: [
-  //       {
-  //         ausId: 'ebitaus123-123456789-09042025-AUS1',
-  //         name: 'Harichandana',
-  //         email: 'harichandana.vegesna@ebitaus.com',
-  //         emailLink:
-  //           'http://localhost:4020/rekyc/customer/eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiJlYml0YXVzMTIzLTEyMzQ1Njc4OS0wOTA0MjAyNSIsImNvbXBhbnlOYW1lIjoiRWJpdGF1czEyMyIsImN1c3RJZCI6MTIzNDU2Nzg5LCJlbnRpdHlUeXBlIjoiUHJpdmF0ZSIsImlhdCI6MTc0NDE5MTM4MywiZXhwIjoxNzc1NzI3MzgzfQ.fTgp5B4oFlh8JOkJ156Immn9hYDf6_oCiLFLMdtuXzk',
-  //         isVerified: false,
-  //         status: 'pending',
-  //         isSigned: false,
-  //         personalDetails: {
-  //           name: 'Vegesna Harichandana',
-  //           fatherName: '',
-  //           dateOfBirth: '10/04/1996',
-  //           designation: '',
-  //           din: '',
-  //           companyEmail: '',
-  //           mobile: '',
-  //           address: '8-3-169/23 3rd FLOOR, SIDARTH NAGAR, MADHURA NAGAR, HYDERABAD',
-  //           documents: {
-  //             identityProof: {
-  //               type: 'identityProof',
-  //               fileName: 'Image.png',
-  //               fileType: 'image/png',
-  //               url: '/uploads\\ebitaus123-123456789-09042025\\ebitaus123-123456789-09042025-AUS1\\identityProof/Image.png',
-  //               isVerified: true,
-  //               verifiedSource: 'Internal',
-  //               timestamp: '2025-04-11T10:50:07.826Z',
-  //             },
-  //             photograph: {
-  //               type: 'photograph',
-  //               fileName: 'Screenshot 2025-04-11 172215.png',
-  //               fileType: 'image/png',
-  //               url: '/uploads/ebitaus123-123456789-09042025/ebitaus123-123456789-09042025-AUS1/photograph/Screenshot 2025-04-11 172215.png',
-  //               isVerified: false,
-  //               verifiedSource: '',
-  //               timestamp: '2025-04-15T05:47:46.324Z',
-  //             },
-  //             signature: {
-  //               type: 'signature',
-  //               fileName: 'Screenshot 2025-04-11 172310.png',
-  //               fileType: 'image/png',
-  //               url: '/uploads\\ebitaus123-123456789-09042025\\ebitaus123-123456789-09042025-AUS1\\signature/Screenshot 2025-04-11 172310.png',
-  //               isVerified: false,
-  //               verifiedSource: '',
-  //               timestamp: '2025-04-11T12:02:07.177Z',
-  //             },
-  //             addressProof: {
-  //               type: 'addressProof',
-  //               fileName: 'Image4.png',
-  //               fileType: 'image/png',
-  //               url: '/uploads\\ebitaus123-123456789-09042025\\ebitaus123-123456789-09042025-AUS1\\addressProof/Image4.png',
-  //               isVerified: true,
-  //               verifiedSource: 'Internal',
-  //               timestamp: '2025-04-11T12:31:46.488Z',
-  //             },
-  //           },
-  //         },
-  //       },
-  //     ],
-  //     directorDetails: [
-  //       {
-  //         din: '10061417',
-  //         directorName: 'PITCHAI VENKATESH',
-  //         directorEmail: '',
-  //         mailUrl: '',
-  //         isSigned: false,
-  //         status: 'active',
-  //       },
-  //       {
-  //         din: '10099999',
-  //         directorName: '.KOKIL',
-  //         directorEmail: '',
-  //         mailUrl: '',
-  //         isSigned: false,
-  //         status: 'active',
-  //       },
-  //     ],
-  //     boDetails: [
-  //       {
-  //         boName: 'Rajeev Sharma',
-  //         addressLine: 'Flat No 101, Green Residency',
-  //         city: 'Hyderabad',
-  //         state: 'Telangana',
-  //         country: 'India',
-  //         pin: '500032',
-  //       },
-  //       {
-  //         boName: 'Vikram Rao',
-  //         addressLine: 'A-24, Sector 3',
-  //         city: 'Noida',
-  //         state: 'Uttar Pradesh',
-  //         country: 'India',
-  //         pin: '201301',
-  //       },
-  //     ],
-  //     businessDetails: {
-  //       detailsOfActivity: 'FinTech',
-  //       dateOfIncorporation: '30/03/20253',
-  //       annualTurnOverFigures: '10,00,00,000',
-  //       annualTurnOverWords: '10 Crores',
-  //       involvedIn: 'Import',
-  //     },
-  //     entityProofDeclaration: {
-  //       entityProof1: 'Certificate of Incorporation',
-  //       entityProof2: 'MOA (Memorandum of Association) ',
-  //       addressProof: 'Electricity Bill',
-  //       identityProof: 'PAN',
-  //       date: '18/4/25',
-  //     },
-  //     extendedAnnexure: {
-  //       basicDetails: {
-  //         date: '18/04/25',
-  //         aofNo: 'AFO1234',
-  //         nameOfEntity: 'Ebitaus',
-  //         custId: 'CUS1234',
-  //       },
-  //       docEntity: {
-  //         coi: 'COI1234',
-  //         rc: '',
-  //         td: '',
-  //         moa_aoa: true,
-  //       },
-  //       mailAddress: {
-  //         coi: 'COI1234',
-  //         rc: '',
-  //         other: 'Pan Doc',
-  //       },
-  //     },
-  //     boDetails: [
-  //       {
-  //         boName: 'Rajeev Sharma',
-  //         addressLine: 'Flat No 101, Green Residency',
-  //         city: 'Hyderabad',
-  //         state: 'Telangana',
-  //         country: 'India',
-  //         pin: '500032',
-  //       },
-  //       {
-  //         boName: 'Vikram Rao',
-  //         addressLine: 'A-24, Sector 3',
-  //         city: 'Noida',
-  //         state: 'Uttar Pradesh',
-  //         country: 'India',
-  //         pin: '201301',
-  //       },
-  //       {
-  //         boName: 'Rajeev Sharma',
-  //         addressLine: 'Flat No 101, Green Residency',
-  //         city: 'Hyderabad',
-  //         state: 'Telangana',
-  //         country: 'India',
-  //         pin: '500032',
-  //       },
-  //       {
-  //         boName: 'Vikram Rao',
-  //         addressLine: 'A-24, Sector 3',
-  //         city: 'Noida',
-  //         state: 'Uttar Pradesh',
-  //         country: 'India',
-  //         pin: '201301',
-  //       },
-  //     ],
-  //     ausData: [
-  //       {
-  //         nameoftheauthorisedsignatory: 'Alice Johnson',
-  //         fathersname: 'Robert Johnson',
-  //         proofofidentity: 'Passport',
-  //         proofofaddress: 'Utility Bill',
-  //         addressline: '123 Baker Street',
-  //         addresscity: 'London',
-  //         addressstate: 'Greater London',
-  //         addresscountry: 'United Kingdom',
-  //         addresspincode: 'NW1 6XE',
-  //         signature:
-  //           'https://static.vecteezy.com/system/resources/previews/025/866/358/non_2x/fake-autograph-samples-hand-drawn-signatures-examples-of-documents-certificates-and-contracts-with-inked-and-handwritten-lettering-vector.jpg',
-  //         photo:
-  //           'https://www.biowritingservice.com/wp-content/themes/tuborg/images/Executive%20Bio%20Sample%20Photo.png',
-  //         // signature and photograph will be handled separately
-  //       },
-  //       {
-  //         nameoftheauthorisedsignatory: 'Bob Smith',
-  //         fathersname: 'Edward Smith',
-  //         proofofidentity: "Driver's License",
-  //         proofofaddress: 'Bank Statement',
-  //         addressline: '456 Queen Street',
-  //         addresscity: 'Toronto',
-  //         addressstate: 'Ontario',
-  //         addresscountry: 'Canada',
-  //         addresspincode: 'M5V 2B6',
-  //         signature:
-  //           'https://static.vecteezy.com/system/resources/previews/025/866/358/non_2x/fake-autograph-samples-hand-drawn-signatures-examples-of-documents-certificates-and-contracts-with-inked-and-handwritten-lettering-vector.jpg',
-  //         photo:
-  //           'https://images.pexels.com/photos/1222271/pexels-photo-1222271.jpeg?cs=srgb&dl=pexels-justin-shaifer-501272-1222271.jpg&fm=jpg',
-  //         // signature and photograph will be handled separately
-  //       },
-  //       {
-  //         nameoftheauthorisedsignatory: 'Alice Johnson',
-  //         fathersname: 'Robert Johnson',
-  //         proofofidentity: 'Passport',
-  //         proofofaddress: 'Utility Bill',
-  //         addressline: '123 Baker Street',
-  //         addresscity: 'London',
-  //         addressstate: 'Greater London',
-  //         addresscountry: 'United Kingdom',
-  //         addresspincode: 'NW1 6XE',
-  //         signature:
-  //           'https://static.vecteezy.com/system/resources/previews/025/866/358/non_2x/fake-autograph-samples-hand-drawn-signatures-examples-of-documents-certificates-and-contracts-with-inked-and-handwritten-lettering-vector.jpg',
-  //         photo:
-  //           'https://images.unsplash.com/photo-1544005313-94ddf0286df2?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8cGVyc29ufGVufDB8fDB8fHww',
-  //         // signature and photograph will be handled separately
-  //       },
-  //       {
-  //         nameoftheauthorisedsignatory: 'Bob Smith',
-  //         fathersname: 'Edward Smith',
-  //         proofofidentity: "Driver's License",
-  //         proofofaddress: 'Bank Statement',
-  //         addressline: '456 Queen Street',
-  //         addresscity: 'Toronto',
-  //         addressstate: 'Ontario',
-  //         addresscountry: 'Canada',
-  //         addresspincode: 'M5V 2B6',
-  //         signature:
-  //           'https://static.vecteezy.com/system/resources/previews/025/866/358/non_2x/fake-autograph-samples-hand-drawn-signatures-examples-of-documents-certificates-and-contracts-with-inked-and-handwritten-lettering-vector.jpg',
-  //         photo:
-  //           'https://www.biowritingservice.com/wp-content/themes/tuborg/images/Executive%20Bio%20Sample%20Photo.png',
-  //         // signature and photograph will be handled separately
-  //       },
-  //       {
-  //         nameoftheauthorisedsignatory: 'Alice Johnson',
-  //         fathersname: 'Robert Johnson',
-  //         proofofidentity: 'Passport',
-  //         proofofaddress: 'Utility Bill',
-  //         addressline: '123 Baker Street',
-  //         addresscity: 'London',
-  //         addressstate: 'Greater London',
-  //         addresscountry: 'United Kingdom',
-  //         addresspincode: 'NW1 6XE',
-  //         signature:
-  //           'https://static.vecteezy.com/system/resources/previews/025/866/358/non_2x/fake-autograph-samples-hand-drawn-signatures-examples-of-documents-certificates-and-contracts-with-inked-and-handwritten-lettering-vector.jpg',
-  //         photo:
-  //           'https://www.biowritingservice.com/wp-content/themes/tuborg/images/Executive%20Bio%20Sample%20Photo.png',
-  //         // signature and photograph will be handled separately
-  //       },
-  //       {
-  //         nameoftheauthorisedsignatory: 'Bob Smith',
-  //         fathersname: 'Edward Smith',
-  //         proofofidentity: "Driver's License",
-  //         proofofaddress: 'Bank Statement',
-  //         addressline: '456 Queen Street',
-  //         addresscity: 'Toronto',
-  //         addressstate: 'Ontario',
-  //         addresscountry: 'Canada',
-  //         addresspincode: 'M5V 2B6',
-  //         signature:
-  //           'https://static.vecteezy.com/system/resources/previews/025/866/358/non_2x/fake-autograph-samples-hand-drawn-signatures-examples-of-documents-certificates-and-contracts-with-inked-and-handwritten-lettering-vector.jpg',
-  //         photo:
-  //           'https://images.pexels.com/photos/1222271/pexels-photo-1222271.jpeg?cs=srgb&dl=pexels-justin-shaifer-501272-1222271.jpg&fm=jpg',
-  //         // signature and photograph will be handled separately
-  //       },
-  //       {
-  //         nameoftheauthorisedsignatory: 'Alice Johnson',
-  //         fathersname: 'Robert Johnson',
-  //         proofofidentity: 'Passport',
-  //         proofofaddress: 'Utility Bill',
-  //         addressline: '123 Baker Street',
-  //         addresscity: 'London',
-  //         addressstate: 'Greater London',
-  //         addresscountry: 'United Kingdom',
-  //         addresspincode: 'NW1 6XE',
-  //         signature:
-  //           'https://static.vecteezy.com/system/resources/previews/025/866/358/non_2x/fake-autograph-samples-hand-drawn-signatures-examples-of-documents-certificates-and-contracts-with-inked-and-handwritten-lettering-vector.jpg',
-  //         photo:
-  //           'https://images.unsplash.com/photo-1544005313-94ddf0286df2?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8cGVyc29ufGVufDB8fDB8fHww',
-  //         // signature and photograph will be handled separately
-  //       },
-  //       {
-  //         nameoftheauthorisedsignatory: 'Bob Smith',
-  //         fathersname: 'Edward Smith',
-  //         proofofidentity: "Driver's License",
-  //         proofofaddress: 'Bank Statement',
-  //         addressline: '456 Queen Street',
-  //         addresscity: 'Toronto',
-  //         addressstate: 'Ontario',
-  //         addresscountry: 'Canada',
-  //         addresspincode: 'M5V 2B6',
-  //         signature:
-  //           'https://static.vecteezy.com/system/resources/previews/025/866/358/non_2x/fake-autograph-samples-hand-drawn-signatures-examples-of-documents-certificates-and-contracts-with-inked-and-handwritten-lettering-vector.jpg',
-  //         photo:
-  //           'https://www.biowritingservice.com/wp-content/themes/tuborg/images/Executive%20Bio%20Sample%20Photo.png',
-  //         // signature and photograph will be handled separately
-  //       },
-  //     ],
-  //   },
-  // };
-}
-
 function entityBasicInfo() {
+  if (!data) data = {};
+  if (!data.originalData) data.originalData = {};
+  if (!data.editedData) data.editedData = {};
+
   const entityCustId = document.getElementById('entityCustId');
   const entityName = document.getElementById('entityName');
   const entityPan = document.getElementById('entityPan');
 
-  // Pre-fill the form with existing data
+  entityCustId.value = data.originalData.entityCustId || '';
+  entityName.value = data.originalData.entityName || '';
+  entityPan.value = data.originalData.entityDetails?.pan?.panNumber || '';
 
-  console.log('data check', data);
+  // Attach tracking
+  attachInputTracking(entityCustId, ['entityCustId']);
+  attachInputTracking(entityName, ['entityName']);
+  attachInputTracking(entityPan, ['entityDetails', 'pan', 'panNumber']);
 
-  entityCustId.value = data?.editedData?.entityCustId || '';
-  entityCustId.autofocus = true;
-  entityName.value = data?.editedData?.entityName || '';
-  entityPan.value = data?.editedData?.entityDetails?.pan?.panNumber || '';
-
-  entityCustId.oninput = (e) => {
-    data.editedData.entityCustId = e.target.value.trim();
-  };
-
-  entityName.oninput = (e) => {
-    data.editedData.entityName = e.target.value.trim();
-  };
-
-  entityPan.oninput = (e) => {
-    if (!data.editedData.entityDetails) data.editedData.entityDetails = {};
-    if (!data.editedData.entityDetails.pan) data.editedData.entityDetails.pan = {};
-
-    data.editedData.entityDetails.pan.panNumber = e.target.value.trim();
-  };
+  const date = document.getElementById('date-input');
+  if (date) {
+    const today = new Date();
+    const day = String(today.getDate()).padStart(2, '0');
+    const month = String(today.getMonth() + 1).padStart(2, '0');
+    const year = today.getFullYear();
+    date.value = `${day}-${month}-${year}`;
+    date.readOnly = true;
+    date.style.setProperty('color', 'blue', 'important');
+  }
 }
 
 function entityMailingAddress() {
-  if (!data.editedData.entityDetails.entityMailingAddress) {
-    data.editedData.entityDetails.entityMailingAddress = {};
-  }
+  // if (data?.editedData?.entityDetails?.entityMailingAddress === undefined) {
+  //   // Ensure that editedData and entityDetails are also defined before assigning an empty object to entityMailingAddress
+  //   if (!data.editedData) {
+  //     data.editedData = {};
+  //   }
 
-  const mailingAddress = data.editedData.entityDetails.entityMailingAddress;
+  //   if (!data.editedData.entityDetails) {
+  //     data.editedData.entityDetails = {};
+  //   }
+
+  //   data.editedData.entityDetails.entityMailingAddress = {};
+  // }
+
+  const mailingAddress = data?.editedData.entityDetails.entityMailingAddress;
 
   // Checkbox elements
   const noChangeCheckbox = document.getElementById('noChangeInEmailAddress');
@@ -1028,7 +128,7 @@ function entityMailingAddress() {
 }
 
 function entityRegisteredAddress() {
-  const entityDetails = data.editedData.entityDetails;
+  const entityDetails = data?.editedData.entityDetails;
 
   // Ensure entityRegisteredAddress exists
   if (!entityDetails.entityRegisteredAddress) {
@@ -1145,7 +245,7 @@ function entityType() {
     { id: 'trust', label: 'Trust' },
   ];
 
-  const selectedLabel = data.editedData.entityType;
+  const selectedLabel = data?.originalData.entityType;
   const selector = '#entity-type .checkbox_container';
   const container = document.querySelector(selector);
   container.innerHTML = '';
@@ -1215,7 +315,7 @@ function entitySubCategory() {
   if (!container) return;
 
   const allCheckboxes = container.querySelectorAll('.checkbox_wrapper input[type="checkbox"]');
-  const preSelected = data.editedData?.entityDetails?.subCategory || '';
+  const preSelected = data?.originalData?.subCategory || '';
   const [categoryRaw, valueRaw] = preSelected.split(':').map((s) => s.trim());
   const isOther = categoryRaw.includes('-others');
   const baseCategory = isOther ? categoryRaw.replace('-others', '') : categoryRaw;
@@ -1260,15 +360,15 @@ function entitySubCategory() {
         if (isOtherBox) {
           inputEl.focus();
           inputEl.addEventListener('input', () => {
-            data.editedData.entityDetails.subCategory = `${categoryClass}-others: ${inputEl.value.trim()}`;
+            data.originalData.subCategory = `${categoryClass}-others: ${inputEl.value.trim()}`;
           });
         } else {
-          data.editedData.entityDetails.subCategory = `${categoryClass}: ${textNode.textContent.trim()}`;
+          data.originalData.subCategory = `${categoryClass}: ${textNode.textContent.trim()}`;
         }
       } else {
         const anyChecked = [...allCheckboxes].some((cb) => cb.checked);
         if (!anyChecked) {
-          data.editedData.entityDetails.subCategory = null;
+          data.originalData.subCategory = null;
         }
       }
     });
@@ -1285,7 +385,7 @@ function entitySubCategory() {
           }
         });
 
-        data.editedData.entityDetails.subCategory = `${categoryClass}-others: ${inputEl.value.trim()}`;
+        data.originalData.subCategory = `${categoryClass}-others: ${inputEl.value.trim()}`;
       });
     }
   });
@@ -1298,7 +398,7 @@ function selfEmployedProfessional() {
   const allCheckboxes = container.querySelectorAll('.checkbox_wrapper input[type="checkbox"]');
   const allTextInputs = container.querySelectorAll('.checkbox_wrapper input[type="text"]');
 
-  const preSelected = data.editedData?.entityDetails?.selfEmployeedProfessional || '';
+  const preSelected = data?.originalData?.selfEmployeedProfessional || '';
 
   // Reset initially
   allCheckboxes.forEach((cb) => (cb.checked = false));
@@ -1330,12 +430,12 @@ function selfEmployedProfessional() {
 
         if (inputEl) {
           inputEl.focus();
-          data.editedData.entityDetails.selfEmployeedProfessional = `Others: ${inputEl.value.trim()}`;
+          data.originalData.selfEmployeedProfessional = `Others: ${inputEl.value.trim()}`;
         } else {
-          data.editedData.entityDetails.selfEmployeedProfessional = label;
+          data.originalData.selfEmployeedProfessional = label;
         }
       } else {
-        data.editedData.entityDetails.selfEmployeedProfessional = null;
+        data.originalData.selfEmployeedProfessional = null;
       }
     });
 
@@ -1351,7 +451,7 @@ function selfEmployedProfessional() {
           if (input !== inputEl) input.value = '';
         });
 
-        data.editedData.entityDetails.selfEmployeedProfessional = `Others: ${inputEl.value.trim()}`;
+        data.originalData.selfEmployeedProfessional = `Others: ${inputEl.value.trim()}`;
       });
     }
   });
@@ -1364,7 +464,7 @@ function natureOfBusiness() {
   const allCheckboxes = container.querySelectorAll('.checkbox_wrapper input[type="checkbox"]');
   const allTextInputs = container.querySelectorAll('.checkbox_wrapper input[type="text"]');
 
-  const preSelected = data.editedData?.entityDetails?.natureOfBusiness || '';
+  const preSelected = data?.originalData?.natureOfBusiness || '';
 
   // Reset all checkboxes and inputs
   allCheckboxes.forEach((cb) => (cb.checked = false));
@@ -1395,12 +495,12 @@ function natureOfBusiness() {
 
         if (inputEl) {
           inputEl.focus();
-          data.editedData.entityDetails.natureOfBusiness = `Others: ${inputEl.value.trim()}`;
+          data.originalData.natureOfBusiness = `Others: ${inputEl.value.trim()}`;
         } else {
-          data.editedData.entityDetails.natureOfBusiness = label;
+          data.originalData.natureOfBusiness = label;
         }
       } else {
-        data.editedData.entityDetails.natureOfBusiness = null;
+        data.originalData.natureOfBusiness = null;
       }
     });
 
@@ -1416,14 +516,14 @@ function natureOfBusiness() {
           if (input !== inputEl) input.value = '';
         });
 
-        data.editedData.entityDetails.natureOfBusiness = `Others: ${inputEl.value.trim()}`;
+        data.originalData.natureOfBusiness = `Others: ${inputEl.value.trim()}`;
       });
 
       // Handle blur: if input is empty, unselect it
       inputEl.addEventListener('blur', () => {
         if (inputEl.value.trim() === '') {
           checkbox.checked = false;
-          data.editedData.entityDetails.natureOfBusiness = null;
+          data.originalData.natureOfBusiness = null;
         }
       });
     }
@@ -1441,50 +541,57 @@ function businessDetails() {
   const importCheckbox = section.querySelector('#import');
   const exportCheckbox = section.querySelector('#export');
 
+  if (!data.originalData.businessDetails) {
+    data.originalData.businessDetails = {};
+  }
+
   // Pre-fill if any data exists
-  const dataSet = data.editedData?.businessDetails || {};
+  const dataSet = data?.originalData?.businessDetails || {};
+
+  console.log('dataset', dataSet);
 
   detailsOfActivityInput.value = dataSet.detailsOfActivity || '';
   dateOfIncorporationInput.value = dataSet.dateOfIncorporation || '';
   annualTurnOverFiguresInput.value = dataSet.annualTurnOverFigures || '';
   annualTurnOverWordsInput.value = dataSet.annualTurnOverWords || '';
 
+  // Set color for inputs only
+  const inputs = [
+    detailsOfActivityInput,
+    dateOfIncorporationInput,
+    annualTurnOverFiguresInput,
+    annualTurnOverWordsInput,
+  ];
+  inputs.forEach((input) => {
+    if (input) {
+      input.style.setProperty('color', 'red', 'important');
+    }
+  });
+
   if (dataSet.involvedIn === 'Import') importCheckbox.checked = true;
   else if (dataSet.involvedIn === 'Export') exportCheckbox.checked = true;
 
-  // Input listeners
-  detailsOfActivityInput.addEventListener('input', () => {
-    data.editedData.businessDetails.detailsOfActivity = detailsOfActivityInput.value.trim();
-  });
-
-  dateOfIncorporationInput.addEventListener('input', () => {
-    data.editedData.businessDetails.dateOfIncorporation = dateOfIncorporationInput.value.trim();
-  });
-
-  annualTurnOverFiguresInput.addEventListener('input', () => {
-    data.editedData.businessDetails.annualTurnOverFigures = annualTurnOverFiguresInput.value.trim();
-  });
-
-  annualTurnOverWordsInput.addEventListener('input', () => {
-    data.editedData.businessDetails.annualTurnOverWords = annualTurnOverWordsInput.value.trim();
-  });
+  attachInputTracking(detailsOfActivityInput, ['businessDetails', 'detailsOfActivity']);
+  attachInputTracking(dateOfIncorporationInput, ['businessDetails', 'dateOfIncorporation']);
+  attachInputTracking(annualTurnOverFiguresInput, ['businessDetails', 'annualTurnOverFigures']);
+  attachInputTracking(annualTurnOverWordsInput, ['businessDetails', 'annualTurnOverWords']);
 
   // Checkbox logic (like radio)
   importCheckbox.addEventListener('change', () => {
     if (importCheckbox.checked) {
       exportCheckbox.checked = false;
-      data.editedData.businessDetails.involvedIn = 'Import';
+      data.originalData.businessDetails.involvedIn = 'Import';
     } else {
-      data.editedData.businessDetails.involvedIn = '';
+      data.originalData.businessDetails.involvedIn = '';
     }
   });
 
   exportCheckbox.addEventListener('change', () => {
     if (exportCheckbox.checked) {
       importCheckbox.checked = false;
-      data.editedData.businessDetails.involvedIn = 'Export';
+      data.originalData.businessDetails.involvedIn = 'Export';
     } else {
-      data.editedData.businessDetails.involvedIn = '';
+      data.originalData.businessDetails.involvedIn = '';
     }
   });
 }
@@ -1537,7 +644,7 @@ function natureOfIndustry() {
   ];
 
   const container = document.querySelector('#nature-of-industry .checkbox_container');
-  const selectedValue = data.editedData?.entityDetails?.natureOfIndustry || '';
+  const selectedValue = data?.originalData?.natureOfIndustry || '';
   let othersInput = null;
 
   labels.forEach((label, i) => {
@@ -1582,12 +689,12 @@ function natureOfIndustry() {
       if (checkbox.checked) {
         if (label === 'Others') {
           createAndAttachOthersInput(wrapper);
-          data.editedData.entityDetails.natureOfIndustry = '';
+          data.originalData.natureOfIndustry = '';
         } else {
-          data.editedData.entityDetails.natureOfIndustry = label;
+          data.originalData.natureOfIndustry = label;
         }
       } else {
-        data.editedData.entityDetails.natureOfIndustry = '';
+        data.originalData.natureOfIndustry = '';
         if (othersInput) {
           othersInput.remove();
           othersInput = null;
@@ -1608,14 +715,14 @@ function natureOfIndustry() {
     othersInput.focus();
 
     othersInput.addEventListener('input', () => {
-      data.editedData.entityDetails.natureOfIndustry = othersInput.value.trim();
+      data.originalData.natureOfIndustry = othersInput.value.trim();
     });
 
     othersInput.addEventListener('blur', () => {
       if (!othersInput.value.trim()) {
         const othersCheckbox = wrapper.querySelector('input[type="checkbox"]');
         if (othersCheckbox) othersCheckbox.checked = false;
-        data.editedData.entityDetails.natureOfIndustry = '';
+        data.originalData.natureOfIndustry = '';
         othersInput.remove();
         othersInput = null;
       }
@@ -1629,48 +736,110 @@ function entityProofDeclaration() {
   const inputs = section.querySelectorAll('input');
 
   // Destructure and assign fields from your data object
-  const {
-    entityProof1 = '',
-    entityProof2 = '',
-    addressProof = '',
-    identityProof = '',
-    date = '',
-  } = data.editedData?.entityProofDeclaration || {};
+  const { addressProof = '', identityProof = '' } = data?.editedData?.entityProofDeclaration || {};
+
+  // Ensure that editedData.entityProofDeclaration exists
+  if (!data?.editedData?.entityProofDeclaration) {
+    data.editedData.entityProofDeclaration = data?.originalData?.entityDetails || {};
+  }
+
+  const panDoc =
+    data.originalData.entityProofDeclaration?.pan || data?.originalData?.entityDetails?.pan;
+  const coiDoc =
+    data.originalData.entityProofDeclaration?.cin || data?.originalData?.entityDetails?.cin;
 
   // Prefill values
-  inputs[0].value = entityProof1;
-  inputs[1].value = entityProof2;
+  inputs[0].value = `PAN - ${panDoc?.panNumber}` || '';
+  inputs[1].value = `CIN - ${coiDoc?.cinNumber}` || '';
   inputs[2].value = addressProof;
   inputs[3].value = identityProof;
-  inputs[4].value = date;
 
-  // Update on input
-  inputs[0].addEventListener('input', (e) => {
-    data.editedData.entityProofDeclaration.entityProof1 = e.target.value.trim();
-  });
+  // Attach input tracking for changes
+  function attachInputTracking(inputField, key) {
+    inputField.addEventListener('input', (e) => {
+      // Update the corresponding field in editedData on input change
+      data.editedData.entityProofDeclaration[key] = e.target.value.trim();
+      // Optionally, log the change for debugging
+      console.log(`Updated ${key}: `, e.target.value.trim());
+    });
+  }
 
-  inputs[1].addEventListener('input', (e) => {
-    data.editedData.entityProofDeclaration.entityProof2 = e.target.value.trim();
-  });
+  // Attach tracking to the input fields
+  attachInputTracking(inputs[0], 'entityProof1');
+  attachInputTracking(inputs[1], 'entityProof2');
+  attachInputTracking(inputs[2], 'addressProof');
+  attachInputTracking(inputs[3], 'identityProof');
 
-  inputs[2].addEventListener('input', (e) => {
-    data.editedData.entityProofDeclaration.addressProof = e.target.value.trim();
-  });
+  const date = document.getElementById('date-input');
+  if (date) {
+    const today = new Date();
+    const day = String(today.getDate()).padStart(2, '0');
+    const month = String(today.getMonth() + 1).padStart(2, '0');
+    const year = today.getFullYear();
+    date.value = `${day}-${month}-${year}`;
+    date.readOnly = true;
+    date.style.setProperty('color', 'blue', 'important');
+  }
 
-  inputs[3].addEventListener('input', (e) => {
-    data.editedData.entityProofDeclaration.identityProof = e.target.value.trim();
-  });
+  // Handle image sources for authorized signatories
+  const signatoryImages = section.querySelectorAll('.aus_sign_img');
 
-  inputs[4].addEventListener('input', (e) => {
-    data.editedData.entityProofDeclaration.date = e.target.value.trim();
+  signatoryImages.forEach((imgContainer, index) => {
+    const signatoryData = data?.originalData?.authorizedSignatoriesDetails?.[index];
+    if (signatoryData) {
+      const imageUrl = signatoryData?.personalDetails?.documents?.signature?.url || '';
+
+      if (imageUrl) {
+        // If URL exists, create the img element and set the src attribute
+        const img = document.createElement('img');
+        img.src = imageUrl;
+        img.alt = `Signature of Authorized Signatory ${index + 1}`; // Alt text for better accessibility
+
+        // Append the img to the container
+        imgContainer.appendChild(img);
+      }
+    }
   });
 }
 
 function extendedAnnexure() {
-  const extended = data.editedData.extendedAnnexure || {
-    basicDetails: {},
-    docEntity: {},
-    mailAddress: {},
+  const extended = data?.originalData.extendedAnnexure || {
+    basicDetails: {
+      entityName: data.originalData.entityName || '',
+      entityCustId: data.originalData.entityCustId || '',
+    },
+    docEntity: {
+      cin: data.originalData.entityDetails?.cin?.cinNumber || '',
+    },
+    mailAddress: {
+      cin: data.originalData.entityDetails?.cin?.cinNumber || '',
+    },
+  };
+
+  const basicLabelKey = {
+    aofNo: 'aofNo',
+    nameOfEntity: 'entityName',
+    custId: 'entityCustId',
+  };
+
+  const docEntityLabel = {
+    coi: 'cin',
+  };
+
+  const mailAddressLabel = {
+    coi: 'cin',
+  };
+
+  // Correct input color handling based on original vs edited
+  const basicDetailsInputColor = (input, key) => {
+    const originalValue = extended.basicDetails[basicLabelKey[key]] || '';
+    const currentValue = input.value || '';
+
+    if (originalValue !== currentValue) {
+      input.style.setProperty('color', 'orange', 'important'); // modified
+    } else {
+      input.style.setProperty('color', 'blue', 'important'); // untouched
+    }
   };
 
   // Prefill + bind basic details
@@ -1678,9 +847,22 @@ function extendedAnnexure() {
   basicFields.forEach((key) => {
     const input = document.getElementById(`basic-${key}`);
     if (input) {
-      input.value = extended.basicDetails[key] || '';
+      input.value = extended.basicDetails[basicLabelKey[key]] || '';
+
+      basicDetailsInputColor(input, key); // Set initial color
+
       input.addEventListener('input', () => {
-        extended.basicDetails[key] = input.value;
+        extended.basicDetails[basicLabelKey[key]] = input.value;
+
+        if (!data.editedData) data.editedData = {};
+        if (!data.editedData.extendedAnnexure)
+          data.editedData.extendedAnnexure = { basicDetails: {} };
+        if (!data.editedData.extendedAnnexure.basicDetails)
+          data.editedData.extendedAnnexure.basicDetails = {};
+
+        data.editedData.extendedAnnexure.basicDetails[basicLabelKey[key]] = input.value; // store real input value
+
+        basicDetailsInputColor(input, key); // Check color again after typing
       });
     }
   });
@@ -1691,20 +873,22 @@ function extendedAnnexure() {
     const input = document.getElementById(`docEntity-${key}`);
     const check = document.getElementById(`docEntity-${key}-check`);
 
-    if (typeof extended.docEntity[key] !== 'undefined') {
-      if (check) check.checked = !!extended.docEntity[key];
-      if (input && typeof extended.docEntity[key] === 'string') {
-        input.value = extended.docEntity[key];
+    const labelKey = docEntityLabel[key];
+
+    if (typeof extended.docEntity[labelKey] !== 'undefined') {
+      if (check) check.checked = !!extended.docEntity[labelKey];
+      if (input && typeof extended.docEntity[labelKey] === 'string') {
+        input.value = extended.docEntity[labelKey];
       }
     }
 
     if (check) {
       check.addEventListener('change', () => {
         if (!check.checked) {
-          extended.docEntity[key] = '';
+          extended.docEntity[labelKey] = '';
           if (input) input.value = '';
         } else {
-          extended.docEntity[key] = input ? input.value || true : true;
+          extended.docEntity[labelKey] = input ? input.value || true : true;
         }
       });
     }
@@ -1712,7 +896,7 @@ function extendedAnnexure() {
     if (input) {
       input.addEventListener('input', () => {
         if (check?.checked) {
-          extended.docEntity[key] = input.value;
+          extended.docEntity[labelKey] = input.value;
         }
       });
     }
@@ -1724,20 +908,22 @@ function extendedAnnexure() {
     const input = document.getElementById(`mailAddress-${key}`);
     const check = document.getElementById(`mailAddress-${key}-check`);
 
-    if (typeof extended.mailAddress[key] !== 'undefined') {
-      if (check) check.checked = !!extended.mailAddress[key];
-      if (input && typeof extended.mailAddress[key] === 'string') {
-        input.value = extended.mailAddress[key];
+    const labelKey = mailAddressLabel[key];
+
+    if (typeof extended.mailAddress[labelKey] !== 'undefined') {
+      if (check) check.checked = !!extended.mailAddress[labelKey];
+      if (input && typeof extended.mailAddress[labelKey] === 'string') {
+        input.value = extended.mailAddress[labelKey];
       }
     }
 
     if (check) {
       check.addEventListener('change', () => {
         if (!check.checked) {
-          extended.mailAddress[key] = '';
+          extended.mailAddress[labelKey] = '';
           if (input) input.value = '';
         } else {
-          extended.mailAddress[key] = input ? input.value : '';
+          extended.mailAddress[labelKey] = input ? input.value : '';
         }
       });
     }
@@ -1745,7 +931,7 @@ function extendedAnnexure() {
     if (input) {
       input.addEventListener('input', () => {
         if (check?.checked) {
-          extended.mailAddress[key] = input.value;
+          extended.mailAddress[labelKey] = input.value;
         }
       });
     }
@@ -1753,7 +939,7 @@ function extendedAnnexure() {
 }
 
 function boDetailsTable() {
-  const boDetails = data.editedData.boDetails; // Assuming data.boDetails contains the details
+  const boDetails = data?.originalData?.boDetails; // Assuming data.boDetails contains the details
   const container = document.querySelector('#extended-annexure');
   const detailsContainer = document.querySelector('.bo_details');
   const boContainer = document.createElement('div');
@@ -1776,7 +962,12 @@ function boDetailsTable() {
       { label: 'Address - Pincode', key: 'pin' },
     ];
 
-    // Handle the pair of BOs for each iteration
+    // Helper to get deep value safely (if needed later)
+    function getValueByPath(obj, path) {
+      return path.split('.').reduce((acc, part) => acc?.[part], obj);
+    }
+
+    // Loop over BOs
     const currentBo = boDetails[i];
     const nextBo = boDetails[i + 1];
 
@@ -1784,45 +975,161 @@ function boDetailsTable() {
       const row = document.createElement('div');
       row.classList.add('row');
 
-      // Description part (first column)
       const descDiv = document.createElement('div');
       descDiv.classList.add('desc');
       const label = document.createElement('p');
       label.innerText = col.label;
       descDiv.appendChild(label);
 
-      // Value part (second column - for first input of BO[i])
+      // Handle input1 (currentBO)
       const valueDiv1 = document.createElement('div');
       valueDiv1.classList.add('value');
       const input1 = document.createElement('input');
       input1.type = 'text';
-      input1.value = currentBo[col.key] || ''; // Prefill the value if available
-      input1.addEventListener('input', (event) => {
-        boDetails[i][col.key] = event.target.value;
+      input1.value = currentBo?.[col.key] || '';
+
+      // Attach manual input tracking for input1
+      input1.addEventListener('input', (e) => {
+        const value = e.target.value.trim();
+        const trueOriginalValue1 =
+          data.originalData.boDetails?.find((bo) => bo.boId === currentBo.boId)?.[col.key] ?? '';
+
+        // Handle editedData for input1
+        if (trueOriginalValue1 === '') {
+          if (value) {
+            setByPath(data.editedData, ['boDetails', currentBo.boId, col.key], 'own');
+          } else {
+            deleteByPath(data.editedData, ['boDetails', currentBo.boId, col.key]);
+          }
+        } else {
+          if (value !== trueOriginalValue1) {
+            setByPath(data.editedData, ['boDetails', currentBo.boId, col.key], 'modified');
+          } else {
+            deleteByPath(data.editedData, ['boDetails', currentBo.boId, col.key]);
+          }
+        }
+
+        // Set color for input1
+        if (trueOriginalValue1 === '') {
+          input1.style.setProperty('color', value ? '#4b4b4d' : '#4b4b4d', 'important'); // Grey if Own
+        } else {
+          // Check if the value is different from the original value and update color
+          input1.style.setProperty(
+            'color',
+            value !== trueOriginalValue1 ? '#D97706' : '#2563EB',
+            'important',
+          ); // Orange if Modified, Blue if Same
+        }
+
+        // Update local object for input1
+        if (currentBo) currentBo[col.key] = value;
+
+        // Update originalData for input1
+        const boIndex = data.originalData.boDetails.findIndex((bo) => bo.boId === currentBo.boId);
+        if (boIndex !== -1) {
+          data.originalData.boDetails[boIndex][col.key] = value;
+        }
       });
+
+      // Set Initial Color for input1
+      const trueOriginalValue1 =
+        data.originalData.boDetails?.find((bo) => bo.boId === currentBo.boId)?.[col.key] ?? '';
+      const trueEditedValue1 = data.editedData.boDetails?.[currentBo.boId]?.[col.key] ?? ''; // Get the value from editedData
+
+      // Adjust logic: If value is modified in `editedData`, color should be orange (modified)
+      if (trueEditedValue1 === 'modified') {
+        input1.style.setProperty('color', '#D97706', 'important'); // Orange if Modified
+      } else if (trueOriginalValue1 === '') {
+        input1.style.setProperty('color', input1.value ? '#4b4b4d' : '#4b4b4d', 'important'); // Grey if Own
+      } else {
+        input1.style.setProperty(
+          'color',
+          input1.value !== trueOriginalValue1 ? '#D97706' : '#2563EB',
+          'important',
+        ); // Orange if Modified, Blue if Same
+      }
+
       valueDiv1.appendChild(input1);
 
-      // Value part (third column - for second input, either for BO[i+1] or empty)
+      // Handle input2 (nextBo)
       const valueDiv2 = document.createElement('div');
       valueDiv2.classList.add('value');
       const input2 = document.createElement('input');
       input2.type = 'text';
+
       if (nextBo) {
-        input2.value = nextBo[col.key] || ''; // Prefill the value if available
-        input2.addEventListener('input', (event) => {
-          boDetails[i + 1][col.key] = event.target.value;
+        input2.value = nextBo[col.key] || '';
+
+        // Attach manual input tracking for input2
+        input2.addEventListener('input', (e) => {
+          const value = e.target.value.trim();
+          const trueOriginalValue2 =
+            data.originalData.boDetails?.find((bo) => bo.boId === nextBo.boId)?.[col.key] ?? '';
+
+          // Handle editedData for input2
+          if (trueOriginalValue2 === '') {
+            if (value) {
+              setByPath(data.editedData, ['boDetails', nextBo.boId, col.key], 'own');
+            } else {
+              deleteByPath(data.editedData, ['boDetails', nextBo.boId, col.key]);
+            }
+          } else {
+            if (value !== trueOriginalValue2) {
+              setByPath(data.editedData, ['boDetails', nextBo.boId, col.key], 'modified');
+            } else {
+              deleteByPath(data.editedData, ['boDetails', nextBo.boId, col.key]);
+            }
+          }
+
+          // Set color for input2
+          if (trueOriginalValue2 === '') {
+            input2.style.setProperty('color', value ? '#4b4b4d' : '#4b4b4d', 'important'); // Grey if Own
+          } else {
+            // Check if the value is different from the original value and update color
+            input2.style.setProperty(
+              'color',
+              value !== trueOriginalValue2 ? '#D97706' : '#2563EB',
+              'important',
+            ); // Orange if Modified, Blue if Same
+          }
+
+          // Update local object for input2
+          if (nextBo) nextBo[col.key] = value;
+
+          // Update originalData for input2
+          const boIndex2 = data.originalData.boDetails.findIndex((bo) => bo.boId === nextBo.boId);
+          if (boIndex2 !== -1) {
+            data.originalData.boDetails[boIndex2][col.key] = value;
+          }
         });
       } else {
-        input2.disabled = true; // If no next BO, disable input
+        input2.disabled = true;
       }
+
+      // Set Initial Color for input2
+      const trueOriginalValue2 =
+        data.originalData.boDetails?.find((bo) => bo.boId === nextBo.boId)?.[col.key] ?? '';
+      const trueEditedValue2 = data.editedData.boDetails?.[nextBo.boId]?.[col.key] ?? ''; // Get the value from editedData
+
+      // Adjust logic: If value is modified in `editedData`, color should be orange (modified)
+      if (trueEditedValue2 === 'modified') {
+        input2.style.setProperty('color', '#D97706', 'important'); // Orange if Modified
+      } else if (trueOriginalValue2 === '') {
+        input2.style.setProperty('color', input2.value ? '#4b4b4d' : '#4b4b4d', 'important'); // Grey if Own
+      } else {
+        input2.style.setProperty(
+          'color',
+          input2.value !== trueOriginalValue2 ? '#D97706' : '#2563EB',
+          'important',
+        ); // Orange if Modified, Blue if Same
+      }
+
       valueDiv2.appendChild(input2);
 
-      // Append all three parts to the row
+      // Final assembly for the row
       row.appendChild(descDiv);
       row.appendChild(valueDiv1);
       row.appendChild(valueDiv2);
-
-      // Append row to the wrapper
       boWrapper.appendChild(row);
     });
 
@@ -1835,7 +1142,8 @@ function boDetailsTable() {
 }
 
 function ausDetails() {
-  const ausData = data?.editedData?.ausData || [];
+  console.log('reached auss');
+  const ausData = data?.originalData?.authorizedSignatoriesDetails || [];
   const labels = [
     'Name of the Authorised Signatory',
     "Father's name",
@@ -1849,8 +1157,25 @@ function ausDetails() {
     'Signature',
     'Photograph',
   ];
+  const labelKey = {
+    'Name of the Authorised Signatory': 'name',
+    "Father's name": 'fatherName',
+    'Proof of Identity': 'identityProof',
+    'Proof of Address': 'addressProof',
+    'Address - Line': 'address.line',
+    'Address - City': 'address.city',
+    'Address - State': 'address.state',
+    'Address - Country': 'address.country',
+    'Address - Pincode': 'address.pincode',
+    Signature: 'signature',
+    Photograph: 'photo',
+  };
 
   const toKey = (label) => label.toLowerCase().replace(/[^a-z0-9]/gi, '');
+
+  function getValueByPath(obj, path) {
+    return path.split('.').reduce((acc, part) => acc?.[part], obj);
+  }
 
   for (let i = 0; i < ausData.length; i += 2) {
     const aus1 = ausData[i];
@@ -1898,6 +1223,20 @@ function ausDetails() {
         const td = document.createElement('td');
         const div = document.createElement('div');
 
+        // ausData = {
+        //   ...ausData,
+        //   personalDetails: {
+        //     ...ausData.personalDetails,
+        //     address: { city: 'chennai' },
+        //     documents: {
+        //       ...ausData.personalDetails.documents,
+        //       photograph: {
+        //         url: 'http://3.109.141.220:3002/uploads/ebitaus-CUS62099-26042025/ebitaus-CUS62099-26042025-AUS3/photograph/musk.png',
+        //       },
+        //     },
+        //   },
+        // };
+
         if (rowIndex === 9) {
           // Signature row
           div.className = 'sign_container';
@@ -1905,12 +1244,9 @@ function ausDetails() {
           const wrapper = document.createElement('div');
           wrapper.className = 'sign_wrapper';
 
-          if (ausData?.signature) {
+          if (ausData?.personalDetails?.documents?.signature?.url) {
             const img = document.createElement('img');
-            img.src = ausData.signature;
-            img.style.maxWidth = '100%';
-            img.style.height = 'auto';
-            img.style.objectFit = 'contain';
+            img.src = ausData.personalDetails.documents.signature.url;
             wrapper.appendChild(img);
           }
 
@@ -1922,22 +1258,99 @@ function ausDetails() {
           const wrapper = document.createElement('div');
           wrapper.className = 'photo_wrapper';
 
-          if (ausData?.photo) {
+          if (ausData?.personalDetails?.documents?.photograph?.url) {
             const img = document.createElement('img');
-            img.src = ausData.photo;
+            img.src = ausData.personalDetails.documents.photograph.url;
             wrapper.appendChild(img);
           }
 
           div.appendChild(wrapper);
         } else {
-          // Input field for other rows
+          // Input field for other rows01327E
           const input = document.createElement('input');
           input.type = 'text';
-          const key = toKey(label);
-          input.value = ausData?.[key] || '';
+
+          const key = labelKey[label];
+
+          // Capture true original value once (important)
+          const trueOriginalValue = getValueByPath(ausData?.personalDetails, key) ?? '';
+
+          // Set initial input value
+          input.value = trueOriginalValue;
+
+          // 🌟 Function to update color based on value
+          function updateColor(value) {
+            const editedAus = data.editedData.authorizedSignatoriesDetails?.find(
+              (aus) => aus.ausId === ausData.ausId,
+            );
+
+            const status = editedAus?.personalDetails?.[key];
+            console.log('status 123', status, data.editedData.authorizedSignatoriesDetails);
+
+            if (status === 'own') {
+              input.style.setProperty('color', '#4b4b4d', 'important'); // Grey for own
+            } else if (status === 'modified') {
+              input.style.setProperty('color', '#D97706', 'important'); // Orange for modified
+            } else {
+              input.style.setProperty('color', '#2563EB', 'important'); // Blue if not edited
+            }
+          }
+
+          // Set initial color
+          updateColor(input.value.trim());
+
           input.addEventListener('input', (e) => {
-            if (ausData) ausData[key] = e.target.value;
+            const value = e.target.value.trim();
+
+            // 1. Update color immediately
+            updateColor(value);
+
+            // 2. Update editedData manually
+            let editedAus = data.editedData.authorizedSignatoriesDetails?.find(
+              (aus) => aus.ausId === ausData.ausId,
+            );
+
+            if (!editedAus) {
+              editedAus = { ausId: ausData.ausId, personalDetails: {} };
+              data.editedData.authorizedSignatoriesDetails =
+                data.editedData.authorizedSignatoriesDetails || [];
+              data.editedData.authorizedSignatoriesDetails.push(editedAus);
+            }
+
+            if (trueOriginalValue === '') {
+              if (value) {
+                editedAus.personalDetails[key] = 'own';
+              } else {
+                delete editedAus.personalDetails[key];
+              }
+            } else {
+              if (value !== trueOriginalValue) {
+                editedAus.personalDetails[key] = 'modified';
+              } else {
+                delete editedAus.personalDetails[key];
+              }
+            }
+
+            // Clean if no keys left
+            if (Object.keys(editedAus.personalDetails).length === 0) {
+              const idx = data.editedData.authorizedSignatoriesDetails.indexOf(editedAus);
+              if (idx !== -1) data.editedData.authorizedSignatoriesDetails.splice(idx, 1);
+            }
+
+            // 3. Bruteforce update ausData and originalData
+            if (ausData) {
+              ausData.personalDetails[key] = value;
+            }
+
+            const ausIndex = data.originalData.authorizedSignatoriesDetails.findIndex(
+              (aus) => aus.ausId === ausData.ausId,
+            );
+
+            if (ausIndex !== -1) {
+              data.originalData.authorizedSignatoriesDetails[ausIndex].personalDetails[key] = value;
+            }
           });
+
           div.appendChild(input);
         }
 

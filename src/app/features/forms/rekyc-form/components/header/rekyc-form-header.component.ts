@@ -6,7 +6,6 @@ import { Store } from '@ngrx/store';
 @Component({
   selector: 'rekyc-form-header',
   templateUrl: './rekyc-form-header.component.html',
-  styleUrls: ['./rekyc-form-header.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class RekycFormHeaderComponent {
@@ -15,8 +14,9 @@ export class RekycFormHeaderComponent {
   constructor(private store: Store) {}
 
   get getAusType() {
-    switch (this.ausInfo()?.ausType) {
+    switch (this.ausInfo()?.ausType?.toLowerCase()) {
       case 'aus':
+        return 'Authorized Signatory';
       case 'others':
         return 'Others';
       default:

@@ -1,4 +1,4 @@
-<ui-modal [isOpen]="true" class="max-w-xl">
+<ui-modal [isOpen]="isOpen()" class="max-w-xl">
   <div modalHeader>
     <h4 class="text-primary">
       Welcome to
@@ -23,7 +23,7 @@
       <ui-button
         label="Continue"
         class="mt-10 w-full"
-        (btnClick)="showFlow.set(false)"
+        (btnClick)="showFlow.set(true)"
       />
     </div>
 
@@ -51,7 +51,7 @@
           <div
             class="rounded-md bg-gray-100 px-4 py-0.5 font-medium text-primary"
           >
-            puneetgmail.com
+            {{ ausInfo()?.ausEmail }}
           </div>
         </div>
 
@@ -68,7 +68,7 @@
           </div>
 
           <div class="w-1/2">
-            <ui-select [options]="ausList" />
+            <ui-select [options]="ausList()" />
           </div>
         </div>
 
@@ -81,7 +81,7 @@
         >
           <div class="flex items-center gap-2">
             <input type="checkbox" [checked]="selectedFilledBy() === 3" />
-            <label for="entityFilledBy">Do it myself</label>
+            <label for="entityFilledBy">Others</label>
           </div>
 
           <div class="w-1/2">
@@ -89,6 +89,7 @@
               type="text"
               placeholder="Others"
               (valueChange)="setOthersEmail($event)"
+              [autofocus]="selectedFilledBy() === 3"
             />
           </div>
         </div>

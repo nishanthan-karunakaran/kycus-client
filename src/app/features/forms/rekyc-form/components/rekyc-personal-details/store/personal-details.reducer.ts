@@ -10,14 +10,16 @@ import { initialPersonalDetails } from './personal-details.state';
 export interface AusInfoState {
   ausId: null | string;
   ausName: null | string;
+  ausEmail: null | string;
   ausType: null | string;
   isAuthenticated: boolean;
 }
 
 export const initialAusInfoState: AusInfoState = {
-  ausId: null,
-  ausName: null,
-  ausType: null,
+  ausId: 'ebitaus-CUS62099-26042025-AUS3',
+  ausName: 'Nishanthan',
+  ausEmail: 'nishanthan.karunakaran@ebitaus.com',
+  ausType: 'aus',
   isAuthenticated: false,
 };
 

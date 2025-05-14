@@ -17,7 +17,7 @@ import { InputFormat } from 'src/app/core/directives/input-format.directive';
 @Component({
   selector: 'ui-input',
   templateUrl: './input.component.html',
-  styleUrls: ['./input.component.scss'],
+  // styleUrls: ['./input.component.scss'],
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
@@ -26,9 +26,7 @@ import { InputFormat } from 'src/app/core/directives/input-format.directive';
     },
   ],
 })
-export class InputComponent
-  implements OnChanges, AfterViewInit, ControlValueAccessor
-{
+export class InputComponent implements OnChanges, AfterViewInit, ControlValueAccessor {
   @Input() type = 'text';
   @Input() id = '';
   @Input() name = '';
@@ -99,8 +97,7 @@ export class InputComponent
           }
 
           if (propName === 'autocomplete') {
-            this.inputRef.nativeElement.autocomplete =
-              this.autocomplete || 'off';
+            this.inputRef.nativeElement.autocomplete = this.autocomplete || 'off';
           }
         }
       }

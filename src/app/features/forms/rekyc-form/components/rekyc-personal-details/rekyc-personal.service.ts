@@ -12,4 +12,12 @@ export class RekycPersonalFormService {
   uploadProofDocument(data: UploadFileProof) {
     return this.api.post(API_URL.APPLICATION.REKYC.PERSONAL_FORM.PERSONAL_DOCS_UPLOAD, data);
   }
+
+  getPersonalDetails(entityId: string, ausId: string) {
+    return this.api.get(API_URL.APPLICATION.REKYC.PERSONAL_FORM.PERSONAL_DETAILS(entityId, ausId));
+  }
+
+  previewEntityDetails(entityId: string, ausId: string) {
+    return this.api.get(API_URL.APPLICATION.REKYC.PERSONAL_FORM.PREVIEW_DETAILS(entityId, ausId));
+  }
 }

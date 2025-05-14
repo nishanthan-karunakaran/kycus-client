@@ -6,6 +6,7 @@
     <link rel="stylesheet" href="./rekyc.css" />
     <link rel="stylesheet" href="./var.css" />
     <script src="./rekyc.js"></script>
+    <script src="./rekycData.js"></script>
   </head>
 
   <body id="pdf-container">
@@ -41,7 +42,7 @@
           </div>
           <div class="form-container">
             <label for="date">Date</label>
-            <input type="text" />
+            <input id="date-input" type="text" />
           </div>
         </div>
 
@@ -56,7 +57,7 @@
           </div>
           <div class="form-container">
             <label for="propKartaCustId">
-              <span class="text-nowrap">CUSTOMER ID OF</span>
+              <span class="text-nowrap">PAN NUMBER OF</span>
               <br />
               <span class="text-nowrap">PROPERITOR/KARTA</span>
             </label>
@@ -90,7 +91,7 @@
           </div>
           <div class="form-container" class="text-nowrap">
             <label for="entityName" class="text-nowrap">PAN OF ENTITY</label>
-            <input type="text" id="entityPan" class="text-black" />
+            <input type="text" id="entityPan" />
           </div>
         </div>
       </section>
@@ -916,7 +917,7 @@
 
         <div class="aus_sign_container">
           <div class="aus_sign">
-            <hr />
+            <div class="aus_sign_img"></div>
             <p>
               Signature of Authorised
               <br />
@@ -924,7 +925,7 @@
             </p>
           </div>
           <div class="aus_sign">
-            <hr />
+            <div class="aus_sign_img"></div>
             <p>
               Signature of Authorised
               <br />
@@ -932,7 +933,7 @@
             </p>
           </div>
           <div class="aus_sign">
-            <hr />
+            <div class="aus_sign_img"></div>
             <p>
               Signature of Authorised
               <br />
@@ -944,7 +945,7 @@
         <div class="form-row">
           <div class="form-container">
             <label for="date" class="text-nowrap">Date</label>
-            <input type="text" />
+            <input id="date-input" type="text" />
           </div>
         </div>
 
@@ -1084,195 +1085,5 @@
         </div>
       </section>
     </div>
-
-    <!-- Page 4 -->
-    <!-- <div class="pdf-page">
-      <section id="aus-details" class="form_section">
-        <div class="header text-center">
-          <h2 class="text-black">Authorised Signatories details</h2>
-          <p>{All fields are mandatory}</p>
-        </div>
-
-        <div class="aus_container">
-          <table>
-            <tbody>
-              <tr>
-                <td>
-                  <p>Name of the Authorised Signatory</p>
-                </td>
-                <td>
-                  <div>
-                    <label for="date" class="text-nowrap">1)</label>
-                    <input type="text" />
-                  </div>
-                </td>
-                <td>
-                  <div>
-                    <label for="date" class="text-nowrap">1)</label>
-                    <input type="text" />
-                  </div>
-                </td>
-              </tr>
-              <tr>
-                <td>
-                  <p>Father's name</p>
-                </td>
-                <td>
-                  <div>
-                    <input type="text" />
-                  </div>
-                </td>
-                <td>
-                  <div>
-                    <input type="text" />
-                  </div>
-                </td>
-              </tr>
-              <tr>
-                <td>
-                  <p>Proof of Identity</p>
-                </td>
-                <td>
-                  <div>
-                    <label for="date" class="text-nowrap">Voter ID</label>
-                    <input type="text" />
-                  </div>
-                </td>
-                <td>
-                  <div>
-                    <label for="date" class="text-nowrap">Voter ID</label>
-                    <input type="text" />
-                  </div>
-                </td>
-              </tr>
-              <tr>
-                <td>
-                  <p>Proof of Address</p>
-                </td>
-                <td>
-                  <div>
-                    <label for="date" class="text-nowrap">Aadhaar</label>
-                    <input type="text" />
-                  </div>
-                </td>
-                <td>
-                  <div>
-                    <label for="date" class="text-nowrap">Aadhaar</label>
-                    <input type="text" />
-                  </div>
-                </td>
-              </tr>
-              <tr>
-                <td>
-                  <p>Address - Line</p>
-                </td>
-                <td>
-                  <div>
-                    <input type="text" />
-                  </div>
-                </td>
-                <td>
-                  <div>
-                    <input type="text" />
-                  </div>
-                </td>
-              </tr>
-              <tr>
-                <td>
-                  <p>Address - City</p>
-                </td>
-                <td>
-                  <div>
-                    <input type="text" />
-                  </div>
-                </td>
-                <td>
-                  <div>
-                    <input type="text" />
-                  </div>
-                </td>
-              </tr>
-              <tr>
-                <td>
-                  <p>Address - State</p>
-                </td>
-                <td>
-                  <div>
-                    <input type="text" />
-                  </div>
-                </td>
-                <td>
-                  <div>
-                    <input type="text" />
-                  </div>
-                </td>
-              </tr>
-              <tr>
-                <td>
-                  <p>Address - Country</p>
-                </td>
-                <td>
-                  <div>
-                    <input type="text" />
-                  </div>
-                </td>
-                <td>
-                  <div>
-                    <input type="text" />
-                  </div>
-                </td>
-              </tr>
-              <tr>
-                <td>
-                  <p>Address - Pincode</p>
-                </td>
-                <td>
-                  <div>
-                    <input type="text" />
-                  </div>
-                </td>
-                <td>
-                  <div>
-                    <input type="text" />
-                  </div>
-                </td>
-              </tr>
-              <tr>
-                <td>
-                  <p>Signature</p>
-                </td>
-                <td>
-                  <div class="sign_container">
-                    <div class="sign_wrapper"></div>
-                    <input type="text" name="ausName" id="ausName" />
-                  </div>
-                </td>
-                <td>
-                  <div class="sign_container">
-                    <div class="sign_wrapper"></div>
-                    <input type="text" name="ausName" id="ausName" />
-                  </div>
-                </td>
-              </tr>
-              <tr>
-                <td>
-                  <p>Photograph</p>
-                </td>
-                <td>
-                  <div class="photo_container">
-                    <div class="photo_wrapper"></div>
-                  </div>
-                </td>
-                <td>
-                  <div class="photo_container">
-                    <div class="photo_wrapper"></div>
-                  </div>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </section>
-    </div> -->
   </body>
 </html>

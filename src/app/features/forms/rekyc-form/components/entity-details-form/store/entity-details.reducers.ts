@@ -9,8 +9,6 @@ import {
 export const entityDetailsReducer = createReducer(
   initialEntityDetails,
   on(setEntityDetails, (state, payload) => {
-    // eslint-disable-next-line no-console
-    console.log('received ent det', payload);
     return { ...state, ...payload };
   }),
   on(updateEntityDetails, (state, { key, data }) => {

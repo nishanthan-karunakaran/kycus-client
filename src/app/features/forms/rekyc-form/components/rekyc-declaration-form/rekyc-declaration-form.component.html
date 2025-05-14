@@ -33,14 +33,8 @@
   <ng-container [ngSwitch]="currentScreen()">
     <rekyc-directors-form
       *ngSwitchCase="'directors'"
-      [addBtnClicked]="this.addBtnTrigger"
-      (updateAddBtnClicked)="handleAddBtn()"
       (formNavigation)="setCurrentScreen('bo')"
     />
-    <rekyc-bo-form
-      *ngSwitchCase="'bo'"
-      [addBO]="this.addBtnTrigger"
-      (updateAddBtnClicked)="handleAddBtn()"
-    />
+    <rekyc-bo-form *ngSwitchCase="'bo'" />
   </ng-container>
 </div>

@@ -24,270 +24,94 @@
     (ngSubmit)="submit('submit')"
     class="flex flex-col gap-4"
   >
-    <div class="grid w-full grid-cols-1 items-stretch gap-4 md:grid-cols-2">
-      <ui-rekycform-uploadwrapper>
-        <div>
-          <p>
-            Select Proof of Identity
-            <span
-              *ngIf="form.get('identityProof.isRequired')?.value"
-              class="text-red-500"
-            >
-              *
-            </span>
-          </p>
-          <p class="text-xs text-gray-500">
-            Name will fetched and validated with this
-          </p>
-        </div>
+    <div class="divide-y-2 rounded-lg border">
+      <div
+        *ngFor="let doc of documentKeys; trackBy: trackDoc"
+        class="flex items-center justify-between px-4 py-4"
+      >
+        <div class="w-[42%]">
+          <div class="flex flex-col gap-2">
+            <p>
+              {{ form.get(doc + '.label')?.value }}
+              <span
+                *ngIf="form.get(doc + '.isRequired')?.value"
+                class="text-red-500"
+              >
+                *
+              </span>
+            </p>
 
-        <ui-select
-          [options]="identityProofList"
-          (valueChange)="onProofDocChange('identityProof', $event)"
-          placeholder="Choose Proof of Identity"
-          [defaultValue]="form.value.identityProof.file.selectedType"
-        ></ui-select>
+            <ui-select
+              *ngIf="doc === 'addressProof' || doc === 'identityProof'"
+              [options]="
+                doc === 'addressProof' ? addressProofList : identityProofList
+              "
+              (valueChange)="onProofDocChange(doc, $event)"
+              placeholder="Choose Proof of Address"
+              [defaultValue]="form.get([doc, 'file', 'selectedType'])?.value"
+            ></ui-select>
+          </div>
 
-        <ui-upload-button
-          *ngIf="!form.get('identityProof.file.name')?.value"
-          accept=".pdf, .xlsx"
-          [disabled]="form.value.identityProof.file.selectedType === ''"
-          [loading]="isFileLoadingType('identityProof')"
-          (selectedFile)="onFileSelection('identityProof', $event)"
-        />
-
-        <div
-          *ngIf="form.get('identityProof.file.name')?.value"
-          class="flex items-center gap-2"
-        >
-          <ui-filename
-            *ngIf="form.get('identityProof.file.name')?.value"
-            [fileName]="form.get('identityProof.file.name')?.value"
-            (removeFile)="removeFile('identityProof')"
-          />
-          <lucide-icon
-            *ngIf="isFileLoadingType('identityProof')"
-            class="animate-slow-spin"
-            name="loader-circle"
-            color="#e67a4c"
-            size="20"
-          />
-          <lucide-icon
-            *ngIf="!isFileLoadingType('identityProof')"
-            name="check"
-            color="#219B17"
-          />
-        </div>
-
-        <p
-          class="text-sm text-red-500"
-          *ngIf="
-            form.get(['identityProof', 'file', 'name'])?.errors?.['required'] &&
-            form.get(['identityProof', 'file', 'name'])?.touched
-          "
-        >
-          Identity Proof is required
-        </p>
-      </ui-rekycform-uploadwrapper>
-
-      <ui-rekycform-uploadwrapper>
-        <div>
-          <p>
-            Select Proof of Address
-            <span
-              *ngIf="form.get('addressProof.isRequired')?.value"
-              class="text-red-500"
-            >
-              *
-            </span>
-          </p>
-          <p class="text-xs text-gray-500">
-            Address will fetched and validated with this
-          </p>
-        </div>
-
-        <ui-select
-          [options]="addressProofList"
-          (valueChange)="onProofDocChange('addressProof', $event)"
-          placeholder="Choose Proof of Address"
-          [defaultValue]="form.value.addressProof.file.selectedType"
-        ></ui-select>
-
-        <ui-upload-button
-          *ngIf="!form.get('addressProof.file.name')?.value"
-          accept=".pdf, .xlsx"
-          [disabled]="form.value.addressProof.file.selectedType === ''"
-          [loading]="isFileLoadingType('addressProof')"
-          (selectedFile)="onFileSelection('addressProof', $event)"
-        />
-
-        <div
-          *ngIf="form.get('addressProof.file.name')?.value"
-          class="flex items-center gap-2"
-        >
-          <ui-filename
-            *ngIf="form.get('addressProof.file.name')?.value"
-            [fileName]="form.get('addressProof.file.name')?.value"
-            (removeFile)="removeFile('addressProof')"
-          />
-          <lucide-icon
-            *ngIf="isFileLoadingType('addressProof')"
-            class="animate-slow-spin"
-            name="loader-circle"
-            color="#e67a4c"
-            size="20"
-          />
-          <lucide-icon
-            *ngIf="!isFileLoadingType('addressProof')"
-            name="check"
-            color="#219B17"
-          />
-        </div>
-
-        <p
-          class="text-sm text-red-500"
-          *ngIf="
-            form.get(['addressProof', 'file', 'name'])?.errors?.['required'] &&
-            form.get(['addressProof', 'file', 'name'])?.touched
-          "
-        >
-          Address Proof is required
-        </p>
-      </ui-rekycform-uploadwrapper>
-
-      <ui-rekycform-uploadwrapper>
-        <div>
-          <p>
-            Upload Photograph
-            <span
-              *ngIf="form.get('photograph.isRequired')?.value"
-              class="text-red-500"
-            >
-              *
-            </span>
-          </p>
-          <p class="text-xs font-semibold text-primary">Supports JPG, PNG</p>
-          <span class="text-xs text-gray-500">
-            Max size
-            <strong>2mb</strong>
+          <span
+            class="text-xs text-red-500"
+            *ngIf="
+              form.get([doc, 'file', 'name'])?.errors?.['required'] &&
+              form.get([doc, 'file', 'name'])?.touched
+            "
+          >
+            {{
+              doc === 'addressProof'
+                ? 'Address Proof'
+                : doc === 'identityProof'
+                  ? 'Identity Proof'
+                  : doc.charAt(0).toUpperCase() + doc.slice(1)
+            }}
+            is required
           </span>
         </div>
 
-        <ui-upload-button
-          *ngIf="!form.get('photograph.file.name')?.value"
-          accept=".png, .jpg"
-          [disabled]="form.value.photograph.file.selectedType === ''"
-          [loading]="isFileLoadingType('photograph')"
-          (selectedFile)="onFileSelection('photograph', $event)"
-        />
-
-        <div
-          *ngIf="form.get('photograph.file.name')?.value"
-          class="flex items-center gap-2"
-        >
-          <ui-filename
-            *ngIf="form.get('photograph.file.name')?.value"
-            [fileName]="form.get('photograph.file.name')?.value"
-            (removeFile)="removeFile('photograph')"
-          />
-          <lucide-icon
-            *ngIf="isFileLoadingType('photograph')"
-            class="animate-slow-spin"
-            name="loader-circle"
-            color="#e67a4c"
-            size="20"
-          />
-          <lucide-icon
-            *ngIf="!isFileLoadingType('photograph')"
-            name="check"
-            color="#219B17"
-          />
-        </div>
-
-        <p
-          class="text-sm text-red-500"
-          *ngIf="
-            form.get(['photograph', 'file', 'name'])?.errors?.['required'] &&
-            form.get(['photograph', 'file', 'name'])?.touched
-          "
-        >
-          Photograph is required
-        </p>
-      </ui-rekycform-uploadwrapper>
-
-      <ui-rekycform-uploadwrapper>
         <div>
-          <p>
-            Upload Specimen Signature
-            <span
-              *ngIf="form.get('signature.isRequired')?.value"
-              class="text-red-500"
-            >
-              *
-            </span>
-          </p>
-          <p class="text-xs text-gray-500">
-            Sign on white background, capture a clear picture and upload it
-          </p>
-          <p class="text-xs text-primary">Supports JPG, PNG</p>
-          <span class="text-xs text-gray-500">
-            Max size
-            <strong>2mb</strong>
-          </span>
+          <ui-upload-button
+            *ngIf="!form.get(doc + '.file.name')?.value"
+            [accept]="proofDoc(doc) ? '.pdf' : '.jpg, .png'"
+            [disabled]="
+              doc === 'addressProof'
+                ? form.get(doc + '.file.selectedType')?.value === ''
+                : false
+            "
+            (selectedFile)="onFileSelection(doc, $event)"
+          ></ui-upload-button>
+
+          <div
+            *ngIf="form.get(doc + '.file.name')?.value"
+            class="flex items-center gap-2"
+          >
+            <ui-filename
+              *ngIf="form.get(doc + '.file.name')?.value"
+              [fileName]="form.get(doc + '.file.name')?.value"
+              [fileLink]="form.get(doc + '.file.link')?.value"
+              (removeFile)="deleteDocument(doc)"
+            />
+          </div>
         </div>
-
-        <ui-upload-button
-          *ngIf="!form.get('signature.file.name')?.value"
-          accept=".png, .jpg"
-          [disabled]="form.value.signature.file.selectedType === ''"
-          [loading]="isFileLoadingType('signature')"
-          (selectedFile)="onFileSelection('signature', $event)"
-        />
-
-        <div
-          *ngIf="form.get('signature.file.name')?.value"
-          class="flex items-center gap-2"
-        >
-          <ui-filename
-            *ngIf="form.get('signature.file.name')?.value"
-            [fileName]="form.get('signature.file.name')?.value"
-            (removeFile)="removeFile('signature')"
-          />
-          <lucide-icon
-            *ngIf="isFileLoadingType('signature')"
-            class="animate-slow-spin"
-            name="loader-circle"
-            color="#e67a4c"
-            size="20"
-          />
-          <lucide-icon
-            *ngIf="!isFileLoadingType('signature')"
-            name="check"
-            color="#219B17"
-          />
-        </div>
-
-        <p
-          class="text-sm text-red-500"
-          *ngIf="
-            form.get(['signature', 'file', 'name'])?.errors?.['required'] &&
-            form.get(['signature', 'file', 'name'])?.touched
-          "
-        >
-          Signature is required
-        </p>
-      </ui-rekycform-uploadwrapper>
+      </div>
     </div>
 
     <div
       class="flex items-center justify-end gap-2 border-t border-gray-300 py-4"
     >
       <ui-button
-        label="Save Draft"
+        label="Preview"
         class="btn-outline"
-        (btnClick)="submit('save')"
+        (btnClick)="handlePreviewSheet()"
       />
       <ui-button type="submit" label="Submit" class="py-[7px]" />
     </div>
   </form>
+
+  <rekyc-preview-entitydet
+    [openSheet]="showPreviewSheet()"
+    (closeSheet)="handlePreviewSheet()"
+    [data]="previewData()"
+  />
 </div>

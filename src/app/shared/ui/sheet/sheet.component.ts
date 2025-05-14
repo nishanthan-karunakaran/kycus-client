@@ -9,6 +9,7 @@ export class SheetComponent {
   @Input() isOpen = false;
   @Input() showClose = false;
   @Input() class = '';
+  @Input() contentClass = '';
   @Input() position: 'left' | 'right' = 'right';
   @Output() closeSheet = new EventEmitter<void>();
 

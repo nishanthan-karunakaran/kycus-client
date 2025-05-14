@@ -39,12 +39,12 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngIf="filteredReKycApplications.length === 0">
+        <tr *ngIf="filteredReKycApplications().length === 0">
           <td colspan="4" class="text-center">No data found</td>
         </tr>
 
         <tr
-          *ngFor="let item of filteredReKycApplications; trackBy: trackRow"
+          *ngFor="let item of filteredReKycApplications(); trackBy: trackRow"
           tabindex="0"
         >
           <td>{{ item.entityName }}</td>
@@ -81,7 +81,7 @@
 
   <ui-pagination
     [active]="1"
-    [totalItems]="filteredReKycApplications.length"
+    [totalItems]="reKycPaginationInfo()?.total || 0"
     class="self-center"
     (activeChange)="setActivePage($event)"
   />

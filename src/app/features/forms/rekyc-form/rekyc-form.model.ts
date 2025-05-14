@@ -2,21 +2,20 @@ import { EntityInfoState } from './components/entity-filledby/store/entity-info.
 import { Director } from './components/rekyc-declaration-form/components/rekyc-bo-form/rekyc-directors-form/store/declaration-directors.state';
 import { AusInfoState } from './components/rekyc-personal-details/store/personal-details.reducer';
 
-export enum FormStep {
-  ENTITY_DETAILS,
-  DECLARATION,
-  PERSONAL_DETAILS,
-  KYC_FORM,
-  E_SIGN,
-}
-
 // export enum FormStep {
-//   ENTITY_DETAILS = 'entityDetails',
-//   DECLARATION = 'declaration',
-//   PERSONAL_DETAILS = 'personalDetails',
-//   KYC_FORM = 'kycForm',
-//   E_SIGN = 'eSign',
+//   ENTITY_DETAILS,
+//   DECLARATION,
+//   PERSONAL_DETAILS,
+//   KYC_FORM,
+//   E_SIGN,
 // }
+
+export enum FormStep {
+  ENTITY_DETAILS = 'entity-details',
+  PERSONAL_DETAILS = 'personal-details',
+  KYC_FORM = 'rekyc-form',
+  E_SIGN = 'eSign',
+}
 
 export interface VerifyOtpResponse {
   entityInfo: EntityInfoState;
@@ -40,6 +39,12 @@ export interface UploadFileProof {
 export interface UploadFileProofResponse {
   docName?: string;
   storedPath?: string;
+}
+
+export interface DeleteDocument {
+  entityId?: string;
+  ausId?: string;
+  docType: string;
 }
 
 export type EntityDetailsFileType = 'pan' | 'gstin' | 'addressProof' | 'coi' | 'moa' | 'aoa';
