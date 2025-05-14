@@ -20,6 +20,7 @@
           'pl-9': icon !== null && iconPos === 'start',
           'error-input': errorMessage,
         }"
+        [value]="defaultValue"
         [class]="class"
         [(ngModel)]="value"
         (input)="handleInput($event)"

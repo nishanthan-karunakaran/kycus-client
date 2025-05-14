@@ -47,33 +47,22 @@ import { ToastComponent } from 'src/app/shared/ui/toast/toast.component';
 import { ButtonComponent } from './ui/button/button.component';
 import { FilenameComponent } from './ui/filename/filename.component';
 import { InputDebounceComponent } from './ui/input-debounce/input-debounce.component';
+import { MenuComponent } from './ui/menu/menu.component';
 import { PaginationComponent } from './ui/pagination/pagination.component';
 import { SelectComponent } from './ui/select/select.component';
 import { SheetComponent } from './ui/sheet/sheet.component';
 import { TableComponent } from './ui/table/table.component';
-import { UploadButtonComponent } from './ui/upload-button/upload-button.component';
-import { PresentValuesPipe } from '@core/pipes/presentValues.pipe';
-import { MenuComponent } from './ui/menu/menu.component';
 import { TooltipComponent } from './ui/tooltip/tooltip.component';
+import { UploadButtonComponent } from './ui/upload-button/upload-button.component';
 
 @NgModule({
-  declarations: [
-    FilenameComponent,
-    InputComponent,
-    InputDebounceComponent,
-    MenuComponent,
-    OtpComponent,
-    PaginationComponent,
-    SelectComponent,
-    SheetComponent,
-    TableComponent,
-    ToastComponent,
-    UploadButtonComponent,
-  ],
   imports: [
     ButtonComponent,
     CommonModule,
     FormsModule,
+    FilenameComponent,
+    InputComponent,
+    InputDebounceComponent,
     InputFormatDirective,
     LucideAngularModule.pick({
       AlertOctagon,
@@ -111,11 +100,18 @@ import { TooltipComponent } from './ui/tooltip/tooltip.component';
       X,
       XCircle,
     }),
+    MenuComponent,
     ModalComponent,
-    PresentValuesPipe,
+    OtpComponent,
+    PaginationComponent,
     ReactiveFormsModule,
+    SelectComponent,
+    SheetComponent,
     RouterModule,
+    TableComponent,
+    ToastComponent,
     TooltipComponent,
+    UploadButtonComponent,
   ],
   exports: [
     ButtonComponent,
@@ -130,7 +126,6 @@ import { TooltipComponent } from './ui/tooltip/tooltip.component';
     ModalComponent,
     OtpComponent,
     PaginationComponent,
-    PresentValuesPipe,
     ReactiveFormsModule,
     RouterModule,
     SelectComponent,

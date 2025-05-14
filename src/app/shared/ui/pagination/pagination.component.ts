@@ -1,7 +1,12 @@
+import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
+import { LucideAngularModule } from 'lucide-angular';
+import { ButtonComponent } from '../button/button.component';
 
 @Component({
   selector: 'ui-pagination',
+  standalone: true,
+  imports: [CommonModule, LucideAngularModule, ButtonComponent],
   templateUrl: './pagination.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

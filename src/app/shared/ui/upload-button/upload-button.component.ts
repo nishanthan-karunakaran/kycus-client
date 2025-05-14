@@ -7,9 +7,13 @@ import {
   Output,
 } from '@angular/core';
 import { ToastService } from '../toast/toast.service';
+import { CommonModule } from '@angular/common';
+import { LucideAngularModule } from 'lucide-angular';
 
 @Component({
   selector: 'ui-upload-button',
+  standalone: true,
+  imports: [CommonModule, LucideAngularModule],
   template: `
     <button
       type="button"

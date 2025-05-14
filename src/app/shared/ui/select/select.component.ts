@@ -1,3 +1,4 @@
+import { CommonModule } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -16,6 +17,8 @@ export interface SelectOption<T = unknown> {
 
 @Component({
   selector: 'ui-select',
+  standalone: true,
+  imports: [CommonModule],
   template: `
     <select
       class="w-full rounded border bg-white p-2"

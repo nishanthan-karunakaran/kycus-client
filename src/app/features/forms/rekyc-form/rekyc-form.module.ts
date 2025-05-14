@@ -23,10 +23,12 @@ import { RekycFormRoutingModule } from './rekyc-form-routing.module';
 import { RekycFormComponent } from './rekyc-form.component';
 import { rekycFormReducers } from './store/rekyc-form.reducer';
 import { ConfirmationModalComponent } from '@src/app/shared/ui/confirmation-modal/confirmation-modal.component';
+import { PresentValuesPipe } from '@core/pipes/presentValues.pipe';
 
 @NgModule({
   imports: [
     SharedModule,
+    PresentValuesPipe,
     RekycFormRoutingModule,
     StoreModule.forFeature('rekycForm', rekycFormReducers),
     UiCircularMaskedLoaderComponent,

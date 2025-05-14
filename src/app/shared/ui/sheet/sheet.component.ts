@@ -1,7 +1,11 @@
+import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { LucideAngularModule } from 'lucide-angular';
 
 @Component({
   selector: 'app-sheet',
+  standalone: true,
+  imports: [CommonModule, LucideAngularModule],
   templateUrl: './sheet.component.html',
   styleUrls: ['./sheet.component.scss'],
 })

@@ -1,7 +1,11 @@
+import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { LucideAngularModule } from 'lucide-angular';
 
 @Component({
   selector: 'ui-filename',
+  standalone: true,
+  imports: [CommonModule, LucideAngularModule],
   templateUrl: './filename.component.html',
 })
 export class FilenameComponent {

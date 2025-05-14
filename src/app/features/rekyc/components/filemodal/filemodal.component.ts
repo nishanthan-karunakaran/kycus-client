@@ -78,10 +78,10 @@ export class FilemodalComponent {
 
         this.fileUpload();
       } else {
-        this.toastService.error('Please select a valid Excel file.');
+        this.toastService.error('Please upload a valid Excel file');
       }
     } else {
-      this.toastService.error('Please select a valid Excel file.');
+      this.toastService.error('Please upload a valid Excel file');
     }
 
     this.fileInput.nativeElement.value = '';

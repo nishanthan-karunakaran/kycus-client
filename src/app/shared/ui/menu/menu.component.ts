@@ -1,3 +1,4 @@
+import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 
 export interface MenuItem {
@@ -10,6 +11,8 @@ export interface MenuItem {
 
 @Component({
   selector: 'ui-menu',
+  standalone: true,
+  imports: [CommonModule],
   templateUrl: './menu.component.html',
   styleUrls: ['./menu.component.css'],
 })
