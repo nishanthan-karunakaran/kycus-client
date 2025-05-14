@@ -2,15 +2,6 @@ let data = {};
 let isCheckedAllReqInputFilled = false;
 
 async function renderAll() {
-  // const status = data?.status || false;
-
-  // if (status) {
-  //   document.querySelectorAll('input, select, textarea, button').forEach((element) => {
-  //     element.disabled = true; // Disable all form elements
-  //   });
-  //   document.body.style.pointerEvents = 'none'; // Disable all interactions with the body
-  // }
-
   await entityBasicInfo();
   await entityMailingAddress();
   await entityRegisteredAddress();
@@ -24,10 +15,10 @@ async function renderAll() {
   await extendedAnnexure();
   await boDetailsTable();
   await ausDetails();
-  // await extendedDeclaration();
-  // await fatcaCRS();
-  // await annexure1();
-  // await annexure2();
+  await extendedDeclaration();
+  await fatcaCRS();
+  await annexure1();
+  await annexure2();
 }
 
 function entityBasicInfo() {
@@ -335,7 +326,7 @@ function entityType() {
       document.querySelectorAll(`${selector} input[type="checkbox"]`).forEach((cb) => {
         if (cb !== input) cb.checked = false;
       });
-      data.editedData.entityType = input.checked ? label : null;
+      data.originalData.entityType = input.checked ? label : null;
     });
   });
 }
@@ -1796,10 +1787,10 @@ function annexure2() {
       'taxIdNumber',
     'Tax identification number type (for country other than India)': 'taxIdType',
     'Address - Line (Mandatory)': 'addressLine',
-    'Address - City (Mandatory)': 'addressCity',
-    'Address - State (Mandatory)': 'addressState',
-    'Address - Country (Mandatory)': 'addressCountry',
-    'Address - Pin Code (Mandatory)': 'addressPinCode',
+    'Address - City (Mandatory)': 'city',
+    'Address - State (Mandatory)': 'state',
+    'Address - Country (Mandatory)': 'country',
+    'Address - Pin Code (Mandatory)': 'pin',
     'Address Type for above (Mandatory)': 'addressType',
     'Mobile Number (Mandatory)': 'mobileNo',
     'Telephone Number (with ISD &STD code)': 'teleNo',
@@ -1855,7 +1846,12 @@ function annexure2() {
       const input1 = document.createElement('input');
       input1.style.width = '96%';
       input1.type = 'text';
-      input1.value = `${value}`;
+      input1.value =
+        (data?.originalData?.boDetails[index] && data?.originalData?.boDetails[index][value]) || '';
+
+      input1.addEventListener('input', () => {
+        data.originalData.boDetails[index][value] = input1.value.trim();
+      });
 
       innerDiv1.appendChild(input1);
       bo1.append(innerDiv1);
@@ -1865,7 +1861,14 @@ function annexure2() {
       const input2 = document.createElement('input');
       input2.style.width = '96%';
       input2.type = 'text';
-      input2.value = `${value}`;
+      input2.value =
+        (data?.originalData?.boDetails[index + 1] &&
+          data?.originalData?.boDetails[index + 1][value]) ||
+        '';
+
+      input2.addEventListener('input', () => {
+        data.originalData.boDetails[index + 1][value] = input2.value.trim();
+      });
 
       innerDiv2.appendChild(input2);
       bo2.append(innerDiv2);

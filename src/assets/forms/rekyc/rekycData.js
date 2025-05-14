@@ -28,6 +28,9 @@ const reqInputs = [
   'entity-contact-address-rentedLeased',
   'aof-no',
 ];
+const directCheckBoxes = {
+  'type-of-entity': ['data.originalData.entityType'],
+};
 
 function sendSaveData() {
   window.parent.postMessage(
@@ -64,14 +67,26 @@ function setFormData(payload) {
   };
 
   renderAll();
+  // disableEditAfterSubmit();
 }
+
+// function disableEditAfterSubmit() {
+// const status = data?.status || false;
+// if (status) {
+//   document.querySelectorAll('input, select, textarea, button').forEach((element) => {
+//     element.disabled = true; // Disable all form elements
+//   });
+//   document.body.style.pointerEvents = 'none'; // Disable all interactions with the body
+// }
+// }
 
 function checkAllReqInputFilled() {
   let firstEmptyInput = null;
+  let firstEmptyCheckboxLabel = null;
   let allInputsFilled = true;
 
+  // Check regular inputs
   reqInputs.forEach((inputId) => {
-    isCheckedAllReqInputFilled = true;
     const inputElement = document.getElementById(inputId);
     if (!inputElement) {
       console.warn(`Missing input: ${inputId}`);
@@ -82,7 +97,7 @@ function checkAllReqInputFilled() {
     const isFilled = inputElement.value?.trim() !== '';
 
     if (!isFilled) {
-      inputElement.style.setProperty('border-bottom', '1px solid red', 'important');
+      inputElement.style.setProperty('border-bottom', '2px solid red', 'important');
       allInputsFilled = false;
 
       if (!firstEmptyInput) {
@@ -93,12 +108,35 @@ function checkAllReqInputFilled() {
     }
   });
 
+  // Check checkboxes using the values in the provided data object
+  for (const [labelId, checkboxPaths] of Object.entries(directCheckBoxes)) {
+    const labelElement = document.getElementById(labelId);
+    const isChecked = checkboxPaths.some((path) => {
+      const value = eval(path); // Using eval to access the value directly from the path
+      return value && value.trim(); // Check if the value is non-empty or truthy
+    });
+
+    if (!isChecked) {
+      labelElement.style.setProperty('border-bottom', '2px solid red', 'important');
+      allInputsFilled = false;
+
+      if (!firstEmptyCheckboxLabel) {
+        firstEmptyCheckboxLabel = labelElement;
+      }
+    } else {
+      labelElement.style.removeProperty('border-bottom');
+    }
+  }
+
   if (allInputsFilled) {
     console.log('All required inputs are filled.');
   } else {
     console.log('Some required inputs are missing.');
-    if (firstEmptyInput) firstEmptyInput.focus();
   }
+
+  if (firstEmptyInput) firstEmptyInput.focus();
+  else if (firstEmptyCheckboxLabel)
+    firstEmptyCheckboxLabel.scrollIntoView({ behavior: 'smooth', block: 'center' });
 
   window.parent.postMessage(
     {
