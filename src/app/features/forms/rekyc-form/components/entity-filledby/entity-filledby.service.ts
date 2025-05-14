@@ -10,6 +10,10 @@ export class RekycEntityFilledbyService {
   constructor(private api: ApiService) {}
 
   updateEntityFilledBy(data: EntityFilledBy) {
+    if (data.email) {
+      return this.api.post(API_URL.APPLICATION.REKYC.ENTITY_INFO.ENTITY_FILLED_BY_OTHERS, data);
+    }
+
     return this.api.post(API_URL.APPLICATION.REKYC.ENTITY_INFO.ENTITY_FILLED_BY, data);
   }
 

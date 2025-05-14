@@ -2,6 +2,7 @@ import { selectAusInfo } from './../rekyc-personal-details/store/personal-detail
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { Store } from '@ngrx/store';
+import { selectEntityInfo } from '../entity-filledby/store/entity-info.selectors';
 
 @Component({
   selector: 'rekyc-form-header',
@@ -10,6 +11,13 @@ import { Store } from '@ngrx/store';
 })
 export class RekycFormHeaderComponent {
   readonly ausInfo = toSignal(this.store.select(selectAusInfo));
+  readonly entityInfo = toSignal(this.store.select(selectEntityInfo));
+  menuOptions = [
+    {
+      label: 'Logout',
+      icon: 'log-out',
+    },
+  ];
 
   constructor(private store: Store) {}
 
@@ -17,8 +25,8 @@ export class RekycFormHeaderComponent {
     switch (this.ausInfo()?.ausType?.toLowerCase()) {
       case 'aus':
         return 'Authorized Signatory';
-      case 'others':
-        return 'Others';
+      case 'other':
+        return 'Other';
       default:
         return 'Authorized Signatory';
     }

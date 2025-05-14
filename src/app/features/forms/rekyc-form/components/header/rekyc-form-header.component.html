@@ -12,17 +12,17 @@
 
     <div class="flex flex-col items-start gap-1 border-l-2 pl-4 text-primary">
       <p>RE KYC - NON INDIVIDUAL</p>
-      <img
+      <!-- <img
         src="./assets/images/logo/hdfc.webp"
         alt="HDFC"
         class="w-32 object-contain"
-      />
+      /> -->
     </div>
   </div>
 
   <div class="flex items-center gap-4">
     <div class="flex flex-col border-r-2 pr-4 text-end text-primary">
-      <p>TATA Consumer Products</p>
+      <p>{{ entityInfo()?.entityName }}</p>
       <span class="text-xs">Private Limited</span>
     </div>
 
@@ -36,4 +36,6 @@
       </div>
     </div>
   </div>
+
+  <!-- <ui-menu [menuItems]="menuOptions" /> -->
 </header>

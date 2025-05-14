@@ -1,10 +1,11 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { RekycFormComponent } from './rekyc-form.component';
+import { RekycEmailValidationComponent } from './components/email-validation/email-validation.component';
 import { RekycEntityDetailsFormComponent } from './components/entity-details-form/entity-details-form.component';
-import { RekycDeclarationFormComponent } from './components/rekyc-declaration-form/rekyc-declaration-form.component';
-import { RekycPersonalDetailsComponent } from './components/rekyc-personal-details/rekyc-personal-details.component';
+import { RekycEsignComponent } from './components/rekyc-esign/rekyc-esign.component';
 import { RekycKycFormComponent } from './components/rekyc-kyc-form/rekyc-kyc-form.component';
+import { RekycPersonalDetailsComponent } from './components/rekyc-personal-details/rekyc-personal-details.component';
+import { RekycFormComponent } from './rekyc-form.component';
 
 const routes: Routes = [
   {
@@ -12,25 +13,28 @@ const routes: Routes = [
     component: RekycFormComponent,
     children: [
       {
-        path: 'entity-details',
-        component: RekycEntityDetailsFormComponent,
+        path: 'login',
+        component: RekycEmailValidationComponent,
       },
       {
-        path: 'declaration',
-        component: RekycDeclarationFormComponent,
+        path: 'entity-details',
+        component: RekycEntityDetailsFormComponent,
+        // canActivate: [RekycGuard],
       },
       {
         path: 'personal-details',
         component: RekycPersonalDetailsComponent,
+        // canActivate: [RekycGuard],
       },
       {
         path: 'rekyc-form',
         component: RekycKycFormComponent,
+        // canActivate: [RekycGuard],
       },
-      // {
-      //   path: 'e-sign',
-      //   component: Rekuyce,
-      // },
+      {
+        path: 'eSign',
+        component: RekycEsignComponent,
+      },
     ],
   },
 ];

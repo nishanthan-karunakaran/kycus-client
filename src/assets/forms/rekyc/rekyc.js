@@ -1,6 +1,16 @@
 let data = {};
+let isCheckedAllReqInputFilled = false;
 
 async function renderAll() {
+  // const status = data?.status || false;
+
+  // if (status) {
+  //   document.querySelectorAll('input, select, textarea, button').forEach((element) => {
+  //     element.disabled = true; // Disable all form elements
+  //   });
+  //   document.body.style.pointerEvents = 'none'; // Disable all interactions with the body
+  // }
+
   await entityBasicInfo();
   await entityMailingAddress();
   await entityRegisteredAddress();
@@ -14,7 +24,10 @@ async function renderAll() {
   await extendedAnnexure();
   await boDetailsTable();
   await ausDetails();
-  // await downloadPDF();
+  // await extendedDeclaration();
+  // await fatcaCRS();
+  // await annexure1();
+  // await annexure2();
 }
 
 function entityBasicInfo() {
@@ -25,43 +38,49 @@ function entityBasicInfo() {
   const entityCustId = document.getElementById('entityCustId');
   const entityName = document.getElementById('entityName');
   const entityPan = document.getElementById('entityPan');
+  const propKartaCustId = document.getElementById('propKartaCustId');
+  const propKartaPan = document.getElementById('propKartaPan');
+  const propKartaCustName = document.getElementById('propKartaCustName');
+  const propKartaName = document.getElementById('propKartaName');
 
-  entityCustId.value = data.originalData.entityCustId || '';
+  entityCustId.value = data.originalData.custId || '';
   entityName.value = data.originalData.entityName || '';
   entityPan.value = data.originalData.entityDetails?.pan?.panNumber || '';
+  propKartaCustId.value = data.originalData.propKartaCustId || '';
+  propKartaPan.value = data.originalData.propKartaPan || '';
+  propKartaCustName.value = data.originalData.propKartaCustName || '';
+  propKartaName.value = data.originalData.propKartaName || '';
 
   // Attach tracking
-  attachInputTracking(entityCustId, ['entityCustId']);
+  attachInputTracking(entityCustId, ['custId']);
   attachInputTracking(entityName, ['entityName']);
   attachInputTracking(entityPan, ['entityDetails', 'pan', 'panNumber']);
+  attachInputTracking(propKartaCustId, ['propKartaCustId']);
+  attachInputTracking(propKartaPan, ['propKartaPan']);
+  attachInputTracking(propKartaCustName, ['propKartaCustName']);
+  attachInputTracking(propKartaName, ['propKartaName']);
 
-  const date = document.getElementById('date-input');
-  if (date) {
+  const dateInputs = document.querySelectorAll('input#date-input');
+
+  if (dateInputs.length > 0) {
     const today = new Date();
     const day = String(today.getDate()).padStart(2, '0');
     const month = String(today.getMonth() + 1).padStart(2, '0');
     const year = today.getFullYear();
-    date.value = `${day}-${month}-${year}`;
-    date.readOnly = true;
-    date.style.setProperty('color', 'blue', 'important');
+    const formattedDate = `${day}-${month}-${year}`;
+
+    dateInputs.forEach((input) => {
+      input.value = formattedDate;
+      input.readOnly = true;
+      input.style.setProperty('color', '#01327E', 'important');
+    });
   }
 }
 
 function entityMailingAddress() {
-  // if (data?.editedData?.entityDetails?.entityMailingAddress === undefined) {
-  //   // Ensure that editedData and entityDetails are also defined before assigning an empty object to entityMailingAddress
-  //   if (!data.editedData) {
-  //     data.editedData = {};
-  //   }
+  const entityDetails = data?.originalData?.entityDetails || {};
 
-  //   if (!data.editedData.entityDetails) {
-  //     data.editedData.entityDetails = {};
-  //   }
-
-  //   data.editedData.entityDetails.entityMailingAddress = {};
-  // }
-
-  const mailingAddress = data?.editedData.entityDetails.entityMailingAddress;
+  const mailingAddress = entityDetails.mailingAddress || {};
 
   // Checkbox elements
   const noChangeCheckbox = document.getElementById('noChangeInEmailAddress');
@@ -115,28 +134,47 @@ function entityMailingAddress() {
     'emailID',
   ];
 
+  const labelKey = {
+    shopBidg: 'buildingName',
+    roadName: 'street',
+    landmark: 'landmark',
+    city: 'city',
+    pincode: 'pin',
+    state: 'state',
+    country: 'country',
+    telOff: 'telOff',
+    extNo: 'extNo',
+    faxNo: 'faxNo',
+    telR: 'telR',
+    mobNo: 'mobNo',
+    emailID: 'email',
+  };
+
   fields.forEach((field) => {
     const input = document.getElementById(`entity-mailing-address-${field}`);
     if (!input) return;
 
-    input.value = mailingAddress[field] || '';
+    input.value = mailingAddress[labelKey[field]] || '';
 
-    input.oninput = (e) => {
-      mailingAddress[field] = e.target.value.trim();
-    };
+    const pathArray = ['entityDetails', 'mailingAddress', labelKey[field]];
+    attachInputTracking(input, pathArray);
+
+    // input.oninput = (e) => {
+    //   mailingAddress[field] = e.target.value.trim();
+    // };
   });
 }
 
 function entityRegisteredAddress() {
-  const entityDetails = data?.editedData.entityDetails;
+  const entityDetails = data?.originalData.entityDetails;
 
   // Ensure entityRegisteredAddress exists
-  if (!entityDetails.entityRegisteredAddress) {
-    entityDetails.entityRegisteredAddress = {};
+  if (!entityDetails.registeredOfficeAddress) {
+    entityDetails.registeredOfficeAddress = {};
   }
 
-  const registeredAddress = entityDetails.entityRegisteredAddress;
-  const mailingAddress = entityDetails.entityMailingAddress || {}; // assumed field for "same as mailing"
+  const registeredAddress = entityDetails.registeredOfficeAddress;
+  const mailingAddress = entityDetails.mailingAddress || {}; // assumed field for "same as mailing"
 
   // Checkbox elements for "Owned", "Rented / Leased" and "Same as Mailing Address"
   const owned = document.getElementById('entity-contact-address-owned');
@@ -146,18 +184,31 @@ function entityRegisteredAddress() {
   // Input field ids
   const fields = ['shopBidg', 'roadName', 'landmark', 'city', 'pincode', 'state', 'country'];
 
+  const labelKey = {
+    shopBidg: 'buildingName',
+    roadName: 'street',
+    landmark: 'landmark',
+    city: 'city',
+    pincode: 'pin',
+    state: 'state',
+    country: 'country',
+  };
+
   // Initialize the input fields
   fields.forEach((field) => {
     const input = document.getElementById(`entity-contact-address-${field}`);
     if (!input) return;
 
-    input.value = registeredAddress[field] || ''; // Set initial value from registeredAddress
-    input.disabled = !!sameAsMailing?.checked; // Disable inputs if "Same as Mailing" is checked
+    input.value = registeredAddress[labelKey[field]] || ''; // Set initial value from registeredAddress
+    // input.disabled = !!sameAsMailing?.checked; // Disable inputs if "Same as Mailing" is checked
+
+    const pathArray = ['entityDetails', 'registeredOfficeAddress', labelKey[field]];
+    attachInputTracking(input, pathArray);
 
     // Handle input changes to update registeredAddress
-    input.oninput = (e) => {
-      registeredAddress[field] = e.target.value.trim();
-    };
+    // input.oninput = (e) => {
+    //   registeredAddress[field] = e.target.value.trim();
+    // };
   });
 
   // Checkbox logic: Owned vs Rented
@@ -197,22 +248,32 @@ function entityRegisteredAddress() {
   if (sameAsMailing) {
     sameAsMailing.onchange = () => {
       const isSame = sameAsMailing.checked;
-      // Track the state of the "sameAsMailing" checkbox in registeredAddress
+
+      // Track the checkbox state in registeredAddress
       registeredAddress.sameAsMailing = isSame;
 
-      fields.forEach((field) => {
-        const input = document.getElementById(`entity-contact-address-${field}`);
-        if (!input) return;
+      // fields.forEach((field) => {
+      //   const input = document.getElementById(`entity-contact-address-${field}`);
+      //   if (!input) return;
 
-        if (isSame) {
-          // If "same as mailing" is checked, copy values from mailingAddress
-          input.value = mailingAddress[field] || '';
-          registeredAddress[field] = mailingAddress[field] || ''; // Update registeredAddress with mailing data
-        }
+      //   const key = labelKey[field];
 
-        // Disable the inputs if "same as mailing" is checked
-        input.disabled = isSame;
-      });
+      //   if (isSame) {
+      //     // If checked, copy from mailingAddress and disable input
+      //     input.value = mailingAddress[field] || '';
+      //     registeredAddress[key] = mailingAddress[field] || '';
+      //     // input.disabled = true;
+      //     input.style.setProperty('color', '#01327E', 'important');
+      //   } else {
+      //     // If unchecked, restore value from registeredAddress and attach input tracking
+      //     // input.disabled = false;
+      //     input.value = registeredAddress[key] || '';
+      //     input.style.setProperty('color', '#01327E', 'important');
+
+      //     const pathArray = ['entityDetails', 'registeredOfficeAddress', key];
+      //     attachInputTracking(input, pathArray);
+      //   }
+      // });
     };
   }
 
@@ -548,8 +609,6 @@ function businessDetails() {
   // Pre-fill if any data exists
   const dataSet = data?.originalData?.businessDetails || {};
 
-  console.log('dataset', dataSet);
-
   detailsOfActivityInput.value = dataSet.detailsOfActivity || '';
   dateOfIncorporationInput.value = dataSet.dateOfIncorporation || '';
   annualTurnOverFiguresInput.value = dataSet.annualTurnOverFigures || '';
@@ -562,11 +621,11 @@ function businessDetails() {
     annualTurnOverFiguresInput,
     annualTurnOverWordsInput,
   ];
-  inputs.forEach((input) => {
-    if (input) {
-      input.style.setProperty('color', 'red', 'important');
-    }
-  });
+  // inputs.forEach((input) => {
+  //   if (input) {
+  //     input.style.setProperty('color', 'red', 'important');
+  //   }
+  // });
 
   if (dataSet.involvedIn === 'Import') importCheckbox.checked = true;
   else if (dataSet.involvedIn === 'Export') exportCheckbox.checked = true;
@@ -736,41 +795,29 @@ function entityProofDeclaration() {
   const inputs = section.querySelectorAll('input');
 
   // Destructure and assign fields from your data object
-  const { addressProof = '', identityProof = '' } = data?.editedData?.entityProofDeclaration || {};
+  const { identityProof = '' } = data?.editedData?.entityProofDeclaration || {};
 
   // Ensure that editedData.entityProofDeclaration exists
   if (!data?.editedData?.entityProofDeclaration) {
     data.editedData.entityProofDeclaration = data?.originalData?.entityDetails || {};
   }
 
-  const panDoc =
-    data.originalData.entityProofDeclaration?.pan || data?.originalData?.entityDetails?.pan;
-  const coiDoc =
-    data.originalData.entityProofDeclaration?.cin || data?.originalData?.entityDetails?.cin;
+  const panDoc = data?.originalData?.entityDetails?.pan;
+  const coiDoc = data?.originalData?.entityDetails?.cin;
+  const addressProofDoc = data?.originalData?.entityDetails?.documents?.entityAddressProof;
 
   // Prefill values
   inputs[0].value = `PAN - ${panDoc?.panNumber}` || '';
   inputs[1].value = `CIN - ${coiDoc?.cinNumber}` || '';
-  inputs[2].value = addressProof;
+  inputs[2].value = camelToTitleCase(addressProofDoc?.selectedType || '') || '';
   inputs[3].value = identityProof;
 
-  // Attach input tracking for changes
-  function attachInputTracking(inputField, key) {
-    inputField.addEventListener('input', (e) => {
-      // Update the corresponding field in editedData on input change
-      data.editedData.entityProofDeclaration[key] = e.target.value.trim();
-      // Optionally, log the change for debugging
-      console.log(`Updated ${key}: `, e.target.value.trim());
-    });
-  }
+  // Clear input fields if they are empty
+  inputs.forEach((input) => {
+    input.disabled = true;
+  });
 
-  // Attach tracking to the input fields
-  attachInputTracking(inputs[0], 'entityProof1');
-  attachInputTracking(inputs[1], 'entityProof2');
-  attachInputTracking(inputs[2], 'addressProof');
-  attachInputTracking(inputs[3], 'identityProof');
-
-  const date = document.getElementById('date-input');
+  const date = document.querySelector('#date-input');
   if (date) {
     const today = new Date();
     const day = String(today.getDate()).padStart(2, '0');
@@ -778,7 +825,7 @@ function entityProofDeclaration() {
     const year = today.getFullYear();
     date.value = `${day}-${month}-${year}`;
     date.readOnly = true;
-    date.style.setProperty('color', 'blue', 'important');
+    date.style.setProperty('color', '#01327E', 'important');
   }
 
   // Handle image sources for authorized signatories
@@ -803,18 +850,27 @@ function entityProofDeclaration() {
 }
 
 function extendedAnnexure() {
-  const extended = data?.originalData.extendedAnnexure || {
-    basicDetails: {
-      entityName: data.originalData.entityName || '',
-      entityCustId: data.originalData.entityCustId || '',
-    },
-    docEntity: {
-      cin: data.originalData.entityDetails?.cin?.cinNumber || '',
-    },
-    mailAddress: {
-      cin: data.originalData.entityDetails?.cin?.cinNumber || '',
-    },
-  };
+  if (!data.originalData?.extendedAnnexure) {
+    data.originalData.extendedAnnexure = {
+      basicDetails: {
+        entityName: data.originalData?.entityName || '',
+        entityCustId: data.originalData?.custId || '',
+        aofNo: data.originalData?.aofNo || '',
+      },
+      docEntity: {
+        cin: data.originalData?.entityDetails?.cin?.cinNumber || '',
+        reg: '',
+        trust: '',
+        moa: '',
+      },
+      mailAddress: {
+        cin: data.originalData?.entityDetails?.cin?.cinNumber || '',
+        reg: '',
+      },
+    };
+  }
+
+  const extended = data.originalData.extendedAnnexure;
 
   const basicLabelKey = {
     aofNo: 'aofNo',
@@ -824,10 +880,14 @@ function extendedAnnexure() {
 
   const docEntityLabel = {
     coi: 'cin',
+    reg: 'reg',
+    trust: 'trust',
+    moa: 'moa',
   };
 
   const mailAddressLabel = {
     coi: 'cin',
+    reg: 'reg',
   };
 
   // Correct input color handling based on original vs edited
@@ -836,9 +896,9 @@ function extendedAnnexure() {
     const currentValue = input.value || '';
 
     if (originalValue !== currentValue) {
-      input.style.setProperty('color', 'orange', 'important'); // modified
+      input.style.setProperty('color', '#FF8754', 'important'); // modified
     } else {
-      input.style.setProperty('color', 'blue', 'important'); // untouched
+      input.style.setProperty('color', '#01327E', 'important'); // untouched
     }
   };
 
@@ -854,21 +914,13 @@ function extendedAnnexure() {
       input.addEventListener('input', () => {
         extended.basicDetails[basicLabelKey[key]] = input.value;
 
-        if (!data.editedData) data.editedData = {};
-        if (!data.editedData.extendedAnnexure)
-          data.editedData.extendedAnnexure = { basicDetails: {} };
-        if (!data.editedData.extendedAnnexure.basicDetails)
-          data.editedData.extendedAnnexure.basicDetails = {};
-
-        data.editedData.extendedAnnexure.basicDetails[basicLabelKey[key]] = input.value; // store real input value
-
         basicDetailsInputColor(input, key); // Check color again after typing
       });
     }
   });
 
   // Prefill + bind document entity
-  const docEntityFields = ['coi', 'rc', 'td', 'moa_aoa'];
+  const docEntityFields = ['coi', 'reg', 'trust', 'moa'];
   docEntityFields.forEach((key) => {
     const input = document.getElementById(`docEntity-${key}`);
     const check = document.getElementById(`docEntity-${key}-check`);
@@ -903,18 +955,16 @@ function extendedAnnexure() {
   });
 
   // Prefill + bind mailing address
-  const mailFields = ['coi', 'rc', 'other'];
+  const mailFields = ['coi', 'reg', 'other'];
   mailFields.forEach((key) => {
     const input = document.getElementById(`mailAddress-${key}`);
     const check = document.getElementById(`mailAddress-${key}-check`);
 
     const labelKey = mailAddressLabel[key];
 
-    if (typeof extended.mailAddress[labelKey] !== 'undefined') {
-      if (check) check.checked = !!extended.mailAddress[labelKey];
-      if (input && typeof extended.mailAddress[labelKey] === 'string') {
-        input.value = extended.mailAddress[labelKey];
-      }
+    if (check) check.checked = !!extended.mailAddress[labelKey];
+    if (input && typeof extended.mailAddress[labelKey] === 'string') {
+      input.value = extended.mailAddress[labelKey];
     }
 
     if (check) {
@@ -939,16 +989,18 @@ function extendedAnnexure() {
 }
 
 function boDetailsTable() {
-  const boDetails = data?.originalData?.boDetails; // Assuming data.boDetails contains the details
+  const boDetailsTemp = data?.originalData?.boDetails || [{}, {}]; // Assuming data.boDetails contains the details
+  const boDetails = [...boDetailsTemp];
+  // const boDetails = [...boDetailsTemp, ...boDetailsTemp, ...boDetailsTemp, ...boDetailsTemp];
   const container = document.querySelector('#extended-annexure');
   const detailsContainer = document.querySelector('.bo_details');
   const boContainer = document.createElement('div');
   boContainer.classList.add('bo_container');
 
-  const boLength = boDetails.length;
+  const boLength = boDetails.length || 2;
 
   // Loop for half the length of boDetails
-  for (let i = 0; i < Math.ceil(boLength / 2); i++) {
+  for (let i = 0; i < Math.ceil(boLength / 2); i += 2) {
     const boWrapper = document.createElement('div');
     boWrapper.classList.add('bo_wrapper');
 
@@ -968,8 +1020,8 @@ function boDetailsTable() {
     }
 
     // Loop over BOs
-    const currentBo = boDetails[i];
-    const nextBo = boDetails[i + 1];
+    const currentBo = boDetails[i] || {};
+    const nextBo = boDetails[i + 1] || {};
 
     columns.forEach((col) => {
       const row = document.createElement('div');
@@ -1016,7 +1068,7 @@ function boDetailsTable() {
           // Check if the value is different from the original value and update color
           input1.style.setProperty(
             'color',
-            value !== trueOriginalValue1 ? '#D97706' : '#2563EB',
+            value !== trueOriginalValue1 ? '#D97706' : '#01327E',
             'important',
           ); // Orange if Modified, Blue if Same
         }
@@ -1044,7 +1096,7 @@ function boDetailsTable() {
       } else {
         input1.style.setProperty(
           'color',
-          input1.value !== trueOriginalValue1 ? '#D97706' : '#2563EB',
+          input1.value !== trueOriginalValue1 ? '#D97706' : '#01327E',
           'important',
         ); // Orange if Modified, Blue if Same
       }
@@ -1088,7 +1140,7 @@ function boDetailsTable() {
             // Check if the value is different from the original value and update color
             input2.style.setProperty(
               'color',
-              value !== trueOriginalValue2 ? '#D97706' : '#2563EB',
+              value !== trueOriginalValue2 ? '#D97706' : '#01327E',
               'important',
             ); // Orange if Modified, Blue if Same
           }
@@ -1119,7 +1171,7 @@ function boDetailsTable() {
       } else {
         input2.style.setProperty(
           'color',
-          input2.value !== trueOriginalValue2 ? '#D97706' : '#2563EB',
+          input2.value !== trueOriginalValue2 ? '#D97706' : '#01327E',
           'important',
         ); // Orange if Modified, Blue if Same
       }
@@ -1133,16 +1185,37 @@ function boDetailsTable() {
       boWrapper.appendChild(row);
     });
 
-    // Append the wrapper to the boContainer
-    boContainer.appendChild(boWrapper);
+    if (i < 2) {
+      // Append the wrapper to the boContainer
+      boContainer.appendChild(boWrapper);
 
-    // Append boContainer to the detailsContainer
-    detailsContainer.appendChild(boContainer);
+      // Append boContainer to the detailsContainer
+      detailsContainer.appendChild(boContainer);
+    } else {
+      const pdfPage = document.createElement('div');
+      pdfPage.classList.add('pdf-page');
+
+      const section = document.createElement('section');
+      section.classList.add('form-section');
+      section.id = 'extended-annexure';
+
+      const boDetailsDiv = document.createElement('div');
+      boDetailsDiv.classList.add('bo_details');
+
+      const boContainerDiv = document.createElement('div');
+      boContainerDiv.classList.add('bo_container');
+
+      boContainerDiv.appendChild(boWrapper);
+      boDetailsDiv.appendChild(boContainerDiv);
+      section.appendChild(boDetailsDiv);
+      pdfPage.appendChild(section);
+
+      document.body.appendChild(pdfPage);
+    }
   }
 }
 
 function ausDetails() {
-  console.log('reached auss');
   const ausData = data?.originalData?.authorizedSignatoriesDetails || [];
   const labels = [
     'Name of the Authorised Signatory',
@@ -1160,13 +1233,13 @@ function ausDetails() {
   const labelKey = {
     'Name of the Authorised Signatory': 'name',
     "Father's name": 'fatherName',
-    'Proof of Identity': 'identityProof',
-    'Proof of Address': 'addressProof',
-    'Address - Line': 'address.line',
+    'Proof of Identity': 'documents.identityProof.selectedType',
+    'Proof of Address': 'documents.addressProof.selectedType',
+    'Address - Line': 'address.street',
     'Address - City': 'address.city',
     'Address - State': 'address.state',
     'Address - Country': 'address.country',
-    'Address - Pincode': 'address.pincode',
+    'Address - Pincode': 'address.pin',
     Signature: 'signature',
     Photograph: 'photo',
   };
@@ -1223,20 +1296,6 @@ function ausDetails() {
         const td = document.createElement('td');
         const div = document.createElement('div');
 
-        // ausData = {
-        //   ...ausData,
-        //   personalDetails: {
-        //     ...ausData.personalDetails,
-        //     address: { city: 'chennai' },
-        //     documents: {
-        //       ...ausData.personalDetails.documents,
-        //       photograph: {
-        //         url: 'http://3.109.141.220:3002/uploads/ebitaus-CUS62099-26042025/ebitaus-CUS62099-26042025-AUS3/photograph/musk.png',
-        //       },
-        //     },
-        //   },
-        // };
-
         if (rowIndex === 9) {
           // Signature row
           div.className = 'sign_container';
@@ -1275,24 +1334,31 @@ function ausDetails() {
           // Capture true original value once (important)
           const trueOriginalValue = getValueByPath(ausData?.personalDetails, key) ?? '';
 
-          // Set initial input value
-          input.value = trueOriginalValue;
+          if (label === 'Proof of Identity' || label === 'Proof of Address') {
+            // const selectedType = ausData?.personalDetails?.documents?.[key]?.type || '';
+            // const docNumber =
+            //   ausData?.personalDetails?.documents?.[key]?.number || 'Number not extracted';
+            // // Set initial input value
+            // input.value = `${selectedType} - ${docNumber}`;
+            input.value = trueOriginalValue.toUpperCase();
+          } else {
+            // Set initial input value
+            input.value = trueOriginalValue;
+          }
 
-          // 🌟 Function to update color based on value
           function updateColor(value) {
             const editedAus = data.editedData.authorizedSignatoriesDetails?.find(
-              (aus) => aus.ausId === ausData.ausId,
+              (aus) => aus?.ausId === ausData?.ausId,
             );
 
             const status = editedAus?.personalDetails?.[key];
-            console.log('status 123', status, data.editedData.authorizedSignatoriesDetails);
 
             if (status === 'own') {
-              input.style.setProperty('color', '#4b4b4d', 'important'); // Grey for own
+              input.style.setProperty('color', '#4B4B4D', 'important'); // Grey for own
             } else if (status === 'modified') {
               input.style.setProperty('color', '#D97706', 'important'); // Orange for modified
             } else {
-              input.style.setProperty('color', '#2563EB', 'important'); // Blue if not edited
+              input.style.setProperty('color', '#01327E', 'important'); // Blue if not edited
             }
           }
 
@@ -1332,22 +1398,46 @@ function ausDetails() {
             }
 
             // Clean if no keys left
-            if (Object.keys(editedAus.personalDetails).length === 0) {
+            if (editedAus && Object.keys(editedAus.personalDetails).length === 0) {
               const idx = data.editedData.authorizedSignatoriesDetails.indexOf(editedAus);
-              if (idx !== -1) data.editedData.authorizedSignatoriesDetails.splice(idx, 1);
+              if (idx !== -1) {
+                data.editedData.authorizedSignatoriesDetails.splice(idx, 1);
+              }
             }
 
-            // 3. Bruteforce update ausData and originalData
+            // 3. Bruteforce update both ausData and originalData
             if (ausData) {
-              ausData.personalDetails[key] = value;
+              ausData.personalDetails = ausData.personalDetails || {};
+              const keyParts = key.split('.');
+              let current = ausData.personalDetails;
+
+              for (let i = 0; i < keyParts.length - 1; i++) {
+                if (!current[keyParts[i]]) {
+                  current[keyParts[i]] = {};
+                }
+                current = current[keyParts[i]];
+              }
+              current[keyParts[keyParts.length - 1]] = value;
             }
 
-            const ausIndex = data.originalData.authorizedSignatoriesDetails.findIndex(
-              (aus) => aus.ausId === ausData.ausId,
+            const ausIndex = data.originalData?.authorizedSignatoriesDetails?.findIndex(
+              (aus) => aus.ausId === ausData?.ausId,
             );
 
             if (ausIndex !== -1) {
-              data.originalData.authorizedSignatoriesDetails[ausIndex].personalDetails[key] = value;
+              const originalAus = data.originalData.authorizedSignatoriesDetails[ausIndex];
+              originalAus.personalDetails = originalAus.personalDetails || {};
+
+              const keyParts = key.split('.');
+              let current = originalAus.personalDetails;
+
+              for (let i = 0; i < keyParts.length - 1; i++) {
+                if (!current[keyParts[i]]) {
+                  current[keyParts[i]] = {};
+                }
+                current = current[keyParts[i]];
+              }
+              current[keyParts[keyParts.length - 1]] = value;
             }
           });
 
@@ -1365,7 +1455,448 @@ function ausDetails() {
     container.appendChild(table);
     section.appendChild(container);
     pdfPage.appendChild(section);
-    document.body.appendChild(pdfPage);
+    const extended = document.querySelector('.extended-declaration-div');
+    extended.parentNode.insertBefore(pdfPage, extended);
+  }
+}
+
+function extendedDeclaration() {
+  const section = document.querySelector('#extended-declaration');
+  const entityDetails = data?.originalData.entityDetails;
+
+  const aofNo = document.querySelector('#aof-no');
+  aofNo.value = data?.originalData?.entityDetails?.aofNo || '';
+  attachInputTracking(aofNo, ['entityDetails', 'aofNo']);
+
+  const entityName = section.querySelector('#entityName');
+  entityName.value = data?.originalData?.entityName || '';
+  attachInputTracking(entityName, ['entityName']);
+
+  const custId = section.querySelector('#custId');
+  custId.value = data?.originalData?.custId || '';
+  attachInputTracking(custId, ['custId']);
+
+  if (!data?.originalData?.entityDetails?.country) {
+    data.originalData.entityDetails.country = entityDetails?.registeredOfficeAddress?.country;
+  }
+
+  const countryCin = section.querySelector('#countryCin');
+  countryCin.value = data?.originalData?.entityDetails?.country || '';
+  attachInputTracking(countryCin, ['entityDetails', 'country']);
+
+  if (!data?.originalData?.entityDetails?.city) {
+    data.originalData.entityDetails.city = entityDetails?.registeredOfficeAddress?.city;
+  }
+
+  const cityCin = section.querySelector('#cityCin');
+  cityCin.value = data?.originalData?.entityDetails?.city || '';
+  attachInputTracking(cityCin, ['entityDetails', 'cityCin']);
+
+  handleEitherCheckbox('taxableOutsideIndia', 'nonTaxableOutsideIndia', 'taxOutsideIndia');
+  handleEitherCheckbox('usResident', 'nonUSResident', 'usResident');
+  handleEitherCheckbox('ownedByMany', 'nonOwnedByMany', 'ownedBy');
+  handleEitherCheckbox('financialInstitution', 'nonFinancialInstitution', 'financialInstitution');
+  handleEitherCheckbox('publicTraded', 'nonPublicTraded', 'publicTraded');
+  handleEitherCheckbox('relatedPublicTraded', 'nonRelatedPublicTraded', 'relatedPublicTraded');
+  handleEitherCheckbox('subsidiary', 'controlled', 'relationNature');
+  handleEitherCheckbox(
+    'ultimateBeneficialOwner',
+    'nonUltimateBeneficialOwner',
+    'ultimateBeneficialOwner',
+  );
+
+  function handleEitherCheckbox(cb1, cb2, cbKey) {
+    const c1 = section.querySelector(`#${cb1}`);
+    const c2 = section.querySelector(`#${cb2}`);
+    updateCheckBoxValue();
+
+    c1.onchange = () => {
+      if (c1.checked) {
+        data.originalData.entityDetails[cbKey] = 'c1';
+        c2.checked = false; // Ensure the other checkbox is unchecked
+      } else {
+        data.originalData.entityDetails[cbKey] = null;
+      }
+
+      updateCheckBoxValue();
+    };
+
+    c2.onchange = () => {
+      if (c2.checked) {
+        data.originalData.entityDetails[cbKey] = 'c2';
+        c1.checked = false; // Ensure the other checkbox is unchecked
+      } else {
+        data.originalData.entityDetails[cbKey] = null;
+      }
+
+      updateCheckBoxValue();
+    };
+
+    function updateCheckBoxValue() {
+      c1.checked = data?.originalData?.entityDetails[cbKey] === 'c1';
+      c2.checked = data?.originalData?.entityDetails[cbKey] === 'c2';
+    }
+  }
+
+  const stockExchange = section.querySelector('#stockExchange');
+  stockExchange.value = data?.originalData?.entityDetails?.stockExchange || '';
+  attachInputTracking(stockExchange, ['entityDetails', 'stockExchange']);
+
+  const listedCompany = section.querySelector('#listedCompany');
+  listedCompany.value = data?.originalData?.entityDetails?.listedCompany || '';
+  attachInputTracking(listedCompany, ['entityDetails', 'listedCompany']);
+
+  const listedStockExchange = section.querySelector('#listedStockExchange');
+  listedStockExchange.value = data?.originalData?.entityDetails?.listedStockExchange || '';
+  attachInputTracking(listedStockExchange, ['entityDetails', 'listedStockExchange']);
+}
+
+function fatcaCRS() {
+  if (!data?.originalData?.entityDetails?.fatcaCRS) {
+    data.originalData.entityDetails.fatcaCRS = {};
+  }
+
+  const section = document.querySelector('#fatca-crs');
+
+  const name = section.querySelector('#name');
+  name.value = data?.originalData?.entityDetails?.fatcaCRS?.name || '';
+  attachInputTracking(name, ['entityDetails', 'fatcaCRS', 'name']);
+
+  const designation = section.querySelector('#designation');
+  designation.value = data?.originalData?.entityDetails?.fatcaCRS?.designation || '';
+  attachInputTracking(designation, ['entityDetails', 'fatcaCRS', 'designation']);
+}
+
+function annexure1() {
+  // Update data.originalData.annexure1 for the current checkbox
+  if (!data.originalData.annexure1) {
+    data.originalData.annexure1 = {};
+  }
+
+  const section = document.querySelector('#annexure-1');
+
+  const entityName = section.querySelector('#entityName');
+  entityName.value = data.originalData.entityName || '';
+  attachInputTracking(entityName, ['entityName']);
+
+  const aofNo = section.querySelector('#aof-no');
+  aofNo.value = data?.originalData?.entityDetails?.aofNo || '';
+  attachInputTracking(aofNo, ['entityDetails', 'aofNo']);
+
+  const checkBoxIds = ['cin', 'globalEntityIdentificationNo', 'tin', 'other-checkbox'];
+
+  checkBoxIds.forEach((id) => {
+    const checkbox = section.querySelector(`#${id}`);
+    if (!checkbox) return;
+
+    // Set initial state based on data.originalData.annexure1
+    checkbox.checked = !!data.originalData.annexure1?.[id];
+
+    // Add change event listener
+    checkbox.addEventListener('change', () => {
+      if (checkbox.checked) {
+        // Uncheck all other checkboxes
+        checkBoxIds.forEach((otherId) => {
+          if (otherId !== id) {
+            const otherCheckbox = section.querySelector(`#${otherId}`);
+            if (otherCheckbox) {
+              otherCheckbox.checked = false;
+              if (data.originalData.annexure1) {
+                data.originalData.annexure1[otherId] = false;
+              }
+            }
+          }
+        });
+
+        data.originalData.annexure1[id] = true;
+
+        if (id === 'other-checkbox') {
+          otherInput.focus();
+        }
+      } else {
+        // If unchecked, update data.originalData.annexure1
+        if (data.originalData.annexure1) {
+          data.originalData.annexure1[id] = false;
+        }
+
+        if (id !== 'other-checkbox') {
+          otherInput.focus();
+        }
+      }
+    });
+  });
+
+  const otherInput = section.querySelector('#other');
+  otherInput.value = data.originalData.annexure1.identificationNoOtherInput || '';
+  attachInputTracking(otherInput, ['annexure1', 'identificationNoOtherInput']);
+
+  const idNo = section.querySelector('#idNo');
+  idNo.value = data.originalData.annexure1.idNo || '';
+  attachInputTracking(idNo, ['annexure1', 'idNo']);
+
+  const idNoIssuingCountry = section.querySelector('#idNoIssuingCountry');
+  idNoIssuingCountry.value = data.originalData.annexure1.idNoIssuingCountry || '';
+  attachInputTracking(idNoIssuingCountry, ['annexure1', 'idNoIssuingCountry']);
+
+  const addressCheckBoxIds = ['taxAddressReg', 'taxAddressMail'];
+  const addressCheckBoxType = ['resiBusiness', 'residential', 'business', 'regOffice'];
+
+  // Ensure only one checkbox from addressCheckBoxIds can be selected
+  addressCheckBoxIds.forEach((id) => {
+    const checkbox = section.querySelector(`#${id}`);
+    if (!checkbox) return;
+
+    // Set initial state based on data.originalData.annexure1
+    checkbox.checked = !!data.originalData.annexure1?.[id];
+
+    checkbox.addEventListener('change', () => {
+      if (checkbox.checked) {
+        addressCheckBoxIds.forEach((otherId) => {
+          if (otherId !== id) {
+            const otherCheckbox = section.querySelector(`#${otherId}`);
+            if (otherCheckbox) otherCheckbox.checked = false;
+            if (data.originalData.annexure1) {
+              data.originalData.annexure1[otherId] = false;
+            }
+          }
+        });
+        data.originalData.annexure1[id] = true;
+      } else {
+        if (data.originalData.annexure1) {
+          data.originalData.annexure1[id] = false;
+        }
+      }
+    });
+  });
+
+  // Ensure only one checkbox from addressCheckBoxType can be selected
+  addressCheckBoxType.forEach((id) => {
+    const checkbox = section.querySelector(`#${id}`);
+    if (!checkbox) return;
+
+    // Set initial state based on data.originalData.annexure1
+    checkbox.checked = !!data.originalData.annexure1?.[id];
+
+    checkbox.addEventListener('change', () => {
+      if (checkbox.checked) {
+        addressCheckBoxType.forEach((otherId) => {
+          if (otherId !== id) {
+            const otherCheckbox = section.querySelector(`#${otherId}`);
+            if (otherCheckbox) otherCheckbox.checked = false;
+            if (data.originalData.annexure1) {
+              data.originalData.annexure1[otherId] = false;
+            }
+          }
+        });
+        data.originalData.annexure1[id] = true;
+      } else {
+        if (data.originalData.annexure1) {
+          data.originalData.annexure1[id] = false;
+        }
+      }
+    });
+  });
+
+  const entityExcemptionCode = section.querySelector('#entityExcemptionCode');
+  entityExcemptionCode.value = data.originalData.annexure1.entityExcemptionCode || '';
+  attachInputTracking(entityExcemptionCode, ['annexure1', 'entityExcemptionCode']);
+
+  const personType = ['usPerson', 'nonUSPerson'];
+
+  // Ensure only one checkbox from personType can be selected
+  personType.forEach((id) => {
+    const checkbox = section.querySelector(`#${id}`);
+    if (!checkbox) return;
+
+    // Set initial state based on data.originalData.annexure1
+    checkbox.checked = !!data.originalData.annexure1?.[id];
+
+    checkbox.addEventListener('change', () => {
+      if (checkbox.checked) {
+        personType.forEach((otherId) => {
+          if (otherId !== id) {
+            const otherCheckbox = section.querySelector(`#${otherId}`);
+            if (otherCheckbox) otherCheckbox.checked = false;
+            if (data.originalData.annexure1) {
+              data.originalData.annexure1[otherId] = false;
+            }
+          }
+        });
+        data.originalData.annexure1[id] = true;
+
+        // Disable and clear entityExcemptionCode if usPerson is selected
+        if (id === 'usPerson') {
+          entityExcemptionCode.value = '';
+          entityExcemptionCode.disabled = true;
+          data.originalData.annexure1.entityExcemptionCode = '';
+        } else {
+          entityExcemptionCode.disabled = false;
+        }
+      } else {
+        if (data.originalData.annexure1) {
+          data.originalData.annexure1[id] = false;
+        }
+      }
+    });
+  });
+
+  const institutionType = ['financialInstitution', 'directReporting'];
+
+  // Ensure only one checkbox from institutionType can be selected
+  institutionType.forEach((id) => {
+    const checkbox = section.querySelector(`#${id}`);
+    if (!checkbox) return;
+
+    // Set initial state based on data.originalData.extendedDeclaration
+    checkbox.checked = !!data.originalData.annexure1?.[id];
+
+    checkbox.addEventListener('change', () => {
+      if (checkbox.checked) {
+        institutionType.forEach((otherId) => {
+          if (otherId !== id) {
+            const otherCheckbox = section.querySelector(`#${otherId}`);
+            if (otherCheckbox) otherCheckbox.checked = false;
+            if (data.originalData.annexure1) {
+              data.originalData.annexure1[otherId] = false;
+            }
+          }
+        });
+        data.originalData.annexure1[id] = true;
+      } else {
+        if (data.originalData.annexure1) {
+          data.originalData.annexure1[id] = false;
+        }
+      }
+    });
+  });
+}
+
+function annexure2() {
+  const boLength = data?.originalData?.boDetails.length;
+
+  const fields = {
+    'Name of the controlling person (mandatory)': 'boName',
+    'Entity Type (mandatory)': 'entityType',
+    'Controlling person type code (mandatory)': 'controllingPersonTypeCode',
+    'Date of birth (mandatory)': 'dob',
+    'PAN (mandatory)': 'pan',
+    'Customer ID (if applicable)': 'custId',
+    'Percentage of ownership/capital/profits(mandatory)': 'sharePercentage',
+    'Place / City of Birth (mandatory)': 'placeOfBirth',
+    'Country of Birth (mandatory)': 'countryOfBirth',
+    'Gender (mandatory)': 'gender',
+    'Marital Status (mandatory)': 'maritalStatus',
+    'Father’s name (mandatory)': 'fatherName',
+    'Nationality (Please specify country) (mandatory)': 'nationality',
+    'Aadhaar No (Optional)': 'aadhaarNo',
+    'Mother’s Name (optional)': 'motherName',
+    'Maiden Name (if any)': 'maidenName',
+    'Country of tax residence* (Mandatory)': 'taxResidenceCountry',
+    'Tax identification number (or functional equivalent of country other than India) %':
+      'taxIdNumber',
+    'Tax identification number type (for country other than India)': 'taxIdType',
+    'Address - Line (Mandatory)': 'addressLine',
+    'Address - City (Mandatory)': 'addressCity',
+    'Address - State (Mandatory)': 'addressState',
+    'Address - Country (Mandatory)': 'addressCountry',
+    'Address - Pin Code (Mandatory)': 'addressPinCode',
+    'Address Type for above (Mandatory)': 'addressType',
+    'Mobile Number (Mandatory)': 'mobileNo',
+    'Telephone Number (with ISD &STD code)': 'teleNo',
+    'Occupation Type (Mandatory)': 'occupationType',
+    'Proof of Identity (Mandatory)': 'identityProof',
+    'Proof of Address (Mandatory)': 'addressProof',
+    'Spouse’s name (Optional)': 'spouseName',
+    'Recent colour Photographs (Photo is Non- mandatory for Account opening)': 'photograph',
+  };
+
+  for (let index = 0; index < boLength; index += 2) {
+    let wholeContainer = null;
+    let section = null;
+    let content = null;
+    if (index < 2) {
+      wholeContainer = document.querySelector(`.annexure-2-div-${index + 1}`);
+      section = document.querySelector('#annexure-2');
+      content = section.querySelector('.content');
+    } else {
+      wholeContainer = document.createElement('div');
+      wholeContainer.classList.add(`annexure-2-div-${index + 1}`);
+      wholeContainer.classList.add('pdf-page');
+      section = document.createElement('section');
+      section.id = '#annexure-2';
+      content = document.createElement('div');
+      content.classList.add('content');
+    }
+    const table = document.createElement('table');
+    table.classList.add('bo-annexure-table');
+    const tbody = document.createElement('tbody');
+
+    const newPage = document.createElement('div');
+    newPage.classList.add('pdf-page');
+    const newSection = document.createElement('div');
+    newSection.classList.add('#annexure-2');
+    const table2 = document.createElement('table');
+    table2.classList.add('bo-annexure-table');
+    const tbody2 = document.createElement('tbody');
+
+    Object.entries(fields).map(([key, value], i) => {
+      const tr = document.createElement('tr');
+
+      const siNo = document.createElement('td');
+      siNo.classList.add('text-black');
+      siNo.innerText = i + 1;
+
+      const rowField = document.createElement('td');
+      rowField.classList.add('text-black');
+      rowField.innerText = key;
+
+      const bo1 = document.createElement('td');
+      const innerDiv1 = document.createElement('div');
+      const input1 = document.createElement('input');
+      input1.style.width = '96%';
+      input1.type = 'text';
+      input1.value = `${value}`;
+
+      innerDiv1.appendChild(input1);
+      bo1.append(innerDiv1);
+
+      const bo2 = document.createElement('td');
+      const innerDiv2 = document.createElement('div');
+      const input2 = document.createElement('input');
+      input2.style.width = '96%';
+      input2.type = 'text';
+      input2.value = `${value}`;
+
+      innerDiv2.appendChild(input2);
+      bo2.append(innerDiv2);
+
+      tr.appendChild(siNo);
+      tr.appendChild(rowField);
+      tr.appendChild(bo1);
+      tr.appendChild(bo2);
+      if (i <= 18) {
+        tbody.appendChild(tr);
+      } else {
+        tbody2.appendChild(tr);
+      }
+    });
+
+    table.appendChild(tbody);
+    content.appendChild(table);
+
+    table2.appendChild(tbody2);
+    newSection.appendChild(table2);
+    newPage.appendChild(newSection);
+
+    if (index < 2) {
+      wholeContainer.parentNode.insertBefore(newPage, wholeContainer.nextSibling);
+    } else {
+      section.appendChild(content);
+      wholeContainer.appendChild(section);
+      document.body.appendChild(wholeContainer);
+      document.body.appendChild(newPage);
+      // wholeContainer.parentNode.insertBefore(newPage, wholeContainer.nextSibling);
+    }
   }
 }
 

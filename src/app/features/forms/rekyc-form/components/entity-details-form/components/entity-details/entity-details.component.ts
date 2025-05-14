@@ -2,7 +2,6 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
-  DoCheck,
   effect,
   EventEmitter,
   OnDestroy,
@@ -13,6 +12,7 @@ import {
 import { toSignal } from '@angular/core/rxjs-interop';
 import { FormArray, FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { ApiStatus } from '@core/constants/api.response';
+import { GetEntityResponse } from '@features/forms/rekyc-form/components/entity-details-form/entity-details-form.model';
 import { updatePartialEntityDetails } from '@features/forms/rekyc-form/components/entity-details-form/store/entity-details.actions';
 import { selectEntityDetails } from '@features/forms/rekyc-form/components/entity-details-form/store/entity-details.selectors';
 import {
@@ -27,6 +27,7 @@ import {
   DeleteDocument,
   EntityDetailsFileType,
   UploadFileProof,
+  UploadFileProofErrorResponse,
   UploadFileProofResponse,
 } from '@features/forms/rekyc-form/rekyc-form.model';
 import { RekycFormService } from '@features/forms/rekyc-form/rekyc-form.service';
@@ -35,34 +36,48 @@ import { Store } from '@ngrx/store';
 import { ToastService } from '@src/app/shared/ui/toast/toast.service';
 import { HelperService } from 'src/app/core/services/helpers.service';
 import { EntityDetailsService } from './entity-details.service';
-import { GetEntityResponse } from '@features/forms/rekyc-form/components/entity-details-form/entity-details-form.model';
 
 @Component({
   selector: 'rekyc-entity-details',
   templateUrl: './entity-details.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class EntityDetailsComponent implements OnInit, DoCheck, OnDestroy {
+export class EntityDetailsComponent implements OnInit, OnDestroy {
   @Output() formNavigation = new EventEmitter<string>();
   form!: FormGroup;
   entityAddressProofList = [
+    // {
+    //   id: 1,
+    //   label: 'Shop and Establishment Certificate',
+    //   value: 'shopAndEstablishment',
+    // },
+    // {
+    //   id: 2,
+    //   label: 'Udyam (MSME) Registration Certificate',
+    //   value: 'udyam',
+    // },
     {
-      id: 1,
+      id: 3,
+      label: 'Lease/Rental Agreement (in Entity Name)',
+      value: 'leaseRentalAgreement',
+    },
+    {
+      id: 4,
       label: 'Electricity Bill (not more than 2 months old)',
       value: 'electricityBill',
     },
     {
-      id: 2,
+      id: 5,
       label: 'Water Bill (not more than 2 months old)',
       value: 'waterBill',
     },
     {
-      id: 3,
+      id: 6,
       label: 'Landline Bill (not more than 2 months old)',
       value: 'landlineBill',
     },
     {
-      id: 4,
+      id: 7,
       label: 'Internet Bill (not more than 2 months old)',
       value: 'internetBill',
     },
@@ -108,11 +123,6 @@ export class EntityDetailsComponent implements OnInit, DoCheck, OnDestroy {
     this.getEntityDetails();
   }
 
-  ngDoCheck(): void {
-    // eslint-disable-next-line no-console
-    console.log('Entity details form rendeing');
-  }
-
   patchFormWithDocs(docs: EntityDetails): void {
     if (!this.form) return;
 
@@ -127,7 +137,7 @@ export class EntityDetailsComponent implements OnInit, DoCheck, OnDestroy {
       const typeFromForm = group.get('type')?.value;
       if (typeFromForm !== key) {
         // eslint-disable-next-line no-console
-        console.log(`Skipping patch for ${key} due to type mismatch: ${typeFromForm}`);
+        console.warn(`Skipping patch for ${key} due to type mismatch: ${typeFromForm}`);
         return;
       }
 
@@ -190,7 +200,6 @@ export class EntityDetailsComponent implements OnInit, DoCheck, OnDestroy {
 
   handlePreviewSheet() {
     this.showPreviewSheet.set(!this.showPreviewSheet());
-    this.previewEntityDetails();
   }
 
   trackDoc(_index: number, doc: string): string {
@@ -222,6 +231,13 @@ export class EntityDetailsComponent implements OnInit, DoCheck, OnDestroy {
       const name = this.form.get(`${key}.file.name`)?.value;
       return !isRequired || !!name;
     });
+  }
+
+  getDocAcceptedType(doc: string) {
+    if (doc === 'pan') {
+      return '.jpg,.png,.pdf';
+    }
+    return '.pdf';
   }
 
   getErrorMessage(controlName: EntityDetailsFileType): string {
@@ -286,7 +302,10 @@ export class EntityDetailsComponent implements OnInit, DoCheck, OnDestroy {
           const { status } = response;
 
           if (status === ApiStatus.SUCCESS) {
-            this.toast.success(`${this.helperService.toTitleCase(doc)} deleted`);
+            const entityDetailsType =
+              doc !== 'addressProof' ? doc.toUpperCase() : this.helperService.toTitleCase(doc);
+
+            this.toast.success(`${entityDetailsType} deleted`);
             const fileGroup = this.form.get(`${doc}.file`) as FormGroup;
             fileGroup.patchValue({
               name: '',
@@ -332,17 +351,21 @@ export class EntityDetailsComponent implements OnInit, DoCheck, OnDestroy {
 
         const { status } = response;
 
-        // const entityDetailsFileTypeEntityDetailsFileType =
-        //   type !== 'addressProof' ? type.toUpperCase() : this.helperService.toTitleCase(type);
+        const entityDetailsFileType =
+          type !== 'addressProof' ? type.toUpperCase() : this.helperService.toTitleCase(type);
 
         if (status === ApiStatus.SUCCESS) {
           const { data } = response as { data: UploadFileProofResponse };
           fileGroup.get('name')?.setValue(data?.docName);
           fileGroup.get('link')?.setValue(data?.storedPath);
           this.cdr.markForCheck();
-          // this.toast.success(`${entityDetailsFileTypeEntityDetailsFileType} uploaded successfully`);
+          this.toast.success(`${entityDetailsFileType} uploaded successfully`);
         } else {
-          // this.toast.error(`Invalid document for ${entityDetailsFileTypeEntityDetailsFileType}`);
+          const { error } = response as { error: UploadFileProofErrorResponse };
+          const errMsg = error.reason
+            ? `${entityDetailsFileType}: ${error.reason}`
+            : `Invalid document for ${entityDetailsFileType}`;
+          this.toast.error(errMsg, { duration: 5000 });
           // this.removeFile(type);
         }
       },
@@ -361,6 +384,7 @@ export class EntityDetailsComponent implements OnInit, DoCheck, OnDestroy {
     fileGroup.get('name')?.setValue('');
     fileGroup.get('link')?.setValue('');
     this.setIsFileLoading(type, false);
+    this.cdr.markForCheck();
   }
 
   submit(action: 'submit' | 'save' = 'submit'): void {
@@ -412,27 +436,6 @@ export class EntityDetailsComponent implements OnInit, DoCheck, OnDestroy {
           );
 
           this.store.dispatch(updatePartialEntityDetails({ partialData: updatedEntityDetails }));
-        }
-      },
-    });
-  }
-
-  previewEntityDetails() {
-    const entityId = this.entityInfo()?.entityId as string;
-    // eslint-disable-next-line no-console
-    console.log('onnnn callin');
-    this.entityDetailService.previewEntityDetails(entityId).subscribe({
-      next: (result) => {
-        const { response } = result;
-
-        if (!response) return;
-
-        const { status } = response;
-
-        if (status === ApiStatus.SUCCESS) {
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          const { data } = response as any;
-          this.previewData.set(data);
         }
       },
     });

@@ -15,18 +15,8 @@ export interface PersonalDetails {
 }
 
 export const initialPersonalDetails: PersonalDetails = {
-  identityProof: createInitialProofDoc(
-    'Select Proof of Identity',
-    'identityProof',
-    'driving_license',
-    true,
-  ),
-  addressProof: createInitialProofDoc(
-    'Select Proof of Address',
-    'addressProof',
-    'driving_license',
-    true,
-  ),
+  identityProof: createInitialProofDoc('Select Proof of Identity', 'identityProof', 'pan', true),
+  addressProof: createInitialProofDoc('Select Proof of Address', 'addressProof', 'aadhaar', true),
   photograph: createInitialDoc('Upload Photograph', 'photograph', true),
   signature: createInitialDoc('Upload Signature', 'signature', true),
 };

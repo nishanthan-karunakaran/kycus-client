@@ -2,10 +2,19 @@ import { createReducer, on } from '@ngrx/store';
 import {
   setAusInfo,
   setPersonalDetails,
+  updateAccessibleSteps,
+  updateAusInfo,
   updatePartialPersonalDetails,
   updatePersonalDetails,
 } from './personal-details.actions';
 import { initialPersonalDetails } from './personal-details.state';
+
+export interface AccessibleSteps {
+  entityDetails: boolean;
+  ausDetails: boolean;
+  rekycForm: boolean;
+  eSign: boolean;
+}
 
 export interface AusInfoState {
   ausId: null | string;
@@ -13,21 +22,62 @@ export interface AusInfoState {
   ausEmail: null | string;
   ausType: null | string;
   isAuthenticated: boolean;
+  accessibleSteps: AccessibleSteps;
 }
 
+const getInitialAccessibleSteps = () => {
+  const obj = localStorage.getItem('rekyc');
+  const currentRekyc: Record<string, AccessibleSteps> = obj ? JSON.parse(obj) : {};
+  return (
+    currentRekyc['accessibleSteps'] || {
+      entityDetails: false,
+      ausDetails: true,
+      rekycForm: false,
+      eSign: true,
+    }
+  );
+};
+
+const getInitialAusInfo = (): AusInfoState => {
+  const obj = localStorage.getItem('rekyc');
+  const parsed = obj ? JSON.parse(obj) : {};
+
+  const ausInfoPartial = (parsed.ausInfo as Partial<AusInfoState>) || {};
+  const accessibleSteps =
+    (parsed.accessibleSteps as AccessibleSteps) || getInitialAccessibleSteps();
+
+  const isAuthenticated = localStorage.getItem('access_token') !== null;
+
+  return {
+    ...initialAusInfoState,
+    ...ausInfoPartial,
+    isAuthenticated,
+    accessibleSteps,
+  };
+};
+
 export const initialAusInfoState: AusInfoState = {
-  ausId: 'ebitaus-CUS62099-26042025-AUS3',
-  ausName: 'Nishanthan',
-  ausEmail: 'nishanthan.karunakaran@ebitaus.com',
+  ausId: '',
+  ausName: '',
+  ausEmail: '',
   ausType: 'aus',
-  isAuthenticated: false,
+  isAuthenticated: localStorage.getItem('access_token') !== null,
+  accessibleSteps: getInitialAccessibleSteps(),
 };
 
 export const ausInfoReducer = createReducer(
-  initialAusInfoState,
+  getInitialAusInfo(),
   on(setAusInfo, (state, payload) => ({
     ...state,
     ...payload,
+  })),
+  on(updateAusInfo, (state, payload) => ({
+    ...state,
+    ...payload,
+  })),
+  on(updateAccessibleSteps, (state, { accessibleSteps }) => ({
+    ...state,
+    accessibleSteps,
   })),
 );
 

@@ -7,6 +7,8 @@ import {
   Output,
   signal,
   ChangeDetectionStrategy,
+  ViewChild,
+  ElementRef,
 } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { ApiStatus } from 'src/app/core/constants/api.response';
@@ -18,6 +20,8 @@ import {
 } from 'src/app/features/rekyc/rekyc.model';
 import { RekycService } from 'src/app/features/rekyc/rekyc.service';
 import { ToastService } from 'src/app/shared/ui/toast/toast.service';
+import { API_URL } from '@core/constants/apiurls';
+import { environment } from '@src/environments/environment';
 
 @Component({
   selector: 'app-filemodal',
@@ -37,6 +41,9 @@ export class FilemodalComponent {
   duplicateRekycData: RekycData[] = [];
   activePage = signal(1);
   isDragging = signal(false);
+  excelTemplate = `${environment.apiBaseUrl}${API_URL.REKYC.EXCEL_TEMPLATE}`;
+
+  @ViewChild('fileInput') fileInput!: ElementRef<HTMLInputElement>;
 
   constructor(
     private toastService: ToastService,
@@ -51,9 +58,11 @@ export class FilemodalComponent {
   handlePreviewModal() {
     this.isOpenFilePreview.set(false);
     this.closeModal.emit(false);
+    this.file = null; // resetting the file after upload
   }
 
   handleFile(event: Event | DragEvent) {
+    this.file = null;
     if (event instanceof Event && (event.target as HTMLInputElement)?.files) {
       this.file = (event.target as HTMLInputElement).files?.[0] ?? null;
     } else if (event instanceof DragEvent && event.dataTransfer) {
@@ -74,6 +83,8 @@ export class FilemodalComponent {
     } else {
       this.toastService.error('Please select a valid Excel file.');
     }
+
+    this.fileInput.nativeElement.value = '';
   }
 
   onDragOver(event: DragEvent) {
@@ -105,7 +116,7 @@ export class FilemodalComponent {
 
         if (!response) return;
 
-        const { status } = response;
+        const { status, message } = response;
 
         if (status === ApiStatus.SUCCESS) {
           const { data } = response;
@@ -121,7 +132,7 @@ export class FilemodalComponent {
           }
         } else {
           this.handlePreviewModal();
-          this.toastService.error('Failed to parse the data');
+          this.toastService.error(message || 'Failed to parse the data');
         }
       },
     });
@@ -130,7 +141,7 @@ export class FilemodalComponent {
   submitReKycExcel() {
     const payload: SubmitReKycExcel = {
       mode: 'submit',
-      uploadedBy: 'admin@hdfc.com',
+      uploadedBy: localStorage.getItem('authEmail') as string,
       bankName: 'HDFC Bank',
       data: this.rekycData(),
     };
@@ -173,5 +184,12 @@ export class FilemodalComponent {
 
   trackAus(index: number): number {
     return index;
+  }
+
+  downloadSampleExcel() {
+    const link = document.createElement('a');
+    link.href = this.excelTemplate;
+    link.download = 'SampleTemplate.xlsx';
+    link.click();
   }
 }

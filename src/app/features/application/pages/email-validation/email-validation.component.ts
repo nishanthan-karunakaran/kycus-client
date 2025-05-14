@@ -31,12 +31,12 @@ export class EmailValidationComponent implements OnInit {
 
   ngOnInit(): void {
     this.loginForm = this.fb.group({
-      email: ['venkatesh@gmail.com', [Validators.required, this.validatorsService.emailValidator()]],
+      email: [
+        'venkatesh@gmail.com',
+        [Validators.required, this.validatorsService.emailValidator()],
+      ],
       otp: [''],
     });
-
-    // eslint-disable-next-line no-console
-    console.log(this.loginForm.value);
   }
 
   requestOTP() {
@@ -47,8 +47,6 @@ export class EmailValidationComponent implements OnInit {
 
     this.emailValidationService.requestOTP(payload).subscribe({
       next: (result) => {
-        // eslint-disable-next-line no-console
-        console.log(result);
         const { loading, response } = result;
         this.isLoading = loading;
 

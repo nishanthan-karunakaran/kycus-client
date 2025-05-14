@@ -31,7 +31,7 @@ export class SidebarComponent {
     },
     {
       name: 'Re-KYC',
-      link: '/reKYC',
+      link: '/rekyc',
       icon: 'laptop-minimal-check',
     },
   ];

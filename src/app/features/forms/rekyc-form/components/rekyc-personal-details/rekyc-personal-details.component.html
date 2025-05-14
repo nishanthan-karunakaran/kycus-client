@@ -53,7 +53,7 @@
           </div>
 
           <span
-            class="text-xs text-red-500"
+            class="text-xs font-medium text-red-500"
             *ngIf="
               form.get([doc, 'file', 'name'])?.errors?.['required'] &&
               form.get([doc, 'file', 'name'])?.touched
@@ -73,7 +73,7 @@
         <div>
           <ui-upload-button
             *ngIf="!form.get(doc + '.file.name')?.value"
-            [accept]="proofDoc(doc) ? '.pdf' : '.jpg, .png'"
+            [accept]="getDocAcceptedType(doc)"
             [disabled]="
               doc === 'addressProof'
                 ? form.get(doc + '.file.selectedType')?.value === ''
@@ -109,9 +109,29 @@
     </div>
   </form>
 
-  <rekyc-preview-entitydet
+  <rekyc-preview-personaldet
     [openSheet]="showPreviewSheet()"
     (closeSheet)="handlePreviewSheet()"
-    [data]="previewData()"
+    (openESignSheet)="handleESignSheet()"
   />
+
+  <!-- <rekyc-esign-personaldet
+    [openSheet]="showESignSheet()"
+    (closeSheet)="handleESignSheet()"
+  /> -->
+
+  <ui-modal
+    [showClose]="false"
+    (close)="handlePopup()"
+    class="max-w-md"
+    [isOpen]="showPopup()"
+  >
+    <div modalContent class="flex flex-col gap-8">
+      <p class="text-md">You have successfully submitted the Re-KYC details.</p>
+
+      <div class="flex justify-end gap-4">
+        <button class="px-4" (click)="handlePopup()">OK</button>
+      </div>
+    </div>
+  </ui-modal>
 </div>

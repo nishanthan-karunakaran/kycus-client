@@ -1,5 +1,5 @@
 import { EntityInfoState } from './components/entity-filledby/store/entity-info.reducer';
-import { Director } from './components/rekyc-declaration-form/components/rekyc-bo-form/rekyc-directors-form/store/declaration-directors.state';
+import { Director } from './components/rekyc-directors-form/store/declaration-directors.state';
 import { AusInfoState } from './components/rekyc-personal-details/store/personal-details.reducer';
 
 // export enum FormStep {
@@ -20,6 +20,7 @@ export enum FormStep {
 export interface VerifyOtpResponse {
   entityInfo: EntityInfoState;
   ausInfo: AusInfoState;
+  access_token: string;
 }
 
 export interface FormPage {
@@ -39,6 +40,10 @@ export interface UploadFileProof {
 export interface UploadFileProofResponse {
   docName?: string;
   storedPath?: string;
+}
+
+export interface UploadFileProofErrorResponse {
+  reason?: string;
 }
 
 export interface DeleteDocument {

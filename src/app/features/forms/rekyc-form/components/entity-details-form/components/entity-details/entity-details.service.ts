@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import { Injectable } from '@angular/core';
 import { API_URL } from '@core/constants/apiurls';
 import { ApiService } from '@core/services/api.service';
@@ -45,8 +44,6 @@ export class EntityDetailsService {
         link: docResponse.url, // Update the link
         selectedType: docResponse.selectedType || existingDoc.file.selectedType, // Update selectedType if present, else keep existing
       };
-
-      console.log('doocc', file.name);
 
       if (isProofDoc) {
         return {

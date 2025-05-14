@@ -1,4 +1,4 @@
-<ui-modal [isOpen]="isOpen()" class="max-w-xl">
+<ui-modal (close)="handleEntityFilledBy()" [isOpen]="isOpen()" class="max-w-xl">
   <div modalHeader>
     <h4 class="text-primary">
       Welcome to
@@ -23,7 +23,7 @@
       <ui-button
         label="Continue"
         class="mt-10 w-full"
-        (btnClick)="showFlow.set(true)"
+        (btnClick)="updateShowFlow()"
       />
     </div>
 
@@ -56,6 +56,7 @@
         </div>
 
         <div
+          *ngIf="ausList() && ausList().length > 0"
           class="flex items-center justify-between gap-4 rounded-md border px-4 py-2"
           (click)="selectedFilledBy.set(2)"
           (keydown.enter)="selectedFilledBy.set(2)"
@@ -68,7 +69,10 @@
           </div>
 
           <div class="w-1/2">
-            <ui-select [options]="ausList()" />
+            <ui-select
+              [options]="ausList()"
+              (valueChange)="setSelectedAusId($event)"
+            />
           </div>
         </div>
 
@@ -86,10 +90,11 @@
 
           <div class="w-1/2">
             <ui-input
-              type="text"
+              type="email"
               placeholder="Others"
               (valueChange)="setOthersEmail($event)"
               [autofocus]="selectedFilledBy() === 3"
+              [errorMessage]="emailErrorMsg"
             />
           </div>
         </div>

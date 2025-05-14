@@ -1,15 +1,14 @@
 import {
   ChangeDetectionStrategy,
   Component,
-  EventEmitter,
   Input,
   OnDestroy,
   OnInit,
-  Output,
   signal,
 } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { VerifyOtpResponse } from '@features/forms/rekyc-form/rekyc-form.model';
+import { RekycFormService } from '@features/forms/rekyc-form/rekyc-form.service';
 import { Store } from '@ngrx/store';
 import { interval, Subscription, takeWhile } from 'rxjs';
 import { ApiStatus } from 'src/app/core/constants/api.response';
@@ -17,7 +16,10 @@ import { InputFormat } from 'src/app/core/directives/input-format.directive';
 import { ValidatorsService } from 'src/app/core/services/validators.service';
 import { ToastService } from 'src/app/shared/ui/toast/toast.service';
 import { setEntityInfo } from '../entity-filledby/store/entity-info.actions';
-import { setAusInfo } from '../rekyc-personal-details/store/personal-details.actions';
+import {
+  setAusInfo,
+  updateAccessibleSteps,
+} from '../rekyc-personal-details/store/personal-details.actions';
 import { EmailValidationService } from './email-validation.service';
 
 @Component({
@@ -28,8 +30,6 @@ import { EmailValidationService } from './email-validation.service';
 })
 export class RekycEmailValidationComponent implements OnInit, OnDestroy {
   @Input() token: string | null = null;
-  @Output() emailVerified = new EventEmitter<VerifyOtpResponse>();
-
   isSubmitted = false;
   isLoading = signal(false);
   loginForm!: FormGroup;
@@ -47,11 +47,19 @@ export class RekycEmailValidationComponent implements OnInit, OnDestroy {
     private fb: FormBuilder,
     private validatorsService: ValidatorsService,
     private emailValidationService: EmailValidationService,
+    private rekycFormService: RekycFormService,
     private toast: ToastService,
     private store: Store,
   ) {}
 
   ngOnInit(): void {
+    localStorage.removeItem('rekyc');
+    localStorage.removeItem('access_token');
+
+    if (this.token) {
+      this.rekycFormService.updateRekycLS('applicationToken', this.token);
+    }
+
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, this.validatorsService.emailValidator()]],
     });
@@ -106,13 +114,59 @@ export class RekycEmailValidationComponent implements OnInit, OnDestroy {
         if (status === ApiStatus.SUCCESS) {
           const { data } = response as { data: VerifyOtpResponse };
           data.ausInfo.isAuthenticated = true; // update the authenticated status
+          data.ausInfo.ausName = data.ausInfo?.ausName || this.loginForm.value.email;
+          data.ausInfo.ausType = data.ausInfo.ausId?.includes('OTHER') ? 'OTHER' : 'AUS';
           this.store.dispatch(setEntityInfo(data.entityInfo));
           this.store.dispatch(setAusInfo(data.ausInfo));
           this.toast.success('Email Verified!');
           this.isOTPSent.set(true);
-          this.emailVerified.emit(data);
+
+          localStorage.setItem('access_token', data.access_token);
+
+          this.rekycFormService.tabCompletionStatus(data.ausInfo.ausId as string);
+
+          this.rekycFormService.updateRekycLS('ausInfo', data.ausInfo);
+          this.rekycFormService.updateRekycLS('entityInfo', data.entityInfo);
+
+          const ausId = data.ausInfo.ausId;
+          const entityFilledBy = data.entityInfo.entityFilledBy;
+          let accessibleSteps = {
+            entityDetails: false,
+            ausDetails: true,
+            rekycForm: false,
+            eSign: true,
+          };
+
+          if (entityFilledBy !== null) {
+            if (ausId !== entityFilledBy) {
+              accessibleSteps = {
+                entityDetails: false,
+                ausDetails: true,
+                rekycForm: false,
+                eSign: true,
+              };
+            } else if (ausId === entityFilledBy) {
+              if (ausId.includes('OTHER')) {
+                accessibleSteps = {
+                  entityDetails: true,
+                  ausDetails: false,
+                  rekycForm: true,
+                  eSign: false,
+                };
+              } else {
+                accessibleSteps = {
+                  entityDetails: true,
+                  ausDetails: true,
+                  rekycForm: true,
+                  eSign: true,
+                };
+              }
+            }
+            this.rekycFormService.updateRekycLS('accessibleSteps', accessibleSteps);
+            this.store.dispatch(updateAccessibleSteps({ accessibleSteps }));
+          }
         } else {
-          this.toast.error(message as string);
+          this.toast.error((message as string) || 'Something went wrong');
         }
       },
     });
@@ -141,7 +195,7 @@ export class RekycEmailValidationComponent implements OnInit, OnDestroy {
             this.isOTPSent.set(true);
             this.startResendTimer();
           } else {
-            this.toast.error(message as string);
+            this.toast.error((message as string) || 'Something went wrong');
           }
         },
       });

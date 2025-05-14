@@ -77,6 +77,12 @@ export class RekycBoInputComponent implements OnInit {
 
   get isFormValid(): boolean {
     const formArray = this.form.get('boDetails') as FormArray;
+    // eslint-disable-next-line no-console
+    console.log(
+      'bo submit',
+      formArray && formArray.length > 0,
+      formArray.controls.every((control) => control.valid),
+    );
     return (
       formArray && formArray.length > 0 && formArray.controls.every((control) => control.valid)
     );
@@ -84,7 +90,7 @@ export class RekycBoInputComponent implements OnInit {
 
   createBoDetail(): FormGroup {
     return this.fb.group({
-      boId: [crypto.randomUUID()],
+      boId: new Date(),
       boName: ['', Validators.required],
       addressLine: ['', Validators.required],
       city: ['', Validators.required],
@@ -127,19 +133,16 @@ export class RekycBoInputComponent implements OnInit {
   removeBoDetail(): void {
     const index = this.selectedBOToRemove() as number;
     this.boDetails.removeAt(index);
-
-    // eslint-disable-next-line no-console
-    console.log('index', index);
     this.handleShowDeleteConfirmation();
   }
 
   submit(action: 'save' | 'submit') {
-    if (!this.isFormValid) {
+    if (!this.isFormValid && action === 'submit') {
       this.isFormSubmitted.set(true);
       return;
     }
 
-    if (action === 'submit') {
+    if (action === 'submit' || action === 'save') {
       const boList = this.form.value.boDetails as BoDetail[];
 
       const payload: SaveBODetails = {
@@ -156,7 +159,11 @@ export class RekycBoInputComponent implements OnInit {
           const { status } = response;
 
           if (status === ApiStatus.SUCCESS) {
-            this.toast.success('Beneficairy Owners saved!');
+            if (action === 'save') {
+              this.toast.info('Beneficairy Owners saved successfully!');
+            } else {
+              this.toast.success('Beneficairy Owners submitted successfully!');
+            }
             this.store.dispatch(updateRekycStepStatus({ boDetails: true }));
             this.rekycFormService.updatRekycFormStep('bo');
           } else {
@@ -173,14 +180,6 @@ export class RekycBoInputComponent implements OnInit {
     this.boService.getBODetails(entityId).subscribe({
       next: (result) => {
         const { loading, response } = result;
-
-        // if (!response) return;
-
-        // Add logging to check the data structure
-        // eslint-disable-next-line no-console
-        console.log('Response:', response);
-        // eslint-disable-next-line no-console
-        console.log('Loading:', loading);
 
         if (!loading && response) {
           // eslint-disable-next-line @typescript-eslint/no-explicit-any

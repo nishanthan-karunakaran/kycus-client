@@ -1,9 +1,4 @@
-import {
-  HttpEvent,
-  HttpHandler,
-  HttpInterceptor,
-  HttpRequest,
-} from '@angular/common/http';
+import { HttpEvent, HttpHandler, HttpInterceptor, HttpRequest } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -16,11 +11,9 @@ export class ApiInterceptor implements HttpInterceptor {
 
   constructor(private authService: AuthService) {}
 
-  intercept<T>(
-    req: HttpRequest<T>,
-    next: HttpHandler,
-  ): Observable<HttpEvent<T>> {
-    const token = this.authService.getAuthToken();
+  intercept<T>(req: HttpRequest<T>, next: HttpHandler): Observable<HttpEvent<T>> {
+    // const token = this.authService.getAuthToken();
+    const access_token = localStorage.getItem('access_token');
     const apiBaseUrl = environment.apiBaseUrl;
     const fullUrl = apiBaseUrl + req.url;
 
@@ -31,7 +24,9 @@ export class ApiInterceptor implements HttpInterceptor {
     const clonedRequest = req.clone({
       url: fullUrl,
       setHeaders: {
-        Authorization: token ? `Bearer ${token}` : '',
+        // Authorization: token ? `Bearer ${token}` : '',
+        Authorization: access_token ? `Bearer ${access_token}` : '',
+        access_token: access_token ? `${access_token}` : '',
       },
     });
 
