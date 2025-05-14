@@ -47,6 +47,10 @@ export class ApplicationTableComponent implements OnInit {
     this.getReKycApplications();
   }
 
+  getLastEntityIdPart(entityId: string): string {
+    return entityId.split('-').pop() || '';
+  }
+
   filteredReKycApplications = computed(() => {
     const query = this.searchInput().toLowerCase();
     const start = this.activePage() * this.ROWS_PER_PAGE - this.ROWS_PER_PAGE;
