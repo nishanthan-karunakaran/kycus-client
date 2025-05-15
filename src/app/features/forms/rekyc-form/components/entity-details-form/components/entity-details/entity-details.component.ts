@@ -156,7 +156,7 @@ export class EntityDetailsComponent implements OnInit, OnDestroy {
         if (name !== undefined) filePatch.name = name; // Check values.file.name
         if (link !== undefined) filePatch.link = link;
         if (selectedType !== undefined) filePatch.selectedType = selectedType;
-        if (reason !== undefined) filePatch.reason = reason;
+        filePatch.reason = reason || '';
       }
 
       if (Object.keys(filePatch).length > 0) {
@@ -350,29 +350,33 @@ export class EntityDetailsComponent implements OnInit, OnDestroy {
         const entityDetailsFileType =
           type !== 'addressProof' ? type.toUpperCase() : this.helperService.toTitleCase(type);
 
-        if (status === ApiStatus.SUCCESS) {
-          const { data } = response as { data: UploadFileProofResponse };
-          fileGroup.get('name')?.setValue(data?.docName);
-          fileGroup.get('link')?.setValue(data?.storedPath);
-          this.cdr.markForCheck();
-          this.toast.success(`${entityDetailsFileType} uploaded successfully`);
-        } else {
-          const { error } = response as { error: UploadFileProofErrorResponse };
-          fileGroup.get('link')?.setValue(error?.storedPath);
-          // const errMsg = error.reason
-          //   ? `${entityDetailsFileType}: ${error.reason}`
-          //   : `Invalid document for ${entityDetailsFileType}`;
-          // this.toast.error(errMsg, { duration: 5000 });
+        if (fileGroup.get('name')?.value) {
+          if (status === ApiStatus.SUCCESS) {
+            const { data } = response as { data: UploadFileProofResponse };
+            fileGroup.get('name')?.setValue(data?.docName);
+            fileGroup.get('link')?.setValue(data?.storedPath);
+            this.cdr.markForCheck();
+            this.toast.success(`${entityDetailsFileType} uploaded successfully`);
+          } else {
+            const { error } = response as { error: UploadFileProofErrorResponse };
+            fileGroup.get('link')?.setValue(error?.storedPath);
+            fileGroup.get('reason')?.setValue(error?.reason);
+            this.cdr.detectChanges();
+            // const errMsg = error.reason
+            //   ? `${entityDetailsFileType}: ${error.reason}`
+            //   : `Invalid document for ${entityDetailsFileType}`;
+            // this.toast.error(errMsg, { duration: 5000 });
 
-          const entityDetails = this.entityDetails() as EntityDetails;
+            // const entityDetails = this.entityDetails() as EntityDetails;
 
-          const updatedEntityDetails = this.entityDetailService.transformToEntityDetails(
-            { [type]: { ...entityDetails[type], type: 'gstin', reason: error?.reason } },
-            entityDetails,
-          );
+            // const updatedEntityDetails = this.entityDetailService.transformToEntityDetails(
+            //   { [type]: { ...entityDetails[type], type: 'gstin', reason: error?.reason } },
+            //   entityDetails,
+            // );
 
-          this.store.dispatch(updatePartialEntityDetails({ partialData: updatedEntityDetails }));
-          // this.removeFile(type);
+            // this.store.dispatch(updatePartialEntityDetails({ partialData: updatedEntityDetails }));
+            // this.removeFile(type);
+          }
         }
       },
     });
