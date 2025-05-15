@@ -15,10 +15,7 @@ import { ApiStatus } from '@core/constants/api.response';
 import { GetEntityResponse } from '@features/forms/rekyc-form/components/entity-details-form/entity-details-form.model';
 import { updatePartialEntityDetails } from '@features/forms/rekyc-form/components/entity-details-form/store/entity-details.actions';
 import { selectEntityDetails } from '@features/forms/rekyc-form/components/entity-details-form/store/entity-details.selectors';
-import {
-  Doc,
-  EntityDetails,
-} from '@features/forms/rekyc-form/components/entity-details-form/store/entity-details.state';
+import { Doc } from '@features/forms/rekyc-form/components/entity-details-form/store/entity-details.state';
 import { initialEntityInfoState } from '@features/forms/rekyc-form/components/entity-filledby/store/entity-info.reducer';
 import { selectEntityInfo } from '@features/forms/rekyc-form/components/entity-filledby/store/entity-info.selectors';
 import { initialAusInfoState } from '@features/forms/rekyc-form/components/rekyc-personal-details/store/personal-details.reducer';
@@ -35,6 +32,7 @@ import { updateRekycStepStatus } from '@features/forms/rekyc-form/store/rekyc-fo
 import { Store } from '@ngrx/store';
 import { ToastService } from '@src/app/shared/ui/toast/toast.service';
 import { HelperService } from 'src/app/core/services/helpers.service';
+import { EntityDetails } from './../../store/entity-details.state';
 import { EntityDetailsService } from './entity-details.service';
 
 @Component({
@@ -152,12 +150,13 @@ export class EntityDetailsComponent implements OnInit, OnDestroy {
 
       // Check if the file object exists and then patch the name, link, and selectedType
       if (values.file) {
-        const { name, link, selectedType } = values.file;
+        const { name, link, selectedType, reason } = values.file;
 
         // Patch name, link, and selectedType only if available
         if (name !== undefined) filePatch.name = name; // Check values.file.name
         if (link !== undefined) filePatch.link = link;
         if (selectedType !== undefined) filePatch.selectedType = selectedType;
+        if (reason !== undefined) filePatch.reason = reason;
       }
 
       if (Object.keys(filePatch).length > 0) {
@@ -174,7 +173,7 @@ export class EntityDetailsComponent implements OnInit, OnDestroy {
 
     if (!entityDetails) {
       // eslint-disable-next-line no-console
-      console.error('Entity details are not available.');
+      console.warn('Entity details are not available.');
       return;
     }
 
@@ -191,6 +190,7 @@ export class EntityDetailsComponent implements OnInit, OnDestroy {
           name: [doc?.file?.name],
           link: [doc?.file?.link],
           selectedType: [doc?.file?.selectedType ?? ''],
+          reason: [doc?.file?.reason ?? ''],
         }),
       });
     });
@@ -307,11 +307,7 @@ export class EntityDetailsComponent implements OnInit, OnDestroy {
 
             this.toast.success(`${entityDetailsType} deleted`);
             const fileGroup = this.form.get(`${doc}.file`) as FormGroup;
-            fileGroup.patchValue({
-              name: '',
-              link: '',
-            });
-            fileGroup.patchValue({ name: '', link: '' });
+            fileGroup.patchValue({ name: '', link: '', reason: '' });
             this.cdr.markForCheck();
           }
         }
@@ -362,10 +358,20 @@ export class EntityDetailsComponent implements OnInit, OnDestroy {
           this.toast.success(`${entityDetailsFileType} uploaded successfully`);
         } else {
           const { error } = response as { error: UploadFileProofErrorResponse };
-          const errMsg = error.reason
-            ? `${entityDetailsFileType}: ${error.reason}`
-            : `Invalid document for ${entityDetailsFileType}`;
-          this.toast.error(errMsg, { duration: 5000 });
+          fileGroup.get('link')?.setValue(error?.storedPath);
+          // const errMsg = error.reason
+          //   ? `${entityDetailsFileType}: ${error.reason}`
+          //   : `Invalid document for ${entityDetailsFileType}`;
+          // this.toast.error(errMsg, { duration: 5000 });
+
+          const entityDetails = this.entityDetails() as EntityDetails;
+
+          const updatedEntityDetails = this.entityDetailService.transformToEntityDetails(
+            { [type]: { ...entityDetails[type], type: 'gstin', reason: error?.reason } },
+            entityDetails,
+          );
+
+          this.store.dispatch(updatePartialEntityDetails({ partialData: updatedEntityDetails }));
           // this.removeFile(type);
         }
       },
@@ -384,6 +390,11 @@ export class EntityDetailsComponent implements OnInit, OnDestroy {
     fileGroup.get('name')?.setValue('');
     fileGroup.get('link')?.setValue('');
     this.setIsFileLoading(type, false);
+
+    // const entityDetails = { ...this.entityDetails() } as EntityDetails;
+    // delete entityDetails[type];
+    // this.store.dispatch(updatePartialEntityDetails({ partialData: entityDetails }));
+
     this.cdr.markForCheck();
   }
 

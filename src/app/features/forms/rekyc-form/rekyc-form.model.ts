@@ -44,6 +44,7 @@ export interface UploadFileProofResponse {
 
 export interface UploadFileProofErrorResponse {
   reason?: string;
+  storedPath?: string;
 }
 
 export interface DeleteDocument {

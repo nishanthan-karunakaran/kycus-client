@@ -49,20 +49,9 @@
               [defaultValue]="form.value.addressProof.file.selectedType"
             ></ui-select>
           </div>
-
-          <span
-            class="text-xs font-medium text-red-500"
-            *ngIf="
-              form.get([doc, 'file', 'name'])?.errors?.['required'] &&
-              form.get([doc, 'file', 'name'])?.touched
-            "
-          >
-            {{ doc === 'addressProof' ? 'Address Proof' : doc.toUpperCase() }}
-            is required
-          </span>
         </div>
 
-        <div>
+        <div class="flex flex-1 flex-col items-end justify-end">
           <ui-upload-button
             *ngIf="!form.get(doc + '.file.name')?.value"
             [accept]="getDocAcceptedType(doc)"
@@ -74,17 +63,27 @@
             (selectedFile)="onFileSelection(doc, $event)"
           ></ui-upload-button>
 
-          <div
+          <ui-filename
             *ngIf="form.get(doc + '.file.name')?.value"
-            class="flex items-center gap-2"
+            [fileName]="form.get(doc + '.file.name')?.value"
+            [fileLink]="form.get(doc + '.file.link')?.value"
+            (removeFile)="deleteDocument(doc)"
+          />
+
+          <p *ngIf="form.get(doc + '.file.reason')?.value" class="error-msg">
+            {{ form.get(doc + '.file.reason')?.value }}
+          </p>
+
+          <span
+            class="error-msg"
+            *ngIf="
+              form.get([doc, 'file', 'name'])?.errors?.['required'] &&
+              form.get([doc, 'file', 'name'])?.touched
+            "
           >
-            <ui-filename
-              *ngIf="form.get(doc + '.file.name')?.value"
-              [fileName]="form.get(doc + '.file.name')?.value"
-              [fileLink]="form.get(doc + '.file.link')?.value"
-              (removeFile)="deleteDocument(doc)"
-            />
-          </div>
+            {{ doc === 'addressProof' ? 'Address Proof' : doc.toUpperCase() }}
+            is not uploaded
+          </span>
         </div>
       </div>
     </div>

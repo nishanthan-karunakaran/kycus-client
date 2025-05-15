@@ -3,6 +3,7 @@ export interface Doc {
   name: string;
   link: string;
   selectedType?: string;
+  reason?: string;
 }
 
 // this function is also used at personal details
