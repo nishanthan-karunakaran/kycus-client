@@ -18,9 +18,7 @@ export class ApiInterceptor implements HttpInterceptor {
     const clonedRequest = req.clone({
       url: fullUrl,
       setHeaders: {
-        // Authorization: token ? `Bearer ${token}` : '',
         Authorization: access_token ? `Bearer ${access_token}` : '',
-        access_token: access_token ? `${access_token}` : '',
       },
     });
 
