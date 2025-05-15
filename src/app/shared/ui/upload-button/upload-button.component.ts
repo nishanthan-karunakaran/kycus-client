@@ -67,17 +67,20 @@ export class UploadButtonComponent implements OnChanges {
 
   handleChange(event: Event) {
     const input = event.target as HTMLInputElement;
+
     if (input?.files?.[0]) {
       const file = input.files[0];
       const acceptedTypes = this.accept.split(',').map((type) => type.trim());
 
-      // Check if the file type matches the accepted types
-      if (!acceptedTypes.some((type) => file.name.endsWith(type))) {
-        this.toast.error(`Invalid file type. Accepted types: ${this.accept.replaceAll('.', ' ')}`);
-        return;
-      }
+      const isValid = acceptedTypes.some((type) => file.name.endsWith(type));
 
-      this.selectedFile.emit(file);
+      if (!isValid) {
+        this.toast.error(`Invalid file type. Accepted types: ${this.accept.replaceAll('.', ' ')}`);
+      } else {
+        this.selectedFile.emit(file);
+      }
     }
+
+    input.value = '';
   }
 }
