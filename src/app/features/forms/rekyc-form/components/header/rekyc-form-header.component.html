@@ -31,11 +31,11 @@
         <p>{{ ausInfo()?.ausName }}</p>
         <span class="text-xs text-gray-500">{{ getAusType }}</span>
       </div>
-      <div>
-        <img src="./assets/svgs/user.svg" alt="User" />
-      </div>
+      <ui-menu [options]="menuOptions">
+        <div>
+          <img src="./assets/svgs/user.svg" alt="User" />
+        </div>
+      </ui-menu>
     </div>
   </div>
-
-  <!-- <ui-menu [menuItems]="menuOptions" /> -->
 </header>

@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
+import { UiMenuOption } from '@src/app/shared/ui/menu/menu.component';
 
 interface Icon {
   name: string;
@@ -27,6 +28,10 @@ export class HeaderComponent {
   ];
   userEmail = localStorage.getItem('authEmail') || '';
 
+  menuOptions: UiMenuOption[] = [
+    { label: 'Logout', icon: 'log-out', action: () => this.logoutUser() },
+  ];
+
   constructor(private router: Router) {}
 
   trackIcon(_: number, item: Icon): string {
@@ -40,5 +45,9 @@ export class HeaderComponent {
   handleIconClick(icon: string) {
     // eslint-disable-next-line no-console
     console.warn(icon);
+  }
+
+  logoutUser() {
+    this.router.navigate(['/bankers/login']);
   }
 }

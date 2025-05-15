@@ -9,7 +9,7 @@
   *ngIf="isAuthenticated()"
   class="flex h-screen w-screen flex-col overflow-hidden"
 >
-  <rekyc-form-header class="w-full" />
+  <rekyc-form-header class="relative z-50 w-full" />
 
   <main class="flex flex-1 items-center justify-center bg-gray-100">
     <rekyc-entity-filledby *ngIf="entityInfo()?.entityFilledBy === null" />

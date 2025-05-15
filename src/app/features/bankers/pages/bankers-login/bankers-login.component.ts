@@ -41,6 +41,8 @@ export class RekycBankersLoginComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
+    localStorage.removeItem('authEmail');
+
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, this.validatorsService.emailValidator()]],
     });
