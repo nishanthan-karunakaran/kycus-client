@@ -3,34 +3,39 @@ import {
   ChangeDetectorRef,
   Component,
   EventEmitter,
+  OnDestroy,
   OnInit,
   Output,
   signal,
 } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { ApiStatus } from '@core/constants/api.response';
+import { DocResponse } from '@features/forms/rekyc-form/components/entity-details-form/entity-details-form.model';
 import { RekycDeclarationService } from '@features/forms/rekyc-form/components/rekyc-declaration-form/rekyc-declaration.service';
 import { selectAusInfo } from '@features/forms/rekyc-form/components/rekyc-personal-details/store/personal-details.selectors';
 import { SaveDirectorsDraft } from '@features/forms/rekyc-form/rekyc-form.model';
-import { updateRekycStepStatus } from '@features/forms/rekyc-form/store/rekyc-form.action';
+import { RekycFormService } from '@features/forms/rekyc-form/rekyc-form.service';
 import { Store } from '@ngrx/store';
 import { ToastService } from '@src/app/shared/ui/toast/toast.service';
-import { removeDirector, updatePartialDirectors } from './store/declaration-directors.actions';
+import { updateRekycStepStatus } from '@features/forms/rekyc-form/store/rekyc-form.action';
+import {
+  removeDirector,
+  setDirectorsState,
+  updatePartialDirectors,
+} from './store/declaration-directors.actions';
 import { initialDirectorState } from './store/declaration-directors.reducers';
 import {
   selectDeclarationIsDirectorsModified,
   selectReKycDirectors,
 } from './store/declaration-directors.selectors';
 import { Director, Doc } from './store/declaration-directors.state';
-import { RekycFormService } from '@features/forms/rekyc-form/rekyc-form.service';
-import { DocResponse } from '@features/forms/rekyc-form/components/entity-details-form/entity-details-form.model';
 
 @Component({
   selector: 'rekyc-directors-form',
   templateUrl: './rekyc-directors-form.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class RekycDirectorsFormComponent implements OnInit {
+export class RekycDirectorsFormComponent implements OnInit, OnDestroy {
   @Output() formNavigation = new EventEmitter<boolean>();
   addBtnClicked = false;
   directorsList = toSignal(this.store.select(selectReKycDirectors), {
@@ -45,6 +50,7 @@ export class RekycDirectorsFormComponent implements OnInit {
   isForm32ModalOpen = signal(false);
   selectedDirDin: string | null = null;
   isLoading = signal(false);
+  dirFetching = signal(false);
   readonly ausInfo = toSignal(this.store.select(selectAusInfo));
   readonly isDirectorModified$ = toSignal(this.store.select(selectDeclarationIsDirectorsModified));
 
@@ -168,6 +174,7 @@ export class RekycDirectorsFormComponent implements OnInit {
 
   cancelDirEdit() {
     this.store.dispatch(updatePartialDirectors({ isDirectorModified: false }));
+    this.store.dispatch(setDirectorsState(initialDirectorState));
     this.fetchDirectors();
   }
 
@@ -224,26 +231,66 @@ export class RekycDirectorsFormComponent implements OnInit {
       this.toast.error('Please add at least two directors');
       return;
     }
+    const updatedDirectorsList = this.directorsList().map((dir) => {
+      let error = dir.error ? { ...dir.error } : {};
+      if (!dir.directorName) {
+        error = { ...error, nameError: 'Director Name is required' };
+      } else {
+        delete error['nameError'];
+      }
 
-    if (this.isDirectorModified$() && this.form32.file === null) {
+      if (!dir.din) {
+        error = { ...error, dinError: 'DIN is required' };
+      } else {
+        if (dir.din.length < 8) {
+          error = { ...error, dinError: 'DIN should have min 8 characters' };
+        } else if (dir.din.length > 8) {
+          error = { ...error, dinError: 'DIN should have max 8 characters' };
+        } else {
+          delete error['dinError'];
+        }
+      }
+
+      dir = { ...dir, error };
+      return dir;
+    });
+
+    const dinCounts = updatedDirectorsList.reduce(
+      (acc, dir) => {
+        if (dir.din) {
+          acc[dir.din] = (acc[dir.din] || 0) + 1;
+        }
+        return acc;
+      },
+      {} as Record<string, number>,
+    );
+
+    updatedDirectorsList.forEach((dir) => {
+      if (dir.din && dinCounts[dir.din] > 1) {
+        dir.error = { ...dir.error, dinError: 'DIN should be unique' };
+      }
+    });
+
+    this.store.dispatch(updatePartialDirectors({ directorList: updatedDirectorsList }));
+    const dirError = updatedDirectorsList.some((dir) => Object.keys(dir.error || {}).length > 0);
+    const form32Error = this.isDirectorModified$() && this.form32.file === null;
+
+    if (form32Error) {
       this.form32Error.set('Please upload Form 32');
-      return;
     } else {
       this.form32Error.set('');
     }
 
-    // if (!this.isDirectorModified$()) {
-    //   this.store.dispatch(updateRekycStepStatus({ directorDetails: true }));
-    //   this.rekycFormService.updatRekycFormStep('directors');
-    //   return;
-    // }
+    if (form32Error || dirError) {
+      return;
+    }
 
     const existingDir = this.directorsList();
     const refinedDirList = existingDir
-      .filter((dir) => dir.status === 'new-dir' || !dir.status)
+      // .filter((dir) => dir.status === 'new-dir' || !dir.status)
       .map((dir) => ({ ...dir, status: 'active' }));
 
-    if ([...existingDir, ...refinedDirList].length < 2) {
+    if (refinedDirList.length < 2) {
       this.toast.error('Please add at least two director');
       return;
     }
@@ -253,9 +300,9 @@ export class RekycDirectorsFormComponent implements OnInit {
       directorsList: this.isDirectorModified$() ? refinedDirList : this.directorsList(),
     };
     const formData = new FormData();
-    formData.append('form32', this.form32.file as Blob);
     formData.append('data', JSON.stringify(data));
     formData.append('flag', 'save');
+    formData.append('form32', this.form32.file as Blob);
 
     this.declarationService.saveDraft(formData as unknown as SaveDirectorsDraft).subscribe({
       next: (result) => {
@@ -274,10 +321,10 @@ export class RekycDirectorsFormComponent implements OnInit {
           this.store.dispatch(updateRekycStepStatus({ directorDetails: true }));
           this.rekycFormService.updatRekycFormStep('directors');
         } else {
-          this.toast.success('Directors details saved successfully!');
-          this.store.dispatch(updateRekycStepStatus({ directorDetails: true }));
-          this.rekycFormService.updatRekycFormStep('directors');
-          // this.toast.error(response.message || 'Something went wrong!');
+          // this.toast.success('Directors details saved successfully!');
+          // this.store.dispatch(updateRekycStepStatus({ directorDetails: true }));
+          // this.rekycFormService.updatRekycFormStep('directors');
+          this.toast.error(response.message || 'Something went wrong!');
         }
       },
     });
@@ -296,7 +343,7 @@ export class RekycDirectorsFormComponent implements OnInit {
     this.declarationService.getDirectorsList(payload).subscribe({
       next: (result) => {
         const { loading, response } = result;
-        this.isLoading.set(loading);
+        this.dirFetching.set(loading);
 
         if (!response) return;
 
@@ -311,12 +358,18 @@ export class RekycDirectorsFormComponent implements OnInit {
               name: form32.fileName,
               link: form32.url,
             };
+          } else {
+            this.form32 = {
+              name: '',
+              link: '',
+              file: null,
+            };
           }
 
           if (directors.length > 0) {
             this.store.dispatch(
               updatePartialDirectors({
-                directorList: [...this.directorsList(), ...directors],
+                directorList: directors,
               }),
             );
           }
@@ -325,5 +378,9 @@ export class RekycDirectorsFormComponent implements OnInit {
         }
       },
     });
+  }
+
+  ngOnDestroy(): void {
+    this.store.dispatch(setDirectorsState(initialDirectorState));
   }
 }

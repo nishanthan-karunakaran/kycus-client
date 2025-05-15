@@ -17,7 +17,7 @@
         </p>
       </div>
 
-      <div *ngIf="!isLoading()" class="flex">
+      <div *ngIf="!dirFetching()" class="flex">
         <div class="flex-1">
           <div
             *ngFor="let dir of activeDirectors; trackBy: trackDir"
@@ -36,17 +36,20 @@
                 (valueChange)="
                   onDirInputChange(dir.dirId, 'directorName', $event)
                 "
+                [errorMessage]="dir?.error?.nameError || ''"
               />
             </div>
-            <div class="flex min-h-14 flex-1 items-center border-r px-2">
+            <div class="flex min-h-14 flex-1 items-center border-r p-2">
               <p *ngIf="dir.status !== 'new-dir'">{{ dir.din }}</p>
               <ui-input
                 *ngIf="dir.status === 'new-dir'"
-                type="number"
                 name="din"
                 id="din"
-                placeholder="Enter Director Name"
+                placeholder="Enter DIN"
+                [onlyNumeric]="true"
+                [maxlength]="8"
                 (valueChange)="onDirInputChange(dir.dirId, 'din', $event)"
+                [errorMessage]="dir?.error?.dinError || ''"
               />
             </div>
             <div
@@ -112,7 +115,7 @@
         </div>
       </div>
 
-      <div *ngIf="isLoading()" class="flex-center min-h-14 flex-1 border">
+      <div *ngIf="dirFetching()" class="flex-center min-h-14 flex-1 border">
         <div role="status" class="w-full animate-pulse">
           <div class="mb-4 h-4 w-3/4 rounded bg-gray-300"></div>
           <div class="mb-4 h-4 w-1/2 rounded bg-gray-300"></div>

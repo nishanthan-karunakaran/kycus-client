@@ -1,6 +1,10 @@
 import { deduplicateBy } from '@core/utils/helpers';
 import { createReducer, on } from '@ngrx/store';
-import { removeDirector, updatePartialDirectors } from './declaration-directors.actions';
+import {
+  removeDirector,
+  setDirectorsState,
+  updatePartialDirectors,
+} from './declaration-directors.actions';
 import { DirectorState } from './declaration-directors.state';
 
 export const initialDirectorState: DirectorState = {
@@ -14,6 +18,9 @@ export const initialDirectorState: DirectorState = {
 
 export const rekycDirectorReducer = createReducer(
   initialDirectorState,
+  on(setDirectorsState, (data) => ({
+    ...data,
+  })),
   on(updatePartialDirectors, (state, data) => {
     const newState = { ...state, ...data };
 

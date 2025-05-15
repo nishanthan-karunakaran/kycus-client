@@ -4,6 +4,13 @@ export interface Director {
   din: string;
   directorEmail?: string;
   status: string; // active || inactive || new-dir
+  error?: {
+    idError?: string;
+    dinError?: string;
+    nameError?: string;
+    emailError?: string;
+    errorMsg?: string;
+  };
 }
 
 export interface Doc {
