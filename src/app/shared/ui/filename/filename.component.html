@@ -1,8 +1,8 @@
 <div
-  class="flex w-[200px] items-center justify-center gap-2 rounded-sm bg-primary-5 p-2 text-primary"
+  class="flex w-[200px] items-center gap-[3%] rounded-sm bg-primary-5 p-2 text-primary"
 >
   <div
-    class="flex items-center gap-2"
+    class="flex w-[90%] items-center gap-[5%]"
     (click)="openFileInNewTab()"
     (keydown.enter)="openFileInNewTab()"
     (keydown.space)="openFileInNewTab()"
@@ -17,16 +17,18 @@
       {{ fileName }}
     </p>
   </div>
-  <lucide-icon
-    *ngIf="canRemove"
-    name="x"
-    size="20"
-    [ngClass]="{
-      'cursor-pointer': canRemove,
-    }"
-    (click)="deleteFile()"
-    (keydown.enter)="deleteFile()"
-    (keydown.space)="deleteFile()"
-    tabindex="0"
-  />
+  <div class="flex w-[10%] items-center justify-center">
+    <lucide-icon
+      *ngIf="canRemove"
+      name="x"
+      size="20"
+      [ngClass]="{
+        'cursor-pointer': canRemove,
+      }"
+      (click)="deleteFile()"
+      (keydown.enter)="deleteFile()"
+      (keydown.space)="deleteFile()"
+      tabindex="0"
+    />
+  </div>
 </div>
