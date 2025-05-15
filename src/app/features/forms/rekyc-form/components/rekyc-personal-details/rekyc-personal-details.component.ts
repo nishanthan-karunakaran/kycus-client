@@ -184,6 +184,8 @@ export class RekycPersonalDetailsComponent implements OnInit, OnDestroy {
         filePatch.selectedType = values.selectedType;
       }
 
+      filePatch.reason = values.reason || '';
+
       if (Object.keys(filePatch).length > 0) {
         fileGroup.patchValue(filePatch);
       }
@@ -211,6 +213,7 @@ export class RekycPersonalDetailsComponent implements OnInit, OnDestroy {
 
       if (doc?.type === 'identityProof' || doc?.type === 'addressProof') {
         fileGroupConfig['selectedType'] = [doc?.file?.selectedType || ''];
+        fileGroupConfig['reason'] = [doc?.reason || ''];
       }
 
       group[key] = this.fb.group({
@@ -322,11 +325,7 @@ export class RekycPersonalDetailsComponent implements OnInit, OnDestroy {
           if (status === ApiStatus.SUCCESS) {
             this.toast.success(`${this.helperService.toTitleCase(doc)} deleted`);
             const fileGroup = this.form.get(`${doc}.file`) as FormGroup;
-            fileGroup.patchValue({
-              name: '',
-              link: '',
-            });
-            fileGroup.patchValue({ name: '', link: '' });
+            fileGroup.patchValue({ name: '', link: '', reason: '' });
             this.cdr.markForCheck();
           }
         }
@@ -375,17 +374,21 @@ export class RekycPersonalDetailsComponent implements OnInit, OnDestroy {
 
         const fileType = this.helperService.toTitleCase(type);
 
-        if (status === ApiStatus.SUCCESS) {
-          const { data } = response as { data: UploadFileProofResponse };
-          fileGroup.get('name')?.setValue(data?.docName);
-          fileGroup.get('link')?.setValue(data?.storedPath);
-          this.toast.success(`${fileType} uploaded successfully`);
-        } else {
-          const { error } = response as { error: UploadFileProofErrorResponse };
-          const errMsg = error.reason
-            ? `${this.helperService.toTitleCase(fileType)}: ${error.reason}`
-            : `Invalid document for ${fileType}`;
-          this.toast.error(errMsg, { duration: 5000 });
+        if (fileGroup.get('name')?.value) {
+          if (status === ApiStatus.SUCCESS) {
+            const { data } = response as { data: UploadFileProofResponse };
+            fileGroup.get('name')?.setValue(data?.docName);
+            fileGroup.get('link')?.setValue(data?.storedPath);
+            this.toast.success(`${fileType} uploaded successfully`);
+          } else {
+            const { error } = response as { error: UploadFileProofErrorResponse };
+            // const errMsg = error.reason
+            //   ? `${this.helperService.toTitleCase(fileType)}: ${error.reason}`
+            //   : `Invalid document for ${fileType}`;
+            fileGroup.get('reason')?.setValue(error.reason);
+            this.cdr.detectChanges();
+            // this.toast.error(errMsg, { duration: 5000 });
+          }
         }
       },
     });

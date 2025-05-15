@@ -13,6 +13,7 @@ export interface ProofDoc {
   docType: string;
   file: Doc;
   isRequired: boolean;
+  reason?: string;
 }
 
 // this function is also used at personal details
@@ -21,6 +22,7 @@ export interface BasicDoc {
   type: string;
   file: Doc;
   isRequired: boolean;
+  reason?: string;
 }
 
 export interface EntityDetails {

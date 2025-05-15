@@ -51,9 +51,33 @@
               [defaultValue]="form.get([doc, 'file', 'selectedType'])?.value"
             ></ui-select>
           </div>
+        </div>
+
+        <div class="flex flex-1 flex-col items-end justify-end">
+          <ui-upload-button
+            *ngIf="!form.get(doc + '.file.name')?.value"
+            [accept]="getDocAcceptedType(doc)"
+            [disabled]="
+              doc === 'addressProof'
+                ? form.get(doc + '.file.selectedType')?.value === ''
+                : false
+            "
+            (selectedFile)="onFileSelection(doc, $event)"
+          ></ui-upload-button>
+
+          <ui-filename
+            *ngIf="form.get(doc + '.file.name')?.value"
+            [fileName]="form.get(doc + '.file.name')?.value"
+            [fileLink]="form.get(doc + '.file.link')?.value"
+            (removeFile)="deleteDocument(doc)"
+          />
+
+          <p *ngIf="form.get(doc + '.file.reason')?.value" class="error-msg">
+            {{ form.get(doc + '.file.reason')?.value }}
+          </p>
 
           <span
-            class="text-xs font-medium text-red-500"
+            class="error-msg"
             *ngIf="
               form.get([doc, 'file', 'name'])?.errors?.['required'] &&
               form.get([doc, 'file', 'name'])?.touched
@@ -68,31 +92,6 @@
             }}
             is required
           </span>
-        </div>
-
-        <div>
-          <ui-upload-button
-            *ngIf="!form.get(doc + '.file.name')?.value"
-            [accept]="getDocAcceptedType(doc)"
-            [disabled]="
-              doc === 'addressProof'
-                ? form.get(doc + '.file.selectedType')?.value === ''
-                : false
-            "
-            (selectedFile)="onFileSelection(doc, $event)"
-          ></ui-upload-button>
-
-          <div
-            *ngIf="form.get(doc + '.file.name')?.value"
-            class="flex items-center gap-2"
-          >
-            <ui-filename
-              *ngIf="form.get(doc + '.file.name')?.value"
-              [fileName]="form.get(doc + '.file.name')?.value"
-              [fileLink]="form.get(doc + '.file.link')?.value"
-              (removeFile)="deleteDocument(doc)"
-            />
-          </div>
         </div>
       </div>
     </div>

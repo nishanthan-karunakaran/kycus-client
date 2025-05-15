@@ -72,9 +72,6 @@ export class PreviewEntitydetComponent implements OnChanges {
             return customOrder.indexOf(a.docType) - customOrder.indexOf(b.docType);
           });
 
-          // eslint-disable-next-line no-console
-          console.log('sortedDocuments', sortedDocuments);
-
           this.data.set(sortedDocuments);
         }
       },

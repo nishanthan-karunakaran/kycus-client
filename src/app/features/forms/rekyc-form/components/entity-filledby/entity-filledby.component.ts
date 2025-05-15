@@ -48,7 +48,6 @@ export class RekycEntityFilledbyComponent implements OnInit {
       if (this.selectedFilledBy() !== 3) {
         this.emailErrorMsg = '';
         this.othersEmail = '';
-        console.log('on effect');
       }
     });
   }
@@ -82,7 +81,6 @@ export class RekycEntityFilledbyComponent implements OnInit {
       const isEmailAlreadyExists = [...this.ausList(), this.currentAus()].some(
         (aus) => aus.email === othersEmail,
       );
-      [...this.ausList(), this.currentAus()].map((aus) => console.log('aus.email', aus.email));
 
       if (isEmailAlreadyExists) {
         this.emailErrorMsg = 'E-Mail already exists in the current AUS list';
