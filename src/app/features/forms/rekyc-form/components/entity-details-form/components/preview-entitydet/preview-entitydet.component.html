@@ -66,18 +66,18 @@
                   let item of doc.data | presentValues;
                   trackBy: trackByKey
                 "
-                class="flex items-center gap-2 text-xs"
+                class="flex items-start gap-2 text-xs"
               >
                 <p
-                  *ngIf="item[0] !== 'Address'"
+                  *ngIf="item[0] !== 'Proof of Address'"
                   class="text-nowrap text-gray-500"
                 >
                   {{ item[0] }}:
                 </p>
-                <p *ngIf="item[0] !== 'Address'" class="text-nowrap">
+                <p *ngIf="item[0] !== 'Proof of Address'" class="text-wrap">
                   {{ item[1] }}
                 </p>
-                <ng-container *ngIf="item[0] === 'Address'">
+                <ng-container *ngIf="item[0] === 'Proof of Address'">
                   <div
                     *ngFor="
                       let d of item[1] | presentValues;
