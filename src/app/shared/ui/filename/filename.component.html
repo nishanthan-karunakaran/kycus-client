@@ -22,7 +22,7 @@
       {{ fileName }}
     </p>
   </div>
-  <div class="flex w-[10%] items-center justify-center">
+  <div *ngIf="!loading" class="flex w-[10%] items-center justify-center">
     <lucide-icon
       *ngIf="canRemove"
       name="x"
