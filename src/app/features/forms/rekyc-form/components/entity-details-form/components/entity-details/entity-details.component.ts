@@ -341,7 +341,7 @@ export class EntityDetailsComponent implements OnInit, OnDestroy {
       next: (result) => {
         const { loading, response } = result;
         fileGroup.get('isLoading')?.setValue(loading);
-        // this.setIsFileLoading(type, loading);
+        this.setIsFileLoading(type, loading);
 
         if (!response) return;
 

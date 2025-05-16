@@ -65,6 +65,7 @@
 
           <ui-filename
             *ngIf="form.get(doc + '.file.name')?.value"
+            [loading]="isFileLoadingType(doc)"
             [fileName]="form.get(doc + '.file.name')?.value"
             [fileLink]="form.get(doc + '.file.link')?.value"
             (removeFile)="deleteDocument(doc)"

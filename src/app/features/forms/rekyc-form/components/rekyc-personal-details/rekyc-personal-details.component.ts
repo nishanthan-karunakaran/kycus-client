@@ -367,6 +367,7 @@ export class RekycPersonalDetailsComponent implements OnInit, OnDestroy {
       next: (result) => {
         const { loading, response } = result;
         fileGroup.get('isLoading')?.setValue(loading);
+        this.setIsFileLoading(type as FileType, loading);
 
         if (!response) return;
 

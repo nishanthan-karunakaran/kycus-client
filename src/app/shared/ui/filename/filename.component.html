@@ -1,5 +1,9 @@
 <div
-  class="flex w-[200px] items-center gap-[3%] rounded-sm bg-primary-5 p-2 text-primary"
+  class="flex w-[200px] items-center gap-[3%] rounded-sm p-2"
+  [ngClass]="{
+    'bg-primary-5 text-primary': !loading,
+    'bg-secondary-5 text-secondary': loading,
+  }"
 >
   <div
     class="flex w-[90%] items-center gap-[5%]"
@@ -8,7 +12,8 @@
     (keydown.space)="openFileInNewTab()"
     tabindex="0"
   >
-    <lucide-icon name="file-minus" size="20" />
+    <ui-circular-masked-loader *ngIf="loading" />
+    <lucide-icon *ngIf="!loading" name="file-minus" size="20" />
     <p
       class="max-w-[15ch] overflow-hidden truncate"
       [attr.title]="fileName"
