@@ -1,6 +1,6 @@
 <div
   *ngIf="isOpen"
-  class="fixed inset-0 z-10 bg-gray-600 bg-opacity-50 transition-opacity duration-300 ease-in-out"
+  class="fixed inset-0 z-50 bg-gray-600 bg-opacity-50 transition-opacity duration-300 ease-in-out"
   (click)="close()"
   (keydown.enter)="close()"
   (keydown.space)="close()"
@@ -8,7 +8,7 @@
 ></div>
 
 <div
-  class="fixed top-0 z-20 h-full min-w-80 max-w-3xl transform overflow-auto bg-white shadow-lg transition-transform duration-300 ease-linear"
+  class="fixed top-0 z-50 h-full min-w-80 max-w-3xl transform overflow-auto bg-white shadow-lg transition-transform duration-300 ease-linear"
   [ngClass]="[
     position === 'right'
       ? 'right-0 translate-x-full'
