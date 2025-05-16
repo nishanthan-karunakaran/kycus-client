@@ -23,7 +23,7 @@
           [label]="isGettingReport() ? '' : 'Submit'"
           [loading]="isGettingReport()"
           [disabled]="isGettingReport()"
-          (btnClick)="getReport()"
+          (btnClick)="onSave(true)"
         />
       </ng-container>
     </div>

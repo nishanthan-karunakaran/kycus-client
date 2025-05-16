@@ -125,10 +125,12 @@ export class RekycKycFormComponent implements OnInit {
 
             if (status === ApiStatus.SUCCESS) {
               if (isSubmitting) {
-                this.toast.success('Form submitted!');
+                this.getReport();
               } else {
                 this.toast.success('Form saved!');
               }
+            } else {
+              this.toast.error('Something went wrong!');
             }
           },
         });
