@@ -7,7 +7,7 @@ import { FilemodalComponent } from './components/filemodal/filemodal.component';
 import { RekycRoutingModule } from './rekyc-routing.module';
 import { RekycComponent } from './rekyc.component';
 import { rekycReducer } from './store/rekyc.reducers';
-import { TooltipComponent } from '../../shared/ui/tooltip/tooltip.component';
+import { TooltipComponent } from '@ui/tooltip/tooltip.component';
 
 @NgModule({
   imports: [
