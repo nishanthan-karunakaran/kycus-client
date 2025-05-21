@@ -1,11 +1,5 @@
 import { Component, OnDestroy, OnInit, signal } from '@angular/core';
-import {
-  FormBuilder,
-  FormControl,
-  FormGroup,
-  ValidatorFn,
-  Validators,
-} from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, ValidatorFn, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { interval, Subscription, takeWhile } from 'rxjs';
 import { ApiStatus } from 'src/app/core/constants/api.response';
@@ -46,10 +40,7 @@ export class SignupComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.signupForm = this.fb.group({
       name: ['', [Validators.required]],
-      email: [
-        '',
-        [Validators.required, this.validatorService.emailValidator()],
-      ],
+      email: ['', [Validators.required, this.validatorService.emailValidator()]],
     });
   }
 
@@ -64,17 +55,11 @@ export class SignupComponent implements OnInit, OnDestroy {
   addAllFields(): void {
     this.isSubmitted = false;
 
-    const additionalFields: Record<
-      string,
-      [string, ValidatorFn | ValidatorFn[]]
-    > = {
+    const additionalFields: Record<string, [string, ValidatorFn | ValidatorFn[]]> = {
       cin: ['', Validators.required],
       companyName: ['', Validators.required],
       designation: ['', Validators.required],
-      mobileNumber: [
-        '',
-        [Validators.required, this.validatorService.mobileNumberValidator()],
-      ],
+      mobileNumber: ['', [Validators.required, this.validatorService.mobileNumberValidator()]],
     };
 
     Object.entries(additionalFields).forEach(
@@ -161,27 +146,25 @@ export class SignupComponent implements OnInit, OnDestroy {
     const canProceed = isResend ? this.resendOTPTimer <= 0 : true;
 
     if (canProceed) {
-      this.authService
-        .sendEmailOTP({ email: this.signupForm.value.email })
-        .subscribe({
-          next: (result) => {
-            const { loading, response } = result;
-            this.isLoading = loading;
+      this.authService.sendEmailOTP({ email: this.signupForm.value.email }).subscribe({
+        next: (result) => {
+          const { loading, response } = result;
+          this.isLoading = loading;
 
-            if (!response) return;
+          if (!response) return;
 
-            const { status } = response;
+          const { status } = response;
 
-            if (status === ApiStatus.SUCCESS) {
-              this.signupState.mutate((state) => (state.otpSent = true));
-              this.startResendTimer();
-              this.addOTPField();
-              this.toast.success('OTP sent successfully!');
-            } else {
-              this.toast.error(response.message || 'Something went wrong!');
-            }
-          },
-        });
+          if (status === ApiStatus.SUCCESS) {
+            this.signupState.mutate((state) => (state.otpSent = true));
+            this.startResendTimer();
+            this.addOTPField();
+            this.toast.success('OTP sent successfully!');
+          } else {
+            this.toast.error(response.message || 'Something went wrong!');
+          }
+        },
+      });
     }
   }
 
@@ -255,8 +238,6 @@ export class SignupComponent implements OnInit, OnDestroy {
     } else {
       this.signup();
     }
-
-    // console.log(this.signupForm.value);
 
     // this.signupForm.get('mobileNumber')?.setErrors({ 'validationError': 'Vanakkam' });
   }

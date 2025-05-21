@@ -6,6 +6,7 @@ export interface DocResponse {
   fileType: string;
   url: string;
   selectedType: string;
+  reason: string;
   timestamp: string;
   verifiedSource: string;
   isVerified: boolean;

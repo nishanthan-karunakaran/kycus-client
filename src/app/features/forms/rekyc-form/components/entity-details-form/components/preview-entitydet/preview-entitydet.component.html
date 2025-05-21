@@ -4,47 +4,98 @@
   class="w-[600px]"
   contentClass="px-0 py-0"
 >
-  <header class="bg-slate-300 px-4 py-4">
+  <header sheet-header class="bg-primary-20 px-4 py-4">
     <h5 class="text-primary">Preview Document</h5>
   </header>
 
-  <div *ngFor="let doc of data; trackBy: trackDoc" class="divide-y-2">
-    <div class="flex justify-between border p-4">
-      <div class="flex flex-col gap-1">
-        <p>{{ doc?.label }}</p>
+  <div
+    role="status"
+    class="flex h-[360px] items-center justify-center"
+    *ngIf="isLoading(); else renderScreen"
+  >
+    <div
+      class="loader-circle size-8 animate-spin rounded-full border-4 border-gray-300 border-t-primary"
+    ></div>
+  </div>
 
-        <p
-          [ngClass]="{
-            'text-success': doc?.isVerified,
-            'text-primary': !doc?.isVerified,
-          }"
-        >
-          {{ doc?.isVerified ? 'Document verified!' : 'Document submitted!' }}
-        </p>
-      </div>
+  <ng-template #renderScreen>
+    <p
+      class="my-4 px-4 text-center"
+      *ngIf="data().length === 0; else renderDocs"
+    >
+      Wait we are processing your documents. Please check back later.
+    </p>
 
-      <div class="">
-        <div *ngFor="let item of doc.data | presentValues; trackBy: trackByKey">
-          <div class="flex items-center gap-2 text-xs">
-            <p *ngIf="item[0] !== 'Proof of Address'" class="text-gray-500">
-              {{ item[0] }}:
-            </p>
-            <p *ngIf="item[0] !== 'Proof of Address'">
-              {{ item[1] }}
-            </p>
-            <ng-container *ngIf="item[0] === 'Proof of Address'">
-              <div
-                *ngFor="let d of item[1] | presentValues; trackBy: trackByKey"
+    <ng-template #renderDocs>
+      <div *ngFor="let doc of data(); trackBy: trackDoc">
+        <div class="flex w-full justify-between border p-4">
+          <div class="flex w-[40%] flex-col gap-1">
+            <p>{{ doc?.label }}</p>
+
+            <div class="flex items-center gap-1">
+              <lucide-icon
+                *ngIf="doc?.status.toLowerCase() === 'document not uploaded'"
+                name="octagon-alert"
+                color="#F42735"
+                size="16"
+              />
+              <p
+                [ngClass]="{
+                  'text-danger':
+                    doc?.status?.toLowerCase() === 'document not uploaded',
+                  'text-success':
+                    doc?.status?.toLowerCase() !== 'document not uploaded',
+                }"
               >
-                <div class="flex flex-col gap-2 text-xs">
-                  <!-- <p class="text-gray-500">{{ item[0] }}:</p> -->
-                  <p>{{ d[1] }}</p>
-                </div>
+                {{ helperService.toTitleCase(doc?.status, 'space') }}
+              </p>
+
+              <lucide-icon
+                *ngIf="doc?.status.toLowerCase() === 'document verified'"
+                name="check-check"
+                color="#3EB24E"
+                size="20"
+              />
+            </div>
+          </div>
+
+          <div class="flex w-[60%] flex-col gap-2 text-xs">
+            <div *ngIf="doc.data">
+              <div
+                *ngFor="
+                  let item of doc.data | presentValues;
+                  trackBy: trackByKey
+                "
+                class="flex items-start gap-2 text-xs"
+              >
+                <p
+                  *ngIf="item[0] !== 'Proof of Address'"
+                  class="text-nowrap text-gray-500"
+                >
+                  {{ item[0] }}:
+                </p>
+                <p *ngIf="item[0] !== 'Proof of Address'" class="text-wrap">
+                  {{ item[1] }}
+                </p>
+                <ng-container *ngIf="item[0] === 'Proof of Address'">
+                  <div
+                    *ngFor="
+                      let d of item[1] | presentValues;
+                      trackBy: trackByKey
+                    "
+                  >
+                    <div class="flex items-start gap-2 text-xs">
+                      <p class="text-nowrap text-gray-500">{{ d[0] }}:</p>
+                      <p>{{ d[1] }}</p>
+                    </div>
+                  </div>
+                </ng-container>
               </div>
-            </ng-container>
+            </div>
+            <p class="text-danger">{{ doc.reason }}</p>
           </div>
         </div>
       </div>
-    </div>
-  </div>
+    </ng-template>
+  </ng-template>
 </app-sheet>

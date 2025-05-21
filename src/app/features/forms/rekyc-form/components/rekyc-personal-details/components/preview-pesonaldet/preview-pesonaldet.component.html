@@ -1,0 +1,116 @@
+<app-sheet
+  [isOpen]="openSheet"
+  (closeSheet)="handleReKycSheet()"
+  class="w-[600px]"
+  contentClass="px-0 py-0"
+>
+  <header sheet-header class="bg-primary-20 px-4 py-4">
+    <h5 class="text-primary">Preview Document</h5>
+  </header>
+  <div class="flex flex-col">
+    <div
+      role="status"
+      class="flex h-[360px] flex-1 items-center justify-center"
+      *ngIf="isLoading(); else renderScreen"
+    >
+      <div
+        class="loader-circle size-8 animate-spin rounded-full border-4 border-gray-300 border-t-primary"
+      ></div>
+    </div>
+
+    <ng-template #renderScreen>
+      <p
+        class="my-4 flex-1 px-4 text-center"
+        *ngIf="data().length === 0; else renderDocs"
+      >
+        Wait we are processing your documents. Please check back later.
+      </p>
+
+      <ng-template #renderDocs>
+        <div>
+          <div *ngFor="let doc of data(); trackBy: trackDoc" class="divide-y-2">
+            <div class="flex justify-between gap-4 border p-4">
+              <div class="flex w-[40%] flex-col gap-1">
+                <p>{{ doc?.label }}</p>
+
+                <div class="flex items-center gap-1">
+                  <lucide-icon
+                    *ngIf="
+                      doc?.status?.toLowerCase() === 'document not uploaded'
+                    "
+                    name="octagon-alert"
+                    color="#F42735"
+                    size="16"
+                  />
+                  <p
+                    [ngClass]="{
+                      'text-danger':
+                        doc?.status?.toLowerCase() === 'document not uploaded',
+                      'text-success':
+                        doc?.status?.toLowerCase() !== 'document not uploaded',
+                    }"
+                  >
+                    {{ helperService.toTitleCase(doc?.status, 'space') }}
+                  </p>
+
+                  <lucide-icon
+                    *ngIf="doc?.status?.toLowerCase() === 'document verified'"
+                    name="check-check"
+                    color="#3EB24E"
+                    size="20"
+                  />
+                </div>
+              </div>
+
+              <div class="flex w-[60%] flex-col gap-2 text-xs">
+                <div *ngIf="doc.data">
+                  <div
+                    *ngFor="
+                      let item of doc.data | presentValues;
+                      trackBy: trackByKey
+                    "
+                  >
+                    <div class="flex items-start gap-2">
+                      <p
+                        *ngIf="item[0] !== 'Proof of Address'"
+                        class="text-nowrap text-gray-500"
+                      >
+                        {{ item[0] }}:
+                      </p>
+                      <p
+                        *ngIf="item[0] !== 'Proof of Address'"
+                        class="text-wrap"
+                      >
+                        {{ item[1] }}
+                      </p>
+                      <ng-container *ngIf="item[0] === 'Proof of Address'">
+                        <div
+                          *ngFor="
+                            let d of item[1] | presentValues;
+                            trackBy: trackByKey
+                          "
+                        >
+                          <div class="flex flex-col gap-2 text-xs">
+                            <p>{{ d[1] }}</p>
+                          </div>
+                        </div>
+                      </ng-container>
+                    </div>
+                  </div>
+                </div>
+                <p class="text-danger">{{ doc.reason }}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </ng-template>
+    </ng-template>
+  </div>
+  <div
+    sheet-footer
+    *ngIf="!isLoading() && showESign()"
+    class="flex justify-end p-4"
+  >
+    <ui-button label="Continue" (btnClick)="handleProceedESign()" />
+  </div>
+</app-sheet>

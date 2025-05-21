@@ -8,6 +8,10 @@ export class HelperService {
     txt: string,
     splitBy: 'camelCase' | 'underscore' | 'space' = 'camelCase',
   ): string {
+    if (!txt) {
+      return txt;
+    }
+
     let words: string[];
 
     switch (splitBy) {

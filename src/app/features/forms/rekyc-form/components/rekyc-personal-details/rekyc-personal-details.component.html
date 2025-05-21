@@ -24,10 +24,10 @@
     (ngSubmit)="submit('submit')"
     class="flex flex-col gap-4"
   >
-    <div class="divide-y-2 rounded-lg border">
+    <div class="rounded-lg border">
       <div
         *ngFor="let doc of documentKeys; trackBy: trackDoc"
-        class="flex items-center justify-between px-4 py-4"
+        class="flex items-center justify-between gap-[10%] border-b px-4 py-4 last:border-b-0"
       >
         <div class="w-[42%]">
           <div class="flex flex-col gap-2">
@@ -51,9 +51,34 @@
               [defaultValue]="form.get([doc, 'file', 'selectedType'])?.value"
             ></ui-select>
           </div>
+        </div>
+
+        <div class="flex flex-1 flex-col items-end justify-end">
+          <ui-upload-button
+            *ngIf="!form.get(doc + '.file.name')?.value"
+            [accept]="getDocAcceptedType(doc)"
+            [disabled]="
+              doc === 'addressProof'
+                ? form.get(doc + '.file.selectedType')?.value === ''
+                : false
+            "
+            (selectedFile)="onFileSelection(doc, $event)"
+          ></ui-upload-button>
+
+          <ui-filename
+            *ngIf="form.get(doc + '.file.name')?.value"
+            [loading]="isFileLoadingType(doc)"
+            [fileName]="form.get(doc + '.file.name')?.value"
+            [fileLink]="form.get(doc + '.file.link')?.value"
+            (removeFile)="deleteDocument(doc)"
+          />
+
+          <p *ngIf="form.get(doc + '.file.reason')?.value" class="error-msg">
+            {{ form.get(doc + '.file.reason')?.value }}
+          </p>
 
           <span
-            class="text-xs text-red-500"
+            class="error-msg"
             *ngIf="
               form.get([doc, 'file', 'name'])?.errors?.['required'] &&
               form.get([doc, 'file', 'name'])?.touched
@@ -69,31 +94,6 @@
             is required
           </span>
         </div>
-
-        <div>
-          <ui-upload-button
-            *ngIf="!form.get(doc + '.file.name')?.value"
-            [accept]="proofDoc(doc) ? '.pdf' : '.jpg, .png'"
-            [disabled]="
-              doc === 'addressProof'
-                ? form.get(doc + '.file.selectedType')?.value === ''
-                : false
-            "
-            (selectedFile)="onFileSelection(doc, $event)"
-          ></ui-upload-button>
-
-          <div
-            *ngIf="form.get(doc + '.file.name')?.value"
-            class="flex items-center gap-2"
-          >
-            <ui-filename
-              *ngIf="form.get(doc + '.file.name')?.value"
-              [fileName]="form.get(doc + '.file.name')?.value"
-              [fileLink]="form.get(doc + '.file.link')?.value"
-              (removeFile)="deleteDocument(doc)"
-            />
-          </div>
-        </div>
       </div>
     </div>
 
@@ -105,13 +105,33 @@
         class="btn-outline"
         (btnClick)="handlePreviewSheet()"
       />
-      <ui-button type="submit" label="Submit" class="py-[7px]" />
+      <ui-button type="submit" label="E-Sign" class="py-[7px]" />
     </div>
   </form>
 
-  <rekyc-preview-entitydet
+  <rekyc-preview-personaldet
     [openSheet]="showPreviewSheet()"
     (closeSheet)="handlePreviewSheet()"
-    [data]="previewData()"
+    (openESignSheet)="handleESignSheet()"
   />
+
+  <rekyc-esign-personaldet
+    [openSheet]="showESignSheet()"
+    (closeSheet)="handleESignSheet()"
+  />
+
+  <ui-modal
+    [showClose]="false"
+    (close)="handlePopup()"
+    class="max-w-md"
+    [isOpen]="showPopup()"
+  >
+    <div modalContent class="flex flex-col gap-8">
+      <p class="text-md">You have successfully submitted the Re-KYC details.</p>
+
+      <div class="flex justify-end gap-4">
+        <button class="px-4" (click)="handlePopup()">OK</button>
+      </div>
+    </div>
+  </ui-modal>
 </div>

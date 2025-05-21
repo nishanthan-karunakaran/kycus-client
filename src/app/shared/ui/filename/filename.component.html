@@ -1,32 +1,39 @@
 <div
-  class="flex w-max items-center justify-between gap-2 bg-primary bg-opacity-10 p-2 text-primary"
+  class="flex w-[200px] items-center gap-[3%] rounded-sm p-2"
+  [ngClass]="{
+    'bg-primary-5 text-primary': !loading,
+    'bg-secondary-5 text-secondary': loading,
+  }"
 >
   <div
-    class="flex items-center gap-2 border-r"
+    class="flex w-[90%] items-center gap-[5%]"
     (click)="openFileInNewTab()"
     (keydown.enter)="openFileInNewTab()"
     (keydown.space)="openFileInNewTab()"
     tabindex="0"
   >
-    <lucide-icon name="file-minus" size="20" />
+    <ui-circular-masked-loader *ngIf="loading" />
+    <lucide-icon *ngIf="!loading" [name]="fileIcon" size="20" />
     <p
-      class="max-w-[14ch] overflow-hidden truncate"
+      class="max-w-[15ch] overflow-hidden truncate"
       [attr.title]="fileName"
       [ngClass]="{ underline: fileLink, 'cursor-pointer': fileLink }"
     >
       {{ fileName }}
     </p>
   </div>
-  <lucide-icon
-    *ngIf="canRemove"
-    name="x"
-    size="20"
-    [ngClass]="{
-      'cursor-pointer': canRemove,
-    }"
-    (click)="deleteFile()"
-    (keydown.enter)="deleteFile()"
-    (keydown.space)="deleteFile()"
-    tabindex="0"
-  />
+  <div *ngIf="!loading" class="flex w-[10%] items-center justify-center">
+    <lucide-icon
+      *ngIf="canRemove"
+      name="x"
+      size="20"
+      [ngClass]="{
+        'cursor-pointer': canRemove,
+      }"
+      (click)="deleteFile()"
+      (keydown.enter)="deleteFile()"
+      (keydown.space)="deleteFile()"
+      tabindex="0"
+    />
+  </div>
 </div>

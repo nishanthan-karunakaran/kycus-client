@@ -1,3 +1,4 @@
+import { CommonModule } from '@angular/common';
 import {
   AfterViewInit,
   ChangeDetectorRef,
@@ -11,13 +12,15 @@ import {
   SimpleChanges,
   ViewChild,
 } from '@angular/core';
-import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { InputFormat } from 'src/app/core/directives/input-format.directive';
+import { ControlValueAccessor, FormsModule, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { LucideAngularModule } from 'lucide-angular';
+import { InputFormat, InputFormatDirective } from 'src/app/core/directives/input-format.directive';
 
 @Component({
   selector: 'ui-input',
+  standalone: true,
+  imports: [CommonModule, LucideAngularModule, FormsModule, InputFormatDirective],
   templateUrl: './input.component.html',
-  // styleUrls: ['./input.component.scss'],
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
@@ -32,6 +35,8 @@ export class InputComponent implements OnChanges, AfterViewInit, ControlValueAcc
   @Input() name = '';
   @Input() label = '';
   @Input() placeholder = '';
+  @Input() defaultValue = '';
+  @Input() onlyNumeric = false;
   @Input() readonly = false;
   @Input() disabled = false;
   @Input() autofocus = false;
@@ -154,7 +159,7 @@ export class InputComponent implements OnChanges, AfterViewInit, ControlValueAcc
       target.value = inputValue; // Update input field with trimmed value
     }
 
-    if (this.type === 'number') {
+    if (this.type === 'number' || this.onlyNumeric) {
       // Remove non-numeric characters except for decimal and minus sign
       let cleanedValue = inputValue.replace(/[^0-9.-]/g, '');
 
@@ -181,6 +186,9 @@ export class InputComponent implements OnChanges, AfterViewInit, ControlValueAcc
         this.value = ''; // Reset value if invalid
         target.value = ''; // Clear input if value is not valid
       }
+    } else if (this.type === 'email') {
+      this.value = inputValue.toLowerCase();
+      target.value = inputValue.toLowerCase();
     } else {
       // For other types, just update the value based on input (text, etc.)
       this.value = inputValue;

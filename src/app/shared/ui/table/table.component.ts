@@ -1,4 +1,6 @@
+import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { LucideAngularModule } from 'lucide-angular';
 
 interface Column {
   key: string;
@@ -11,6 +13,8 @@ type DataRow = Record<string, string | number | boolean>;
 
 @Component({
   selector: 'ui-table',
+  standalone: true,
+  imports: [CommonModule, LucideAngularModule],
   templateUrl: './table.component.html',
   styleUrls: ['./table.component.scss'],
 })
@@ -43,11 +47,7 @@ export class TableComponent<T extends DataRow> implements OnInit {
 
     if (this.sortKey === key) {
       this.sortDirection =
-        this.sortDirection === 'asc'
-          ? 'desc'
-          : this.sortDirection === 'desc'
-            ? ''
-            : 'asc';
+        this.sortDirection === 'asc' ? 'desc' : this.sortDirection === 'desc' ? '' : 'asc';
     } else {
       this.sortKey = key;
       this.sortDirection = 'asc';
@@ -58,8 +58,7 @@ export class TableComponent<T extends DataRow> implements OnInit {
     });
 
     if (this.sortDirection) {
-      this.columnSortState[key] =
-        this.sortDirection === 'asc' ? 'ascending' : 'descending';
+      this.columnSortState[key] = this.sortDirection === 'asc' ? 'ascending' : 'descending';
     }
 
     if (!this.sortDirection) return;
@@ -69,9 +68,7 @@ export class TableComponent<T extends DataRow> implements OnInit {
       const valB = b[key];
 
       if (typeof valA === 'string' && typeof valB === 'string') {
-        return this.sortDirection === 'asc'
-          ? valA.localeCompare(valB)
-          : valB.localeCompare(valA);
+        return this.sortDirection === 'asc' ? valA.localeCompare(valB) : valB.localeCompare(valA);
       }
       if (typeof valA === 'number' && typeof valB === 'number') {
         return this.sortDirection === 'asc' ? valA - valB : valB - valA;
@@ -82,8 +79,7 @@ export class TableComponent<T extends DataRow> implements OnInit {
 
   isColumnSortable(columnKey: string): boolean {
     return (
-      this.sortable === true ||
-      (Array.isArray(this.sortable) && this.sortable.includes(columnKey))
+      this.sortable === true || (Array.isArray(this.sortable) && this.sortable.includes(columnKey))
     );
   }
 

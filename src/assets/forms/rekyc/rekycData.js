@@ -1,5 +1,25 @@
+const reqInputs = [
+  'entityCustId',
+  'entityName',
+  'entityPan',
+  'entity-mailing-address',
+  'entity-mailing-address-roadName',
+  'entity-mailing-address-city',
+  'entity-mailing-address-pincode',
+  'entity-mailing-address-state',
+  'entity-mailing-address-country',
+  'entity-contact-address-roadName',
+  'entity-contact-address-city',
+  'entity-contact-address-pincode',
+  'entity-contact-address-state',
+  'entity-contact-address-country',
+  'entity-contact-address-owned',
+];
+const directCheckBoxes = {
+  'type-of-entity': ['data.originalData.entityType'],
+};
+
 function sendSaveData() {
-  console.log('Iframe received TRIGGER_SAVE', data);
   window.parent.postMessage(
     {
       type: 'SAVE_DATA',
@@ -11,15 +31,127 @@ function sendSaveData() {
 }
 
 function setFormData(payload) {
-  data = payload;
-  // let temp = payload.editedData;
-  // delete temp.authorizedSignatoriesDetails;
-  // delete temp.boDetails;
-  // data = { originalData: payload.originalData, editedData: temp };
-  // data = { originalData: { entityCustId: 'cust1223', entityName: 'test' } };
+  const originalData = payload.originalData || {};
+  const editedData = payload.editedData || {};
+
+  const hasMailingAddress = !!originalData?.entityDetails?.mailingAddress;
+
+  const updatedOriginalData = {
+    ...originalData,
+    entityDetails: {
+      ...originalData.entityDetails,
+      registeredOfficeAddress: originalData.entityDetails?.registeredOfficeAddress || {},
+      mailingAddress: hasMailingAddress
+        ? originalData.entityDetails.mailingAddress
+        : { ...(originalData.entityDetails?.registeredOfficeAddress || {}) },
+    },
+  };
+
+  data = {
+    ...payload,
+    originalData: updatedOriginalData,
+    editedData: editedData,
+  };
+
   renderAll();
-  console.log('data setted', data);
+  disableEditAfterSubmit();
 }
+
+function disableEditAfterSubmit() {
+  const status = data?.status || false;
+  if (status) {
+    document.querySelectorAll('input, select, textarea, button').forEach((element) => {
+      element.disabled = true; // Disable all form elements
+    });
+    document.body.style.pointerEvents = 'none'; // Disable all interactions with the body
+  }
+}
+
+function checkAllReqInputFilled() {
+  let firstEmptyInput = null;
+  let firstEmptyCheckboxLabel = null;
+  let allInputsFilled = true;
+
+  // Check regular inputs
+  reqInputs.forEach((inputId) => {
+    const inputElement = document.getElementById(inputId);
+    if (!inputElement) {
+      console.warn(`Missing input: ${inputId}`);
+      allInputsFilled = false;
+      return;
+    }
+
+    const isFilled = inputElement.value?.trim() !== '';
+
+    if (!isFilled) {
+      inputElement.style.setProperty('border-bottom', '2px solid red', 'important');
+      allInputsFilled = false;
+
+      if (!firstEmptyInput) {
+        firstEmptyInput = inputElement;
+      }
+    } else {
+      inputElement.style.removeProperty('border-bottom');
+    }
+  });
+
+  // Check checkboxes using the values in the provided data object
+  for (const [labelId, checkboxPaths] of Object.entries(directCheckBoxes)) {
+    const labelElement = document.getElementById(labelId);
+    const isChecked = checkboxPaths.some((path) => {
+      const value = eval(path); // Using eval to access the value directly from the path
+      return value && value.trim(); // Check if the value is non-empty or truthy
+    });
+
+    if (!isChecked) {
+      labelElement.style.setProperty('border-bottom', '2px solid red', 'important');
+      allInputsFilled = false;
+
+      if (!firstEmptyCheckboxLabel) {
+        firstEmptyCheckboxLabel = labelElement;
+      }
+    } else {
+      labelElement.style.removeProperty('border-bottom');
+    }
+  }
+
+  if (firstEmptyInput) firstEmptyInput.focus();
+  else if (firstEmptyCheckboxLabel)
+    firstEmptyCheckboxLabel.scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+  window.parent.postMessage(
+    {
+      type: 'CHECK_ALL_REQ_INPUT_FILLED_RESPONSE',
+      source: 'kyc-form',
+      isFilled: allInputsFilled,
+    },
+    '*',
+  );
+}
+
+document.addEventListener('keydown', function (e) {
+  if (e.key === 'Tab' && isCheckedAllReqInputFilled) {
+    const current = document.activeElement;
+
+    const unfilledInputs = reqInputs
+      .map((id) => document.getElementById(id))
+      .filter((el) => el?.value?.trim() === '');
+
+    if (unfilledInputs.length === 0) return; // All filled, allow default
+
+    const currentIndex = unfilledInputs.indexOf(current);
+
+    e.preventDefault();
+
+    if (currentIndex === -1 || currentIndex === unfilledInputs.length - 1) {
+      // Not in list or last item — loop to first unfilled
+      unfilledInputs[0].focus();
+    } else {
+      // Move to next unfilled
+      unfilledInputs[currentIndex + 1].focus();
+    }
+  }
+});
 
 window.addEventListener('message', (event) => {
   const { type, payload } = event.data || {};
@@ -31,6 +163,8 @@ window.addEventListener('message', (event) => {
     case 'TRIGGER_SAVE':
       sendSaveData();
       break;
+    case 'CHECK_ALL_REQ_INPUT_FILLED':
+      checkAllReqInputFilled();
     default:
       break;
   }
@@ -51,16 +185,13 @@ function setByPath(obj, pathArray, value) {
     if (index === pathArray.length - 1) {
       // Handling special case for finding by ID
       if (typeof key === 'object' && key.findById !== undefined) {
-        console.log('bogot 2');
         const item = acc.find((item) => item.ausId === key.findById);
         if (item) item[pathArray[index + 1]] = value; // Set the value on the specific field
       } else {
-        console.log('bogot 3');
         acc[key] = value;
       }
     } else {
       if (typeof key === 'object' && key.findById !== undefined) {
-        console.log('bogot 4');
         const item = acc.find((item) => item.ausId === key.findById);
         if (item) return item;
         else return {};
@@ -103,9 +234,21 @@ function attachInputTracking(inputElement, pathArray) {
   inputElement.addEventListener('input', (e) => {
     const value = e.target.value.trim();
     const originalValue = getByPath(data.originalData, pathArray);
+    const existingEditedStatus = getByPath(data.editedData, pathArray);
 
-    // Always update the originalData directly
-    setByPath(data.originalData, pathArray, value);
+    // if (originalValue === undefined || originalValue === null || originalValue === '') {
+    //   if (value) {
+    //     setByPath(data.editedData, pathArray, 'own');
+    //   } else {
+    //     deleteByPath(data.editedData, pathArray);
+    //   }
+    // } else {
+    //   if (value !== originalValue) {
+    //     setByPath(data.editedData, pathArray, 'modified');
+    //   } else {
+    //     deleteByPath(data.editedData, pathArray);
+    //   }
+    // }
 
     if (originalValue === undefined || originalValue === null || originalValue === '') {
       if (value) {
@@ -115,14 +258,29 @@ function attachInputTracking(inputElement, pathArray) {
       }
     } else {
       if (value !== originalValue) {
-        setByPath(data.editedData, pathArray, 'modified');
+        // Only update to 'modified' if not already marked as 'own'
+        if (existingEditedStatus !== 'own') {
+          setByPath(data.editedData, pathArray, 'modified');
+        }
       } else {
-        deleteByPath(data.editedData, pathArray);
+        // If value matches original, remove any editedData
+        if (existingEditedStatus !== 'own') {
+          deleteByPath(data.editedData, pathArray);
+        }
       }
     }
+
+    // Always update the originalData directly
+    setByPath(data.originalData, pathArray, value);
 
     // Dynamically update color using setProperty
     const color = decideColor(pathArray);
     inputElement.style.setProperty('color', color, 'important');
   });
+}
+
+function camelToTitleCase(input) {
+  return input
+    .replace(/([a-z])([A-Z])/g, '$1 $2') // insert space before capital letters
+    .replace(/^./, (char) => char.toUpperCase()); // capitalize first letter
 }

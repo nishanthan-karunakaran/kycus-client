@@ -1,18 +1,18 @@
+<!-- Overlay -->
 <div
   *ngIf="isOpen"
-  class="fixed inset-0 z-10 bg-gray-600 bg-opacity-50 transition-opacity duration-300 ease-in-out"
-  (click)="close()"
-  (keydown.enter)="close()"
-  (keydown.space)="close()"
+  class="fixed inset-0 z-50 bg-gray-600 bg-opacity-50 transition-opacity duration-300 ease-in-out"
+  (click)="sheetDismissOnOutside && close()"
+  (keydown.enter)="sheetDismissOnOutside && close()"
+  (keydown.space)="sheetDismissOnOutside && close()"
   tabindex="0"
 ></div>
 
+<!-- Sheet Panel -->
 <div
-  class="fixed top-0 z-20 h-full min-w-80 max-w-3xl transform overflow-auto bg-white shadow-lg transition-transform duration-300 ease-linear"
+  class="fixed top-0 z-50 flex h-full min-w-[600px] max-w-3xl transform flex-col bg-white shadow-lg transition-transform duration-300 ease-linear"
   [ngClass]="[
-    position === 'right'
-      ? 'right-0 translate-x-full'
-      : 'left-0 -translate-x-full',
+    position === 'right' ? 'right-0' : 'left-0',
     isOpen
       ? 'translate-x-0'
       : position === 'right'
@@ -21,6 +21,7 @@
     class,
   ]"
 >
+  <!-- Close Button -->
   <button
     *ngIf="showClose"
     (click)="close()"
@@ -34,7 +35,24 @@
     ></lucide-icon>
   </button>
 
-  <div class="p-6" [ngClass]="[contentClass]">
-    <ng-content></ng-content>
+  <!-- Main Content Area (flex column layout) -->
+  <div class="flex h-full flex-col">
+    <!-- Header -->
+    <div class="sticky top-0 z-10 bg-white shadow-sm" [ngClass]="headerClass">
+      <ng-content select="[sheet-header]"></ng-content>
+    </div>
+
+    <!-- Scrollable Content -->
+    <div class="flex-1 overflow-y-auto" [ngClass]="contentClass">
+      <ng-content></ng-content>
+    </div>
+
+    <!-- Footer -->
+    <div
+      class="sticky bottom-0 z-10 bg-white shadow-sm"
+      [ngClass]="footerClass"
+    >
+      <ng-content select="[sheet-footer]"></ng-content>
+    </div>
   </div>
 </div>

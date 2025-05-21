@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import { Injectable } from '@angular/core';
 import { API_URL } from '@core/constants/apiurls';
 import { ApiService } from '@core/services/api.service';
@@ -30,7 +29,8 @@ export class EntityDetailsService {
   }
 
   transformToEntityDetails = (
-    docResponse: Record<keyof EntityDetails, DocResponse>,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    docResponse: any,
     entityDetails: EntityDetails, // Pass in the existing entityDetails state
   ): EntityDetails => {
     // Helper function to map DocResponse to BasicDoc or ProofDoc, and only update the file label
@@ -44,9 +44,8 @@ export class EntityDetailsService {
         name: docResponse.fileName, // Update the name (label)
         link: docResponse.url, // Update the link
         selectedType: docResponse.selectedType || existingDoc.file.selectedType, // Update selectedType if present, else keep existing
+        reason: docResponse?.reason,
       };
-
-      console.log('doocc', file.name);
 
       if (isProofDoc) {
         return {

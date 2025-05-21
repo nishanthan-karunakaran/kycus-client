@@ -8,6 +8,7 @@ export const REKYC_STATUS_LABELS: Record<keyof typeof ReKycStatus, string> = {
   SUBMITTED: 'Submitted',
   PENDING: 'Pending',
   EXPIRED: 'Expired',
+  ENTITY_ESIGN: 'In Progress',
 };
 
 @Pipe({ name: 'rekycStatusLabel' })

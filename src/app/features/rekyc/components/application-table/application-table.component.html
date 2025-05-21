@@ -13,18 +13,20 @@
     ></ui-input-debounce>
 
     <div class="flex items-center gap-2">
-      <ui-button
+      <!-- <ui-button
         label="Filter"
         icon="sliders-horizontal"
         [iconSize]="14"
         class="btn-outline"
-      />
+      /> -->
+      <!-- <ui-tooltip content="Upload Excel"> -->
       <ui-button
         label="Upload"
         icon="upload"
         [iconSize]="14"
         (btnClick)="handleModal()"
       />
+      <!-- </ui-tooltip> -->
     </div>
   </div>
 
@@ -32,49 +34,72 @@
     <table aria-labelledby="user-table">
       <thead class="sticky top-0">
         <tr>
-          <th scope="col" class="w-[25%]">Company</th>
-          <th scope="col" class="w-[25%]">Requested On</th>
-          <th scope="col" class="w-[20%]">Status</th>
-          <th scope="col" class="w-[30%]">Action</th>
+          <th scope="col" class="w-[15%]">ID</th>
+          <th scope="col" class="w-[20%]">Company</th>
+          <th scope="col" class="w-[20%]">Requested On</th>
+          <th scope="col" class="w-[15%]">Status</th>
+          <th scope="col" class="w-[20%]">Action</th>
         </tr>
       </thead>
       <tbody>
-        <tr *ngIf="filteredReKycApplications().length === 0">
-          <td colspan="4" class="text-center">No data found</td>
-        </tr>
+        <ng-container *ngIf="isApplicationsLoading()">
+          <tr>
+            <td class="px-2" colspan="5">
+              <div
+                role="status"
+                class="flex h-[400px] animate-pulse items-center justify-center bg-gray-200"
+              >
+                <!-- <div
+                  class="loader-circle size-10 animate-spin rounded-full border-4 border-gray-300 border-t-primary"
+                ></div> -->
+              </div>
+            </td>
+          </tr>
+        </ng-container>
 
-        <tr
-          *ngFor="let item of filteredReKycApplications(); trackBy: trackRow"
-          tabindex="0"
-        >
-          <td>{{ item.entityName }}</td>
-          <td>{{ item.requestedOn }}</td>
-          <td [ngClass]="item.status | rekycStatusClass">
-            {{ item.status | rekycStatusLabel }}
-          </td>
-          <td class="flex items-center gap-2">
-            <ng-container *ngIf="item.status.toLowerCase() !== 'completed'">
-              <ui-button
-                class="btn-outline-compact font-semibold"
-                label="Send Reminder"
-                icon="bell-ring"
-                [iconSize]="14"
-                iconPos="right"
-              />
-            </ng-container>
-            <ui-button
-              class="btn-outline-compact p-1.5"
-              icon="download"
-              [iconSize]="14"
-            />
-            <ui-button
-              class="btn-outline-compact p-1.5"
-              icon="eye"
-              [iconSize]="14"
-              (btnClick)="handleReKycSheet(item)"
-            />
-          </td>
-        </tr>
+        <ng-container *ngIf="!isApplicationsLoading()">
+          <tr *ngIf="filteredReKycApplications().length === 0">
+            <td colspan="5" class="text-center">No records found</td>
+          </tr>
+
+          <tr
+            *ngFor="let item of filteredReKycApplications(); trackBy: trackRow"
+            tabindex="0"
+          >
+            <td>#{{ getLastEntityIdPart(item.entityId) }}</td>
+            <td>{{ item.entityName }}</td>
+            <td>{{ formatTo12HourDateTime(item.requestedOn) }}</td>
+            <td [ngClass]="item.status | rekycStatusClass">
+              {{ item.status | rekycStatusLabel }}
+            </td>
+            <td class="flex items-center gap-2">
+              <ng-container *ngIf="item.status.toLowerCase() !== 'completed'">
+                <ui-button
+                  class="btn-outline-compact font-semibold"
+                  label="Send Reminder"
+                  icon="bell-ring"
+                  [iconSize]="14"
+                  iconPos="right"
+                  (btnClick)="handleSendReminder(item.entityId)"
+                />
+              </ng-container>
+              <ng-container *ngIf="item.status.toLowerCase() === 'completed'">
+                <ui-button
+                  class="btn-outline-compact p-1.5"
+                  icon="download"
+                  [iconSize]="14"
+                  (btnClick)="handleDownloadReport(item.entityId)"
+                />
+                <ui-button
+                  class="btn-outline-compact p-1.5"
+                  icon="eye"
+                  [iconSize]="14"
+                  (btnClick)="handleViewReport(item.entityId)"
+                />
+              </ng-container>
+            </td>
+          </tr>
+        </ng-container>
       </tbody>
     </table>
   </div>

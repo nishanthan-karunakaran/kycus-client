@@ -1,25 +1,18 @@
 import { EntityInfoState } from './components/entity-filledby/store/entity-info.reducer';
-import { Director } from './components/rekyc-declaration-form/components/rekyc-bo-form/rekyc-directors-form/store/declaration-directors.state';
+import { Director } from './components/rekyc-directors-form/store/declaration-directors.state';
 import { AusInfoState } from './components/rekyc-personal-details/store/personal-details.reducer';
-
-// export enum FormStep {
-//   ENTITY_DETAILS,
-//   DECLARATION,
-//   PERSONAL_DETAILS,
-//   KYC_FORM,
-//   E_SIGN,
-// }
 
 export enum FormStep {
   ENTITY_DETAILS = 'entity-details',
   PERSONAL_DETAILS = 'personal-details',
   KYC_FORM = 'rekyc-form',
-  E_SIGN = 'eSign',
+  E_SIGN = 'eSignEntity',
 }
 
 export interface VerifyOtpResponse {
   entityInfo: EntityInfoState;
   ausInfo: AusInfoState;
+  access_token: string;
 }
 
 export interface FormPage {
@@ -38,6 +31,11 @@ export interface UploadFileProof {
 
 export interface UploadFileProofResponse {
   docName?: string;
+  storedPath?: string;
+}
+
+export interface UploadFileProofErrorResponse {
+  reason?: string;
   storedPath?: string;
 }
 
@@ -69,4 +67,13 @@ export interface BoDetail {
 export interface SaveBODetails {
   ausId: string;
   boList: BoDetail[];
+}
+
+export interface EntitySignatoriesList {
+  ausId?: string;
+  dirId?: string;
+  name?: string;
+  email?: string;
+  isSelected?: boolean;
+  errorMsg?: string;
 }

@@ -1,4 +1,4 @@
-export const API_URL = {
+export const API_URL = Object.freeze({
   AUTH: {
     SEND_EMAIL_OTP: '/auth/kycus/sendEmailOtp',
     VALIDATE_EMAIL_OTP: '/auth/kycus/validateEmail',
@@ -6,9 +6,15 @@ export const API_URL = {
     REQUEST_LOGIN_OTP: '/auth/kycus/requestLoginOtp',
     LOGIN: '/auth/kycus/login',
   },
+  BANKERS: {
+    REQUEST_OTP: '/kycus/rekyc/banker/login',
+    VERIFY_OTP: '/kycus/rekyc/banker/verifyOtp',
+  },
   REKYC: {
     UPLOAD_EXCEL: '/kycus/rekyc/upload',
     SUBMIT_EXCEL: '/kycus/rekyc/upload',
+    EXCEL_TEMPLATE: `/kycus/rekyc/excelTemplate`,
+    SEND_REMINDER: (entityId: string) => `/kycus/rekyc/sendReminders/${entityId}`,
   },
   APPLICATION: {
     REKYC: {
@@ -22,6 +28,7 @@ export const API_URL = {
       },
       ENTITY_INFO: {
         ENTITY_FILLED_BY: '/kycus/rekyc/entityInfo/entityFilledBy',
+        ENTITY_FILLED_BY_OTHERS: '/kycus/rekyc/othersDetails',
       },
       ENTITY_DETAILS_FORM: {
         ENTITY_DOCS_UPLOAD: '/kycus/rekyc/entityDocs/uploads',
@@ -44,11 +51,28 @@ export const API_URL = {
           `/kycus/rekyc/ausDetails/${entityId}/${ausId}`,
         PREVIEW_DETAILS: (entityId: string, ausId: string) =>
           `/kycus/rekyc/ausPreview/${entityId}/${ausId}`,
+        ESIGN_PREVIEW: (entityId: string, ausId: string) =>
+          `/kycus/rekyc/aus/esignPreview/${entityId}/${ausId}`,
+        ESIGN_PREVIEW_SAVE: '/kycus/rekyc/aus/esignPreviewSave',
+        PROCEED_TO_ESIGN: '/kycus/rekyc/aus/esign',
       },
       REKYC_FORM: {
         GET: (entityId: string) => `/kycus/rekyc/rekycForm/${entityId}`,
         PUT: (entityId: string) => `/kycus/rekyc/rekycForm/${entityId}`,
       },
+      ENTITY_ESIGN: {
+        ESIGN_PREVIEW_DOC: (entityId: string) => `/kycus/rekyc/entityReport/${entityId}`,
+        ESIGN_STATUS: (entityId: string) => `/kycus/rekyc/entityEsignStatus/${entityId}`,
+        ENTITY_ESIGN_PARTICIPANTS: (entityId: string) =>
+          `/kycus/rekyc/entityEsignparticipants/${entityId}`,
+        PROCEED_TO_ESIGN: '/kycus/rekyc/entity/esign',
+      },
+      REPORT: {
+        VIEW: (entityId: string) => `/kycus/rekyc/viewFinalReport/${entityId}`,
+        DOWNLOAD: (entityId: string) => `/kycus/rekyc/download/${entityId}`,
+        GENERATE_REPORT: (entityId: string) => `/kycus/rekyc/finalReport/${entityId}`,
+        GET_REPORT: (entityId: string) => `/kycus/rekyc/rekycFormPreview/${entityId}`,
+      },
     },
   },
-};
+});

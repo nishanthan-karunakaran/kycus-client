@@ -1,23 +1,28 @@
+import { CommonModule } from '@angular/common';
 import {
-  Component,
-  Input,
-  ElementRef,
   AfterContentInit,
-  Output,
-  EventEmitter,
-  Renderer2,
-  OnChanges,
-  SimpleChanges,
   ChangeDetectionStrategy,
+  Component,
+  ElementRef,
+  EventEmitter,
+  Input,
+  OnChanges,
+  OnDestroy,
+  Output,
+  Renderer2,
+  SimpleChanges,
 } from '@angular/core';
+import { LucideAngularModule } from 'lucide-angular';
 
 @Component({
   selector: 'ui-modal',
+  standalone: true,
+  imports: [CommonModule, LucideAngularModule],
   templateUrl: './modal.component.html',
   styleUrls: ['./modal.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ModalComponent implements AfterContentInit, OnChanges {
+export class ModalComponent implements AfterContentInit, OnChanges, OnDestroy {
   @Input() isOpen = false;
   @Input() class = '';
   @Input() contentClass = '';
@@ -51,16 +56,14 @@ export class ModalComponent implements AfterContentInit, OnChanges {
   }
 
   onKeydown(event: KeyboardEvent) {
-    // eslint-disable-next-line no-console
-    console.log(event);
     if (this.dismissOnOutsideClick && event.key === 'Escape') {
       this.closeModal();
     }
   }
 
   lockBackground() {
-    this.renderer.addClass(document.documentElement, 'modal-open');
-    this.renderer.setStyle(document.body, 'pointer-events', 'none'); // Block clicks
+    // this.renderer.addClass(document.documentElement, 'modal-open');
+    // this.renderer.setStyle(document.body, 'pointer-events', 'none'); // Block clicks
   }
 
   unlockBackground() {
@@ -75,8 +78,6 @@ export class ModalComponent implements AfterContentInit, OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    // eslint-disable-next-line no-console
-    console.log('ngonchange', changes['isOpen']?.currentValue, changes['isOpen']?.previousValue);
     if (changes['isOpen']?.currentValue !== changes['isOpen']?.previousValue) {
       if (this.isOpen) {
         this.lockBackground();
@@ -84,5 +85,9 @@ export class ModalComponent implements AfterContentInit, OnChanges {
         this.unlockBackground();
       }
     }
+  }
+
+  ngOnDestroy(): void {
+    this.unlockBackground();
   }
 }

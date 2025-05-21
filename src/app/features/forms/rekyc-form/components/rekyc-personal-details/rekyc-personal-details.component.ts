@@ -14,15 +14,15 @@ import { HelperService } from '@core/services/helpers.service';
 import {
   DeleteDocument,
   UploadFileProof,
+  UploadFileProofErrorResponse,
   UploadFileProofResponse,
 } from '@features/forms/rekyc-form/rekyc-form.model';
 import { RekycFormService } from '@features/forms/rekyc-form/rekyc-form.service';
-import { updateRekycFormStatus } from '@features/forms/rekyc-form/store/rekyc-form.action';
 import { Store } from '@ngrx/store';
 import { ToastService } from '@src/app/shared/ui/toast/toast.service';
 import { Doc } from '../entity-details-form/store/entity-details.state';
 import { selectEntityInfo } from '../entity-filledby/store/entity-info.selectors';
-import { RekycPersonalFormService } from './rekyc-personal.service';
+import { ESignStatus, RekycPersonalFormService } from './rekyc-personal.service';
 import { updatePartialPersonalDetails } from './store/personal-details.actions';
 import { selectAusInfo, selectPersonalDetails } from './store/personal-details.selectors';
 import { PersonalDetails } from './store/personal-details.state';
@@ -44,7 +44,7 @@ export class RekycPersonalDetailsComponent implements OnInit, OnDestroy {
     },
     {
       id: 2,
-      label: 'Aadhaar',
+      label: 'Aadhaar (Both Front & Back)',
       value: 'aadhaar',
     },
     {
@@ -56,6 +56,11 @@ export class RekycPersonalDetailsComponent implements OnInit, OnDestroy {
       id: 4,
       label: 'PAN',
       value: 'pan',
+    },
+    {
+      id: 5,
+      label: 'Passport (Both Front & Back)',
+      value: 'passport',
     },
   ];
   addressProofList = [
@@ -66,7 +71,7 @@ export class RekycPersonalDetailsComponent implements OnInit, OnDestroy {
     },
     {
       id: 2,
-      label: 'Aadhaar',
+      label: 'Aadhaar (Both Front & Back)',
       value: 'aadhaar',
     },
     {
@@ -76,8 +81,28 @@ export class RekycPersonalDetailsComponent implements OnInit, OnDestroy {
     },
     {
       id: 4,
-      label: 'PAN',
-      value: 'pan',
+      label: 'Passport  (Both Front & Back)',
+      value: 'passport',
+    },
+    {
+      id: 5,
+      label: 'Electricity Bill (not more than 2 months old)',
+      value: 'electricityBill',
+    },
+    {
+      id: 6,
+      label: 'Water Bill (not more than 2 months old)',
+      value: 'waterBill',
+    },
+    {
+      id: 7,
+      label: 'Landline Bill (not more than 2 months old)',
+      value: 'landlineBill',
+    },
+    {
+      id: 8,
+      label: 'Gas Bill (not more than 2 months old)',
+      value: 'gasBill',
     },
   ];
   isFileLoading = signal({
@@ -92,7 +117,10 @@ export class RekycPersonalDetailsComponent implements OnInit, OnDestroy {
   ausDocsList = toSignal(this.store.select(selectPersonalDetails));
   documentKeys = ['identityProof', 'addressProof', 'photograph', 'signature'];
   showPreviewSheet = signal(false);
-  previewData = signal([]);
+  showESignSheet = signal(false);
+  showPopup = signal(false);
+  isPreviewOpened = signal(false);
+  esignStatus = signal<ESignStatus | ''>('');
 
   proofDoc = (doc: string) => doc === 'identityProof' || doc === 'addressProof';
 
@@ -132,7 +160,7 @@ export class RekycPersonalDetailsComponent implements OnInit, OnDestroy {
       const typeFromForm = group.get('type')?.value;
       if (typeFromForm !== key) {
         // eslint-disable-next-line no-console
-        console.log(`Skipping patch for ${key} due to type mismatch: ${typeFromForm}`);
+        console.warn(`Skipping patch for ${key} due to type mismatch: ${typeFromForm}`);
         return;
       }
 
@@ -156,6 +184,8 @@ export class RekycPersonalDetailsComponent implements OnInit, OnDestroy {
       if ('selectedType' in values && values.selectedType) {
         filePatch.selectedType = values.selectedType;
       }
+
+      filePatch.reason = values.reason || '';
 
       if (Object.keys(filePatch).length > 0) {
         fileGroup.patchValue(filePatch);
@@ -184,6 +214,7 @@ export class RekycPersonalDetailsComponent implements OnInit, OnDestroy {
 
       if (doc?.type === 'identityProof' || doc?.type === 'addressProof') {
         fileGroupConfig['selectedType'] = [doc?.file?.selectedType || ''];
+        fileGroupConfig['reason'] = [doc?.reason || ''];
       }
 
       group[key] = this.fb.group({
@@ -197,9 +228,21 @@ export class RekycPersonalDetailsComponent implements OnInit, OnDestroy {
     this.form = this.fb.group(group);
   }
 
+  handlePopup() {
+    this.showPopup.set(!this.showPopup());
+  }
+
   handlePreviewSheet() {
     this.showPreviewSheet.set(!this.showPreviewSheet());
-    this.previewEntityDetails();
+  }
+
+  handleESignSheet() {
+    if (!this.isPreviewOpened() && this.esignStatus() === 'Not Initiated') {
+      this.isPreviewOpened.set(!this.isPreviewOpened());
+      this.handlePreviewSheet();
+      return;
+    }
+    this.showESignSheet.set(!this.showESignSheet());
   }
 
   trackDoc(_index: number) {
@@ -211,6 +254,13 @@ export class RekycPersonalDetailsComponent implements OnInit, OnDestroy {
       const link = this.form.get(`${key}.file.name`)?.value;
       return !!link;
     });
+  }
+
+  getDocAcceptedType(doc: string) {
+    if (doc === 'photograph' || doc === 'signature') {
+      return '.png,.jpg';
+    }
+    return '.jpg,.png,.pdf';
   }
 
   isFileLoadingType(doc: string): boolean {
@@ -281,11 +331,7 @@ export class RekycPersonalDetailsComponent implements OnInit, OnDestroy {
           if (status === ApiStatus.SUCCESS) {
             this.toast.success(`${this.helperService.toTitleCase(doc)} deleted`);
             const fileGroup = this.form.get(`${doc}.file`) as FormGroup;
-            fileGroup.patchValue({
-              name: '',
-              link: '',
-            });
-            fileGroup.patchValue({ name: '', link: '' });
+            fileGroup.patchValue({ name: '', link: '', reason: '' });
             this.cdr.markForCheck();
           }
         }
@@ -327,6 +373,7 @@ export class RekycPersonalDetailsComponent implements OnInit, OnDestroy {
       next: (result) => {
         const { loading, response } = result;
         fileGroup.get('isLoading')?.setValue(loading);
+        this.setIsFileLoading(type as FileType, loading);
 
         if (!response) return;
 
@@ -334,13 +381,21 @@ export class RekycPersonalDetailsComponent implements OnInit, OnDestroy {
 
         const fileType = this.helperService.toTitleCase(type);
 
-        if (status === ApiStatus.SUCCESS) {
-          const { data } = response as { data: UploadFileProofResponse };
-          fileGroup.get('name')?.setValue(data?.docName);
-          fileGroup.get('link')?.setValue(data?.storedPath);
-          this.toast.success(`${fileType} uploaded successfully`);
-        } else {
-          this.toast.error(`Invalid document for ${fileType}`);
+        if (fileGroup.get('name')?.value) {
+          if (status === ApiStatus.SUCCESS) {
+            const { data } = response as { data: UploadFileProofResponse };
+            fileGroup.get('name')?.setValue(data?.docName);
+            fileGroup.get('link')?.setValue(data?.storedPath);
+            this.toast.success(`${fileType} uploaded successfully`);
+          } else {
+            const { error } = response as { error: UploadFileProofErrorResponse };
+            // const errMsg = error.reason
+            //   ? `${this.helperService.toTitleCase(fileType)}: ${error.reason}`
+            //   : `Invalid document for ${fileType}`;
+            fileGroup.get('reason')?.setValue(error.reason);
+            this.cdr.detectChanges();
+            // this.toast.error(errMsg, { duration: 5000 });
+          }
         }
       },
     });
@@ -357,9 +412,30 @@ export class RekycPersonalDetailsComponent implements OnInit, OnDestroy {
         return;
       }
 
-      this.toast.success('Form sumitted successfully!');
-      this.store.dispatch(updateRekycFormStatus({ ausDetails: true }));
-      this.rekycFormService.updatRekycFormStep('personal-details');
+      const isAnyOneFileLoading = Object.values(this.isFileLoading()).some(Boolean);
+
+      if (isAnyOneFileLoading) {
+        this.toast.error('Please wait untill the file has been submitted');
+        return;
+      }
+
+      this.handleESignSheet();
+      return;
+
+      // this.toast.success('Form sumitted successfully!');
+      // this.store.dispatch(updateRekycFormStatus({ ausDetails: true }));
+      // // this.rekycFormService.updatRekycFormStep('personal-details');
+      // const entityFilledBy = this.entityInfo()?.entityFilledBy;
+      // // const entityFilledByOthers = entityFilledBy && entityFilledBy.toLowerCase().includes('other');
+      // const entityFilledBySameLoggedInUser =
+      //   entityFilledBy && entityFilledBy === this.ausInfo()?.ausId;
+
+      // if (!entityFilledBySameLoggedInUser) {
+      //   this.handlePopup();
+      // }
+      // // if (entityFilledByOthers || entityFilledBySameLoggedInUser) {
+      // this.rekycFormService.updatRekycFormStep('personal-details');
+      // // }
     } else {
       this.toast.info('Form saved successfully!');
     }
@@ -379,39 +455,7 @@ export class RekycPersonalDetailsComponent implements OnInit, OnDestroy {
         if (status === ApiStatus.SUCCESS) {
           const { data } = response as { status: string; data: { documents: PersonalDetails } };
 
-          // const docs = Object.fromEntries(
-          //   Object.entries(data.documents).map(([key, value]) => [
-          //     key,
-          //     { ...value, link: value.url || null },
-          //   ]),
-          // );
-
-          // // eslint-disable-next-line no-console
-          // console.log('docs', docs);
-
           this.store.dispatch(updatePartialPersonalDetails({ partialData: data.documents }));
-        }
-      },
-    });
-  }
-
-  previewEntityDetails() {
-    const entityId = this.entityInfo()?.entityId as string;
-    const ausId = this.ausInfo()?.ausId as string;
-    // eslint-disable-next-line no-console
-    console.log('onnnn callin');
-    this.personalFormService.previewEntityDetails(entityId, ausId).subscribe({
-      next: (result) => {
-        const { response } = result;
-
-        if (!response) return;
-
-        const { status } = response;
-
-        if (status === ApiStatus.SUCCESS) {
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          const { data } = response as any;
-          this.previewData.set(data[0].documents);
         }
       },
     });

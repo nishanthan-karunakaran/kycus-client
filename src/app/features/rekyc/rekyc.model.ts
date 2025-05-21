@@ -19,6 +19,7 @@ export enum ReKycStatus {
   SUBMITTED = 'submitted',
   PENDING = 'pending',
   EXPIRED = 'expired',
+  ENTITY_ESIGN = 'entity-esign',
   COMPLETED = 'completed',
 }
 
@@ -26,6 +27,7 @@ export interface ReKycApplication {
   _id: string;
   id: string;
   bankName: string;
+  entityId: string;
   entityName: string;
   cin: string;
   reason: string;

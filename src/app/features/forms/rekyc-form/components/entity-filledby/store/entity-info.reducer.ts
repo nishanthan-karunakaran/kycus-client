@@ -7,14 +7,20 @@ export interface EntityInfoState {
   entityFilledBy: null | string;
 }
 
+const getInitialEntityInfo = () => {
+  const obj = localStorage.getItem('rekyc');
+  const currentRekyc: Record<string, EntityInfoState> = obj ? JSON.parse(obj) : {};
+  return currentRekyc['entityInfo'] || initialEntityInfoState;
+};
+
 export const initialEntityInfoState: EntityInfoState = {
-  entityId: 'ebitaus-CUS62099-26042025',
-  entityName: 'JLN Pvt Ltd',
+  entityId: '',
+  entityName: '',
   entityFilledBy: null,
 };
 
 export const entityInfoReducer = createReducer(
-  initialEntityInfoState,
+  getInitialEntityInfo(),
   on(setEntityInfo, (state, payload) => ({
     ...state,
     ...payload,

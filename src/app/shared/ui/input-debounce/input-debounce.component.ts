@@ -2,9 +2,12 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { Subject } from 'rxjs';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { InputFormat } from 'src/app/core/directives/input-format.directive';
+import { InputComponent } from '../input/input.component';
 
 @Component({
   selector: 'ui-input-debounce',
+  standalone: true,
+  imports: [InputComponent],
   template: `
     <ui-input
       [type]="type"

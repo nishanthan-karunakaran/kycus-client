@@ -1,5 +1,7 @@
 import { Component } from '@angular/core';
 import { Toast } from './toast.service';
+import { LucideAngularModule } from 'lucide-angular';
+import { CommonModule } from '@angular/common';
 
 export const DEFAULT_TOAST_OPTIONS = {
   duration: 2000,
@@ -10,6 +12,8 @@ export const DEFAULT_TOAST_OPTIONS = {
 
 @Component({
   selector: 'ui-toast',
+  standalone: true,
+  imports: [CommonModule, LucideAngularModule],
   templateUrl: './toast.component.html',
   styleUrls: ['./toast.component.scss'],
 })
@@ -92,7 +96,7 @@ export class ToastComponent {
   toastIcon(type: Toast['type']): string {
     const icons = {
       success: 'check-circle',
-      error: 'x-circle',
+      error: 'octagon-x',
       warning: 'alert-triangle',
       info: 'info',
       danger: 'alert-octagon',

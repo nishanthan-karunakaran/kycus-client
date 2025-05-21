@@ -59,6 +59,7 @@ export class ToastService {
   }
 
   error(message: string, options: ToastOptions = {}) {
+    // const updatedOptions = { ...options, duration: options.duration ?? 5000 };
     this.show('error', message, options);
   }
 

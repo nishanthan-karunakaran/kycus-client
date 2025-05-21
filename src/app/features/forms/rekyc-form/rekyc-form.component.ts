@@ -4,24 +4,25 @@ import {
   Component,
   computed,
   DoCheck,
+  effect,
   OnDestroy,
   OnInit,
   signal,
 } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ApiStatus } from '@core/constants/api.response';
 import { Store } from '@ngrx/store';
 import { Subject, takeUntil } from 'rxjs';
 import { selectEntityInfo } from './components/entity-filledby/store/entity-info.selectors';
-import { selectAusInfo } from './components/rekyc-personal-details/store/personal-details.selectors';
+import { updateAusInfo } from './components/rekyc-personal-details/store/personal-details.actions';
+import { AccessibleSteps } from './components/rekyc-personal-details/store/personal-details.reducer';
+import {
+  selectAccessibleSteps,
+  selectAusInfo,
+} from './components/rekyc-personal-details/store/personal-details.selectors';
 import { FormPage, FormStep } from './rekyc-form.model';
 import { RekycFormService } from './rekyc-form.service';
-import {
-  updateActiveRoute,
-  updateRekycFormStatus,
-  updateRekycStepStatus,
-} from './store/rekyc-form.action';
+import { updateActiveRoute } from './store/rekyc-form.action';
 import {
   selectRekycActiveRoute,
   selectRekycFormStatus,
@@ -48,15 +49,9 @@ export class RekycFormComponent implements OnInit, DoCheck, OnDestroy {
     { label: 'E-Sign', step: FormStep.E_SIGN, isCompleted: false, canShow: true },
   ]);
   readonly FormStep = FormStep;
-  accessibleSteps = [
-    FormStep.ENTITY_DETAILS,
-    // FormStep.DECLARATION,
-    FormStep.PERSONAL_DETAILS,
-    FormStep.KYC_FORM,
-    FormStep.E_SIGN,
-  ];
   applicationToken: string | null = null;
   readonly ausInfo = toSignal(this.store.select(selectAusInfo));
+  accessibleSteps = toSignal(this.store.select(selectAccessibleSteps));
   readonly entityInfo = toSignal(this.store.select(selectEntityInfo));
   readonly isAuthenticated = computed(() => this.ausInfo()?.isAuthenticated);
   // readonly isAuthenticated = () => true;
@@ -70,7 +65,17 @@ export class RekycFormComponent implements OnInit, DoCheck, OnDestroy {
     private store: Store,
     private rekycFormService: RekycFormService,
     private cdRef: ChangeDetectorRef,
-  ) {}
+  ) {
+    effect(
+      () => {
+        const updatedDocs = this.accessibleSteps();
+        if (updatedDocs) {
+          this.handleInitialRoute();
+        }
+      },
+      { allowSignalWrites: true },
+    );
+  }
 
   ngOnInit(): void {
     this.tabCompletionStatus();
@@ -82,8 +87,8 @@ export class RekycFormComponent implements OnInit, DoCheck, OnDestroy {
 
     this.updateFormList();
 
-    this.handleInitialRoute();
     this.applicationToken = this.activatedRouter.snapshot.queryParamMap.get('token');
+    this.handleInitialRoute();
   }
 
   ngDoCheck(): void {
@@ -92,33 +97,39 @@ export class RekycFormComponent implements OnInit, DoCheck, OnDestroy {
 
   updateFormList(): void {
     const rekycFormStatus = this.rekycFormStatus();
+    const accessibleSteps = this.accessibleSteps();
 
-    if (!rekycFormStatus) return;
+    if (!rekycFormStatus || !accessibleSteps) return;
 
     // Log to confirm that the state is updated
-    // eslint-disable-next-line no-console
-    console.log('Updated rekycFormStatus:', rekycFormStatus);
+
+    // console.log('Updated rekycFormStatus:', rekycFormStatus);
 
     const updatedFormList = [
       {
         label: 'Entity Details',
         step: FormStep.ENTITY_DETAILS,
         isCompleted: rekycFormStatus.entityDetails, // Signal value
-        canShow: true,
+        canShow: accessibleSteps.entityDetails,
       },
       {
         label: 'AUS Details',
         step: FormStep.PERSONAL_DETAILS,
         isCompleted: rekycFormStatus.ausDetails, // Signal value
-        canShow: true,
+        canShow: accessibleSteps.ausDetails,
       },
       {
         label: 'KYC Form',
         step: FormStep.KYC_FORM,
         isCompleted: rekycFormStatus.rekycForm, // Signal value
-        canShow: true,
+        canShow: accessibleSteps.rekycForm,
       },
-      { label: 'E-Sign', step: FormStep.E_SIGN, isCompleted: rekycFormStatus.eSign, canShow: true },
+      {
+        label: 'E-Sign',
+        step: FormStep.E_SIGN,
+        isCompleted: rekycFormStatus.eSignEntity,
+        canShow: accessibleSteps.eSignEntity,
+      },
     ];
 
     // Set the updated form list
@@ -129,21 +140,44 @@ export class RekycFormComponent implements OnInit, DoCheck, OnDestroy {
   }
 
   handleInitialRoute() {
-    const rekycData = localStorage.getItem('rekyc');
-    let activeRoute = 'entity-details';
+    const accessibleSteps = this.accessibleSteps();
 
+    if (!accessibleSteps || !this.applicationToken) return;
+
+    const rekycData = localStorage.getItem('rekyc');
     const parsed = rekycData ? JSON.parse(rekycData) : null;
+
+    const parsedApplicationToken = parsed?.applicationToken || null;
+
+    if (!parsed || !parsedApplicationToken || parsedApplicationToken !== this.applicationToken) {
+      this.store.dispatch(updateAusInfo({ isAuthenticated: false }));
+      return;
+    }
+
+    let activeRoute = Object.keys(accessibleSteps).find(
+      (step) => accessibleSteps[step as keyof AccessibleSteps],
+    );
+
+    const stepToRoute = {
+      entityDetails: 'entity-details',
+      ausDetails: 'personal-details',
+      rekycForm: 'rekyc-form',
+      eSign: 'eSign',
+    };
+
     if (parsed?.activeRoute) {
       activeRoute = parsed.activeRoute;
+    } else {
+      activeRoute = stepToRoute[activeRoute as keyof typeof stepToRoute];
+    }
+
+    if (activeRoute) {
+      this.rekycFormService.updateRekycLS('activeRoute', activeRoute);
     }
 
     // Construct the full path
     const basePath = '/application/rekyc/';
     const fullPath = basePath + activeRoute;
-
-    // Log the full path before navigating
-    // eslint-disable-next-line no-console
-    console.log('Full path to navigate to:', fullPath);
 
     // Get current query parameters from the activated route (preserve them)
     const currentParams = this.activatedRouter.snapshot.queryParams;
@@ -183,58 +217,11 @@ export class RekycFormComponent implements OnInit, DoCheck, OnDestroy {
 
   tabCompletionStatus() {
     const ausId = this.ausInfo()?.ausId as string;
-
-    this.rekycFormService
-      .tabCompletionStatus(ausId)
-      // .pipe(takeUntil(this.destroy$))
-      .subscribe({
-        next: (response) => {
-          if (response) {
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            const { status, data } = response as any;
-
-            if (status === ApiStatus.SUCCESS) {
-              const { ausDetails, boDetails, directorDetails, eSign, entityDocs, rekycForm } = data;
-
-              const entityDetails = entityDocs && directorDetails && boDetails;
-
-              this.store.dispatch(
-                updateRekycStepStatus({ entityDocs, directorDetails, boDetails }),
-              );
-              this.store.dispatch(
-                updateRekycFormStatus({ entityDetails, ausDetails, rekycForm, eSign }),
-              );
-              this.formList.set([
-                {
-                  label: 'Entity Details',
-                  step: FormStep.ENTITY_DETAILS,
-                  isCompleted: entityDetails,
-                  canShow: true,
-                },
-                {
-                  label: 'AUS Details',
-                  step: FormStep.PERSONAL_DETAILS,
-                  isCompleted: ausDetails,
-                  canShow: true,
-                },
-                {
-                  label: 'KYC Form',
-                  step: FormStep.KYC_FORM,
-                  isCompleted: rekycForm,
-                  canShow: true,
-                },
-                { label: 'E-Sign', step: FormStep.E_SIGN, isCompleted: eSign, canShow: true },
-              ]);
-            }
-          }
-        },
-      });
+    this.rekycFormService.tabCompletionStatus(ausId);
   }
 
   ngOnDestroy(): void {
     // this.subscription.unsubscribe();
-    // eslint-disable-next-line no-console
-    console.log('object');
     this.destroy$.next();
     this.destroy$.complete();
   }

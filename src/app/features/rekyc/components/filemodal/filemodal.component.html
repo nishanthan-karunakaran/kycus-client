@@ -4,6 +4,7 @@
   [showClose]="true"
   [class]="'max-w-lg'"
   (close)="handleModal()"
+  tabindex="0"
 >
   <div modalHeader>
     <h5 class="text-primary">Bulk Upload</h5>
@@ -32,7 +33,7 @@
       </div>
 
       <input
-        #file
+        #fileInput
         id="file"
         type="file"
         class="hidden"
@@ -43,7 +44,7 @@
       <ui-button
         label="Browse files"
         class="btn-outline"
-        (btnClick)="file.click()"
+        (btnClick)="fileInput.click()"
       />
 
       <p class="text-pretty text-center">
@@ -56,7 +57,15 @@
         <strong>20MB</strong>
       </p>
 
-      <a class="text-secondary">Download Sample</a>
+      <a
+        (click)="downloadSampleExcel()"
+        (keydown.enter)="downloadSampleExcel()"
+        (keydown.space)="downloadSampleExcel()"
+        class="text-secondary"
+        tabindex="0"
+      >
+        Download Sample
+      </a>
     </div>
   </div>
 </ui-modal>
@@ -145,7 +154,7 @@
 
       <div class="flex items-center gap-4">
         <ui-button
-          class="btn-nostyle"
+          class="btn-nostyle font-medium"
           label="Cancel"
           (btnClick)="handlePreviewModal()"
         />

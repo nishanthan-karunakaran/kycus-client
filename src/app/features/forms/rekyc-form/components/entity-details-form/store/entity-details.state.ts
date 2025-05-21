@@ -3,6 +3,7 @@ export interface Doc {
   name: string;
   link: string;
   selectedType?: string;
+  reason?: string;
 }
 
 // this function is also used at personal details
@@ -12,6 +13,7 @@ export interface ProofDoc {
   docType: string;
   file: Doc;
   isRequired: boolean;
+  reason?: string;
 }
 
 // this function is also used at personal details
@@ -20,6 +22,7 @@ export interface BasicDoc {
   type: string;
   file: Doc;
   isRequired: boolean;
+  reason?: string;
 }
 
 export interface EntityDetails {
@@ -70,6 +73,6 @@ export const initialEntityDetails: EntityDetails = {
     true,
   ),
   coi: createInitialDoc('COI (Certificate of Incoporation) ', 'coi', true),
-  moa: createInitialDoc('MOA (Memorandum of Association) ', 'moa', true),
-  aoa: createInitialDoc('AOA (Articles of Association) ', 'aoa', true),
+  moa: createInitialDoc('MOA (Memorandum of Association) ', 'moa', false),
+  aoa: createInitialDoc('AOA (Articles of Association) ', 'aoa', false),
 };

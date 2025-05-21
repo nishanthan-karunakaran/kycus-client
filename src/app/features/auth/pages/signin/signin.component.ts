@@ -1,11 +1,4 @@
-import {
-  Component,
-  ElementRef,
-  OnDestroy,
-  OnInit,
-  signal,
-  ViewChild,
-} from '@angular/core';
+import { Component, ElementRef, OnDestroy, OnInit, signal, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { interval, Subject, Subscription, takeUntil, takeWhile } from 'rxjs';
@@ -48,10 +41,7 @@ export class SigninComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.loginForm = this.fb.group({
-      email: [
-        '',
-        [Validators.required, this.validatorsService.emailValidator()],
-      ],
+      email: ['', [Validators.required, this.validatorsService.emailValidator()]],
       otp: [''],
     });
   }
@@ -77,9 +67,7 @@ export class SigninComponent implements OnInit, OnDestroy {
   }
 
   private updateOTPValidators() {
-    this.loginForm
-      .get('otp')
-      ?.setValidators([Validators.required, Validators.minLength(6)]);
+    this.loginForm.get('otp')?.setValidators([Validators.required, Validators.minLength(6)]);
     this.loginForm.get('otp')?.updateValueAndValidity();
   }
 
@@ -159,8 +147,6 @@ export class SigninComponent implements OnInit, OnDestroy {
 
   submitLoginForm() {
     this.isSubmitted = true;
-
-    // console.log(this.loginForm.value);
 
     if (this.loginForm.invalid) return; // Stop execution if form is invalid
 

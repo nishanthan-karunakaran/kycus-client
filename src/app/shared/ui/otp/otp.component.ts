@@ -1,3 +1,4 @@
+import { CommonModule } from '@angular/common';
 import {
   AfterViewInit,
   Component,
@@ -14,11 +15,15 @@ import {
   FormArray,
   FormControl,
   FormGroup,
+  FormsModule,
   NG_VALUE_ACCESSOR,
+  ReactiveFormsModule,
 } from '@angular/forms';
 
 @Component({
   selector: 'ui-otp',
+  standalone: true,
+  imports: [CommonModule, FormsModule, ReactiveFormsModule],
   templateUrl: './otp.component.html',
   styleUrls: ['./otp.component.scss'],
   providers: [
@@ -134,9 +139,7 @@ export class OtpComponent implements OnInit, OnChanges, AfterViewInit {
   onPaste(event: ClipboardEvent): void {
     event.preventDefault();
     const pastedValue = event.clipboardData?.getData('text') || '';
-    const valueToPaste = this.onlyNumeric
-      ? pastedValue.replace(/\D/g, '')
-      : pastedValue;
+    const valueToPaste = this.onlyNumeric ? pastedValue.replace(/\D/g, '') : pastedValue;
 
     valueToPaste.split('').forEach((char, i) => {
       if (i < this.length) {

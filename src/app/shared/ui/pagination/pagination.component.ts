@@ -1,7 +1,12 @@
+import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
+import { LucideAngularModule } from 'lucide-angular';
+import { ButtonComponent } from '../button/button.component';
 
 @Component({
   selector: 'ui-pagination',
+  standalone: true,
+  imports: [CommonModule, LucideAngularModule, ButtonComponent],
   templateUrl: './pagination.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -34,16 +39,16 @@ export class PaginationComponent {
   next() {
     if (this.active < this.totalPages) {
       this.active++;
-      this.activeChange.emit(this.active);
       this.updateStartPage();
+      this.activeChange.emit(this.active);
     }
   }
 
   prev() {
     if (this.active > 1) {
       this.active--;
-      this.activeChange.emit(this.active);
       this.updateStartPage();
+      this.activeChange.emit(this.active);
     }
   }
 

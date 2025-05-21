@@ -8,11 +8,6 @@ const routes: Routes = [
     component: DashboardLayoutComponent,
     children: [
       {
-        path: '',
-        redirectTo: 'wallet',
-        pathMatch: 'full',
-      },
-      {
         path: 'wallet',
         loadChildren: () =>
           import('../../features/wallet/wallet.module').then((m) => m.WalletModule),
@@ -28,12 +23,17 @@ const routes: Routes = [
           import('../../features/consent/consent.module').then((m) => m.ConsentModule),
       },
       {
-        path: 'reKYC',
+        path: 'rekyc',
         loadChildren: () => import('../../features/rekyc/rekyc.module').then((m) => m.RekycModule),
       },
       {
         path: '**',
-        redirectTo: 'reKYC',
+        redirectTo: 'rekyc',
+      },
+      {
+        path: '',
+        redirectTo: 'rekyc',
+        pathMatch: 'full',
       },
     ],
   },

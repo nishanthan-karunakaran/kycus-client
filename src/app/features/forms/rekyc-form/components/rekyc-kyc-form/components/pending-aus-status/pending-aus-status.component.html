@@ -1,0 +1,42 @@
+<div
+  class="flex w-full flex-col gap-6 rounded-md border-2 border-secondary/20 p-6"
+>
+  <div class="flex flex-col items-start gap-2 text-center">
+    <img src="./assets/svgs/timerMail.svg" alt="E-Sign Pending" class="w-28" />
+    <h5 class="text-lg font-semibold text-secondary">
+      Authorized Signatories E-Sign are still pending
+    </h5>
+    <p class="text-sm text-gray-500">
+      To proceed, the following signatories need to complete their e-sign
+      process.
+    </p>
+  </div>
+
+  <div class="rounded-md bg-white p-4 shadow-sm">
+    <ul class="list-inside list-disc space-y-2">
+      <li
+        *ngFor="let aus of ausList; trackBy: trackAus"
+        [ngClass]="{
+          'text-success': aus.isComplete,
+          'text-secondary': !aus.isComplete,
+        }"
+      >
+        {{ aus.name }}
+        <span
+          class="ml-1 italic"
+          [ngClass]="{
+            'text-success-80': aus.isComplete,
+            'text-secondary-80': !aus.isComplete,
+          }"
+        >
+          {{ aus.isComplete ? '(E-Signed)' : '(E-Sign Pending)' }}
+        </span>
+      </li>
+    </ul>
+  </div>
+
+  <div class="text-secondary-70 mt-4 text-start text-sm text-gray-500">
+    Kindly remind them to check their email and complete the signature as soon
+    as possible.
+  </div>
+</div>

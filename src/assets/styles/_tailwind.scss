@@ -76,7 +76,8 @@
   }
 
   [type='checkbox'] {
-    @apply rounded-md accent-primary focus:border-2 focus:ring-0;
+    // @apply rounded-md accent-primary focus:border-2 focus:ring-0;
+    @apply rounded-[4px] accent-primary focus:outline-none focus:ring-0;
   }
 
   select {
@@ -97,7 +98,7 @@
 
   tbody {
     tr {
-      @apply border-b bg-gray-50 hover:bg-gray-100;
+      @apply border-b hover:bg-gray-100;
     }
   }
 
@@ -113,7 +114,7 @@
 @layer components {
   /*  Button Components */
   .btn-secondary {
-    @apply bg-secondary hover:bg-secondary/90;
+    @apply bg-secondary hover:bg-secondary-80 focus:ring-secondary;
   }
 
   .btn-secondary-light {
