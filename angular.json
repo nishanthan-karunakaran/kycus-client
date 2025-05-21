@@ -74,7 +74,8 @@
               "browserTarget": "kycus-ui:build:production"
             },
             "development": {
-              "browserTarget": "kycus-ui:build:development"
+              "browserTarget": "kycus-ui:build:development",
+              "hmr": true
             }
           },
           "defaultConfiguration": "development",
