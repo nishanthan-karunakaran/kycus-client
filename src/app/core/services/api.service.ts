@@ -34,6 +34,7 @@ export class ApiService {
           body,
           params,
           headers,
+          withCredentials: true,
         })
         .pipe(
           takeUntilDestroyed(this.destroyRef),

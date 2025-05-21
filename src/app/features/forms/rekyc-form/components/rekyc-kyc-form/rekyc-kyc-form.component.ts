@@ -17,6 +17,12 @@ import { RekycKycFormService } from './rekyc-kyc-form.service';
 import { updateRekycFormStatus } from '@features/forms/rekyc-form/store/rekyc-form.action';
 import { selectRekycFormStatus } from '@features/forms/rekyc-form/store/rekyc-form.selectors';
 
+interface AusESign {
+  name: string;
+  email: string;
+  ausId?: string;
+  isComplete: boolean;
+}
 @Component({
   selector: 'rekyc-kyc-form',
   templateUrl: './rekyc-kyc-form.component.html',
@@ -31,9 +37,12 @@ export class RekycKycFormComponent implements OnInit {
   private isDataSent = false; // Flag to track if data has been sent already
   isSaveBtnClicked = signal(false);
   isGettingReport = signal(false);
+  isSubmittingReport = signal(false);
   isSubmitted = signal(false);
   isFetchingFormData = signal(false);
   formStatus = toSignal(this.store.select(selectRekycFormStatus));
+  pendingAus = signal<AusESign[]>([] as AusESign[]);
+  showConfirmation = signal(false);
 
   constructor(
     private rekycKycFormService: RekycKycFormService,
@@ -43,7 +52,12 @@ export class RekycKycFormComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.fetchFormData();
+    // this.fetchFormData();
+    this.checkPendingAUSESign();
+  }
+
+  handleShowConfirmation() {
+    this.showConfirmation.set(!this.showConfirmation());
   }
 
   getIframeHtml(): string | null {
@@ -74,6 +88,33 @@ export class RekycKycFormComponent implements OnInit {
         sendMessage();
       };
     }
+  }
+
+  checkPendingAUSESign() {
+    this.rekycKycFormService.getReport(this.entityInfo()?.entityId as string).subscribe({
+      next: (result) => {
+        const { loading, response } = result;
+        this.isGettingReport.set(loading);
+
+        if (response) {
+          const { status } = response;
+
+          if (status === ApiStatus.SUCCESS) {
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            const { data } = response as any;
+            const ausPending = data?.ausPending || [];
+            if (ausPending.length > 0 || !data?.boPending || !data?.directorsPending) {
+              this.pendingAus.set(ausPending);
+            } else {
+              this.fetchFormData();
+            }
+          } else {
+            const { message } = response;
+            this.toast.error(message || 'Something went wrong!');
+          }
+        }
+      },
+    });
   }
 
   fetchFormData() {
@@ -125,7 +166,7 @@ export class RekycKycFormComponent implements OnInit {
 
             if (status === ApiStatus.SUCCESS) {
               if (isSubmitting) {
-                this.getReport();
+                this.checkAllFilled();
               } else {
                 this.toast.success('Form saved!');
               }
@@ -144,7 +185,7 @@ export class RekycKycFormComponent implements OnInit {
     iframe.contentWindow?.postMessage({ type: 'TRIGGER_SAVE' }, '*');
   }
 
-  getReport() {
+  checkAllFilled() {
     const iframe = this.pdfViewer.nativeElement;
 
     if (iframe?.contentWindow) {
@@ -159,20 +200,7 @@ export class RekycKycFormComponent implements OnInit {
         const isFilled = event.data.isFilled;
 
         if (isFilled) {
-          this.rekycService.generateReport(this.entityInfo()?.entityId as string).subscribe({
-            next: (result) => {
-              const { loading, response } = result;
-              this.isGettingReport.set(loading);
-              if (!response) return;
-              const { status } = response;
-              if (status === ApiStatus.SUCCESS) {
-                this.store.dispatch(updateRekycFormStatus({ rekycForm: true }));
-                this.toast.success('Report successfully generated and sent to the Bank');
-              } else {
-                this.toast.error('Failed to generate report');
-              }
-            },
-          });
+          this.handleShowConfirmation();
         }
 
         window.removeEventListener('message', handleMessage);
@@ -180,29 +208,25 @@ export class RekycKycFormComponent implements OnInit {
     };
 
     window.addEventListener('message', handleMessage);
-    // return;
-    // this.rekycKycFormService.getReport(this.entityInfo()?.entityId as string).subscribe({
-    //   next: (result) => {
-    //     const { loading, response } = result;
-    //     this.isGettingReport.set(loading);
+  }
 
-    //     if (response) {
-    //       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    //       const { status, data } = response as { status: ApiStatus; data: any };
+  getReport() {
+    this.rekycService.generateReport(this.entityInfo()?.entityId as string).subscribe({
+      next: (result) => {
+        const { loading, response } = result;
+        this.isSubmittingReport.set(loading);
 
-    //       if (status === ApiStatus.SUCCESS) {
-    //         const ausPending = data?.ausPending || [];
-
-    //         if (ausPending.length > 0 || !data?.boPending || !data?.directorsPending) {
-    //           this.toast.error(
-    //             'Please complete all the previous steps and make sure all AUS are filled their details',
-    //           );
-    //         } else {
-    //           this.rekycService.generateReport(this.entityInfo()?.entityId as string);
-    //         }
-    //       }
-    //     }
-    //   },
-    // });
+        if (!response) return;
+        const { status } = response;
+        if (status === ApiStatus.SUCCESS) {
+          this.store.dispatch(updateRekycFormStatus({ rekycForm: true }));
+          this.isSubmitted.set(true);
+          this.sendFormDataToIframe();
+          this.toast.success('Report successfully generated and sent to the Bank');
+        } else {
+          this.toast.error('Failed to generate report');
+        }
+      },
+    });
   }
 }

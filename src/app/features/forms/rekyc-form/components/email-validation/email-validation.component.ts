@@ -131,10 +131,10 @@ export class RekycEmailValidationComponent implements OnInit, OnDestroy {
           const ausId = data.ausInfo.ausId;
           const entityFilledBy = data.entityInfo.entityFilledBy;
           let accessibleSteps = {
-            entityDetails: false,
+            entityDetails: true,
             ausDetails: true,
-            rekycForm: false,
-            eSign: true,
+            rekycForm: true,
+            eSignEntity: true,
           };
 
           if (entityFilledBy !== null) {
@@ -143,7 +143,7 @@ export class RekycEmailValidationComponent implements OnInit, OnDestroy {
                 entityDetails: false,
                 ausDetails: true,
                 rekycForm: false,
-                eSign: true,
+                eSignEntity: false,
               };
             } else if (ausId === entityFilledBy) {
               if (ausId.includes('OTHER')) {
@@ -151,14 +151,14 @@ export class RekycEmailValidationComponent implements OnInit, OnDestroy {
                   entityDetails: true,
                   ausDetails: false,
                   rekycForm: true,
-                  eSign: false,
+                  eSignEntity: true,
                 };
               } else {
                 accessibleSteps = {
                   entityDetails: true,
                   ausDetails: true,
                   rekycForm: true,
-                  eSign: true,
+                  eSignEntity: true,
                 };
               }
             }

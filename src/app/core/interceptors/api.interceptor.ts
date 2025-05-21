@@ -10,16 +10,16 @@ export class ApiInterceptor implements HttpInterceptor {
 
   intercept<T>(req: HttpRequest<T>, next: HttpHandler): Observable<HttpEvent<T>> {
     // const token = this.authService.getAuthToken();
-    const access_token = localStorage.getItem('access_token');
+    // const access_token = localStorage.getItem('access_token');
     const apiBaseUrl = environment.apiBaseUrl;
     const fullUrl = apiBaseUrl + req.url;
 
     // Clone the request and attach headers
     const clonedRequest = req.clone({
       url: fullUrl,
-      setHeaders: {
-        Authorization: access_token ? `Bearer ${access_token}` : '',
-      },
+      // setHeaders: {
+      //   Authorization: access_token ? `Bearer ${access_token}` : '',
+      // },
     });
 
     return next.handle(clonedRequest);

@@ -13,7 +13,7 @@ export interface FieldError {
 
 export interface ApiResponse<T = unknown> {
   status: ApiStatus;
-  message?: string;
+  message: string;
   data?: T | T[] | Record<string, T>;
   error?: T | T[] | Record<string, T>;
 }

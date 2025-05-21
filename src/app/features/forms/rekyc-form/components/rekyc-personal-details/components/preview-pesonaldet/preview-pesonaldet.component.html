@@ -4,11 +4,10 @@
   class="w-[600px]"
   contentClass="px-0 py-0"
 >
-  <div class="flex h-dvh flex-col justify-between">
-    <header class="bg-slate-300 px-4 py-4">
-      <h5 class="text-primary">Preview Document</h5>
-    </header>
-
+  <header sheet-header class="bg-primary-20 px-4 py-4">
+    <h5 class="text-primary">Preview Document</h5>
+  </header>
+  <div class="flex flex-col">
     <div
       role="status"
       class="flex h-[360px] flex-1 items-center justify-center"
@@ -28,7 +27,7 @@
       </p>
 
       <ng-template #renderDocs>
-        <div class="flex-1">
+        <div>
           <div *ngFor="let doc of data(); trackBy: trackDoc" class="divide-y-2">
             <div class="flex justify-between gap-4 border p-4">
               <div class="flex w-[40%] flex-col gap-1">
@@ -37,7 +36,7 @@
                 <div class="flex items-center gap-1">
                   <lucide-icon
                     *ngIf="
-                      doc?.status.toLowerCase() === 'document not uploaded'
+                      doc?.status?.toLowerCase() === 'document not uploaded'
                     "
                     name="octagon-alert"
                     color="#F42735"
@@ -55,7 +54,7 @@
                   </p>
 
                   <lucide-icon
-                    *ngIf="doc?.status.toLowerCase() === 'document verified'"
+                    *ngIf="doc?.status?.toLowerCase() === 'document verified'"
                     name="check-check"
                     color="#3EB24E"
                     size="20"
@@ -71,7 +70,7 @@
                       trackBy: trackByKey
                     "
                   >
-                    <div class="flex items-center gap-2">
+                    <div class="flex items-start gap-2">
                       <p
                         *ngIf="item[0] !== 'Proof of Address'"
                         class="text-nowrap text-gray-500"
@@ -106,9 +105,12 @@
         </div>
       </ng-template>
     </ng-template>
-
-    <!-- <div class="self-end px-4 py-10">
-      <ui-button label="Continue" (btnClick)="handleProceedESign()" />
-    </div> -->
+  </div>
+  <div
+    sheet-footer
+    *ngIf="!isLoading() && showESign()"
+    class="flex justify-end p-4"
+  >
+    <ui-button label="Continue" (btnClick)="handleProceedESign()" />
   </div>
 </app-sheet>

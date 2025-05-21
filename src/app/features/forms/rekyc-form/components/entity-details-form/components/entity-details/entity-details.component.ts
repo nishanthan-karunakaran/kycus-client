@@ -414,6 +414,13 @@ export class EntityDetailsComponent implements OnInit, OnDestroy {
         return;
       }
 
+      const isAnyOneFileLoading = Object.values(this.isFileLoading()).some(Boolean);
+
+      if (isAnyOneFileLoading) {
+        this.toast.error('Please wait untill the file has been submitted');
+        return;
+      }
+
       this.toast.success('Entity Details submitted!');
       this.formNavigation.emit('next');
       this.store.dispatch(updateRekycStepStatus({ entityDocs: true }));

@@ -22,7 +22,7 @@ import { LucideAngularModule } from 'lucide-angular';
       [attr.aria-disabled]="disabled"
       [attr.role]="role"
       [attr.aria-pressed]="ariaPressed"
-      [disabled]="disabled"
+      [disabled]="disabled || loading"
       [type]="type"
       (click)="onClick($event)"
     >

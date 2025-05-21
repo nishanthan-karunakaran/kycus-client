@@ -127,7 +127,7 @@ export class RekycEntityFilledbyComponent implements OnInit {
               entityDetails: false,
               ausDetails: true,
               rekycForm: false,
-              eSign: true,
+              eSignEntity: true,
             };
 
             if (entityFilledBy !== null) {
@@ -136,7 +136,7 @@ export class RekycEntityFilledbyComponent implements OnInit {
                   entityDetails: false,
                   ausDetails: true,
                   rekycForm: false,
-                  eSign: true,
+                  eSignEntity: true,
                 };
               } else if (ausId === entityFilledBy) {
                 if (ausId.includes('OTHER')) {
@@ -144,14 +144,14 @@ export class RekycEntityFilledbyComponent implements OnInit {
                     entityDetails: true,
                     ausDetails: false,
                     rekycForm: true,
-                    eSign: false,
+                    eSignEntity: false,
                   };
                 } else {
                   accessibleSteps = {
                     entityDetails: true,
                     ausDetails: true,
                     rekycForm: true,
-                    eSign: true,
+                    eSignEntity: true,
                   };
                 }
               }
@@ -172,7 +172,7 @@ export class RekycEntityFilledbyComponent implements OnInit {
               entityDetails: false,
               ausDetails: true,
               rekycForm: false,
-              eSign: true,
+              eSignEntity: true,
             };
             this.rekycFormService.updateRekycLS('accessibleSteps', accessibleSteps);
 

@@ -26,7 +26,7 @@
               />
               <span
                 *ngIf="
-                  group.get('noName')?.errors?.['required'] && isFormSubmitted()
+                  group.get('boName')?.errors?.['required'] && isFormSubmitted()
                 "
                 class="error-msg"
               >
@@ -127,9 +127,10 @@
 
               <div>
                 <ui-input
-                  type="number"
                   label="Pin Code"
+                  [onlyNumeric]="true"
                   [maxlength]="6"
+                  [minlength]="6"
                   formControlName="pin"
                   (valueChange)="updateBoDetail(i, 'pin', $event)"
                 />

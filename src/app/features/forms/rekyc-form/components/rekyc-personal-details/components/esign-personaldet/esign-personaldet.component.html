@@ -4,8 +4,15 @@
   class="w-[600px]"
   contentClass="px-0 py-0"
 >
-  <header class="bg-slate-300 px-4 py-4">
-    <h5 class="text-primary">E-Sign Document</h5>
+  <header sheet-header class="bg-primary-20 px-4 py-4">
+    <h5
+      [ngClass]="{
+        'text-primary': !canProceedToESign(),
+        'text-secondary': canProceedToESign(),
+      }"
+    >
+      E-Sign Document
+    </h5>
     <p>Please review the details and proceed with the E-Sign.</p>
   </header>
 
@@ -24,148 +31,241 @@
       <form class="space-y-10 p-4" [formGroup]="form" (ngSubmit)="onSubmit()">
         <div class="flex flex-col gap-4">
           <div class="flex items-center gap-4">
-            <label class="w-1/4" for="name">Name</label>
+            <label class="w-1/4" for="name">
+              Name
+              <span class="text-red-500">*</span>
+            </label>
             <ui-input
+              *ngIf="!disableEdit()"
               id="name"
               type="text"
               formControlName="name"
               class="w-[320px]"
+              (valueChange)="updateValue('name', $event)"
               [errorMessage]="getErrorMessage('name')"
             />
+            <p *ngIf="disableEdit()">{{ form.value.name }}</p>
           </div>
 
           <div class="flex items-center gap-4">
-            <label class="w-1/4" for="fatherName">Father's Name</label>
+            <label class="w-1/4" for="fatherName">
+              Father's Name
+              <span class="text-red-500">*</span>
+            </label>
             <ui-input
+              *ngIf="!disableEdit()"
               id="fatherName"
               type="text"
               formControlName="fatherName"
               class="w-[320px]"
+              (valueChange)="updateValue('fatherName', $event)"
               [errorMessage]="getErrorMessage('fatherName')"
             />
+            <p *ngIf="disableEdit()">{{ form.value.fatherName }}</p>
           </div>
 
           <div class="flex items-center gap-4">
-            <label class="w-1/4" for="proofOfIdentity">Proof of Identity</label>
-            <ui-filename
-              [canRemove]="false"
-              [fileName]="form.get('proofOfIdentity')?.value.fileName"
-              [fileLink]="form.get('proofOfIdentity')?.value.url"
-            />
-          </div>
-
-          <div class="flex items-center gap-4">
-            <label class="w-1/4" for="proofOfAddress">Proof of Address</label>
-            <ui-filename
-              [canRemove]="false"
-              [fileName]="form.get('proofOfAddress')?.value.fileName"
-              [fileLink]="form.get('proofOfAddress')?.value.url"
-            />
-          </div>
-
-          <div class="flex items-center gap-4">
-            <label class="w-1/4" for="currentAddress">Current Address</label>
+            <label class="w-1/4" for="line1">
+              Address
+              <span class="text-red-500">*</span>
+            </label>
             <ui-input
-              id="currentAddress"
+              *ngIf="!disableEdit()"
+              id="line1"
               type="text"
-              formControlName="currentAddress"
+              formControlName="line1"
               class="w-[320px]"
-              [errorMessage]="getErrorMessage('currentAddress')"
+              (valueChange)="updateValue('line1', $event)"
+              [errorMessage]="getErrorMessage('line1')"
             />
+            <p *ngIf="disableEdit()" class="ml-12">{{ form.value.line1 }}</p>
           </div>
 
           <div class="flex items-center gap-4">
-            <label class="w-1/4" for="city">City</label>
+            <label class="w-1/4" for="city">
+              City
+              <span class="text-red-500">*</span>
+            </label>
             <ui-input
+              *ngIf="!disableEdit()"
               id="city"
               type="text"
               formControlName="city"
               class="w-[320px]"
+              (valueChange)="updateValue('city', $event)"
               [errorMessage]="getErrorMessage('city')"
             />
+            <p *ngIf="disableEdit()">{{ form.value.city }}</p>
           </div>
 
           <div class="flex items-center gap-4">
-            <label class="w-1/4" for="state">State</label>
+            <label class="w-1/4" for="state">
+              State
+              <span class="text-red-500">*</span>
+            </label>
             <ui-input
+              *ngIf="!disableEdit()"
               id="state"
               type="text"
               formControlName="state"
               class="w-[320px]"
+              (valueChange)="updateValue('state', $event)"
               [errorMessage]="getErrorMessage('state')"
             />
+            <p *ngIf="disableEdit()">{{ form.value.state }}</p>
           </div>
 
           <div class="flex items-center gap-4">
-            <label class="w-1/4" for="country">Country</label>
+            <label class="w-1/4" for="country">
+              Country
+              <span class="text-red-500">*</span>
+            </label>
             <ui-input
+              *ngIf="!disableEdit()"
               id="country"
               type="text"
               formControlName="country"
               class="w-[320px]"
+              (valueChange)="updateValue('country', $event)"
               [errorMessage]="getErrorMessage('country')"
             />
+            <p *ngIf="disableEdit()">{{ form.value.country }}</p>
           </div>
 
           <div class="flex items-center gap-4">
-            <label class="w-1/4" for="pinCode">Pin Code</label>
+            <label class="w-1/4" for="pinCode">
+              Pin Code
+              <span class="text-red-500">*</span>
+            </label>
             <ui-input
               id="pinCode"
               type="text"
+              *ngIf="!disableEdit()"
               [onlyNumeric]="true"
               [maxlength]="6"
               formControlName="pinCode"
               class="w-[320px]"
+              (valueChange)="updateValue('pinCode', $event)"
               [errorMessage]="getErrorMessage('pinCode')"
             />
+            <p *ngIf="disableEdit()">{{ form.value.pinCode }}</p>
           </div>
 
           <div class="flex items-center gap-4">
-            <label class="w-1/4" for="photographUrl">Photograph</label>
-            <img
-              [src]="form.get('photographUrl')?.value"
-              alt="Didn't have photograph"
-              class="w-28 object-contain"
-              [ngClass]="{ 'w-[320px]': !form.get('photographUrl')?.value }"
-            />
+            <label class="w-1/4" for="photographUrl">
+              Photograph
+              <span class="text-red-500">*</span>
+            </label>
+            <div class="size-28 border-2">
+              <img
+                [src]="form.get('photographUrl')?.value"
+                alt="Didn't have photograph"
+                class="object-contain"
+                [ngClass]="{ 'w-[320px]': !form.get('photographUrl')?.value }"
+              />
+            </div>
           </div>
 
           <div class="flex items-center gap-4">
-            <label class="w-1/4" for="signatureUrl">Signature</label>
-            <img
-              [src]="form.get('signatureUrl')?.value"
-              alt="Didn't have signature"
-              class="w-28 object-contain"
-              [ngClass]="{ 'w-[320px]': !form.get('signatureUrl')?.value }"
-            />
+            <label class="w-1/4" for="signatureUrl">
+              Signature
+              <span class="text-red-500">*</span>
+            </label>
+            <div class="h-16 w-28 border-2">
+              <img
+                [src]="form.get('signatureUrl')?.value"
+                alt="Didn't have signature"
+                class="object-contain"
+                [ngClass]="{ 'w-[320px]': !form.get('signatureUrl')?.value }"
+              />
+            </div>
           </div>
-        </div>
-
-        <div class="flex items-center justify-end gap-4">
-          <ui-button
-            type="button"
-            label="Cancel"
-            class="btn-outline"
-            (btnClick)="handleSheet()"
-          />
-
-          <ui-button
-            type="submit"
-            label="Submit"
-            (btnClick)="handleSaveConfimModal()"
-          />
         </div>
       </form>
     </div>
   </ng-template>
+
+  <div sheet-footer class="flex items-center justify-center gap-4 p-4">
+    <button
+      *ngIf="!esignRedirectUrl()"
+      type="button"
+      class="w-full"
+      [ngClass]="{
+        'btn-outline': !showProceedESign && !showContinueESign,
+        'btn-outline-secondary': showProceedESign || showContinueESign,
+      }"
+      (click)="handleSheet()"
+    >
+      Cancel
+    </button>
+
+    <div
+      *ngIf="showContinueESign"
+      class="flex w-full items-center gap-1 text-secondary"
+    >
+      <p>E-Sign Pending</p>
+      <lucide-icon name="clock-fading" size="20" />
+    </div>
+
+    <ng-container *ngIf="!disableEdit() && !isFormFinallySubmitted()">
+      <button type="button" class="w-full" (click)="onSubmit()">Submit</button>
+    </ng-container>
+
+    <ng-container *ngIf="showProceedESign">
+      <button
+        type="button"
+        class="btn-secondary w-full"
+        [ngClass]="{
+          loading: isFormSubmitting(),
+        }"
+        [disabled]="isFormSubmitting()"
+        (click)="handleSaveConfimModal()"
+      >
+        Proceed to E-Sign
+      </button>
+    </ng-container>
+
+    <ng-container *ngIf="showContinueESign">
+      <button
+        type="button"
+        class="btn-secondary w-full"
+        (click)="continueESign()"
+      >
+        Continue with E-Sign
+      </button>
+    </ng-container>
+
+    <div
+      *ngIf="showESignCompletedStatus"
+      class="flex w-full items-center gap-1 text-success"
+    >
+      <p>E-Sign Completed</p>
+      <lucide-icon name="check" size="20" />
+    </div>
+  </div>
 </app-sheet>
 
-<ui-confirmation-modal
+<ui-modal
   [showClose]="false"
   [isOpen]="showSaveConfirmModal()"
   (close)="handleSaveConfimModal()"
-  (cancel)="handleSaveConfimModal()"
-  (confirm)="onSubmit()"
-  headerText="Submit Details"
-  contentText="Once you saved the details you can't be able to modify it later"
-/>
+  class="max-w-md"
+  [showClose]="true"
+>
+  <header modalHeader class="">
+    <h5 class="text-primary">Choose E-Sign</h5>
+    <span>Select the way you prefer to esign</span>
+  </header>
+
+  <div modalContent class="flex items-center justify-between gap-4">
+    <button class="btn-outline w-full" (click)="proceedToESign('aadhaar')">
+      AADHAAR
+    </button>
+
+    (or)
+
+    <button class="btn-outline w-full" (click)="proceedToESign('dsc')">
+      DSC
+    </button>
+  </div>
+</ui-modal>

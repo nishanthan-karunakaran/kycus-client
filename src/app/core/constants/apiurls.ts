@@ -1,4 +1,4 @@
-export const API_URL = {
+export const API_URL = Object.freeze({
   AUTH: {
     SEND_EMAIL_OTP: '/auth/kycus/sendEmailOtp',
     VALIDATE_EMAIL_OTP: '/auth/kycus/validateEmail',
@@ -54,10 +54,18 @@ export const API_URL = {
         ESIGN_PREVIEW: (entityId: string, ausId: string) =>
           `/kycus/rekyc/aus/esignPreview/${entityId}/${ausId}`,
         ESIGN_PREVIEW_SAVE: '/kycus/rekyc/aus/esignPreviewSave',
+        PROCEED_TO_ESIGN: '/kycus/rekyc/aus/esign',
       },
       REKYC_FORM: {
         GET: (entityId: string) => `/kycus/rekyc/rekycForm/${entityId}`,
         PUT: (entityId: string) => `/kycus/rekyc/rekycForm/${entityId}`,
+      },
+      ENTITY_ESIGN: {
+        ESIGN_PREVIEW_DOC: (entityId: string) => `/kycus/rekyc/entityReport/${entityId}`,
+        ESIGN_STATUS: (entityId: string) => `/kycus/rekyc/entityEsignStatus/${entityId}`,
+        ENTITY_ESIGN_PARTICIPANTS: (entityId: string) =>
+          `/kycus/rekyc/entityEsignparticipants/${entityId}`,
+        PROCEED_TO_ESIGN: '/kycus/rekyc/entity/esign',
       },
       REPORT: {
         VIEW: (entityId: string) => `/kycus/rekyc/viewFinalReport/${entityId}`,
@@ -67,4 +75,4 @@ export const API_URL = {
       },
     },
   },
-};
+});

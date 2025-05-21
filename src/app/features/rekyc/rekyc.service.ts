@@ -37,7 +37,7 @@ export class RekycService {
   }
 
   sendReminder(entityId: string) {
-    return this.api.post(API_URL.REKYC.SEND_REMINDER(entityId));
+    return this.api.get(API_URL.REKYC.SEND_REMINDER(entityId));
   }
 
   viewReport(entityId: string) {
@@ -48,15 +48,20 @@ export class RekycService {
   }
 
   downloadReport(entityId: string) {
-    const url = `${API_URL.APPLICATION.REKYC.REPORT.VIEW(entityId)}`;
-    this.http.get(url, { responseType: 'blob' }).subscribe((blob) => {
-      const link = document.createElement('a');
-      const objectUrl = window.URL.createObjectURL(blob);
-      link.href = objectUrl;
-      link.download = `Final Re-KYC Report - ${entityId}.pdf`;
-      link.click();
-      window.URL.revokeObjectURL(objectUrl); // Clean up the object URL
-    });
+    const url = `/kycus/rekyc/downloadFinalReport/${entityId}`;
+
+    this.http
+      .get<Blob>(url, {
+        responseType: 'blob' as 'json',
+      })
+      .subscribe((blob: Blob) => {
+        const link = document.createElement('a');
+        const url = window.URL.createObjectURL(blob);
+        link.href = url;
+        link.download = `Final Re-KYC Report - ${entityId.split('-').pop()}.zip`;
+        link.click();
+        window.URL.revokeObjectURL(url);
+      });
   }
 
   downloadSample() {

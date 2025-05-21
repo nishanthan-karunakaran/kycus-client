@@ -26,7 +26,7 @@ export interface FormStatus {
     entityDetails: boolean;
     ausDetails: boolean;
     rekycForm: boolean;
-    eSign: boolean;
+    eSignEntity: boolean;
   };
 }
 
@@ -41,7 +41,7 @@ export const initialFormStatus: FormStatus = (() => {
     entityDetails: steps.entityDocs && steps.directorDetails && steps.boDetails,
     ausDetails: false,
     rekycForm: false,
-    eSign: false,
+    eSignEntity: false,
   };
 
   return { steps, forms };

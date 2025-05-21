@@ -18,12 +18,11 @@ import {
   UploadFileProofResponse,
 } from '@features/forms/rekyc-form/rekyc-form.model';
 import { RekycFormService } from '@features/forms/rekyc-form/rekyc-form.service';
-import { updateRekycFormStatus } from '@features/forms/rekyc-form/store/rekyc-form.action';
 import { Store } from '@ngrx/store';
 import { ToastService } from '@src/app/shared/ui/toast/toast.service';
 import { Doc } from '../entity-details-form/store/entity-details.state';
 import { selectEntityInfo } from '../entity-filledby/store/entity-info.selectors';
-import { RekycPersonalFormService } from './rekyc-personal.service';
+import { ESignStatus, RekycPersonalFormService } from './rekyc-personal.service';
 import { updatePartialPersonalDetails } from './store/personal-details.actions';
 import { selectAusInfo, selectPersonalDetails } from './store/personal-details.selectors';
 import { PersonalDetails } from './store/personal-details.state';
@@ -120,6 +119,8 @@ export class RekycPersonalDetailsComponent implements OnInit, OnDestroy {
   showPreviewSheet = signal(false);
   showESignSheet = signal(false);
   showPopup = signal(false);
+  isPreviewOpened = signal(false);
+  esignStatus = signal<ESignStatus | ''>('');
 
   proofDoc = (doc: string) => doc === 'identityProof' || doc === 'addressProof';
 
@@ -236,6 +237,11 @@ export class RekycPersonalDetailsComponent implements OnInit, OnDestroy {
   }
 
   handleESignSheet() {
+    if (!this.isPreviewOpened() && this.esignStatus() === 'Not Initiated') {
+      this.isPreviewOpened.set(!this.isPreviewOpened());
+      this.handlePreviewSheet();
+      return;
+    }
     this.showESignSheet.set(!this.showESignSheet());
   }
 
@@ -406,20 +412,30 @@ export class RekycPersonalDetailsComponent implements OnInit, OnDestroy {
         return;
       }
 
-      this.toast.success('Form sumitted successfully!');
-      this.store.dispatch(updateRekycFormStatus({ ausDetails: true }));
-      // this.rekycFormService.updatRekycFormStep('personal-details');
-      const entityFilledBy = this.entityInfo()?.entityFilledBy;
-      // const entityFilledByOthers = entityFilledBy && entityFilledBy.toLowerCase().includes('other');
-      const entityFilledBySameLoggedInUser =
-        entityFilledBy && entityFilledBy === this.ausInfo()?.ausId;
+      const isAnyOneFileLoading = Object.values(this.isFileLoading()).some(Boolean);
 
-      if (!entityFilledBySameLoggedInUser) {
-        this.handlePopup();
+      if (isAnyOneFileLoading) {
+        this.toast.error('Please wait untill the file has been submitted');
+        return;
       }
-      // if (entityFilledByOthers || entityFilledBySameLoggedInUser) {
-      this.rekycFormService.updatRekycFormStep('personal-details');
+
+      this.handleESignSheet();
+      return;
+
+      // this.toast.success('Form sumitted successfully!');
+      // this.store.dispatch(updateRekycFormStatus({ ausDetails: true }));
+      // // this.rekycFormService.updatRekycFormStep('personal-details');
+      // const entityFilledBy = this.entityInfo()?.entityFilledBy;
+      // // const entityFilledByOthers = entityFilledBy && entityFilledBy.toLowerCase().includes('other');
+      // const entityFilledBySameLoggedInUser =
+      //   entityFilledBy && entityFilledBy === this.ausInfo()?.ausId;
+
+      // if (!entityFilledBySameLoggedInUser) {
+      //   this.handlePopup();
       // }
+      // // if (entityFilledByOthers || entityFilledBySameLoggedInUser) {
+      // this.rekycFormService.updatRekycFormStep('personal-details');
+      // // }
     } else {
       this.toast.info('Form saved successfully!');
     }

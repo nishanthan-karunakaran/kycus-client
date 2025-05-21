@@ -13,7 +13,7 @@ export interface AccessibleSteps {
   entityDetails: boolean;
   ausDetails: boolean;
   rekycForm: boolean;
-  eSign: boolean;
+  eSignEntity: boolean;
 }
 
 export interface AusInfoState {
@@ -33,7 +33,7 @@ const getInitialAccessibleSteps = () => {
       entityDetails: false,
       ausDetails: true,
       rekycForm: false,
-      eSign: true,
+      eSignEntity: true,
     }
   );
 };
@@ -95,8 +95,20 @@ export const personalDetailsReducer = createReducer(
       },
     };
   }),
-  on(updatePartialPersonalDetails, (state, { partialData }) => ({
-    ...state,
-    ...partialData,
-  })),
+  on(updatePartialPersonalDetails, (state, { partialData }) => {
+    const updatedFields = Object.entries(partialData).reduce((acc, [key, value]) => {
+      return {
+        ...acc,
+        [key]: {
+          ...state[key as keyof typeof state],
+          ...value,
+        },
+      };
+    }, {});
+
+    return {
+      ...state,
+      ...updatedFields,
+    };
+  }),
 );

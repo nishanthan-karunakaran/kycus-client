@@ -96,7 +96,7 @@ export class ToastComponent {
   toastIcon(type: Toast['type']): string {
     const icons = {
       success: 'check-circle',
-      error: 'x-circle',
+      error: 'octagon-x',
       warning: 'alert-triangle',
       info: 'info',
       danger: 'alert-octagon',

@@ -1,4 +1,4 @@
-import { HttpBackend, HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpBackend, HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { API_URL } from '@core/constants/apiurls';
@@ -9,6 +9,7 @@ import {
 } from '@features/forms/rekyc-form/components/rekyc-personal-details/store/personal-details.selectors';
 import { Store } from '@ngrx/store';
 import { Subject } from 'rxjs';
+import { selectEntityInfo } from './components/entity-filledby/store/entity-info.selectors';
 import { DeleteDocument, FormStep } from './rekyc-form.model';
 import {
   updateActiveRoute,
@@ -24,8 +25,6 @@ import {
 } from './store/rekyc-form.selectors';
 import { EntityDetTab } from './store/rekyc-form.state';
 import { ApiStatus } from '@core/constants/api.response';
-import { selectEntityInfo } from './components/entity-filledby/store/entity-info.selectors';
-import { environment } from '@src/environments/environment';
 
 @Injectable({
   providedIn: 'root',
@@ -36,13 +35,13 @@ export class RekycFormService {
     'entityDetails',
     'ausDetails',
     'rekycForm',
-    'eSign',
+    'eSignEntity',
   ];
   private readonly stepFormKeyMap: Record<FormStep, keyof FormStatus['forms']> = {
     [FormStep.ENTITY_DETAILS]: 'entityDetails',
     [FormStep.PERSONAL_DETAILS]: 'ausDetails',
     [FormStep.KYC_FORM]: 'rekycForm',
-    [FormStep.E_SIGN]: 'eSign',
+    [FormStep.E_SIGN]: 'eSignEntity',
   };
   readonly rekycFormStatus = toSignal(this.store.select(selectRekycFormStatus));
   readonly rekycStepStatus = toSignal(this.store.select(selectRekycStepStatus));
@@ -177,10 +176,9 @@ export class RekycFormService {
       next = 'personal-details';
     } else if (!formStatus.forms.rekycForm && accessibleSteps?.rekycForm) {
       next = 'rekyc-form';
+    } else if (!formStatus.forms.eSignEntity && accessibleSteps?.eSignEntity) {
+      next = 'eSign';
     }
-    // else if (!formStatus.forms.eSign && accessibleSteps?.eSign) {
-    //   next = 'eSign';
-    // }
 
     if (next) {
       this.updateRekycLS('activeRoute', next);
@@ -189,6 +187,7 @@ export class RekycFormService {
   }
 
   canAccessStep(step: FormStep): boolean {
+    // return true;
     const status = this.rekycFormStatus();
     const accessibleSteps = this.accessibleSteps();
 
@@ -219,44 +218,60 @@ export class RekycFormService {
   }
 
   tabCompletionStatus(ausId: string) {
-    const access_token = localStorage.getItem('access_token');
+    // const access_token = localStorage.getItem('access_token');
 
-    const headers = new HttpHeaders({
-      Authorization: access_token ? `Bearer ${access_token}` : '',
-    });
+    // const headers = new HttpHeaders({
+    //   Authorization: access_token ? `Bearer ${access_token}` : '',
+    // });
 
     // using http with HttpBackend handler, because of angular's api aborting
     // whenever the route changes angular will abort all the active requests
 
-    this.http
-      .get(environment.apiBaseUrl + API_URL.APPLICATION.REKYC.TAB_COMPLETION_STATUS(ausId), {
-        headers,
-      })
-      .subscribe({
-        next: (response) => {
-          if (response) {
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            const { status, data } = response as any;
+    // return this.http
+    //   .get(environment.apiBaseUrl + API_URL.APPLICATION.REKYC.TAB_COMPLETION_STATUS(ausId))
+    //   .subscribe({
+    //     next: (response) => {
+    //       if (response) {
+    //         // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    //         const { status, data } = response as any;
 
-            if (status === ApiStatus.SUCCESS) {
-              const { ausDetails, boDetails, directorDetails, eSign, entityDocs, rekycForm } = data;
+    //         if (status === ApiStatus.SUCCESS) {
+    //           const { ausDetails, boDetails, directorDetails, eSign, entityDocs, rekycForm } = data;
 
-              const entityDetails = entityDocs && directorDetails && boDetails;
+    //           const entityDetails = entityDocs && directorDetails && boDetails;
 
-              this.store.dispatch(
-                updateRekycStepStatus({ entityDocs, directorDetails, boDetails }),
-              );
-              this.store.dispatch(
-                updateRekycFormStatus({ entityDetails, ausDetails, rekycForm, eSign }),
-              );
-            }
+    //           this.store.dispatch(
+    //             updateRekycStepStatus({ entityDocs, directorDetails, boDetails }),
+    //           );
+    //           this.store.dispatch(
+    //             updateRekycFormStatus({ entityDetails, ausDetails, rekycForm, eSign }),
+    //           );
+    //         }
+    //       }
+    //     },
+    //   });
+
+    return this.api.get(API_URL.APPLICATION.REKYC.TAB_COMPLETION_STATUS(ausId)).subscribe({
+      next: (result) => {
+        const { response } = result;
+
+        if (response) {
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          const { status, data } = response as any;
+
+          if (status === ApiStatus.SUCCESS) {
+            const { ausDetails, boDetails, directorDetails, eSignEntity, entityDocs, rekycForm } =
+              data;
+
+            const entityDetails = entityDocs && directorDetails && boDetails;
+
+            this.store.dispatch(updateRekycStepStatus({ entityDocs, directorDetails, boDetails }));
+            this.store.dispatch(
+              updateRekycFormStatus({ entityDetails, ausDetails, rekycForm, eSignEntity }),
+            );
           }
-        },
-      });
-
-    return this.http.get(
-      environment.apiBaseUrl + API_URL.APPLICATION.REKYC.TAB_COMPLETION_STATUS(ausId),
-      { headers },
-    );
+        }
+      },
+    });
   }
 }

@@ -32,7 +32,7 @@ const routes: Routes = [
         // canActivate: [RekycGuard],
       },
       {
-        path: 'eSign',
+        path: 'eSignEntity',
         component: RekycEsignComponent,
       },
     ],

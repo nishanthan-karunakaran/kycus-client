@@ -24,10 +24,10 @@
     (ngSubmit)="submit('submit')"
     class="flex flex-col gap-4"
   >
-    <div class="divide-y-2 rounded-lg border">
+    <div class="rounded-lg border">
       <div
         *ngFor="let doc of documentKeys; trackBy: trackDoc"
-        class="flex items-center justify-between gap-[10%] px-4 py-4"
+        class="flex items-center justify-between gap-[10%] border-b px-4 py-4 last:border-b-0"
       >
         <div class="w-[42%]">
           <div class="flex flex-col gap-2">
@@ -105,7 +105,7 @@
         class="btn-outline"
         (btnClick)="handlePreviewSheet()"
       />
-      <ui-button type="submit" label="Submit" class="py-[7px]" />
+      <ui-button type="submit" label="E-Sign" class="py-[7px]" />
     </div>
   </form>
 
@@ -115,10 +115,10 @@
     (openESignSheet)="handleESignSheet()"
   />
 
-  <!-- <rekyc-esign-personaldet
+  <rekyc-esign-personaldet
     [openSheet]="showESignSheet()"
     (closeSheet)="handleESignSheet()"
-  /> -->
+  />
 
   <ui-modal
     [showClose]="false"

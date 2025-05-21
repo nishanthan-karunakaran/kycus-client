@@ -24,12 +24,14 @@ export class ConfirmationModalComponent implements AfterViewInit, OnDestroy {
   @Input() contentText = 'Are you sure you want to proceed?';
   @Input() cancelText = 'Cancel';
   @Input() confirmText = 'Confirm';
-  @Input() showClose = true;
+  @Input() showClose = false;
+  @Input() autoCloseAfterAction = true;
   @Input() isCustomContent = false; // Flag to allow full DOM customization
 
   // eslint-disable-next-line @angular-eslint/no-output-native
   @Output() cancel = new EventEmitter<void>();
   @Output() confirm = new EventEmitter<void>();
+  @Output() closeAfterAction = new EventEmitter<boolean>();
 
   @ViewChild('confirmButton') confirmButton!: ElementRef<HTMLButtonElement>;
   @ViewChild('cancelButton') cancelButton!: ElementRef<HTMLButtonElement>;
@@ -81,10 +83,18 @@ export class ConfirmationModalComponent implements AfterViewInit, OnDestroy {
 
   handleCancel() {
     this.cancel.emit();
+    this.handleAutoClose();
   }
 
   handleConfirm() {
     this.confirm.emit();
+    this.handleAutoClose();
+  }
+
+  handleAutoClose() {
+    if (this.autoCloseAfterAction) {
+      this.closeAfterAction.emit(true);
+    }
   }
 
   ngOnDestroy(): void {

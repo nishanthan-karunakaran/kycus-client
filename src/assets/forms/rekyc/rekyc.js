@@ -1,5 +1,7 @@
 let data = {};
 let isCheckedAllReqInputFilled = false;
+let showAnnexure1 = false;
+let showAnnexure2 = false;
 
 async function renderAll() {
   await entityBasicInfo();
@@ -127,7 +129,7 @@ function entityMailingAddress() {
 
   const labelKey = {
     shopBidg: 'buildingName',
-    roadName: 'street',
+    roadName: 'line1',
     landmark: 'landmark',
     city: 'city',
     pincode: 'pin',
@@ -164,20 +166,32 @@ function entityRegisteredAddress() {
     entityDetails.registeredOfficeAddress = {};
   }
 
-  const registeredAddress = entityDetails.registeredOfficeAddress;
-  const mailingAddress = entityDetails.mailingAddress || {}; // assumed field for "same as mailing"
+  let registeredAddress = entityDetails.registeredOfficeAddress;
 
   // Checkbox elements for "Owned", "Rented / Leased" and "Same as Mailing Address"
   const owned = document.getElementById('entity-contact-address-owned');
   const rented = document.getElementById('entity-contact-address-rentedLeased');
   const sameAsMailing = document.getElementById('entity-contact-address-sameAsMailingAddress');
+  sameAsMailing.checked = registeredAddress.sameAsMailings;
+
+  sameAsMailing.onchange = () => {
+    if (sameAsMailing.checked) {
+      data.originalData.entityDetails.registeredOfficeAddress =
+        data.originalData.entityDetails.mailingAddress;
+      data.originalData.entityDetails.registeredOfficeAddress.sameAsMailing = true;
+      registeredAddress = data.originalData.entityDetails.registeredOfficeAddress;
+      updateInputs();
+    } else {
+      data.originalData.entityDetails.registeredOfficeAddress.sameAsMailing = false;
+    }
+  };
 
   // Input field ids
   const fields = ['shopBidg', 'roadName', 'landmark', 'city', 'pincode', 'state', 'country'];
 
   const labelKey = {
     shopBidg: 'buildingName',
-    roadName: 'street',
+    roadName: 'line1',
     landmark: 'landmark',
     city: 'city',
     pincode: 'pin',
@@ -185,22 +199,25 @@ function entityRegisteredAddress() {
     country: 'country',
   };
 
+  function updateInputs() {
+    fields.forEach((field) => {
+      const input = document.getElementById(`entity-contact-address-${field}`);
+      if (!input) return;
+
+      input.value = registeredAddress[labelKey[field]] || '';
+
+      const pathArray = ['entityDetails', 'registeredOfficeAddress', labelKey[field]];
+      attachInputTracking(input, pathArray);
+
+      input.oninput = () => {
+        data.originalData.entityDetails.registeredOfficeAddress.sameAsMailing = false;
+        sameAsMailing.checked = false;
+      };
+    });
+  }
+
   // Initialize the input fields
-  fields.forEach((field) => {
-    const input = document.getElementById(`entity-contact-address-${field}`);
-    if (!input) return;
-
-    input.value = registeredAddress[labelKey[field]] || ''; // Set initial value from registeredAddress
-    // input.disabled = !!sameAsMailing?.checked; // Disable inputs if "Same as Mailing" is checked
-
-    const pathArray = ['entityDetails', 'registeredOfficeAddress', labelKey[field]];
-    attachInputTracking(input, pathArray);
-
-    // Handle input changes to update registeredAddress
-    // input.oninput = (e) => {
-    //   registeredAddress[field] = e.target.value.trim();
-    // };
-  });
+  updateInputs();
 
   // Checkbox logic: Owned vs Rented
   const updateOwnershipCheckboxState = () => {
@@ -236,37 +253,37 @@ function entityRegisteredAddress() {
   }
 
   // Checkbox logic: Same as mailing address
-  if (sameAsMailing) {
-    sameAsMailing.onchange = () => {
-      const isSame = sameAsMailing.checked;
+  // if (sameAsMailing) {
+  //   sameAsMailing.onchange = () => {
+  //     const isSame = sameAsMailing.checked;
 
-      // Track the checkbox state in registeredAddress
-      registeredAddress.sameAsMailing = isSame;
+  //     // Track the checkbox state in registeredAddress
+  //     registeredAddress.sameAsMailing = isSame;
 
-      // fields.forEach((field) => {
-      //   const input = document.getElementById(`entity-contact-address-${field}`);
-      //   if (!input) return;
+  //     // fields.forEach((field) => {
+  //     //   const input = document.getElementById(`entity-contact-address-${field}`);
+  //     //   if (!input) return;
 
-      //   const key = labelKey[field];
+  //     //   const key = labelKey[field];
 
-      //   if (isSame) {
-      //     // If checked, copy from mailingAddress and disable input
-      //     input.value = mailingAddress[field] || '';
-      //     registeredAddress[key] = mailingAddress[field] || '';
-      //     // input.disabled = true;
-      //     input.style.setProperty('color', '#01327E', 'important');
-      //   } else {
-      //     // If unchecked, restore value from registeredAddress and attach input tracking
-      //     // input.disabled = false;
-      //     input.value = registeredAddress[key] || '';
-      //     input.style.setProperty('color', '#01327E', 'important');
+  //     //   if (isSame) {
+  //     //     // If checked, copy from mailingAddress and disable input
+  //     //     input.value = mailingAddress[field] || '';
+  //     //     registeredAddress[key] = mailingAddress[field] || '';
+  //     //     // input.disabled = true;
+  //     //     input.style.setProperty('color', '#01327E', 'important');
+  //     //   } else {
+  //     //     // If unchecked, restore value from registeredAddress and attach input tracking
+  //     //     // input.disabled = false;
+  //     //     input.value = registeredAddress[key] || '';
+  //     //     input.style.setProperty('color', '#01327E', 'important');
 
-      //     const pathArray = ['entityDetails', 'registeredOfficeAddress', key];
-      //     attachInputTracking(input, pathArray);
-      //   }
-      // });
-    };
-  }
+  //     //     const pathArray = ['entityDetails', 'registeredOfficeAddress', key];
+  //     //     attachInputTracking(input, pathArray);
+  //     //   }
+  //     // });
+  //   };
+  // }
 
   // Initialize checkbox states and inputs on page load
   updateOwnershipCheckboxState();
@@ -1226,7 +1243,7 @@ function ausDetails() {
     "Father's name": 'fatherName',
     'Proof of Identity': 'documents.identityProof.selectedType',
     'Proof of Address': 'documents.addressProof.selectedType',
-    'Address - Line': 'address.street',
+    'Address - Line': 'address.line1',
     'Address - City': 'address.city',
     'Address - State': 'address.state',
     'Address - Country': 'address.country',
@@ -1503,7 +1520,7 @@ function extendedDeclaration() {
 
     c1.onchange = () => {
       if (c1.checked) {
-        data.originalData.entityDetails[cbKey] = 'c1';
+        data.originalData.entityDetails[cbKey] = cb1;
         c2.checked = false; // Ensure the other checkbox is unchecked
       } else {
         data.originalData.entityDetails[cbKey] = null;
@@ -1514,7 +1531,7 @@ function extendedDeclaration() {
 
     c2.onchange = () => {
       if (c2.checked) {
-        data.originalData.entityDetails[cbKey] = 'c2';
+        data.originalData.entityDetails[cbKey] = cb2;
         c1.checked = false; // Ensure the other checkbox is unchecked
       } else {
         data.originalData.entityDetails[cbKey] = null;
@@ -1524,8 +1541,8 @@ function extendedDeclaration() {
     };
 
     function updateCheckBoxValue() {
-      c1.checked = data?.originalData?.entityDetails[cbKey] === 'c1';
-      c2.checked = data?.originalData?.entityDetails[cbKey] === 'c2';
+      c1.checked = data?.originalData?.entityDetails[cbKey] === cb1;
+      c2.checked = data?.originalData?.entityDetails[cbKey] === cb2;
     }
   }
 

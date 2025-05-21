@@ -1,4 +1,5 @@
 import { NgModule } from '@angular/core';
+import { PdfViewerModule } from 'ng2-pdf-viewer';
 import { StoreModule } from '@ngrx/store';
 import { SharedModule } from '@src/app/shared/shared.module';
 import { UiCircularMaskedLoaderComponent } from '@src/app/shared/ui/ui-circular-masked-loader/ui-circular-masked-loader.component';
@@ -24,6 +25,7 @@ import { RekycFormComponent } from './rekyc-form.component';
 import { rekycFormReducers } from './store/rekyc-form.reducer';
 import { ConfirmationModalComponent } from '@src/app/shared/ui/confirmation-modal/confirmation-modal.component';
 import { PresentValuesPipe } from '@core/pipes/presentValues.pipe';
+import { RekycPendingAusStatusComponent } from './components/rekyc-kyc-form/components/pending-aus-status/pending-aus-status.component';
 
 @NgModule({
   imports: [
@@ -33,6 +35,7 @@ import { PresentValuesPipe } from '@core/pipes/presentValues.pipe';
     StoreModule.forFeature('rekycForm', rekycFormReducers),
     UiCircularMaskedLoaderComponent,
     ConfirmationModalComponent,
+    PdfViewerModule,
   ],
   declarations: [
     RekycFormComponent,
@@ -53,6 +56,7 @@ import { PresentValuesPipe } from '@core/pipes/presentValues.pipe';
     RekycKycFormComponent,
     RekycHeaderSectionComponent,
     RekycEsignComponent,
+    RekycPendingAusStatusComponent,
   ],
 })
 export class RekycFormModule {}

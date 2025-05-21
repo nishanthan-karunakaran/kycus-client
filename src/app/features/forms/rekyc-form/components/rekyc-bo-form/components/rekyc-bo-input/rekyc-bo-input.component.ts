@@ -77,12 +77,6 @@ export class RekycBoInputComponent implements OnInit {
 
   get isFormValid(): boolean {
     const formArray = this.form.get('boDetails') as FormArray;
-    // eslint-disable-next-line no-console
-    console.log(
-      'bo submit',
-      formArray && formArray.length > 0,
-      formArray.controls.every((control) => control.valid),
-    );
     return (
       formArray && formArray.length > 0 && formArray.controls.every((control) => control.valid)
     );

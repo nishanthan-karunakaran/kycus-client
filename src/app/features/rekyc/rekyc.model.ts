@@ -19,6 +19,7 @@ export enum ReKycStatus {
   SUBMITTED = 'submitted',
   PENDING = 'pending',
   EXPIRED = 'expired',
+  ENTITY_ESIGN = 'entity-esign',
   COMPLETED = 'completed',
 }
 

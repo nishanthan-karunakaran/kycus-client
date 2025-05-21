@@ -3,30 +3,17 @@ const reqInputs = [
   'entityName',
   'entityPan',
   'entity-mailing-address',
-  'entity-mailing-address-shopBidg',
   'entity-mailing-address-roadName',
-  'entity-mailing-address-landmark',
   'entity-mailing-address-city',
   'entity-mailing-address-pincode',
   'entity-mailing-address-state',
   'entity-mailing-address-country',
-  'entity-mailing-address-telOff',
-  'entity-mailing-address-extNo',
-  'entity-mailing-address-faxNo',
-  'entity-mailing-address-telR',
-  'entity-mailing-address-mobNo',
-  'entity-mailing-address-emailID',
-  'entity-contact-address-sameAsMailingAddress',
-  'entity-contact-address-shopBidg',
   'entity-contact-address-roadName',
-  'entity-contact-address-landmark',
   'entity-contact-address-city',
   'entity-contact-address-pincode',
   'entity-contact-address-state',
   'entity-contact-address-country',
   'entity-contact-address-owned',
-  'entity-contact-address-rentedLeased',
-  'aof-no',
 ];
 const directCheckBoxes = {
   'type-of-entity': ['data.originalData.entityType'],
@@ -67,18 +54,18 @@ function setFormData(payload) {
   };
 
   renderAll();
-  // disableEditAfterSubmit();
+  disableEditAfterSubmit();
 }
 
-// function disableEditAfterSubmit() {
-// const status = data?.status || false;
-// if (status) {
-//   document.querySelectorAll('input, select, textarea, button').forEach((element) => {
-//     element.disabled = true; // Disable all form elements
-//   });
-//   document.body.style.pointerEvents = 'none'; // Disable all interactions with the body
-// }
-// }
+function disableEditAfterSubmit() {
+  const status = data?.status || false;
+  if (status) {
+    document.querySelectorAll('input, select, textarea, button').forEach((element) => {
+      element.disabled = true; // Disable all form elements
+    });
+    document.body.style.pointerEvents = 'none'; // Disable all interactions with the body
+  }
+}
 
 function checkAllReqInputFilled() {
   let firstEmptyInput = null;
@@ -126,12 +113,6 @@ function checkAllReqInputFilled() {
     } else {
       labelElement.style.removeProperty('border-bottom');
     }
-  }
-
-  if (allInputsFilled) {
-    console.log('All required inputs are filled.');
-  } else {
-    console.log('Some required inputs are missing.');
   }
 
   if (firstEmptyInput) firstEmptyInput.focus();

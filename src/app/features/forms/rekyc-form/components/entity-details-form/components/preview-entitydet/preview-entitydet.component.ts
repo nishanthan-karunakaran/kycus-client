@@ -17,7 +17,6 @@ export class PreviewEntitydetComponent implements OnChanges {
   data = signal<any[]>([]);
   entityInfo = toSignal(this.store.select(selectEntityInfo));
   isLoading = signal(true);
-  // helperService = HelperService;
 
   constructor(
     private store: Store,

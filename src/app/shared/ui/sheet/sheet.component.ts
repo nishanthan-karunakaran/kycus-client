@@ -12,7 +12,10 @@ import { LucideAngularModule } from 'lucide-angular';
 export class SheetComponent {
   @Input() isOpen = false;
   @Input() showClose = false;
+  @Input() sheetDismissOnOutside = true;
   @Input() class = '';
+  @Input() headerClass = '';
+  @Input() footerClass = '';
   @Input() contentClass = '';
   @Input() position: 'left' | 'right' = 'right';
   @Output() closeSheet = new EventEmitter<void>();

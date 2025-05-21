@@ -39,16 +39,16 @@ export class PaginationComponent {
   next() {
     if (this.active < this.totalPages) {
       this.active++;
-      this.activeChange.emit(this.active);
       this.updateStartPage();
+      this.activeChange.emit(this.active);
     }
   }
 
   prev() {
     if (this.active > 1) {
       this.active--;
-      this.activeChange.emit(this.active);
       this.updateStartPage();
+      this.activeChange.emit(this.active);
     }
   }
 

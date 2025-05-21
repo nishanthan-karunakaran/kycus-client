@@ -8,18 +8,23 @@ export interface AusEsignPreviewDoc {
   url: string;
 }
 
+export type ESignStatus = 'Not Initiated' | 'Initiated' | 'Awaiting Signing' | 'Signed';
+
 export interface AusESignPreviewData {
-  name: string | '';
-  fatherName: string | '';
+  name: string;
+  fatherName: string;
   proofOfIdentity: AusEsignPreviewDoc;
   proofOfAddress: AusEsignPreviewDoc;
-  currentAddress: string | '';
-  city: string | '';
-  state: string | '';
-  country: string | '';
-  pinCode: string | '';
-  photographUrl: string | '';
-  signatureUrl: string | '';
+  line1: string;
+  line2: string;
+  city: string;
+  state: string;
+  country: string;
+  pinCode: string;
+  photographUrl: string;
+  signatureUrl: string;
+  esignStatus: ESignStatus;
+  redirectUrl: string;
 }
 
 @Injectable({
@@ -46,5 +51,9 @@ export class RekycPersonalFormService {
 
   esignAusPreviewSave(data: { entityId: string; ausId: string; data: AusESignPreviewData }) {
     return this.api.post(API_URL.APPLICATION.REKYC.PERSONAL_FORM.ESIGN_PREVIEW_SAVE, data);
+  }
+
+  proceedToESign(data: { type: 'aadhaar' | 'dsc'; ausId: string }) {
+    return this.api.post(API_URL.APPLICATION.REKYC.PERSONAL_FORM.PROCEED_TO_ESIGN, data);
   }
 }

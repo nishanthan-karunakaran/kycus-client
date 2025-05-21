@@ -13,7 +13,10 @@ import { ApiStatus } from '@core/constants/api.response';
 import { DocResponse } from '@features/forms/rekyc-form/components/entity-details-form/entity-details-form.model';
 import { RekycDeclarationService } from '@features/forms/rekyc-form/components/rekyc-declaration-form/rekyc-declaration.service';
 import { selectAusInfo } from '@features/forms/rekyc-form/components/rekyc-personal-details/store/personal-details.selectors';
-import { SaveDirectorsDraft } from '@features/forms/rekyc-form/rekyc-form.model';
+import {
+  SaveDirectorsDraft,
+  UploadFileProofErrorResponse,
+} from '@features/forms/rekyc-form/rekyc-form.model';
 import { RekycFormService } from '@features/forms/rekyc-form/rekyc-form.service';
 import { Store } from '@ngrx/store';
 import { ToastService } from '@src/app/shared/ui/toast/toast.service';
@@ -119,6 +122,7 @@ export class RekycDirectorsFormComponent implements OnInit, OnDestroy {
     this.form32.name = '';
     this.form32.link = '';
     this.form32.file = null;
+    this.form32Error.set('');
   }
 
   handleForm32Modal() {
@@ -222,12 +226,12 @@ export class RekycDirectorsFormComponent implements OnInit, OnDestroy {
   }
 
   submit() {
-    if (this.isLoading()) {
+    if (this.isLoading() || this.dirFetching()) {
       this.toast.error('Please wait for the request to complete');
       return;
     }
 
-    if (this.directorsList().length === 0) {
+    if (this.directorsList().length < 2) {
       this.toast.error('Please add at least two directors');
       return;
     }
@@ -287,7 +291,7 @@ export class RekycDirectorsFormComponent implements OnInit, OnDestroy {
 
     const existingDir = this.directorsList();
     const refinedDirList = existingDir
-      // .filter((dir) => dir.status === 'new-dir' || !dir.status)
+      .filter((dir) => dir.status === 'new-dir' || !dir.status)
       .map((dir) => ({ ...dir, status: 'active' }));
 
     if (refinedDirList.length < 2) {
@@ -300,8 +304,8 @@ export class RekycDirectorsFormComponent implements OnInit, OnDestroy {
       directorsList: this.isDirectorModified$() ? refinedDirList : this.directorsList(),
     };
     const formData = new FormData();
-    formData.append('data', JSON.stringify(data));
     formData.append('flag', 'save');
+    formData.append('data', JSON.stringify(data));
     formData.append('form32', this.form32.file as Blob);
 
     this.declarationService.saveDraft(formData as unknown as SaveDirectorsDraft).subscribe({
@@ -324,7 +328,12 @@ export class RekycDirectorsFormComponent implements OnInit, OnDestroy {
           // this.toast.success('Directors details saved successfully!');
           // this.store.dispatch(updateRekycStepStatus({ directorDetails: true }));
           // this.rekycFormService.updatRekycFormStep('directors');
-          this.toast.error(response.message || 'Something went wrong!');
+          const { error } = response as { error: UploadFileProofErrorResponse };
+          if (error.reason) {
+            this.form32Error.set(error.reason);
+          } else {
+            this.toast.error(response.message || 'Something went wrong!');
+          }
         }
       },
     });
@@ -382,5 +391,6 @@ export class RekycDirectorsFormComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.store.dispatch(setDirectorsState(initialDirectorState));
+    this.store.dispatch(updatePartialDirectors({ isDirectorModified: false }));
   }
 }

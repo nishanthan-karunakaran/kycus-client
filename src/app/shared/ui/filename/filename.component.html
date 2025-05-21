@@ -13,7 +13,7 @@
     tabindex="0"
   >
     <ui-circular-masked-loader *ngIf="loading" />
-    <lucide-icon *ngIf="!loading" name="file-minus" size="20" />
+    <lucide-icon *ngIf="!loading" [name]="fileIcon" size="20" />
     <p
       class="max-w-[15ch] overflow-hidden truncate"
       [attr.title]="fileName"

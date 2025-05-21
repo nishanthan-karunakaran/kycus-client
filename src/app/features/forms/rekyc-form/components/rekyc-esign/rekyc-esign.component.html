@@ -1,3 +1,165 @@
-<p>
-  rekyc-esign works!
-</p>
+<div class="flex size-full flex-col gap-4">
+  <div class="flex justify-end">
+    <ui-button
+      *ngIf="entityESignStatus() === 'not-initiated'"
+      label="Initiate E-Sign"
+      (btnClick)="handleProceedESignSheet()"
+    />
+    <ui-button
+      *ngIf="entityESignStatus() !== 'not-initiated'"
+      label="Check Status"
+      (btnClick)="handleESignStatusSheet()"
+    />
+  </div>
+
+  <div class="h-full w-full rounded-md border-2">
+    <pdf-viewer
+      [src]="reportUrl"
+      [render-text]="true"
+      [original-size]="false"
+      style="height: 100%; width: 100%; overflow: hidden"
+    ></pdf-viewer>
+  </div>
+</div>
+
+<app-sheet
+  [isOpen]="showESignStatusSheet()"
+  (closeSheet)="handleESignStatusSheet()"
+  contentClass="px-0 py-0"
+>
+  <header sheet-header class="bg-primary-10 p-4">
+    <h5 class="text-primary">E-Sign Status</h5>
+    <span>Check the status of each signatory's E-Sign status</span>
+  </header>
+
+  <div class="rounded-md bg-white p-4 shadow-sm">
+    <ul class="list-inside list-disc space-y-2">
+      <li
+        *ngFor="let aus of signatoryStatusList(); trackBy: trackSignatoryStatus"
+        [ngClass]="{
+          'text-success': getSignatoryStatus(aus),
+          'text-secondary': !getSignatoryStatus(aus),
+        }"
+      >
+        {{ aus?.name || aus?.email }}
+        <span
+          class="ml-1 italic"
+          [ngClass]="{
+            'text-success-80': getSignatoryStatus(aus),
+            'text-secondary-80': !getSignatoryStatus(aus),
+          }"
+        >
+          {{ getSignatoryStatus(aus) ? '(E-Signed)' : '(E-Sign Pending)' }}
+        </span>
+      </li>
+    </ul>
+  </div>
+
+  <div class="flex justify-end p-4">
+    <button type="button" class="mt-4" (click)="continueESign()">
+      Continue with E-Sign
+    </button>
+  </div>
+</app-sheet>
+
+<app-sheet
+  [isOpen]="showProceedESignSheet()"
+  (closeSheet)="handleProceedESignSheet()"
+  contentClass="px-0 py-0"
+>
+  <header sheet-header class="bg-primary-10 p-4">
+    <h5 class="text-primary">Select Signatories</h5>
+    <span>Please select at least two signatories to proceed</span>
+  </header>
+
+  <div class="p-4">
+    <div class="flex border-b border-black">
+      <div class="w-[35%] p-2">
+        <p class="font-medium">Name</p>
+      </div>
+      <div class="flex-1 p-2">
+        <p class="font-medium">Email</p>
+      </div>
+      <div class="w-[10%]"></div>
+    </div>
+    <div class="flex flex-col">
+      <div
+        *ngFor="let signatory of signatoriesList(); trackBy: trackSignatory"
+        class="flex border-b border-l border-r border-black"
+      >
+        <div
+          class="flex w-[35%] flex-wrap items-center gap-1 border-r border-black p-2 py-4"
+        >
+          <p>
+            {{ signatory.name }}
+            <span class="text-xs italic text-gray-500">
+              {{ signatory?.ausId ? '(AUS)' : '(Director)' }}
+            </span>
+          </p>
+        </div>
+        <div
+          class="flex flex-1 flex-col items-start border-r border-black px-2 py-4"
+        >
+          <ui-input
+            type="email"
+            *ngIf="!signatory.ausId; else signatoryName"
+            placeholder="Enter the E-Mail ID"
+            (valueChange)="updateValue(signatory, $event)"
+            [errorMessage]="signatory.errorMsg ? signatory.errorMsg : ''"
+          />
+          <ng-template #signatoryName>
+            <p>{{ signatory.email }}</p>
+            <span class="error-msg mt-1" *ngIf="signatory.errorMsg">
+              {{ signatory.errorMsg }}
+            </span>
+          </ng-template>
+        </div>
+        <div class="flex w-[10%] items-center justify-center p-2 py-4">
+          <input
+            type="checkbox"
+            (change)="updateSignatorySelection(signatory)"
+            [checked]="signatory?.isSelected"
+          />
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div sheet-footer class="flex justify-end gap-4 p-4">
+    <ui-button
+      label="Close"
+      class="btn-outline"
+      (btnClick)="handleProceedESignSheet()"
+    />
+    <ui-button
+      label="Submit and Initiate E-Sign"
+      [loading]="isProceedingToESign()"
+      (btnClick)="onSubmit()"
+    />
+  </div>
+</app-sheet>
+
+<ui-modal
+  [showClose]="false"
+  [isOpen]="showESignTypeModal()"
+  (close)="handleESignTypeModal()"
+  class="max-w-md"
+  [showClose]="true"
+>
+  <header modalHeader class="">
+    <h5 class="text-primary">Choose E-Sign</h5>
+    <span>Select the way you prefer to esign</span>
+  </header>
+
+  <div modalContent class="flex items-center justify-between gap-4">
+    <button class="btn-outline w-full" (click)="proceedToESign('aadhaar')">
+      AADHAAR
+    </button>
+
+    (or)
+
+    <button class="btn-outline w-full" (click)="proceedToESign('dsc')">
+      DSC
+    </button>
+  </div>
+</ui-modal>

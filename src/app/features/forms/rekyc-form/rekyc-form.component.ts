@@ -46,7 +46,7 @@ export class RekycFormComponent implements OnInit, DoCheck, OnDestroy {
       canShow: true,
     },
     { label: 'KYC Form', step: FormStep.KYC_FORM, isCompleted: false, canShow: true },
-    // { label: 'E-Sign', step: FormStep.E_SIGN, isCompleted: false, canShow: true },
+    { label: 'E-Sign', step: FormStep.E_SIGN, isCompleted: false, canShow: true },
   ]);
   readonly FormStep = FormStep;
   applicationToken: string | null = null;
@@ -124,12 +124,12 @@ export class RekycFormComponent implements OnInit, DoCheck, OnDestroy {
         isCompleted: rekycFormStatus.rekycForm, // Signal value
         canShow: accessibleSteps.rekycForm,
       },
-      // {
-      //   label: 'E-Sign',
-      //   step: FormStep.E_SIGN,
-      //   isCompleted: rekycFormStatus.eSign,
-      //   canShow: accessibleSteps.eSign,
-      // },
+      {
+        label: 'E-Sign',
+        step: FormStep.E_SIGN,
+        isCompleted: rekycFormStatus.eSignEntity,
+        canShow: accessibleSteps.eSignEntity,
+      },
     ];
 
     // Set the updated form list
@@ -217,8 +217,7 @@ export class RekycFormComponent implements OnInit, DoCheck, OnDestroy {
 
   tabCompletionStatus() {
     const ausId = this.ausInfo()?.ausId as string;
-
-    this.rekycFormService.tabCompletionStatus(ausId).subscribe();
+    this.rekycFormService.tabCompletionStatus(ausId);
   }
 
   ngOnDestroy(): void {
