@@ -129,7 +129,10 @@ export class RekycEmailValidationComponent implements OnInit, OnDestroy {
           this.store.dispatch(setAusInfo(data.ausInfo));
 
           // eslint-disable-next-line no-console
-          console.log('Update entity and aus info', this.entityInfo());
+          console.log('Update entity info', this.entityInfo());
+
+          // eslint-disable-next-line no-console
+          console.log('Update aus info', this.ausInfo());
 
           localStorage.setItem('access_token', data.access_token);
 
