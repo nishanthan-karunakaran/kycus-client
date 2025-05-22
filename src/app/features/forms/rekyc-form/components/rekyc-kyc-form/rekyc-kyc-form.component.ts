@@ -104,7 +104,7 @@ export class RekycKycFormComponent implements OnInit {
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             const { data } = response as any;
             const ausPending = data?.ausPending || [];
-            if (ausPending.length > 0 || !data?.boPending || !data?.directorsPending) {
+            if (ausPending.length > 0) {
               this.pendingAus.set(ausPending);
             } else {
               this.fetchFormData();
@@ -152,9 +152,9 @@ export class RekycKycFormComponent implements OnInit {
     const handleMessage = (event: MessageEvent) => {
       if (event.data?.type === 'SAVE_DATA' && event.data?.source === 'kyc-form') {
         let formData = event.data.payload;
-        // if (isSubmitting) {
-        formData = { ...formData, status: 'completed' };
-        // }
+        if (isSubmitting) {
+          formData = { ...formData, status: 'completed' };
+        }
         this.formData.set(formData);
 
         this.rekycKycFormService.savePDF(this.formData(), entityId).subscribe({
