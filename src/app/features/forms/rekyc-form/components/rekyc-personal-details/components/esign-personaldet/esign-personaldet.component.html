@@ -78,7 +78,7 @@
               (valueChange)="updateValue('line1', $event)"
               [errorMessage]="getErrorMessage('line1')"
             />
-            <p *ngIf="disableEdit()" class="ml-12">{{ form.value.line1 }}</p>
+            <p *ngIf="disableEdit()">{{ form.value.line1 }}</p>
           </div>
 
           <div class="flex items-center gap-4">
@@ -208,7 +208,7 @@
     </div>
 
     <ng-container *ngIf="!disableEdit() && !isFormFinallySubmitted()">
-      <button type="button" class="w-full" (click)="onSubmit()">Submit</button>
+      <button type="button" class="w-full" (click)="onSubmit()">Save</button>
     </ng-container>
 
     <ng-container *ngIf="showProceedESign">
