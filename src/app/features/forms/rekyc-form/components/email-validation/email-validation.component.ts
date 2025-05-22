@@ -21,6 +21,9 @@ import {
   updateAccessibleSteps,
 } from '../rekyc-personal-details/store/personal-details.actions';
 import { EmailValidationService } from './email-validation.service';
+import { selectEntityInfo } from '../entity-filledby/store/entity-info.selectors';
+import { selectAusInfo } from '../rekyc-personal-details/store/personal-details.selectors';
+import { toSignal } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'rekyc-email-validation',
@@ -39,6 +42,8 @@ export class RekycEmailValidationComponent implements OnInit, OnDestroy {
   isOTPValidated = signal(false);
   ausId = '';
   resendOTPTimer = signal(0);
+  entityInfo = toSignal(this.store.select(selectEntityInfo));
+  ausInfo = toSignal(this.store.select(selectAusInfo));
 
   private intervalSubscription: Subscription | null = null;
   private readonly initialTime = 30;
@@ -116,10 +121,15 @@ export class RekycEmailValidationComponent implements OnInit, OnDestroy {
           data.ausInfo.isAuthenticated = true; // update the authenticated status
           data.ausInfo.ausName = data.ausInfo?.ausName || this.loginForm.value.email;
           data.ausInfo.ausType = data.ausInfo.ausId?.includes('OTHER') ? 'OTHER' : 'AUS';
+
+          // eslint-disable-next-line no-console
+          console.log('Data received', data);
+
           this.store.dispatch(setEntityInfo(data.entityInfo));
           this.store.dispatch(setAusInfo(data.ausInfo));
-          this.toast.success('Email Verified!');
-          this.isOTPSent.set(true);
+
+          // eslint-disable-next-line no-console
+          console.log('Update entity and aus info', this.entityInfo());
 
           localStorage.setItem('access_token', data.access_token);
 
@@ -127,6 +137,13 @@ export class RekycEmailValidationComponent implements OnInit, OnDestroy {
 
           this.rekycFormService.updateRekycLS('ausInfo', data.ausInfo);
           this.rekycFormService.updateRekycLS('entityInfo', data.entityInfo);
+
+          // eslint-disable-next-line no-console
+          console.log(
+            'Updated ls',
+            localStorage.getItem('rekyc'),
+            localStorage.getItem('access_token'),
+          );
 
           const ausId = data.ausInfo.ausId;
           const entityFilledBy = data.entityInfo.entityFilledBy;
@@ -165,6 +182,11 @@ export class RekycEmailValidationComponent implements OnInit, OnDestroy {
             this.rekycFormService.updateRekycLS('accessibleSteps', accessibleSteps);
             this.store.dispatch(updateAccessibleSteps({ accessibleSteps }));
           }
+
+          // eslint-disable-next-line no-console
+          console.log('Updated Accessible Steps', accessibleSteps);
+
+          this.toast.success('Email Verified!');
         } else {
           this.toast.error((message as string) || 'Something went wrong');
         }
