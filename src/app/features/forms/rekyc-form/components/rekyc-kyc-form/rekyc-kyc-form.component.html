@@ -1,9 +1,9 @@
 <div class="flex h-full w-full flex-col gap-2 overflow-hidden">
-  <ng-container *ngIf="pendingAus().length > 0">
+  <ng-container *ngIf="pendingAus().length > 0 && !isCheckingStatus()">
     <rekyc-pending-aus-status [ausList]="pendingAus()" />
   </ng-container>
 
-  <ng-container *ngIf="pendingAus().length === 0">
+  <ng-container *ngIf="pendingAus().length === 0 && !isCheckingStatus()">
     <div class="flex items-center justify-between px-2">
       <div class="ml-2 text-xs">
         <p>Please make sure the required fields are filled</p>

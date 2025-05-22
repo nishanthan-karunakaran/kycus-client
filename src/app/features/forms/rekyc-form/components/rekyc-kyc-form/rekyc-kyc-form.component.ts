@@ -36,6 +36,7 @@ export class RekycKycFormComponent implements OnInit {
   formData = signal({});
   private isDataSent = false; // Flag to track if data has been sent already
   isSaveBtnClicked = signal(false);
+  isCheckingStatus = signal(false);
   isGettingReport = signal(false);
   isSubmittingReport = signal(false);
   isSubmitted = signal(false);
@@ -94,7 +95,7 @@ export class RekycKycFormComponent implements OnInit {
     this.rekycKycFormService.getReport(this.entityInfo()?.entityId as string).subscribe({
       next: (result) => {
         const { loading, response } = result;
-        this.isGettingReport.set(loading);
+        this.isCheckingStatus.set(loading);
 
         if (response) {
           const { status } = response;

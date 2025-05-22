@@ -92,7 +92,9 @@ export class EsignPersonaldetComponent implements OnInit, OnChanges {
   get showContinueESign() {
     return (
       this.esignRedirectUrl() &&
-      (this.esignStatus() === 'Initiated' || this.esignStatus() === 'Awaiting Signing')
+      (this.esignStatus() === 'Initiated' ||
+        this.esignStatus() === 'Awaiting Signing' ||
+        this.esignStatus() === 'Pending')
     );
   }
 
@@ -204,6 +206,9 @@ export class EsignPersonaldetComponent implements OnInit, OnChanges {
           const { data } = response as any;
           this.data.set(data);
           this.esignRedirectUrl.set(data?.redirectUrl);
+          if (data?.esignStatus === 'Signed') {
+            this.store.dispatch(updateRekycFormStatus({ ausDetails: true }));
+          }
           this.updateFormGroup();
         }
       },
@@ -223,9 +228,6 @@ export class EsignPersonaldetComponent implements OnInit, OnChanges {
       entityId: this.entityInfo()?.entityId as string,
     };
 
-    // this.esignRedirectUrl.set('https://lucide.dev/icons/categories');
-    // return;
-
     this.personalFormService.proceedToESign(payload).subscribe({
       next: (result) => {
         const { loading, response } = result;
@@ -244,7 +246,6 @@ export class EsignPersonaldetComponent implements OnInit, OnChanges {
           this.esignRedirectUrl.set(data?.redirectUrl);
           this.data.set({ ...this.data(), esignStatus: 'Initiated' });
 
-          this.store.dispatch(updateRekycFormStatus({ ausDetails: true }));
           const entityFilledBy = this.entityInfo()?.entityFilledBy;
           const entityFilledBySameLoggedInUser =
             entityFilledBy && entityFilledBy === this.ausInfo()?.ausId;

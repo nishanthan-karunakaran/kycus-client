@@ -8,7 +8,7 @@ export interface AusEsignPreviewDoc {
   url: string;
 }
 
-export type ESignStatus = 'Not Initiated' | 'Initiated' | 'Awaiting Signing' | 'Signed';
+export type ESignStatus = 'Not Initiated' | 'Initiated' | 'Awaiting Signing' | 'Pending' | 'Signed';
 
 export interface AusESignPreviewData {
   name: string;
